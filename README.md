@@ -37,7 +37,7 @@
 - Delete Vendor : ``DELETE: {{url}}/v1/vendor/[id]``
  - Authorization : _bearer token_
  
-![List Vendor](/public/image/Screenshot_2.png)
+![List Vendor](/public/image/Screenshot_1.png)
 
 ![Create Vendor](/public/image/Screenshot_3.png)
 > Modal / Pop Up muncul saat penambahan, perubahan atau detail data
