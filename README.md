@@ -33,8 +33,16 @@
 - Delete Vendor : ``DELETE: {{url}}/v1/vendor/[id]``
  - Authorization : _bearer token_
  
+#### Task
 ![List Vendor](/public/image/Screenshot_2.png)
+> fitur pencarian data berfungsi
+> fitur pagination berfungsi
+> abaikan tab active & expire
+> tab all bersisi jumlah keselurhan data (bukan total data per page)
+> Saat proses hapus data, muncul pop up konfirmasi penghapusan data
+
 
 ![Create Vendor](/public/image/Screenshot_3.png)
 > Modal / Pop Up muncul saat penambahan, perubahan atau detail data.
 > Jika saat penambahan data / perubahan data terdapat respon kesalahan di backend, tampilkan kesalahan tersebut didalam form. misal duplikat inputan TDR
+> Jika saat submit terdapat pesan kesalahan dari backend, nilai dari inputan data tidak hilang
