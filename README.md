@@ -9,8 +9,9 @@
 
 #### API
 - url : `http://api-corsec.hasabi.id/api/`
-- login : ``POST:{{url}}/v1/auth/login``
+- login : `POST:{{url}}/v1/auth/login`
   - Request : username, password
+    > u : admin@admin.com <br> p : password
 - logout : ``POST: {{url}}/v1/auth/login``
  - Authorization : _bearer token_
 - Create Vendor : ``POST: {{url}}/v1/vendor``
