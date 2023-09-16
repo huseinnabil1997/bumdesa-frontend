@@ -5,6 +5,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import mailReducer from './slices/mail';
 import chatReducer from './slices/chat';
 import productReducer from './slices/product';
+import vendorReducer from './slices/vendor';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 
@@ -38,12 +39,20 @@ const productPersistConfig = {
   whitelist: ['sortBy', 'checkout'],
 };
 
+const vendorPersistConfig = {
+  key: 'vendor',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
 const rootReducer = combineReducers({
   mail: mailReducer,
   chat: chatReducer,
   calendar: calendarReducer,
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
+  vendor: persistReducer(vendorPersistConfig, vendorReducer),
 });
 
 export { rootPersistConfig, rootReducer };

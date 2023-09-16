@@ -9,6 +9,7 @@ import { isValidToken, setSession } from '../utils/jwt';
 const initialState = {
   isAuthenticated: false,
   isInitialized: false,
+  isError: false,
   user: null,
 };
 
@@ -109,19 +110,21 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axios.post('v1/auth/login', {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
 
-    setSession(accessToken);
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user,
-      },
-    });
+    if (response.data.success) {
+      const { access_token } = response.data.data;
+      setSession(access_token);
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user: access_token,
+        },
+      });
+    }
   };
 
   const register = async (email, password, firstName, lastName) => {

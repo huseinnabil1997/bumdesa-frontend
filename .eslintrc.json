@@ -17,10 +17,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "@next/eslint-plugin-next"
-  ],
+  "plugins": ["react", "@next/eslint-plugin-next"],
   "rules": {
     "arrow-body-style": 1,
     "react/prop-types": 1,
@@ -32,6 +29,7 @@
     "@next/next/no-img-element": 0,
     "react/no-unescaped-entities": 0,
     "import/no-useless-path-segments": 1,
+    "react-hooks/exhaustive-deps": "off",
     "no-unused-vars": [
       1,
       {
