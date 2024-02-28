@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, IconButton, InputAdornment, Alert } from '@mui/material';
+import { Stack, IconButton, InputAdornment, Alert, Grid, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
@@ -12,7 +12,6 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
-
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
@@ -43,7 +42,7 @@ export default function RegisterForm() {
 
   const {
     reset,
-
+    watch,
     setError,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -66,16 +65,82 @@ export default function RegisterForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <RHFTextField name="firstName" label="First name" />
-          <RHFTextField name="lastName" label="Last name" />
-        </Stack>
-
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="firstName" label="Nama BUM Desa" />
+        <RHFTextField name="lastName" label="Email Aktif" />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Buat Kata Sandi"
+          type={showPassword ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
+                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        {watch('password')?.length > 0 && (
+          <Grid container spacing={1}>
+            <Grid item xs={6} display="flex">
+              {watch('password')?.length > 11 ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 12 karakter
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[0-9]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 1 angka
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[~!@#$%^&*]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Simbol ~!@#$%%^&*
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[a-z]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 1 huruf kecil
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[A-Z]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 1 huruf besar
+              </Typography>
+            </Grid>
+          </Grid>
+        )}
+
+        <RHFTextField
+          name="password"
+          label="Konfirmasi Kata Sandi"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (

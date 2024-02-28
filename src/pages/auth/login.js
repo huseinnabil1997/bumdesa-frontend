@@ -1,9 +1,6 @@
-import { capitalCase } from 'change-case';
-// next
-import NextLink from 'next/link';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography } from '@mui/material';
+import { Box, Card, Stack, Link, Button, Container, Typography } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // hooks
@@ -17,6 +14,7 @@ import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
 import { LoginForm } from '../../sections/auth/login';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -26,29 +24,14 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const HeaderStyle = styled('header')(({ theme }) => ({
-  top: 0,
-  zIndex: 9,
-  lineHeight: 0,
+const SectionStyle = styled('div')(() => ({
+  position: 'relative',
   width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'absolute',
-  padding: theme.spacing(3),
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-start',
-    padding: theme.spacing(7, 5, 0, 7),
-  },
-}));
-
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
+  maxWidth: '50%',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
+  height: '100vh',
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -61,10 +44,23 @@ const ContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
+const Title = styled(Stack)(() => ({
+  position: 'absolute',
+  top: '35%',
+  textAlign: 'center',
+  width: '100%',
+  margin: 'auto',
+  fontWeight: 600,
+  fontSize: 22,
+  color: 'white',
+}));
+
 // ----------------------------------------------------------------------
 
 export default function Login() {
   const { method } = useAuth();
+
+  const router = useRouter();
 
   const smUp = useResponsive('up', 'sm');
 
@@ -74,68 +70,46 @@ export default function Login() {
     <GuestGuard>
       <Page title="Login">
         <RootStyle>
-          <HeaderStyle>
-            <Logo />
-            {smUp && (
-              <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-                Don’t have an account? {''}
-                <NextLink href={PATH_AUTH.register} passHref>
-                  <Link variant="subtitle2">Get started</Link>
-                </NextLink>
-              </Typography>
-            )}
-          </HeaderStyle>
-
           {mdUp && (
             <SectionStyle>
-              <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-                Hi, Welcome Back
-              </Typography>
-              <Image
-                visibleByDefault
-                disabledEffect
-                src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_login.png"
-                alt="login"
-              />
+              <Image visibleByDefault disabledEffect src="/image/login.svg" alt="login" />
+              <Title>
+                <Image
+                  visibleByDefault
+                  disabledEffect
+                  src="/image/bri-square.svg"
+                  alt="bri"
+                  sx={{ width: 100, m: 'auto', mb: 1 }}
+                />
+                <Typography variant="h3">BUM Desa Digital</Typography>
+                <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
+                  Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu sendiri.
+                </Typography>
+              </Title>
             </SectionStyle>
           )}
 
           <Container maxWidth="sm">
             <ContentStyle>
-              <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h4" gutterBottom>
-                    Sign in to Minimal
-                  </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
-                </Box>
+              <Card sx={{ p: 5 }}>
+                <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
+                  <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
+                    <Typography variant="h4" gutterBottom>
+                      Masuk ke BUM Desa
+                    </Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>Silahkan masukkan email dan password.</Typography>
+                  </Box>
+                </Stack>
 
-                <Tooltip title={capitalCase(method)} placement="right">
-                  <>
-                    <Image
-                      disabledEffect
-                      alt={method}
-                      src={`https://minimal-assets-api.vercel.app/assets/icons/auth/ic_${method}.png`}
-                      sx={{ width: 32, height: 32 }}
-                    />
-                  </>
-                </Tooltip>
-              </Stack>
+                <LoginForm />
 
-              <Alert severity="info" sx={{ mb: 3 }}>
-                Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-              </Alert>
-
-              <LoginForm />
-
-              {!smUp && (
                 <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                  Don’t have an account?{' '}
-                  <NextLink href={PATH_AUTH.register} passHref>
-                    <Link variant="subtitle2">Get started</Link>
-                  </NextLink>
+                  Anda belum punya akun?{' '}
+                  <Button onClick={() => router.push(PATH_AUTH.register)}>
+                    <Typography variant="subtitle2">Daftar Sekarang</Typography>
+                  </Button>
                 </Typography>
-              )}
+              </Card>
             </ContentStyle>
           </Container>
         </RootStyle>

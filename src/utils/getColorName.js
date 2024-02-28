@@ -19,7 +19,7 @@ export default function getColorName(hex) {
     case '#FF4842':
       color = 'Red';
       break;
-    case '#1890FF':
+    case '#1078CA':
       color = 'Blue';
       break;
     case '#94D82D':

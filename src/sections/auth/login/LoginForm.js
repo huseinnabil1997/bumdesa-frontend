@@ -32,8 +32,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: 'admin@admin.com',
-    password: 'password',
+    email: '',
+    password: '',
     remember: true,
   };
 
@@ -66,7 +66,7 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Email" />
 
         <RHFTextField
           name="password"
@@ -85,14 +85,14 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" />
+        <RHFCheckbox name="remember" label="Ingat Saya" />
         <NextLink href={PATH_AUTH.resetPassword} passHref>
-          <Link variant="subtitle2">Forgot password?</Link>
+          <Link variant="subtitle2">Lupa Kata Sandi?</Link>
         </NextLink>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Login
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" color="primary" loading={isSubmitting}>
+        Masuk
       </LoadingButton>
     </FormProvider>
   );
