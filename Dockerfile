@@ -10,14 +10,14 @@ COPY package*.json ./
 # Install dependensi npm
 RUN npm install --force
 
-Salin semua file sumber ke direktori kerja di dalam container
+# Salin semua file sumber ke direktori kerja di dalam container
 COPY . .
 
-Build aplikasi ReactJS
+# Build aplikasi ReactJS
 RUN npm run build
 
-Expose port yang akan digunakan oleh aplikasi
+# Expose port yang akan digunakan oleh aplikasi
 EXPOSE 3031
 
-Perintah untuk menjalankan aplikasi ketika container dijalankan
+# Perintah untuk menjalankan aplikasi ketika container dijalankan
 CMD [ "npm", "start" ]
