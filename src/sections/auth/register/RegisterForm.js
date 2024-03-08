@@ -14,7 +14,7 @@ import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 // ----------------------------------------------------------------------
 
-export default function RegisterForm() {
+export default function RegisterForm({ setSuccess, setEmail }) {
   const { register } = useAuth();
 
   const isMountedRef = useIsMountedRef();
@@ -22,10 +22,12 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
-    lastName: Yup.string().required('Last name required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    name: Yup.string().required('Nama wajib diisi'),
+    email: Yup.string().email().required('Email wajib diisi'),
+    password: Yup.string().required('Kata sandi wajib diisi'),
+    're-password': Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
   });
 
   const defaultValues = {
@@ -50,7 +52,9 @@ export default function RegisterForm() {
 
   const onSubmit = async (data) => {
     try {
-      await register(data.email, data.password, data.firstName, data.lastName);
+      setSuccess(true);
+      setEmail(data.email);
+      // await register(data.email, data.password, data.firstName, data.lastName);
     } catch (error) {
       console.error(error);
       reset();
@@ -65,8 +69,8 @@ export default function RegisterForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="firstName" label="Nama BUM Desa" />
-        <RHFTextField name="lastName" label="Email Aktif" />
+        <RHFTextField name="name" label="Nama BUM Desa" />
+        <RHFTextField name="email" label="Email Aktif" />
 
         <RHFTextField
           name="password"
@@ -139,7 +143,7 @@ export default function RegisterForm() {
         )}
 
         <RHFTextField
-          name="password"
+          name="re-password"
           label="Konfirmasi Kata Sandi"
           type={showPassword ? 'text' : 'password'}
           InputProps={{

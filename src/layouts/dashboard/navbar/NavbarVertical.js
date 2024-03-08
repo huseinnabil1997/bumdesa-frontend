@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Drawer } from '@mui/material';
+import { Box, Stack, Drawer, Typography } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
@@ -13,14 +13,10 @@ import cssStyles from '../../../utils/cssStyles';
 // config
 import { NAVBAR } from '../../../config';
 // components
-import Logo from '../../../components/Logo';
 import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
-import NavbarDocs from './NavbarDocs';
-import NavbarAccount from './NavbarAccount';
-import CollapseButton from './CollapseButton';
 
 // ----------------------------------------------------------------------
 
@@ -74,15 +70,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           ...(isCollapse && { alignItems: 'center' }),
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Logo />
-
-          {isDesktop && !isCollapse && (
-            <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
-          )}
-        </Stack>
-
-        <NavbarAccount isCollapse={isCollapse} />
+        <Typography>BRI</Typography>
       </Stack>
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />

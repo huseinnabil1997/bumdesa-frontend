@@ -5,7 +5,9 @@ function path(root, sublink) {
 }
 
 const ROOTS_AUTH = '/auth';
-const ROOTS_DASHBOARD = '/';
+const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_OTHER = '/other/';
+const ROOTS_APP = '/';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,18 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
+  bumdes: {
+    jurnal: path(ROOTS_APP, 'jurnal/list'),
+    ledger: path(ROOTS_APP, 'ledger'),
+    report: path(ROOTS_APP, 'report'),
+    unit: path(ROOTS_APP, 'unit'),
+    profile: path(ROOTS_APP, 'profile'),
+  },
+  other: {
+    evaluation: path(ROOTS_OTHER, 'evaluation'),
+    content: path(ROOTS_OTHER, 'content'),
+    help: path(ROOTS_OTHER, 'help'),
+  },
   general: {
     app: path(ROOTS_DASHBOARD, 'app'),
     ecommerce: path(ROOTS_DASHBOARD, 'ecommerce'),

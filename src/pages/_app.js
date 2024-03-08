@@ -50,7 +50,6 @@ import { CollapseDrawerProvider } from '../contexts/CollapseDrawerContext';
 // theme
 import ThemeProvider from '../theme';
 // components
-import Settings from '../components/settings';
 import { ChartStyle } from '../components/chart';
 import RtlLayout from '../components/RtlLayout';
 import ProgressBar from '../components/ProgressBar';
@@ -99,7 +98,7 @@ export default function MyApp(props) {
                           <ThemeLocalization>
                             <RtlLayout>
                               <ChartStyle />
-                              {/* <Settings />, */}
+                              {/* <Settings /> */}
                               <ProgressBar />
                               {getLayout(<Component {...pageProps} />)}
                             </RtlLayout>

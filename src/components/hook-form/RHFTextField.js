@@ -18,7 +18,22 @@ export default function RHFTextField({ name, ...other }) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <TextField {...field} fullWidth error={!!error} helperText={error?.message} {...other} />
+        <TextField
+          {...field}
+          fullWidth
+          error={!!error}
+          helperText={error?.message}
+          {...other}
+          InputLabelProps={{ shrink: true }}
+          sx={{
+            '.MuiFormLabel-asterisk': { color: 'red' },
+            'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
+              '-webkit-appearance': 'none',
+              margin: 0,
+            },
+            ...other.sx,
+          }}
+        />
       )}
     />
   );

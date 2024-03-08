@@ -116,12 +116,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
+const dummy = 'https://jsonplaceholder.typicode.com/users';
+
 export function getVendors(page, keyword) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`v1/vendor`, { params: { page, q: keyword } });
-      dispatch(slice.actions.getVendorsSuccess(response.data.data));
+      const response = await axios.get(dummy, { params: { page, q: keyword } });
+      dispatch(slice.actions.getVendorsSuccess({ data: response.data }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
