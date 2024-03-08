@@ -27,6 +27,7 @@ export default function RHFSelect({ name, children, ...other }) {
           error={!!error}
           helperText={error?.message}
           {...other}
+          sx={{ '.MuiFormLabel-asterisk': { color: 'red' }, ...other.sx }}
         >
           {children}
         </TextField>

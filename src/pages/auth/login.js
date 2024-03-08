@@ -79,9 +79,8 @@ export default function Login() {
                   disabledEffect
                   src="/image/bri-square.svg"
                   alt="bri"
-                  sx={{ width: 100, m: 'auto', mb: 1 }}
+                  sx={{ width: 160, m: 'auto', mb: 1 }}
                 />
-                <Typography variant="h3">BUM Desa Digital</Typography>
                 <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
                   Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu sendiri.
                 </Typography>

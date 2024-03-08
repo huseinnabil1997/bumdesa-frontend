@@ -43,31 +43,10 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
       <TableCell>{name}</TableCell>
 
-      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {tdr}
-      </TableCell>
-
-      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {moment(tdr_start_date).format('DD MMM yyyy')}
-      </TableCell>
-
-      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {moment(tdr_end_date).format('DD MMM yyyy')}
-      </TableCell>
-
-      <TableCell align="left">
-        <Label
-          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          sx={{
-            textTransform: 'capitalize',
-            color: status_color.text,
-            background: status_color.background,
-            minWidth: 100,
-          }}
-        >
-          {status}
-        </Label>
-      </TableCell>
+      <TableCell>{name}</TableCell>
+      <TableCell>{name}</TableCell>
+      <TableCell>{name}</TableCell>
+      <TableCell>{name}</TableCell>
 
       <TableCell align="right">
         <TableMoreMenu

@@ -16,36 +16,47 @@ const ICONS = {
   user: getIcon('ic_user'),
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
+  create: getIcon('ic_create'),
+  referral: getIcon('ic_referral'),
+  help: getIcon('ic_help'),
+  profile: getIcon('ic_profile'),
+  star: getIcon('ic_star'),
+  ledger: getIcon('ic_ledger'),
+  unit: getIcon('ic_unit'),
+  report: getIcon('ic_report'),
 };
 
 const navConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
   {
-    subheader: 'general',
+    subheader: '',
+    items: [{ title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard }],
+  },
+  {
+    subheader: 'Bumdes',
     items: [
-      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      { title: 'Jurnal', path: PATH_DASHBOARD.bumdes.jurnal, icon: ICONS.create },
+      { title: 'Buku Besar', path: PATH_DASHBOARD.bumdes.ledger, icon: ICONS.ledger },
+      { title: 'Laporan Keuangan', path: PATH_DASHBOARD.bumdes.report, icon: ICONS.report },
+      { title: 'Unit Usaha BUM Des', path: PATH_DASHBOARD.bumdes.unit, icon: ICONS.unit },
+      { title: 'Profil BUM Desa', path: PATH_DASHBOARD.bumdes.profile, icon: ICONS.profile },
     ],
   },
-
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
   {
-    subheader: 'management',
+    subheader: 'Evaluasi',
+    items: [{ title: 'Penilaian BUM Desa', path: PATH_DASHBOARD.other.evaluation, icon: ICONS.star }],
+  },
+  {
+    subheader: 'Lainnya',
     items: [
-      // USER
       {
-        title: 'user',
-        path: PATH_DASHBOARD.user.root,
-        icon: ICONS.user,
-        children: [
-          { title: 'profile', path: PATH_DASHBOARD.user.profile },
-          { title: 'cards', path: PATH_DASHBOARD.user.cards },
-          { title: 'list', path: PATH_DASHBOARD.user.list },
-          { title: 'create', path: PATH_DASHBOARD.user.new },
-          { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
-          { title: 'account', path: PATH_DASHBOARD.user.account },
-        ],
+        title: 'Konten Edukasi',
+        path: PATH_DASHBOARD.other.content,
+        icon: ICONS.referral,
+      },
+      {
+        title: 'Pusat Bantuan',
+        path: PATH_DASHBOARD.other.help,
+        icon: ICONS.help,
       },
     ],
   },

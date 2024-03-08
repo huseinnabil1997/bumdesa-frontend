@@ -23,6 +23,16 @@ export const ListItemStyle = styled(ListItemButton, {
     ...theme.typography.subtitle2,
     color: theme.palette.primary.main,
     backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    '::before': {
+      content: "''",
+      position: 'absolute',
+      top: '10px',
+      left: '0px' /* Adjust this value to change the offset */,
+      height: '28px',
+      width: '4px',
+      backgroundColor: '#F87304',
+      borderRadius: '0 4px 4px 0',
+    },
   }),
   // activeSub
   ...(activeSub && {
