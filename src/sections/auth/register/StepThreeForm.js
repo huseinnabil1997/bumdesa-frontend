@@ -1,6 +1,3 @@
-import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
-// form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -12,6 +9,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import {
   FormProvider,
+  RHFAutocomplete,
   RHFSelect,
   RHFTextField,
   RHFUploadPhoto,
@@ -20,17 +18,13 @@ import { fData } from '../../../utils/formatNumber';
 import { useRouter } from 'next/router';
 import { StyledButton } from 'src/theme/custom/Button';
 import { ArrowBack } from '@mui/icons-material';
+import { yearsArray } from 'src/utils/formatTime';
+import { AlertInfo } from 'src/theme/custom/Alert';
+import { StepThreeSchema, threeDefaultValues } from './validation/stepThree';
+import { handleDrop } from 'src/utils/helperFunction';
 // ----------------------------------------------------------------------
 
-const SERVICE_OPTIONS = ['Jakarta', 'Banding'];
-
-const StyledMenuItem = styled(MenuItem)(() => ({
-  mx: 1,
-  borderRadius: 0.75,
-  typography: 'body2',
-  fontStyle: 'italic',
-  color: 'text.secondary',
-}));
+const SERVICE_OPTIONS = [{ text: 'Jakarta', value: 1 }];
 
 const StyledMenuItemValued = styled(MenuItem)(() => ({
   mx: 1,
@@ -40,34 +34,16 @@ const StyledMenuItemValued = styled(MenuItem)(() => ({
   textTransform: 'capitalize',
 }));
 
-export default function StepThreeForm({ setSuccess, setEmail }) {
-  const { register } = useAuth();
+export default function StepThreeForm() {
+  const { registerForm } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const router = useRouter();
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const RegisterSchema = Yup.object().shape({
-    name: Yup.string().required('Nama wajib diisi'),
-    email: Yup.string().email().required('Email wajib diisi'),
-    password: Yup.string().required('Kata sandi wajib diisi'),
-    're-password': Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
-  });
-
-  const defaultValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  };
-
   const methods = useForm({
-    resolver: yupResolver(RegisterSchema),
-    defaultValues,
+    resolver: yupResolver(StepThreeSchema),
+    defaultValues: threeDefaultValues,
   });
 
   const {
@@ -79,13 +55,22 @@ export default function StepThreeForm({ setSuccess, setEmail }) {
   } = methods;
 
   const onSubmit = async (data) => {
+    const payload = {
+      ...data,
+      sector: data.sector.value,
+    };
+
+    const formData = new FormData();
+
+    for (const key in payload) {
+      formData.append(key, payload[key]);
+    }
+
     try {
-      setSuccess(true);
-      setEmail(data.email);
-      router.push('/register/step-two');
-      // await register(data.email, data.password, data.firstName, data.lastName);
+      const res = await registerForm({ payload: formData, step: 3 });
+      if (res.code === 200) router.push('/auth/register/step-four');
+      else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      console.error(error);
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });
@@ -93,33 +78,17 @@ export default function StepThreeForm({ setSuccess, setEmail }) {
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      if (file) {
-        setValue(
-          'avatarUrl',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
-      }
-    },
-    [setValue]
-  );
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFUploadPhoto
-          name="avatarUrl"
+          name="image"
           label="Foto Kantor BUM Desa"
           accept="image/*"
           maxSize={900000}
-          onDrop={handleDrop}
+          onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
               variant="caption"
@@ -137,28 +106,51 @@ export default function StepThreeForm({ setSuccess, setEmail }) {
           }
         />
 
-        <RHFTextField name="name" label="Nama Unit Usaha" required />
-        <RHFTextField name="address" label="Alamat Email Unit Usaha" required />
-        <RHFTextField name="date" label="Tahun Berdiri" required type="month" />
+        <RHFTextField name="name" label="Nama Unit Usaha" require />
+        <RHFTextField name="address" label="Alamat Email Unit Usaha" require />
 
         <RHFSelect
-          required
+          require
           fullWidth
-          name="sector"
-          label="Sektor Usaha"
+          name="year_founded"
+          label="Tahun Berdiri"
           InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+          SelectProps={{
+            native: false,
+            sx: { textTransform: 'capitalize' },
+            MenuProps: {
+              PaperProps: {
+                style: {
+                  maxHeight: 200,
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                },
+              },
+            },
+          }}
         >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
+          {yearsArray.map((option) => (
             <StyledMenuItemValued key={option} value={option}>
               {option}
             </StyledMenuItemValued>
           ))}
         </RHFSelect>
 
-        <Alert severity="info">
+        <RHFAutocomplete
+          require
+          name="sector"
+          label="Sektor Usaha"
+          loading={false}
+          options={SERVICE_OPTIONS?.map((option) => option) ?? []}
+          getOptionLabel={(option) => option.text}
+          renderOption={(props, option) => (
+            <li {...props} key={option.value}>
+              {option.text}
+            </li>
+          )}
+        />
+
+        <AlertInfo severity="info">
           <AlertTitle>
             <Typography fontSize={12} fontWeight={700}>
               Tambah Unit Usaha
@@ -167,25 +159,18 @@ export default function StepThreeForm({ setSuccess, setEmail }) {
           <Typography fontSize={12}>
             Penambahan unit usaha lainnya dapat dilakukan setelah proses registrasi berhasil.
           </Typography>
-        </Alert>
+        </AlertInfo>
 
         <Divider />
 
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} justifyContent="flex-end">
           <StyledButton
-            fullWidth
             startIcon={<ArrowBack />}
             onClick={() => router.push('/auth/register/step-two')}
           >
             Sebelumnya
           </StyledButton>
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
+          <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
             Selanjutnya
           </LoadingButton>
         </Stack>

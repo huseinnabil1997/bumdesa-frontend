@@ -6,28 +6,33 @@ import { useForm } from 'react-hook-form';
 // @mui
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// hooks
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
+import useAuth from 'src/hooks/useAuth';
 // components
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 ResetPasswordForm.propTypes = {
   onSent: PropTypes.func,
   onGetEmail: PropTypes.func,
+  sentStatus: PropTypes.bool,
 };
 
-export default function ResetPasswordForm({ onSent, onGetEmail }) {
-  const isMountedRef = useIsMountedRef();
+export default function ResetPasswordForm({ onSent, onGetEmail, sentStatus }) {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { resetPassword } = useAuth();
 
   const ResetPasswordSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    email: Yup.string()
+      .email('Email harus merupakan alamat email yang valid.')
+      .required('Email harus diisi'),
   });
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { email: 'demo@minimals.cc' },
+    defaultValues: { email: 'bumdespengandaran@gmail.com' },
   });
 
   const {
@@ -37,24 +42,44 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
 
   const onSubmit = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      if (isMountedRef.current) {
+      const res = await resetPassword(data);
+      console.log('res', res);
+      if (res?.data?.id_user) {
         onSent();
         onGetEmail(data.email);
       }
     } catch (error) {
-      console.error(error);
+      enqueueSnackbar(error?.message, { variant: 'error' });
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Email" />
 
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-          Reset Password
-        </LoadingButton>
+        {!sentStatus ? (
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            Atur ulang Kata Sandi
+          </LoadingButton>
+        ) : (
+          <LoadingButton
+            disabled
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            Atur ulang Kata Sandi
+          </LoadingButton>
+        )}
       </Stack>
     </FormProvider>
   );

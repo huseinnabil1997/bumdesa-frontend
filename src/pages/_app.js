@@ -58,10 +58,17 @@ import NotistackProvider from '../components/NotistackProvider';
 import ThemeLocalization from '../components/ThemeLocalization';
 import MotionLazyContainer from '../components/animate/MotionLazyContainer';
 
+// date picker
+import 'react-datepicker/dist/react-datepicker.css';
+
 // Check our docs
 // https://docs-minimals.vercel.app/authentication/ts-version
 
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { AuthProvider } from '../contexts/JWTContext';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { getSessionToken } from 'src/utils/axios';
 // import { AuthProvider } from '../contexts/Auth0Context';
 // import { AuthProvider } from '../contexts/FirebaseContext';
 // import { AuthProvider } from '../contexts/AwsCognitoContext';
@@ -79,6 +86,16 @@ export default function MyApp(props) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  const queryClient = new QueryClient();
+
+  const router = useRouter();
+
+  const isLogin = !!getSessionToken();
+
+  useEffect(() => {
+    if (router.asPath.includes('/login') && isLogin) router.push('/auth/register/step-one');
+  }, [router.asPath]);
+
   return (
     <>
       <Head>
@@ -87,30 +104,32 @@ export default function MyApp(props) {
 
       <AuthProvider>
         <ReduxProvider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <CollapseDrawerProvider>
-                <SettingsProvider defaultSettings={settings}>
-                  <ThemeProvider>
-                    <NotistackProvider>
-                      <MotionLazyContainer>
-                        <ThemeColorPresets>
-                          <ThemeLocalization>
-                            <RtlLayout>
-                              <ChartStyle />
-                              {/* <Settings /> */}
-                              <ProgressBar />
-                              {getLayout(<Component {...pageProps} />)}
-                            </RtlLayout>
-                          </ThemeLocalization>
-                        </ThemeColorPresets>
-                      </MotionLazyContainer>
-                    </NotistackProvider>
-                  </ThemeProvider>
-                </SettingsProvider>
-              </CollapseDrawerProvider>
-            </LocalizationProvider>
-          </PersistGate>
+          <QueryClientProvider client={queryClient}>
+            <PersistGate loading={null} persistor={persistor}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <CollapseDrawerProvider>
+                  <SettingsProvider defaultSettings={settings}>
+                    <ThemeProvider>
+                      <NotistackProvider>
+                        <MotionLazyContainer>
+                          <ThemeColorPresets>
+                            <ThemeLocalization>
+                              <RtlLayout>
+                                <ChartStyle />
+                                {/* <Settings /> */}
+                                <ProgressBar />
+                                {getLayout(<Component {...pageProps} />)}
+                              </RtlLayout>
+                            </ThemeLocalization>
+                          </ThemeColorPresets>
+                        </MotionLazyContainer>
+                      </NotistackProvider>
+                    </ThemeProvider>
+                  </SettingsProvider>
+                </CollapseDrawerProvider>
+              </LocalizationProvider>
+            </PersistGate>
+          </QueryClientProvider>
         </ReduxProvider>
       </AuthProvider>
     </>
@@ -122,7 +141,9 @@ export default function MyApp(props) {
 MyApp.getInitialProps = async (context) => {
   const appProps = await App.getInitialProps(context);
 
-  const cookies = cookie.parse(context.ctx.req ? context.ctx.req.headers.cookie || '' : document.cookie);
+  const cookies = cookie.parse(
+    context.ctx.req ? context.ctx.req.headers.cookie || '' : document.cookie
+  );
 
   const settings = getSettings(cookies);
 

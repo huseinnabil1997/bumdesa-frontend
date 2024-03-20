@@ -1,61 +1,39 @@
-import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
-// form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, MenuItem, Alert, Divider, styled, AlertTitle, Typography } from '@mui/material';
+import { Stack, Alert, Divider, Typography, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
-import {
-  FormProvider,
-  RHFSelect,
-  RHFTextField,
-  RHFUploadPhoto,
-} from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFUploadPhoto } from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
 import { useRouter } from 'next/router';
 import { StyledButton } from 'src/theme/custom/Button';
 import { ArrowBack } from '@mui/icons-material';
+import { fourDefaultValues, stepFourSchema } from './validation/stepFour';
+import { handleDrop } from 'src/utils/helperFunction';
+import Image from '../../../components/Image';
+import PropTypes from 'prop-types';
+import { DialogAnimate } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
-const SERVICE_OPTIONS = ['Jakarta', 'Banding'];
+StepFourForm.propTypes = {
+  setSuccess: PropTypes.func,
+  isSuccess: PropTypes.bool,
+};
 
-const StyledMenuItem = styled(MenuItem)(() => ({
-  mx: 1,
-  borderRadius: 0.75,
-  typography: 'body2',
-  fontStyle: 'italic',
-  color: 'text.secondary',
-}));
-
-const StyledMenuItemValued = styled(MenuItem)(() => ({
-  mx: 1,
-  my: 0.5,
-  borderRadius: 0.75,
-  typography: 'body2',
-  textTransform: 'capitalize',
-}));
-
-export default function StepFourForm({ setSuccess, setEmail }) {
-  const { register } = useAuth();
+export default function StepFourForm({ setSuccess, isSuccess }) {
+  const { registerForm } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const router = useRouter();
 
-  const defaultValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  };
-
   const methods = useForm({
-    defaultValues,
+    resolver: yupResolver(stepFourSchema),
+    defaultValues: fourDefaultValues,
   });
 
   const {
@@ -67,12 +45,17 @@ export default function StepFourForm({ setSuccess, setEmail }) {
   } = methods;
 
   const onSubmit = async (data) => {
+    const formData = new FormData();
+
+    for (const key in data) {
+      formData.append(key, data[key]);
+    }
+
     try {
-      setSuccess(true);
-      setEmail(data.email);
-      // await register(data.email, data.password, data.firstName, data.lastName);
+      const res = await registerForm({ payload: formData, step: 4 });
+      if (res.code === 200) setSuccess(true);
+      else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      console.error(error);
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });
@@ -80,33 +63,17 @@ export default function StepFourForm({ setSuccess, setEmail }) {
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      if (file) {
-        setValue(
-          'avatarUrl',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
-      }
-    },
-    [setValue]
-  );
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFUploadPhoto
-          name="avatarUrl"
+          name="image"
           label="Foto Manager BUM Desa"
           accept="image/*"
           maxSize={900000}
-          onDrop={handleDrop}
+          onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
               variant="caption"
@@ -124,26 +91,9 @@ export default function StepFourForm({ setSuccess, setEmail }) {
           }
         />
 
-        <RHFTextField name="name" label="Nama Manager BUM Desa" required />
-
-        <RHFSelect
-          required
-          fullWidth
-          name="title"
-          label="Jabaran"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
-        >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
-
-        <RHFTextField name="phone" label="Nomor HP" required type="number" />
+        <RHFTextField name="name" label="Nama Manager BUM Desa" require />
+        <RHFTextField name="position" label="Jabatan" require disabled />
+        <RHFTextField name="phone" label="Nomor HP" require type="number" />
 
         <Divider />
 
@@ -166,6 +116,32 @@ export default function StepFourForm({ setSuccess, setEmail }) {
           </LoadingButton>
         </Stack>
       </Stack>
+
+      <DialogAnimate open={isSuccess}>
+        <Stack sx={{ p: 3 }} justifyContent="center">
+          <Image
+            style={{ width: 240, margin: 'auto', display: 'flex' }}
+            src="/image/registration_success.svg"
+            alt="login"
+          />
+          <Typography align="center" variant="h5" sx={{ mt: 3, mb: 1 }}>
+            Selamat! Akun BUM Desa Pusat Anda Berhasil Dibuat
+          </Typography>
+          <Typography align="center" variant="subtitle2" sx={{ color: '#666666' }} fontWeight={500}>
+            Sistem telah mengirimkan email verifikasi ke alamat email yang terdaftar untuk unit
+            usaha BUM Desa Anda.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3 }}
+            size="large"
+            onClick={() => router.push('/auth/login')}
+          >
+            Masuk
+          </Button>
+        </Stack>
+      </DialogAnimate>
     </FormProvider>
   );
 }

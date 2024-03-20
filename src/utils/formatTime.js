@@ -23,3 +23,9 @@ export function fToNow(date) {
     addSuffix: true,
   });
 }
+
+const currentYear = new Date().getFullYear();
+export const yearsArray = Array.from(
+  { length: currentYear - 2000 + 1 },
+  (_, index) => 2000 + index
+).reverse();

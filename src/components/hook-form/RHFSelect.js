@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // form
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
-import { TextField } from '@mui/material';
+import { TextField, Typography, Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -15,23 +15,35 @@ export default function RHFSelect({ name, children, ...other }) {
   const { control } = useFormContext();
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          select
-          fullWidth
-          SelectProps={{ native: true }}
-          error={!!error}
-          helperText={error?.message}
-          {...other}
-          sx={{ '.MuiFormLabel-asterisk': { color: 'red' }, ...other.sx }}
-        >
-          {children}
-        </TextField>
+    <Stack>
+      {other?.label && (
+        <Typography variant="caption" sx={{ mb: 0.5 }}>
+          {other?.label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+        </Typography>
       )}
-    />
+      <Controller
+        name={name}
+        control={control}
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            {...field}
+            select
+            fullWidth
+            SelectProps={{ native: true }}
+            error={!!error}
+            helperText={error?.message}
+            {...other}
+            sx={{
+              '.MuiFormLabel-asterisk': { color: 'red' },
+              '.MuiFormHelperText-root': { marginLeft: 0 },
+              ...other.sx,
+            }}
+            label=""
+          >
+            {children}
+          </TextField>
+        )}
+      />
+    </Stack>
   );
 }

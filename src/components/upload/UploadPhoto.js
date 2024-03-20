@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import isString from 'lodash/isString';
 import { useDropzone } from 'react-dropzone';
 // @mui
-import { Box, Stack, Button, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 //
 import Image from '../Image';
 import Iconify from '../Iconify';
 import RejectionFiles from './RejectionFiles';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 const Container = styled(Box)(() => ({
@@ -99,7 +100,9 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
           >
             <input {...getInputProps()} />
 
-            {file && <Image alt="avatar" src={isString(file) ? file : file.preview} sx={{ zIndex: 8 }} />}
+            {file && (
+              <Image alt="avatar" src={isString(file) ? file : file.preview} sx={{ zIndex: 8 }} />
+            )}
 
             <PlaceholderStyle
               className="placeholder"
@@ -122,12 +125,12 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
 
         <Stack sx={{ width: 'calc(100% - 116px)' }}>
           <Box>
-            <Button variant="contained" color="primary" sx={{ mr: 1 }}>
+            <StyledLoadingButton variant="contained" color="primary" sx={{ mr: 1 }}>
               Unggah Foto
-            </Button>
-            <Button variant="contained" color="grey">
+            </StyledLoadingButton>
+            <StyledLoadingButton variant="contained" color="grey" disabled={!file}>
               Hapus Foto
-            </Button>
+            </StyledLoadingButton>
           </Box>
           {helperText && helperText}
         </Stack>

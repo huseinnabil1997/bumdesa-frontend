@@ -16,6 +16,7 @@ import OtpInput from 'react-otp-input';
 import { RegisterForm } from '../../../sections/auth/register';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +27,9 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 const SectionStyle = styled('div')(() => ({
-  position: 'relative',
+  position: 'sticky',
+  top: 0,
+  left: 0,
   width: '100%',
   maxWidth: '50%',
   display: 'flex',
@@ -59,17 +62,28 @@ const Title = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const { method } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
-  const smUp = useResponsive('up', 'sm');
+  const { verify } = useAuth();
 
   const mdUp = useResponsive('up', 'md');
 
   const [isSuccess, setSuccess] = useState(false);
   const [otp, setOtp] = useState('');
+  const [id, setId] = useState('');
   const [email, setEmail] = useState('');
+
+  const onSubmit = async () => {
+    try {
+      await verify({ id, otp });
+
+      router.push('/auth/register/step-one');
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+    }
+  };
 
   return (
     <GuestGuard>
@@ -87,7 +101,8 @@ export default function Register() {
                   sx={{ width: 160, m: 'auto', mb: 1 }}
                 />
                 <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
-                  Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu sendiri.
+                  Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu
+                  sendiri.
                 </Typography>
               </Title>
             </SectionStyle>
@@ -108,11 +123,11 @@ export default function Register() {
                     </Box>
                   </Stack>
 
-                  <RegisterForm setEmail={setEmail} setSuccess={setSuccess} />
+                  <RegisterForm setEmail={setEmail} setSuccess={setSuccess} setId={setId} />
 
                   <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                     Apakah Anda sudah memiliki Akun?{' '}
-                    <Button onClick={() => router.push(PATH_AUTH.register)}>
+                    <Button onClick={() => router.push(PATH_AUTH.login)} type="button">
                       <Typography variant="subtitle2">Masuk</Typography>
                     </Button>
                   </Typography>
@@ -136,7 +151,9 @@ export default function Register() {
                       <Typography sx={{ color: 'text.secondary' }}>
                         Masukkan 6 digit kode OTP yang dikirimkan ke email
                       </Typography>
-                      <Typography sx={{ color: '#1078CA', textDecoration: 'underline' }}>{email}</Typography>
+                      <Typography sx={{ color: '#1078CA', textDecoration: 'underline' }}>
+                        {email}
+                      </Typography>
                     </Box>
                   </Stack>
 
@@ -159,12 +176,20 @@ export default function Register() {
                     />
                   </Box>
 
-                  <Button size="large" fullWidth sx={{ mt: 3 }} type="submit" variant="contained" loading={false}>
+                  <Button
+                    size="large"
+                    fullWidth
+                    sx={{ mt: 3 }}
+                    type="submit"
+                    variant="contained"
+                    loading={false}
+                    onClick={onSubmit}
+                  >
                     Lanjutkan
                   </Button>
 
                   <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                    Tidak mendapat OTP?{' '}
+                    Tidak mendapat OTP?
                     <Button onClick={() => router.push(PATH_AUTH.register)}>
                       <Typography variant="subtitle2">Kirim Ulang</Typography>
                     </Button>
