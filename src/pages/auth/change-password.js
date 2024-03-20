@@ -1,18 +1,26 @@
+import { useEffect, useState } from 'react';
+// next
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Stack, Typography } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
-// hooks
-import useResponsive from '../../hooks/useResponsive';
+// layouts
+import Layout from '../../layouts';
 // guards
 import GuestGuard from '../../guards/GuestGuard';
 // components
 import Page from '../../components/Page';
 import Image from '../../components/Image';
 // sections
-import { LoginForm } from '../../sections/auth/login';
-import { useRouter } from 'next/router';
+import { ResetPasswordForm } from '../../sections/auth/reset-password';
+// assets
+import { SentIcon } from '../../assets';
+// hooks
+import useResponsive from 'src/hooks/useResponsive';
+import { AccountChangePassword } from 'src/sections/@dashboard/user/account';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +31,9 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 const SectionStyle = styled('div')(() => ({
-  position: 'relative',
+  position: 'sticky',
+  top: 0,
+  left: 0,
   width: '100%',
   maxWidth: '50%',
   display: 'flex',
@@ -55,14 +65,19 @@ const Title = styled(Stack)(() => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
-  const router = useRouter();
+ResetPassword.getLayout = function getLayout(page) {
+  return <Layout variant="logoOnly">{page}</Layout>;
+};
+
+// ----------------------------------------------------------------------
+
+export default function ResetPassword() {
 
   const mdUp = useResponsive('up', 'md');
 
   return (
     <GuestGuard>
-      <Page title="Login">
+      <Page title="Reset Password" sx={{ height: 1 }}>
         <RootStyle>
           {mdUp && (
             <SectionStyle>
@@ -86,25 +101,16 @@ export default function Login() {
           <Container maxWidth="sm">
             <ContentStyle>
               <Card sx={{ p: 5 }}>
-                <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
-                  <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
-                    <Typography variant="h4" gutterBottom>
-                      Masuk ke BUM Desa
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>
-                      Silahkan masukkan email dan password.
-                    </Typography>
-                  </Box>
-                </Stack>
+                <>
+                  <Typography variant="h3" paragraph align='center'>
+                    Buat Password Baru
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary', mb: 5 }} align='center'>
+                    Silahkan buat password demi keamanan akun anda.
+                  </Typography>
 
-                <LoginForm />
-
-                <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                  Anda belum punya akun?{' '}
-                  <Button onClick={() => router.push(PATH_AUTH.register)}>
-                    <Typography variant="subtitle2">Daftar Sekarang</Typography>
-                  </Button>
-                </Typography>
+                  <AccountChangePassword />
+                </>
               </Card>
             </ContentStyle>
           </Container>

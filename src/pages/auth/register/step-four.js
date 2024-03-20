@@ -68,10 +68,6 @@ const SideContent = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const { method } = useAuth();
-
-  const router = useRouter();
-
   const mdUp = useResponsive('up', 'md');
 
   const [isSuccess, setSuccess] = useState(false);
@@ -103,41 +99,20 @@ export default function Register() {
 
           <Container maxWidth="md">
             <ContentStyle>
-              {!isSuccess && (
-                <Card sx={{ p: 5 }} elevation={3}>
-                  <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
-                    <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
-                      <Typography variant="h4" gutterBottom>
-                        Tambahkan Data Manager Unit Usaha
-                      </Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>
-                        Silahkan masukkan informasi Manager Unit Usaha.
-                      </Typography>
-                    </Box>
-                  </Stack>
-
-                  <StepFourForm setSuccess={setSuccess} />
-                </Card>
-              )}
-
-              {isSuccess && (
-                <Stack>
-                  <CheckCircle sx={{ m: 'auto', fontSize: 60 }} color="success" />
-                  <Typography align="center" variant="h4">
-                    Selamat!
-                  </Typography>
-                  <Typography align="center" variant="body2">
-                    Akun Anda telah terdaftar.
-                  </Typography>
-                  <BtnLightPrimary
-                    onClick={() => router.push('/auth/login')}
-                    sx={{ width: 300, mx: 'auto', mt: 3 }}
-                    size="large"
-                  >
-                    <Typography variant="subtitle2">Masuk</Typography>
-                  </BtnLightPrimary>
+              <Card sx={{ p: 5 }} elevation={3}>
+                <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
+                  <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
+                    <Typography variant="h4" gutterBottom>
+                      Tambahkan Data Manager Unit Usaha
+                    </Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>
+                      Silahkan masukkan informasi Manager Unit Usaha.
+                    </Typography>
+                  </Box>
                 </Stack>
-              )}
+
+                <StepFourForm setSuccess={setSuccess} isSuccess={isSuccess} />
+              </Card>
             </ContentStyle>
           </Container>
         </RootStyle>

@@ -1,65 +1,34 @@
-import * as Yup from 'yup';
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment } from 'react';
 // form
 import { useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, MenuItem, Alert, Divider, styled, Button, Typography, Box } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Stack, Alert, Divider, Typography } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
-import {
-  FormProvider,
-  RHFSelect,
-  RHFTextField,
-  RHFUploadPhoto,
-} from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFUploadPhoto } from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
 import { useRouter } from 'next/router';
-import Delete from '@mui/icons-material/Delete';
-import { BtnLightError, BtnLightPrimary, StyledButton } from 'src/theme/custom/Button';
-import { Add, ArrowBack } from '@mui/icons-material';
+import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
+import { ArrowBack } from '@mui/icons-material';
 import { handleDrop } from 'src/utils/helperFunction';
+import { StepTwoSchema, twoDefaultValues } from './validation/stepTwo';
 
 // ----------------------------------------------------------------------
 
-const SERVICE_OPTIONS = ['Jakarta', 'Banding'];
-
-const StyledMenuItem = styled(MenuItem)(() => ({
-  mx: 1,
-  borderRadius: 0.75,
-  typography: 'body2',
-  fontStyle: 'italic',
-  color: 'text.secondary',
-}));
-
-const StyledMenuItemValued = styled(MenuItem)(() => ({
-  mx: 1,
-  my: 0.5,
-  borderRadius: 0.75,
-  typography: 'body2',
-  textTransform: 'capitalize',
-}));
-
 export default function StepTwoForm() {
-  const { register } = useAuth();
+  const { registerForm } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const router = useRouter();
 
-  const defaultValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    user: [{ name: '' }],
-  };
-
   const methods = useForm({
-    defaultValues,
+    resolver: yupResolver(StepTwoSchema),
+    defaultValues: twoDefaultValues,
+    mode: 'onChange',
   });
 
   const {
@@ -71,15 +40,30 @@ export default function StepTwoForm() {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
-    name: 'user',
+    name: 'organizations',
   });
 
   const onSubmit = async (data) => {
+    const formData = new FormData();
+
+    formData.append('organization.0.name', data.name);
+    formData.append('organization.0.phone', data.phone);
+    formData.append('organization.0.image', data.image);
+    formData.append('organization.0.position', '1');
+
+    data.organizations.forEach((row, i) => {
+      formData.append(`organization.${i + 1}.name`, data.name);
+      formData.append(`organization.${i + 1}.phone`, data.phone);
+      formData.append(`organization.${i + 1}.image`, data.image);
+      formData.append(`organization.${i + 1}.position`, i + 2);
+    });
+
     try {
-      router.push('/register/step-two');
-      // await register(data.email, data.password, data.firstName, data.lastName);
+      const res = await registerForm({ payload: formData, step: 2 });
+      if (res.code === 200) router.push('/auth/register/step-three');
+      else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
       console.error(error);
       reset();
@@ -95,11 +79,11 @@ export default function StepTwoForm() {
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFUploadPhoto
-          name="photo"
+          name="image"
           label="Foto Direktur BUM Desa"
           accept="image/*"
           maxSize={900000}
-          onDrop={(file) => handleDrop(file, (val) => setValue('photo', val))}
+          onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
               variant="caption"
@@ -117,37 +101,22 @@ export default function StepTwoForm() {
           }
         />
 
-        <RHFTextField name="name" label="Nama Direktur BUM Desa" required />
-
-        <RHFSelect
-          required
-          fullWidth
-          name="province"
-          label="Jabatan"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
-        >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
-
-        <RHFTextField name="id" label="Nomor HP" required type="tel" />
+        <RHFTextField name="name" label="Nama Direktur BUM Desa" require />
+        <RHFTextField name="position" label="Jabatan" require disabled />
+        <RHFTextField name="phone" label="Nomor HP" require type="tel" />
 
         <Divider />
 
         {fields.map((row, i) => (
           <Fragment key={row.id}>
             <RHFUploadPhoto
-              name={`user.${i}.photo`}
+              name={`organizations.${i}.image`}
               label="Foto Pengurus BUM Desa"
               accept="image/*"
               maxSize={900000}
-              onDrop={(file) => handleDrop(file, (val) => setValue(`user.${i}.photo`, val))}
+              onDrop={(file) =>
+                handleDrop(file, (val) => setValue(`organizations.${i}.image`, val))
+              }
               helperText={
                 <Typography
                   variant="caption"
@@ -165,60 +134,34 @@ export default function StepTwoForm() {
               }
             />
 
-            <RHFTextField name={`user.${i}.photo`} label="Nama Pengurus BUM Desa" required />
-            <RHFSelect
-              required
-              fullWidth
-              name={`user.${i}.title`}
-              label="Jabatan"
-              InputLabelProps={{ shrink: true }}
-              SelectProps={{
-                native: false,
-                sx: { textTransform: 'capitalize' },
-              }}
-            >
-              <StyledMenuItem value="">None</StyledMenuItem>
-              <Divider />
-              {SERVICE_OPTIONS.map((option) => (
-                <StyledMenuItemValued key={option} value={option}>
-                  {option}
-                </StyledMenuItemValued>
-              ))}
-            </RHFSelect>
-            <RHFTextField name={`user.${i}.phone`} label="Nomor HP" required type="tel" />
-
-            <Stack spacing={1}>
-              {fields.length > 1 && (
-                <BtnLightError fullWidth startIcon={<Delete />} onClick={() => remove(row.id)}>
-                  Delete
-                </BtnLightError>
-              )}
-              <BtnLightPrimary startIcon={<Add />} fullWidth onClick={() => append({ name: '' })}>
-                Tambah Data Pengguna
-              </BtnLightPrimary>
-            </Stack>
+            <RHFTextField name={`organizations.${i}.name`} label="Nama Pengurus BUM Desa" require />
+            <RHFTextField name={`organizations.${i}.position`} label="Jabatan" require disabled />
+            <RHFTextField
+              name={`organizations.${i}.phone`}
+              label="Nomor HP"
+              require
+              type="number"
+            />
 
             <Divider />
           </Fragment>
         ))}
 
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} justifyContent="flex-end">
           <StyledButton
-            fullWidth
             startIcon={<ArrowBack />}
             onClick={() => router.push('/auth/register/step-one')}
           >
             Sebelumnya
           </StyledButton>
-          <LoadingButton
-            fullWidth
+          <StyledLoadingButton
             size="large"
             type="submit"
             variant="contained"
             loading={isSubmitting}
           >
             Selanjutnya
-          </LoadingButton>
+          </StyledLoadingButton>
         </Stack>
       </Stack>
     </FormProvider>

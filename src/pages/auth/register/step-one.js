@@ -1,8 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Button, Container, Typography } from '@mui/material';
-// routes
-import { PATH_AUTH } from '../../../routes/paths';
+import { Box, Card, Stack, Container, Typography } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useResponsive from '../../../hooks/useResponsive';
@@ -11,9 +9,7 @@ import GuestGuard from '../../../guards/GuestGuard';
 // components
 import Page from '../../../components/Page';
 import Image from '../../../components/Image';
-import OtpInput from 'react-otp-input';
 // sections
-import { RegisterForm } from '../../../sections/auth/register';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
@@ -120,13 +116,6 @@ export default function Register() {
                   </Stack>
 
                   <StepOneForm setEmail={setEmail} setSuccess={setSuccess} />
-
-                  <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                    Apakah Anda sudah memiliki Akun?{' '}
-                    <Button onClick={() => router.push(PATH_AUTH.register)}>
-                      <Typography variant="subtitle2">Masuk</Typography>
-                    </Button>
-                  </Typography>
                 </Card>
               )}
             </ContentStyle>

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // form
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
-import { TextField } from '@mui/material';
+import { TextField, Typography, Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -14,27 +14,38 @@ export default function RHFTextField({ name, ...other }) {
   const { control } = useFormContext();
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          fullWidth
-          error={!!error}
-          helperText={error?.message}
-          {...other}
-          InputLabelProps={{ shrink: true }}
-          sx={{
-            '.MuiFormLabel-asterisk': { color: 'red' },
-            'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
-              '-webkit-appearance': 'none',
-              margin: 0,
-            },
-            ...other.sx,
-          }}
-        />
+    <Stack>
+      {other?.label && (
+        <Typography variant="caption" sx={{ mb: 0.5 }}>
+          {other?.label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+        </Typography>
       )}
-    />
+      <Controller
+        name={name}
+        control={control}
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            {...field}
+            fullWidth
+            error={!!error}
+            helperText={error?.message}
+            {...other}
+            sx={{
+              '.MuiFormLabel-asterisk': { color: 'red' },
+              'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
+                '-webkit-appearance': 'none',
+                margin: 0,
+              },
+              '.MuiFormHelperText-root': { marginLeft: 0 },
+              '::-webkit-inner-spin-button,::-webkit-outer-spin-button': {
+                '-webkit-appearance': 'none',
+              },
+              ...other.sx,
+            }}
+            label=""
+          />
+        )}
+      />
+    </Stack>
   );
 }

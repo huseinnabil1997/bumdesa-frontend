@@ -32,7 +32,7 @@ const StyledStepper = styled(Stepper)(() => ({
   '.MuiStepLabel-label ': { color: 'white !important', opacity: 0.7, fontWeight: 600 },
   '.Mui-active': { opacity: `1 !important`, fontWeight: 700 },
   '.Mui-completed': { opacity: `1 !important` },
-  '.MuiStepConnector-line': { borderColor: 'white', height: 42, borderLeft: '1.5px solid white' },
+  '.MuiStepConnector-line': { borderColor: 'white', height: 22, borderLeft: '1.5px solid white' },
   '.Mui-disabled .MuiStepConnector-line': { borderLeft: '1.5px dashed white', opacity: 0.7 },
 }));
 

@@ -48,7 +48,8 @@ const handlers = {
   },
 };
 
-const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
+const reducer = (state, action) =>
+  handlers[action.type] ? handlers[action.type](state, action) : state;
 
 const AuthContext = createContext({
   ...initialState,
@@ -56,6 +57,11 @@ const AuthContext = createContext({
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
+  registerForm: () => Promise.resolve(),
+  resendOtp: () => Promise.resolve(),
+  verify: () => Promise.resolve(),
+  resetPassword: () => Promise.resolve(),
+  changePassword: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -110,39 +116,60 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('v1/auth/login', {
+    const response = await axios.post('/signin', {
       email,
       password,
     });
 
-    if (response.data.success) {
-      const { access_token } = response.data.data;
-      setSession(access_token);
-      dispatch({
-        type: 'LOGIN',
-        payload: {
-          user: access_token,
-        },
-      });
-    }
+    return response.data;
   };
 
-  const register = async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
-    const { accessToken, user } = response.data;
+  const register = async (payload) => {
+    const response = await axios.post('/signup-account', payload);
 
-    window.localStorage.setItem('accessToken', accessToken);
+    return response.data;
+  };
+
+  const registerForm = async ({ payload, step }) => {
+    const response = await axios.post(`/signup-form/${step}`, payload);
+
+    return response.data;
+  };
+
+  const verify = async (payload) => {
+    const response = await axios.post('/signup-verify', payload);
+    const { user } = response.data;
+
     dispatch({
-      type: 'REGISTER',
+      type: 'VERIFY',
       payload: {
         user,
       },
     });
+  };
+
+  const resendOtp = async (payload) => {
+    const response = await axios.post('/resend-otp', payload);
+    const { user } = response.data;
+
+    dispatch({
+      type: 'RESEND_OTP',
+      payload: {
+        user,
+      },
+    });
+  };
+
+  const resetPassword = async (payload) => {
+    const response = await axios.post('/reset-password', payload);
+
+    return response.data;
+  };
+
+  const changePassword = async (payload) => {
+    const response = await axios.post('/force-change-password', payload);
+
+    return response.data;
   };
 
   const logout = async () => {
@@ -158,6 +185,11 @@ function AuthProvider({ children }) {
         login,
         logout,
         register,
+        resendOtp,
+        verify,
+        registerForm,
+        resetPassword,
+        changePassword,
       }}
     >
       {children}

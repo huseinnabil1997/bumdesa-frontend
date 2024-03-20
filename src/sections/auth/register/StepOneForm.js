@@ -1,66 +1,46 @@
-import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useEffect } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, MenuItem, Alert, Divider, styled, Box, Typography } from '@mui/material';
+import { Stack, Alert, Divider, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
-import { FormProvider, RHFSelect, RHFTextField, RHFUploadPhoto } from '../../../components/hook-form';
+import {
+  FormProvider,
+  RHFAutocomplete,
+  RHFTextField,
+  RHFUploadPhoto,
+} from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
 import { useRouter } from 'next/router';
+import 'react-image-crop/dist/ReactCrop.css';
+import { handleDrop } from 'src/utils/helperFunction';
+
+import { AlertInfo } from 'src/theme/custom/Alert';
+import { StepOneSchema, oneDefaultValues } from './validation/stepOne';
+import { useGetProvincies } from 'src/query/hooks/useGetProvincies';
+import { useGetCities } from 'src/query/hooks/useGetCities';
+import { useGetDistricts } from 'src/query/hooks/useGetDistricts';
+import { useGetSubdistricts } from 'src/query/hooks/useGetSubdistricts';
+import { useGetPostalCode } from 'src/query/hooks/useGetPostalCode';
+
 // ----------------------------------------------------------------------
 
-const SERVICE_OPTIONS = ['Jakarta', 'Banding'];
-
-const StyledMenuItem = styled(MenuItem)(() => ({
-  mx: 1,
-  borderRadius: 0.75,
-  typography: 'body2',
-  fontStyle: 'italic',
-  color: 'text.secondary',
-}));
-
-const StyledMenuItemValued = styled(MenuItem)(() => ({
-  mx: 1,
-  my: 0.5,
-  borderRadius: 0.75,
-  typography: 'body2',
-  textTransform: 'capitalize',
-}));
-
-export default function StepOneForm({ setSuccess, setEmail }) {
-  const { register } = useAuth();
+export default function StepOneForm() {
+  const { registerForm } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const router = useRouter();
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const RegisterSchema = Yup.object().shape({
-    name: Yup.string().required('Nama wajib diisi'),
-    email: Yup.string().email().required('Email wajib diisi'),
-    password: Yup.string().required('Kata sandi wajib diisi'),
-    're-password': Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
-  });
-
-  const defaultValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  };
-
   const methods = useForm({
-    resolver: yupResolver(RegisterSchema),
-    defaultValues,
+    resolver: yupResolver(StepOneSchema),
+    defaultValues: oneDefaultValues,
+    mode: 'onChange',
   });
 
   const {
@@ -68,17 +48,42 @@ export default function StepOneForm({ setSuccess, setEmail }) {
     setValue,
     setError,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
 
+  const province = watch('province');
+  const city = watch('city');
+  const district = watch('district');
+  const subdistrict = watch('subdistrict');
+
+  const { data: provincies } = useGetProvincies();
+  const { data: cities } = useGetCities({ prov_id: province?.value });
+  const { data: districts } = useGetDistricts({ city_id: city?.value });
+  const { data: subdistricts } = useGetSubdistricts({ dis_id: district?.value });
+  const { data: postalCode } = useGetPostalCode({ subdis_id: subdistrict?.value });
+
   const onSubmit = async (data) => {
+    const payload = {
+      ...data,
+      province: data.province.value,
+      city: data.city.value,
+      district: data.district.value,
+      subdistrict: data.subdistrict.value,
+      postal_code: postalCode.value,
+    };
+
+    const formData = new FormData();
+
+    for (const key in payload) {
+      formData.append(key, payload[key]);
+    }
+
     try {
-      setSuccess(true);
-      setEmail(data.email);
-      router.push('/register/step-two');
-      // await register(data.email, data.password, data.firstName, data.lastName);
+      const res = await registerForm({ payload: formData, step: 1 });
+      if (res.code === 200) router.push('/register/step-two');
+      else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      console.error(error);
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });
@@ -86,21 +91,23 @@ export default function StepOneForm({ setSuccess, setEmail }) {
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
+  useEffect(() => {
+    if (postalCode) setValue('postal_code', postalCode?.subdis_id);
+  }, [postalCode]);
 
-      if (file) {
-        setValue(
-          'avatarUrl',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
-      }
-    },
-    [setValue]
-  );
+  useEffect(() => {
+    setValue('city', { value: null, text: '' });
+  }, [province]);
+
+  useEffect(() => {
+    setValue('district', { value: null, text: '' });
+  }, [city]);
+
+  useEffect(() => {
+    setValue('subdistrict', { value: null, text: '' });
+  }, [district]);
+
+  console.log(errors);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -109,11 +116,11 @@ export default function StepOneForm({ setSuccess, setEmail }) {
 
         <Stack spacing={1}>
           <RHFUploadPhoto
-            name="avatarUrl"
+            name="image"
             label="Foto Kantor BUM Desa"
             accept="image/*"
             maxSize={900000}
-            onDrop={handleDrop}
+            onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
             helperText={
               <Typography
                 variant="caption"
@@ -132,11 +139,11 @@ export default function StepOneForm({ setSuccess, setEmail }) {
           />
 
           <RHFUploadPhoto
-            name="avatarUrl"
+            name="image_logo"
             label="Logo BUM Desa"
             accept="image/*"
             maxSize={900000}
-            onDrop={handleDrop}
+            onDrop={(file) => handleDrop(file, (val) => setValue(`image_logo`, val))}
             helperText={
               <Typography
                 variant="caption"
@@ -155,90 +162,84 @@ export default function StepOneForm({ setSuccess, setEmail }) {
           />
         </Stack>
 
-        <Alert severity="info">
+        <AlertInfo severity="info">
           <Typography fontSize={12}>
-            Pastikan logo Anda berbentuk kotak (rasio 1:1) untuk keperluan BUM Desa seperti laporan, logo dashboard, dan
-            lainnya.
+            Pastikan logo Anda berbentuk kotak (rasio 1:1) untuk keperluan BUM Desa seperti laporan,
+            logo dashboard, dan lainnya.
           </Typography>
-        </Alert>
+        </AlertInfo>
 
-        <RHFTextField name="name" label="Nama BUM Desa" required />
-        <RHFTextField name="id" label="ID BUM Desa" required />
-        <RHFTextField name="date" label="Tanggal BUM Desa Berdiri" type="date" required />
-        <RHFTextField name="address" label="Alamat" required />
+        <RHFTextField name="name" label="Nama BUM Desa" require />
+        <RHFTextField name="bumdesa_id_reference" label="ID BUM Desa" require />
+        <RHFTextField name="founded_at" label="Tanggal BUM Desa Berdiri" type="date" require />
+        <RHFTextField name="address" label="Alamat" require />
 
-        <RHFSelect
-          required
-          fullWidth
+        <RHFAutocomplete
+          require
           name="province"
-          label="Provinsi"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
-        >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
+          label="Province"
+          loading={false}
+          options={provincies?.map((option) => option) ?? []}
+          getOptionLabel={(option) => option.text}
+          renderOption={(props, option) => (
+            <li {...props} key={option.value}>
+              {option.text}
+            </li>
+          )}
+        />
 
-        <RHFSelect
-          required
-          fullWidth
-          name="regency"
+        <RHFAutocomplete
+          require
+          name="city"
           label="Kabupaten"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
-        >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
+          loading={false}
+          options={cities?.map((option) => option) ?? []}
+          getOptionLabel={(option) => option.text}
+          renderOption={(props, option) => (
+            <li {...props} key={option.value}>
+              {option.text}
+            </li>
+          )}
+        />
 
-        <RHFSelect
-          required
-          fullWidth
+        <RHFAutocomplete
+          require
           name="district"
           label="Kecamatan"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
-        >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
-        <RHFSelect
-          required
-          fullWidth
-          name="village"
+          loading={false}
+          options={districts?.map((option) => option) ?? []}
+          getOptionLabel={(option) => option.text}
+          renderOption={(props, option) => (
+            <li {...props} key={option.value}>
+              {option.text}
+            </li>
+          )}
+        />
+
+        <RHFAutocomplete
+          require
+          name="subdistrict"
           label="Desa"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
-        >
-          <StyledMenuItem value="">None</StyledMenuItem>
-          <Divider />
-          {SERVICE_OPTIONS.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
+          loading={false}
+          options={subdistricts?.map((option) => option) ?? []}
+          getOptionLabel={(option) => option.text}
+          renderOption={(props, option) => (
+            <li {...props} key={option.value}>
+              {option.text}
+            </li>
+          )}
+        />
 
-        <RHFTextField name="postal_code" label="Kode Pos" required />
+        <RHFTextField name="postal_code" label="Kode Pos" require disabled />
+        <RHFTextField name="employees" label="Jumlah Pegawai Tetap" require type="number" />
 
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-          Register
-        </LoadingButton>
+        <Divider />
+
+        <Stack direction="row" spacing={1} justifyContent="flex-end">
+          <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
+            Selanjutnya
+          </LoadingButton>
+        </Stack>
       </Stack>
     </FormProvider>
   );

@@ -19,6 +19,8 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 // ----------------------------------------------------------------------
 
+const steps = ['', 'one', 'two', 'three', 'four'];
+
 export default function LoginForm() {
   const { login } = useAuth();
 
@@ -51,9 +53,10 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
+      const res = await login(data.email, data.password);
+      sessionStorage.setItem('token', res?.metadata?.token ?? '');
+      window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
     } catch (error) {
-      console.error(error);
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });
@@ -91,7 +94,14 @@ export default function LoginForm() {
         </NextLink>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" color="primary" loading={isSubmitting}>
+      <LoadingButton
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        color="primary"
+        loading={isSubmitting}
+      >
         Masuk
       </LoadingButton>
     </FormProvider>

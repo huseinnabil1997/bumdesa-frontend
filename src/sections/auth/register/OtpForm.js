@@ -1,5 +1,5 @@
+import * as Yup from 'yup';
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,25 +12,34 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
-import { RegisterSchema, registerDefaultValues } from './validation/register';
 // ----------------------------------------------------------------------
 
-RegisterForm.propTypes = {
-  setSuccess: PropTypes.func,
-  setEmail: PropTypes.func,
-  setId: PropTypes.func,
-};
-
-export default function RegisterForm({ setSuccess, setEmail, setId }) {
+export default function RegisterForm({ setSuccess, setEmail }) {
   const { register } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const RegisterSchema = Yup.object().shape({
+    name: Yup.string().required('Nama wajib diisi'),
+    email: Yup.string().email().required('Email wajib diisi'),
+    password: Yup.string().required('Kata sandi wajib diisi'),
+    're-password': Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
+
+  const defaultValues = {
+    name: '',
+    email: '',
+    password: '',
+    're-password': '',
+  };
+
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
-    registerDefaultValues,
+    defaultValues,
   });
 
   const {
@@ -42,15 +51,9 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    delete data['re-password'];
-
     try {
       setEmail(data.email);
-      const res = await register(data);
-      if (res?.data?.id_regis) {
-        setSuccess(true);
-        setId(res.data.id_regis);
-      }
+      await register(data);
     } catch (error) {
       console.error(error);
       reset();
@@ -65,11 +68,10 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="name" label="Nama BUM Desa" required />
-        <RHFTextField name="email" label="Email Aktif" required />
+        <RHFTextField name="name" label="Nama BUM Desa" />
+        <RHFTextField name="email" label="Email Aktif" />
 
         <RHFTextField
-          required
           name="password"
           label="Buat Kata Sandi"
           type={showPassword ? 'text' : 'password'}
@@ -140,7 +142,6 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
         )}
 
         <RHFTextField
-          required
           name="re-password"
           label="Konfirmasi Kata Sandi"
           type={showPassword ? 'text' : 'password'}
