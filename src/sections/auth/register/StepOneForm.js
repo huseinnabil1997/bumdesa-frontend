@@ -81,7 +81,7 @@ export default function StepOneForm() {
 
     try {
       const res = await registerForm({ payload: formData, step: 1 });
-      if (res.code === 200) router.push('/register/step-two');
+      if (res.code === 200) router.push('/auth/register/step-two');
       else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
       reset();

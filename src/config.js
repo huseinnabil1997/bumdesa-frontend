@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD } from './routes/paths';
+import { PATH_AUTH } from './routes/paths';
 
 // API
 // ----------------------------------------------------------------------
@@ -28,7 +28,7 @@ export const AUTH0_API = {
 export const MAPBOX_API = process.env.MAPBOX;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
-export const PATH_AFTER_LOGIN = PATH_DASHBOARD.vendor.list; // as '/dashboard/app'
+export const PATH_AFTER_LOGIN = PATH_AUTH.login; // as '/dashboard/app'
 
 // LAYOUT
 // ----------------------------------------------------------------------
@@ -69,7 +69,7 @@ export const cookiesKey = {
 };
 
 export const defaultSettings = {
-  themeMode: 'dark',
+  themeMode: 'light',
   themeDirection: 'ltr',
   themeColorPresets: 'default',
   themeLayout: 'horizontal',
