@@ -16,6 +16,8 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
+import { setSession } from 'src/utils/jwt';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +29,8 @@ export default function LoginForm() {
   const isMountedRef = useIsMountedRef();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -54,8 +58,15 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const res = await login(data.email, data.password);
-      sessionStorage.setItem('token', res?.metadata?.token ?? '');
-      window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
+      console.log(res);
+      if (res?.data?.full_register === 0) {
+        localStorage.setItem('@token', res?.metadata?.token ?? '');
+        window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
+      } else {
+        setSession(res?.metadata?.token ?? '');
+        enqueueSnackbar(res.message, { variant: 'success' });
+        window.location.reload();
+      }
     } catch (error) {
       reset();
       if (isMountedRef.current) {

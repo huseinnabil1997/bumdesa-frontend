@@ -34,6 +34,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
   const methods = useForm({
     resolver: yupResolver(stepFourSchema),
     defaultValues: fourDefaultValues,
+    mode: 'onChange',
   });
 
   const {
@@ -45,10 +46,12 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
   } = methods;
 
   const onSubmit = async (data) => {
+    const payload = { ...data, position: '4' };
+
     const formData = new FormData();
 
-    for (const key in data) {
-      formData.append(key, data[key]);
+    for (const key in payload) {
+      formData.append(key, payload[key]);
     }
 
     try {
@@ -61,6 +64,11 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
         setError('afterSubmit', { ...error, message: error.message });
       }
     }
+  };
+
+  const handleLogin = () => {
+    localStorage.removeItem('@token');
+    router.push('/auth/login');
   };
 
   return (
@@ -136,7 +144,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
             color="primary"
             sx={{ mt: 3 }}
             size="large"
-            onClick={() => router.push('/auth/login')}
+            onClick={handleLogin}
           >
             Masuk
           </Button>

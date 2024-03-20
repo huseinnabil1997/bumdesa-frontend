@@ -17,6 +17,7 @@ import { RegisterForm } from '../../../sections/auth/register';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { setSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -77,9 +78,12 @@ export default function Register() {
 
   const onSubmit = async () => {
     try {
-      await verify({ id, otp });
-
-      router.push('/auth/register/step-one');
+      const res = await verify({ id, otp });
+      if (res.code === 200) {
+        localStorage.setItem('@token', res.data.token_auth);
+        enqueueSnackbar(res.message, { variant: 'success' });
+        window.location.href = '/auth/register/step-one';
+      } else enqueueSnackbar(res.message, { variant: 'error' });
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
     }

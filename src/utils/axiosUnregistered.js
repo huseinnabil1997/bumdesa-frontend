@@ -10,9 +10,9 @@ const axiosInstance = axios.create({
 });
 
 const checkAuth = (error) => {
-  // if ([444].includes(error.response?.status ?? 0)) {
   if ([401, 403].includes(error.response?.status ?? 0)) {
-    localStorage.removeItem('token');
+    // if ([444].includes(error.response?.status ?? 0)) {
+    localStorage.removeItem('@token');
     window.location.href = '/auth/login';
   }
 
@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use((response) => response, checkAuth);
 export function getSessionToken() {
   // Check if window is defined before accessing localStorage
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('@token');
     return token ? `Bearer ${token}` : undefined;
   }
   return undefined;

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
-import axios from '../utils/axios';
+import axios from '../utils/axiosUnregistered';
 import { isValidToken, setSession } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
@@ -76,19 +76,18 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessToken = window.localStorage.getItem('accessToken');
+        const accessToken = window.localStorage.getItem('token');
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/api/account/my-account');
-          const { user } = response.data;
+          // const response = await axios.get('/api/account/my-account');
+          // const { user } = response.data;
 
           dispatch({
             type: 'INITIALIZE',
             payload: {
               isAuthenticated: true,
-              user,
             },
           });
         } else {
@@ -138,26 +137,14 @@ function AuthProvider({ children }) {
 
   const verify = async (payload) => {
     const response = await axios.post('/signup-verify', payload);
-    const { user } = response.data;
 
-    dispatch({
-      type: 'VERIFY',
-      payload: {
-        user,
-      },
-    });
+    return response.data;
   };
 
   const resendOtp = async (payload) => {
     const response = await axios.post('/resend-otp', payload);
-    const { user } = response.data;
 
-    dispatch({
-      type: 'RESEND_OTP',
-      payload: {
-        user,
-      },
-    });
+    return response.data;
   };
 
   const resetPassword = async (payload) => {
