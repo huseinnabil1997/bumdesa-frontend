@@ -5,11 +5,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { Stack } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import useAuth from 'src/hooks/useAuth';
 // components
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import { useSnackbar } from 'notistack';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ export default function ResetPasswordForm({ onSent, onGetEmail, sentStatus }) {
         <RHFTextField name="email" label="Email" />
 
         {!sentStatus ? (
-          <LoadingButton
+          <StyledLoadingButton
             fullWidth
             size="large"
             type="submit"
@@ -67,9 +67,9 @@ export default function ResetPasswordForm({ onSent, onGetEmail, sentStatus }) {
             loading={isSubmitting}
           >
             Atur ulang Kata Sandi
-          </LoadingButton>
+          </StyledLoadingButton>
         ) : (
-          <LoadingButton
+          <StyledLoadingButton
             disabled
             fullWidth
             size="large"
@@ -78,7 +78,7 @@ export default function ResetPasswordForm({ onSent, onGetEmail, sentStatus }) {
             loading={isSubmitting}
           >
             Atur ulang Kata Sandi
-          </LoadingButton>
+          </StyledLoadingButton>
         )}
       </Stack>
     </FormProvider>
