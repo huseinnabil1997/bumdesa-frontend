@@ -1,0 +1,6 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/${_PROJECT_ID}/bumdes-frontend:${_TAG_NAME}','.']
+  
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'push', 'gcr.io/${_PROJECT_ID}/bumdes-frontend:${_TAG_NAME}']
