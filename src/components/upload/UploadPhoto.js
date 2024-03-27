@@ -9,6 +9,8 @@ import Image from '../Image';
 import Iconify from '../Iconify';
 import RejectionFiles from './RejectionFiles';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import { useRef } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 // ----------------------------------------------------------------------
 const Container = styled(Box)(() => ({
@@ -77,6 +79,22 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
     ...other,
   });
 
+  const fileInputRef = useRef(null);
+  const { setValue } = useFormContext();
+
+  const handleClickUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleDeletePhoto = () => {
+    setValue('image', null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
+  };
+
   return (
     <>
       <Typography variant="caption">
@@ -98,7 +116,7 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
               ...(isDragActive && { opacity: 0.72 }),
             }}
           >
-            <input {...getInputProps()} />
+            <input {...getInputProps()} ref={fileInputRef} />
 
             {file && (
               <Image alt="avatar" src={isString(file) ? file : file.preview} sx={{ zIndex: 8 }} />
@@ -123,12 +141,22 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
           </DropZoneStyle>
         </RootStyle>
 
-        <Stack sx={{ width: 'calc(100% - 116px)' }}>
+        <Stack sx={{ width: 'calc(100% - 116px)', display: 'flex', justifyContent: 'center' }}>
           <Box>
-            <StyledLoadingButton variant="contained" color="primary" sx={{ mr: 1 }}>
+            <StyledLoadingButton
+              variant="contained"
+              color="primary"
+              sx={{ mr: 1 }}
+              onClick={handleClickUpload}
+            >
               Unggah Foto
             </StyledLoadingButton>
-            <StyledLoadingButton variant="contained" color="grey" disabled={!file}>
+            <StyledLoadingButton
+              variant="contained"
+              color="grey"
+              disabled={!file}
+              onClick={handleDeletePhoto}
+            >
               Hapus Foto
             </StyledLoadingButton>
           </Box>

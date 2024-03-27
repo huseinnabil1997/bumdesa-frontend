@@ -1,10 +1,7 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Button, Container, Typography } from '@mui/material';
-// routes
-import { PATH_AUTH } from '../../../routes/paths';
+import { Box, Card, Stack, Container, Typography } from '@mui/material';
 // hooks
-import useAuth from '../../../hooks/useAuth';
 import useResponsive from '../../../hooks/useResponsive';
 // guards
 import GuestGuard from '../../../guards/GuestGuard';
@@ -12,7 +9,6 @@ import GuestGuard from '../../../guards/GuestGuard';
 import Page from '../../../components/Page';
 import Image from '../../../components/Image';
 // sections
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
 import StepTwoForm from 'src/sections/auth/register/StepTwoForm';
@@ -68,14 +64,9 @@ const SideContent = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const { method } = useAuth();
-
-  const router = useRouter();
-
   const mdUp = useResponsive('up', 'md');
 
   const [isSuccess, setSuccess] = useState(false);
-  const [email, setEmail] = useState('');
 
   return (
     <GuestGuard>
@@ -117,7 +108,7 @@ export default function Register() {
                     </Box>
                   </Stack>
 
-                  <StepTwoForm setEmail={setEmail} setSuccess={setSuccess} />
+                  <StepTwoForm setSuccess={setSuccess} />
                 </Card>
               )}
             </ContentStyle>

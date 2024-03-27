@@ -119,7 +119,7 @@ export default function StepOneForm() {
             name="image"
             label="Foto Kantor BUM Desa"
             accept="image/*"
-            maxSize={900000}
+            maxSize={5000000}
             onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
             helperText={
               <Typography
@@ -133,7 +133,7 @@ export default function StepOneForm() {
               >
                 Format yang diperbolehkan: png, jpg, jpeg.
                 <br />
-                Ukuran maks {fData(900000)}
+                Ukuran maks {fData(5000000)}
               </Typography>
             }
           />
@@ -142,7 +142,7 @@ export default function StepOneForm() {
             name="image_logo"
             label="Logo BUM Desa"
             accept="image/*"
-            maxSize={900000}
+            maxSize={5000000}
             onDrop={(file) => handleDrop(file, (val) => setValue(`image_logo`, val))}
             helperText={
               <Typography
@@ -156,7 +156,7 @@ export default function StepOneForm() {
               >
                 Format yang diperbolehkan: png, jpg, jpeg.
                 <br />
-                Ukuran maks {fData(900000)}
+                Ukuran maks {fData(5000000)}
               </Typography>
             }
           />

@@ -3,7 +3,8 @@ import numeral from 'numeral';
 // ----------------------------------------------------------------------
 
 export function fCurrency(number) {
-  return numeral(number).format(Number.isInteger(number) ? '$0,0' : '$0,0.00');
+  const value = Math.round(number);
+  return 'Rp ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 export function fPercent(number) {

@@ -17,7 +17,7 @@ export default function RHFSelect({ name, children, ...other }) {
   return (
     <Stack>
       {other?.label && (
-        <Typography variant="caption" sx={{ mb: 0.5 }}>
+        <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
           {other?.label} {other?.require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}

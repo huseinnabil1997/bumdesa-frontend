@@ -21,8 +21,11 @@ export const ListItemStyle = styled(ListItemButton, {
   // activeRoot
   ...(activeRoot && {
     ...theme.typography.subtitle2,
-    color: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main,
+    span: {
+      color: theme.palette.common.white,
+    },
     '::before': {
       content: "''",
       position: 'absolute',
@@ -32,6 +35,9 @@ export const ListItemStyle = styled(ListItemButton, {
       width: '4px',
       backgroundColor: '#F87304',
       borderRadius: '0 4px 4px 0',
+    },
+    ':hover': {
+      backgroundColor: theme.palette.primary.light,
     },
   }),
   // activeSub

@@ -91,7 +91,11 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       {!isDesktop && (
-        <Drawer open={isOpenSidebar} onClose={onCloseSidebar} PaperProps={{ sx: { width: NAVBAR.DASHBOARD_WIDTH } }}>
+        <Drawer
+          open={isOpenSidebar}
+          onClose={onCloseSidebar}
+          PaperProps={{ sx: { width: NAVBAR.DASHBOARD_WIDTH } }}
+        >
           {renderContent}
         </Drawer>
       )}
@@ -105,7 +109,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           PaperProps={{
             sx: {
               width: NAVBAR.DASHBOARD_WIDTH,
-              borderRightStyle: 'dashed',
+              borderRight: '1px solid #EAEBEB',
               bgcolor: 'background.default',
               transition: (theme) =>
                 theme.transitions.create('width', {

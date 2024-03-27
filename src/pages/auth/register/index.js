@@ -17,7 +17,6 @@ import { RegisterForm } from '../../../sections/auth/register';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { setSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 

@@ -7,28 +7,24 @@ import EmptyContent from '../EmptyContent';
 // ----------------------------------------------------------------------
 
 TableNoData.propTypes = {
-  isNotFound: PropTypes.bool,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  action: PropTypes.node,
 };
 
-export default function TableNoData({ isNotFound }) {
+export default function TableNoData({ title, description, action }) {
   return (
-    <>
-      {isNotFound ? (
-        <TableRow>
-          <TableCell colSpan={9}>
-            <EmptyContent
-              title="No Data"
-              sx={{
-                '& span.MuiBox-root': { height: 160 },
-              }}
-            />
-          </TableCell>
-        </TableRow>
-      ) : (
-        <TableRow>
-          <TableCell colSpan={9} sx={{ p: 0 }} />
-        </TableRow>
-      )}
-    </>
+    <TableRow>
+      <TableCell colSpan={9}>
+        <EmptyContent
+          title={title}
+          description={description}
+          action={action}
+          sx={{
+            '& span.MuiBox-root': { height: 160 },
+          }}
+        />
+      </TableCell>
+    </TableRow>
   );
 }

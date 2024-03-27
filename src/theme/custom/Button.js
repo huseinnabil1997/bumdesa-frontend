@@ -1,4 +1,4 @@
-import { styled, Button } from '@mui/material';
+import { styled, Button, ButtonGroup } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 export const BtnLightPrimary = styled(Button)(() => ({
@@ -15,8 +15,13 @@ export const BtnLightError = styled(Button)(() => ({
 
 export const StyledButton = styled(Button)(() => ({
   textTransform: 'none',
+  ':hover': { backgroundColor: '#DDEFFC', color: '#1078CA' },
 }));
 
 export const StyledLoadingButton = styled(LoadingButton)(() => ({
+  ':hover': { backgroundColor: '#DDEFFC', color: '#1078CA' },
+}));
+
+export const StyledButtonGroup = styled(ButtonGroup)(() => ({
   ':hover': { backgroundColor: '#DDEFFC', color: '#1078CA' },
 }));

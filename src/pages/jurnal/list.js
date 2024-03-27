@@ -1,225 +1,126 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // @mui
-import {
-  Box,
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  Pagination,
-  Alert,
-} from '@mui/material';
+import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useTable, { emptyRows } from '../../hooks/useTable';
+import useTable from '../../hooks/useTable';
 // layouts
 import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  TableEmptyRows,
-  TableHeadCustom,
-  TableNoData,
-  TableSelectedActions,
-  TableSkeleton,
-} from '../../components/table';
-import ModalAddVendor from '../../components/modal/AddVendor';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
 import AlertDeleteVendor from '../../components/modal/DeleteVendor';
 // sections
-import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteVendor, getVendors, resetMessage } from '../../redux/slices/vendor';
+import { UserTableRow } from '../../sections/@dashboard/user/list';
+import { FormProvider } from 'src/components/hook-form';
+import { useForm } from 'react-hook-form';
+import { JurnalHeader } from 'src/sections/jurnal';
+import { JURNAL_HEAD } from 'src/utils/constant';
+import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
+import { useTheme } from '@mui/material/styles';
+import { StyledButton } from 'src/theme/custom/Button';
+import { Add } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Nama Vendor', align: 'left' },
-  { id: 'tdr', label: 'Nomor TDR', align: 'left' },
-  { id: 'tdr_start_date', label: 'Awal Masa Berlaku', align: 'left' },
-  { id: 'tdr_end_date', label: 'Akhir Masa Berlaku', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: '' },
-];
-
-// ----------------------------------------------------------------------
-
-UserList.getLayout = function getLayout(page) {
+JurnalList.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function UserList() {
-  let debounceTimeout;
-  const {
-    page,
-    rowsPerPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onChangePage,
-  } = useTable({ defaultCurrentPage: 1 });
+export default function JurnalList() {
+  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
+  const theme = useTheme();
 
-  const { vendors, isLoading, error, success } = useSelector((state) => state.vendor);
-  const dispatch = useDispatch();
+  const { data, isLoading } = useGetJurnals();
 
   const [filterName, setFilterName] = useState('');
-  const [isOpen, setOpen] = useState(false);
-  const [id, setId] = useState(null);
-  const [isEdit, setEdit] = useState(false);
   const [alertDelete, setAlertDelete] = useState(null);
 
-  const fetchData = (key) => {
-    dispatch(getVendors(page, key));
-    setTimeout(() => {
-      dispatch(resetMessage());
-    }, [3000]);
-  };
+  const handleDeleteRow = (id) => {};
 
-  useEffect(() => {
-    fetchData();
-  }, [page]);
+  const handleEditRow = (row) => {};
 
-  const handleDeleteRow = (id) => {
-    setAlertDelete(id);
-    setSelected([]);
-  };
+  const handleViewRow = (row) => {};
 
-  const onDelete = () => {
-    dispatch(deleteVendor(alertDelete));
-    setAlertDelete(null);
-    setTimeout(() => {
-      dispatch(resetMessage());
-    }, [3000]);
-  };
+  const methods = useForm({
+    defaultValues: { unit: null, year: null },
+  });
 
-  const handleDeleteRows = () => {
-    setSelected([]);
-  };
+  const { handleSubmit } = methods;
 
-  const handleEditRow = (row) => {
-    setOpen(true);
-    setId(row.id);
-    setEdit(true);
-  };
-
-  const handleViewRow = (row) => {
-    setOpen(true);
-    setId(row.id);
-  };
-
-  const handleClose = () => {
-    setId(null);
-    setOpen(false);
-    setEdit(false);
-  };
-
-  const handleInputChange = (event) => {
-    if (event.key === 'Enter') {
-      fetchData(filterName);
-    }
+  const onSubmit = async (data) => {
+    console.log(data);
   };
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <UserTableToolbar filterName={filterName} onFilterName={setFilterName} handleInputChange={handleInputChange} />
-        <Card sx={{ p: 1 }}>
-          {success && (
-            <Alert severity="success" sx={{ m: 1 }}>
-              {success}
-            </Alert>
-          )}
-
-          {error && (
-            <Alert severity="error" sx={{ m: 1 }}>
-              {error}
-            </Alert>
-          )}
-
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <JurnalHeader />
+        </FormProvider>
+        <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {selected.length > 0 && (
-                <TableSelectedActions
-                  numSelected={selected.length}
-                  rowCount={vendors?.data.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      vendors?.data.map((row) => row.id)
-                    )
-                  }
-                  actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-              )}
-
               <Table>
                 <TableHeadCustom
-                  headLabel={TABLE_HEAD}
-                  rowCount={vendors?.data.length}
-                  numSelected={selected.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      vendors?.data.map((row) => row.id)
-                    )
-                  }
+                  headLabel={JURNAL_HEAD}
+                  rowCount={data?.length}
+                  sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    vendors?.data.map((row) => (
+                    data.map((row) => (
                       <UserTableRow
                         key={row.id}
                         row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row)}
                         onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 
-                  <TableEmptyRows emptyRows={emptyRows(page, rowsPerPage, vendors?.data.length)} />
                   {isLoading && <TableSkeleton />}
-                  <TableNoData isNotFound={!vendors?.data} />
+                  {!data?.length > 0 && (
+                    <TableNoData
+                      title="Jurnal belum tersedia."
+                      description="Silakan buat jurnal dengan klik tombol di bawah ini."
+                      action={
+                        <StyledButton
+                          sx={{ mt: 2, width: 200 }}
+                          variant="outlined"
+                          startIcon={<Add fontSize="small" />}
+                        >
+                          Buat Jurnal
+                        </StyledButton>
+                      }
+                    />
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
 
-          <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
-            <Pagination
-              showFirstButton
-              showLastButton
-              color="primary"
-              count={vendors?.lastPage}
-              rowsPerPage={vendors?.totalPerPage}
-              page={page}
-              onChange={onChangePage}
-            />
-          </Box>
+          {data?.length > 0 && (
+            <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
+              <Pagination
+                showFirstButton
+                showLastButton
+                color="primary"
+                count={data?.lastPage}
+                rowsPerPage={data?.totalPerPage}
+                page={page}
+                onChange={onChangePage}
+              />
+            </Box>
+          )}
         </Card>
-        <ModalAddVendor open={isOpen} onClose={handleClose} id={id} refetch={fetchData} isEdit={isEdit} />
-        <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} action={onDelete} />
+        <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} />
       </Container>
     </Page>
   );

@@ -26,7 +26,7 @@ export default function AccountChangePassword() {
 
   const urlParams = new URLSearchParams(window.location.search);
 
-  const dataParam = urlParams.get('data').split(' ').join('+');
+  const dataParam = urlParams.get('data')?.split(' ')?.join('+');
 
   console.log('dataParam', dataParam);
 

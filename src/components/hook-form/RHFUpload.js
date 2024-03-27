@@ -41,9 +41,10 @@ export function RHFUploadAvatar({ name, ...other }) {
 RHFUploadPhoto.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
+  errorTextAlign: PropTypes.string,
 };
 
-export function RHFUploadPhoto({ label, name, ...other }) {
+export function RHFUploadPhoto({ errorTextAlign, label, name, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -57,7 +58,12 @@ export function RHFUploadPhoto({ label, name, ...other }) {
           <div>
             <UploadPhoto error={checkError} {...other} file={field.value} label={label} />
             {checkError && (
-              <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
+              <FormHelperText
+                error
+                sx={
+                  errorTextAlign === 'left' ? { textAlign: 'left' } : { px: 2, textAlign: 'center' }
+                }
+              >
                 {error.message}
               </FormHelperText>
             )}
