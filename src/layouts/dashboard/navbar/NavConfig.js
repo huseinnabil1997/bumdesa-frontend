@@ -36,14 +36,26 @@ const navConfig = [
     items: [
       { title: 'Jurnal', path: PATH_DASHBOARD.bumdes.jurnal, icon: ICONS.create },
       { title: 'Buku Besar', path: PATH_DASHBOARD.bumdes.ledger, icon: ICONS.ledger },
-      { title: 'Laporan Keuangan', path: PATH_DASHBOARD.bumdes.report, icon: ICONS.report },
+      {
+        title: 'Laporan Keuangan',
+        path: PATH_DASHBOARD.bumdes.report,
+        icon: ICONS.report,
+        children: [
+          { title: 'Laporan Laba Rugi', path: PATH_DASHBOARD.other.content },
+          { title: 'Laporan Ekuitas', path: PATH_DASHBOARD.other.content },
+          { title: 'Laporan Neraca', path: PATH_DASHBOARD.other.content },
+          { title: 'Laporan Arus kas', path: PATH_DASHBOARD.other.content },
+        ],
+      },
       { title: 'Unit Usaha BUM Des', path: PATH_DASHBOARD.bumdes.unit, icon: ICONS.unit },
       { title: 'Profil BUM Desa', path: PATH_DASHBOARD.bumdes.profile, icon: ICONS.profile },
     ],
   },
   {
     subheader: 'Evaluasi',
-    items: [{ title: 'Penilaian BUM Desa', path: PATH_DASHBOARD.other.evaluation, icon: ICONS.star }],
+    items: [
+      { title: 'Penilaian BUM Desa', path: PATH_DASHBOARD.other.evaluation, icon: ICONS.star },
+    ],
   },
   {
     subheader: 'Lainnya',
@@ -60,9 +72,6 @@ const navConfig = [
       },
     ],
   },
-
-  // APP
-  // ----------------------------------------------------------------------
 ];
 
 export default navConfig;

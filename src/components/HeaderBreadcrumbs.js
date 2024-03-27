@@ -4,6 +4,7 @@ import isString from 'lodash/isString';
 import { Box, Typography, Link } from '@mui/material';
 //
 import Breadcrumbs from './Breadcrumbs';
+import { NavigateNext } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +16,14 @@ HeaderBreadcrumbs.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '' || [], sx, ...other }) {
+export default function HeaderBreadcrumbs({
+  links,
+  action,
+  heading,
+  moreLink = '' || [],
+  sx,
+  ...other
+}) {
   return (
     <Box sx={{ mb: 5, ...sx }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -23,7 +31,7 @@ export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '
           <Typography variant="h4" gutterBottom>
             {heading}
           </Typography>
-          <Breadcrumbs links={links} {...other} />
+          <Breadcrumbs links={links} separator={<NavigateNext fontSize="small" />} {...other} />
         </Box>
 
         {action && <Box sx={{ flexShrink: 0 }}>{action}</Box>}
@@ -36,7 +44,14 @@ export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '
           </Link>
         ) : (
           moreLink.map((href) => (
-            <Link noWrap key={href} href={href} variant="body2" target="_blank" sx={{ display: 'table' }}>
+            <Link
+              noWrap
+              key={href}
+              href={href}
+              variant="body2"
+              target="_blank"
+              sx={{ display: 'table' }}
+            >
               {href}
             </Link>
           ))

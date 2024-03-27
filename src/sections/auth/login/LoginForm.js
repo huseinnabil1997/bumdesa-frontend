@@ -58,7 +58,6 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const res = await login(data.email, data.password);
-      console.log(res);
       if (res?.data?.full_register === 0) {
         localStorage.setItem('@token', res?.metadata?.token ?? '');
         window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;

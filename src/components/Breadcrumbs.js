@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 // @mui
 import { Box, Link, Typography, Breadcrumbs as MUIBreadcrumbs } from '@mui/material';
+import { useTheme } from '@emotion/react';
 
 // ----------------------------------------------------------------------
 
@@ -13,6 +14,8 @@ Breadcrumbs.propTypes = {
 
 export default function Breadcrumbs({ links, activeLast = false, ...other }) {
   const currentLink = links[links.length - 1].name;
+
+  const theme = useTheme();
 
   const listDefault = links.map((link) => <LinkItem key={link.name} link={link} />);
 
@@ -27,7 +30,8 @@ export default function Breadcrumbs({ links, activeLast = false, ...other }) {
             maxWidth: 260,
             overflow: 'hidden',
             whiteSpace: 'nowrap',
-            color: 'text.disabled',
+            color: theme.palette.common.black,
+            fontWeight: 700,
             textOverflow: 'ellipsis',
           }}
         >
@@ -39,7 +43,12 @@ export default function Breadcrumbs({ links, activeLast = false, ...other }) {
 
   return (
     <MUIBreadcrumbs
-      separator={<Box component="span" sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'text.disabled' }} />}
+      separator={
+        <Box
+          component="span"
+          sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'text.disabled' }}
+        />
+      }
       {...other}
     >
       {activeLast ? listDefault : listActiveLast}
@@ -59,6 +68,7 @@ LinkItem.propTypes = {
 
 function LinkItem({ link }) {
   const { href = '', name, icon } = link;
+  const theme = useTheme();
   return (
     <NextLink href={href} passHref>
       <Link
@@ -68,7 +78,9 @@ function LinkItem({ link }) {
           lineHeight: 2,
           display: 'flex',
           alignItems: 'center',
-          color: 'text.primary',
+          color: theme.palette.grey[500],
+          fontWeight: 500,
+          textDecoration: 'none',
           '& > div': { display: 'inherit' },
         }}
       >

@@ -80,7 +80,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
           name="image"
           label="Foto Manager BUM Desa"
           accept="image/*"
-          maxSize={900000}
+          maxSize={5000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
@@ -94,7 +94,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
             >
               Format yang diperbolehkan: png, jpg, jpeg.
               <br />
-              Ukuran maks {fData(900000)}
+              Ukuran maks {fData(5000000)}
             </Typography>
           }
         />

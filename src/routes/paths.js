@@ -40,8 +40,14 @@ export const PATH_DASHBOARD = {
   bumdes: {
     jurnal: path(ROOTS_APP, 'jurnal/list'),
     ledger: path(ROOTS_APP, 'ledger'),
-    report: path(ROOTS_APP, 'report'),
-    unit: path(ROOTS_APP, 'unit'),
+    report: {
+      root: path(ROOTS_APP, 'report'),
+      profit: path(ROOTS_APP, 'report/profit'),
+      equity: path(ROOTS_APP, 'report/equity'),
+      balance: path(ROOTS_APP, 'report/balance'),
+      cashFlow: path(ROOTS_APP, 'report/cash-flow'),
+    },
+    unit: path(ROOTS_APP, 'unit/list'),
     profile: path(ROOTS_APP, 'profile'),
   },
   other: {

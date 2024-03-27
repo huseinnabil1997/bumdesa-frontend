@@ -160,8 +160,10 @@ function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    const response = await axios.post('/signout');
     setSession(null);
-    dispatch({ type: 'LOGOUT' });
+
+    return response.data;
   };
 
   return (

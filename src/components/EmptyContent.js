@@ -23,17 +23,18 @@ EmptyContent.propTypes = {
   title: PropTypes.string.isRequired,
   img: PropTypes.string,
   description: PropTypes.string,
+  action: PropTypes.node,
 };
 
-export default function EmptyContent({ title, description, img, ...other }) {
+export default function EmptyContent({ title, description, action, ...other }) {
   return (
     <RootStyle {...other}>
       <Image
         disabledEffect
         visibleByDefault
         alt="empty content"
-        src={img || 'https://minimal-assets-api.vercel.app/assets/illustrations/illustration_empty_content.svg'}
-        sx={{ height: 240, mb: 3 }}
+        src="/image/empty.svg"
+        sx={{ height: 240 }}
       />
 
       <Typography variant="h5" gutterBottom>
@@ -45,6 +46,8 @@ export default function EmptyContent({ title, description, img, ...other }) {
           {description}
         </Typography>
       )}
+
+      {action}
     </RootStyle>
   );
 }

@@ -82,7 +82,7 @@ export default function StepTwoForm() {
           name="image"
           label="Foto Direktur BUM Desa"
           accept="image/*"
-          maxSize={900000}
+          maxSize={5000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
@@ -96,7 +96,7 @@ export default function StepTwoForm() {
             >
               Format yang diperbolehkan: png, jpg, jpeg.
               <br />
-              Ukuran maks {fData(900000)}
+              Ukuran maks {fData(5000000)}
             </Typography>
           }
         />
@@ -113,7 +113,7 @@ export default function StepTwoForm() {
               name={`organizations.${i}.image`}
               label="Foto Pengurus BUM Desa"
               accept="image/*"
-              maxSize={900000}
+              maxSize={5000000}
               onDrop={(file) =>
                 handleDrop(file, (val) => setValue(`organizations.${i}.image`, val))
               }
@@ -129,7 +129,7 @@ export default function StepTwoForm() {
                 >
                   Format yang diperbolehkan: png, jpg, jpeg.
                   <br />
-                  Ukuran maks {fData(900000)}
+                  Ukuran maks {fData(5000000)}
                 </Typography>
               }
             />

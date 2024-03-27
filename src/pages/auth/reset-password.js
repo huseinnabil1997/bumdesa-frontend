@@ -68,8 +68,6 @@ ResetPassword.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function ResetPassword() {
-  const [email, setEmail] = useState('');
-
   const [sent, setSent] = useState(false);
 
   const [countdown, setCountdown] = useState(60);
@@ -141,10 +139,7 @@ export default function ResetPassword() {
                       Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
                     </Typography>
 
-                    <ResetPasswordForm
-                      onSent={() => setSent(true)}
-                      onGetEmail={(value) => setEmail(value)}
-                    />
+                    <ResetPasswordForm onSent={() => setSent(true)} />
 
                     <Typography variant="body2" sx={{ mt: 3 }} align="center">
                       Anda belum punya akun?{' '}
@@ -164,10 +159,7 @@ export default function ResetPassword() {
                       Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
                     </Typography>
 
-                    <ResetPasswordForm
-                      onSent={() => setSent(true)}
-                      onGetEmail={(value) => setEmail(value)}
-                    />
+                    <ResetPasswordForm onSent={() => setSent(true)} />
 
                     <Typography variant="body2" sx={{ mt: 3 }} align="center">
                       Belum menerima email?{' '}

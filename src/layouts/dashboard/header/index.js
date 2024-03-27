@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar, Typography } from '@mui/material';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
@@ -19,13 +20,16 @@ import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'isCollapse' && prop !== 'isOffset' && prop !== 'verticalLayout',
+  shouldForwardProp: (prop) =>
+    prop !== 'isCollapse' && prop !== 'isOffset' && prop !== 'verticalLayout',
 })(({ isCollapse, isOffset, verticalLayout, theme }) => ({
   ...cssStyles(theme).bgBlur(),
+  borderBottom: '1px solid #EAEBEB',
   boxShadow: 'none',
   height: HEADER.MOBILE_HEIGHT,
   zIndex: theme.zIndex.appBar + 1,
@@ -34,9 +38,9 @@ const RootStyle = styled(AppBar, {
   }),
   [theme.breakpoints.up('lg')]: {
     height: HEADER.DASHBOARD_DESKTOP_HEIGHT,
-    width: `calc(100% - ${NAVBAR.DASHBOARD_WIDTH + 1}px)`,
+    width: `calc(100% - 280px)`,
     ...(isCollapse && {
-      width: `calc(100% - ${NAVBAR.DASHBOARD_COLLAPSE_WIDTH}px)`,
+      width: `calc(100% - 280px)`,
     }),
     ...(isOffset && {
       height: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT,
@@ -57,10 +61,27 @@ DashboardHeader.propTypes = {
   verticalLayout: PropTypes.bool,
 };
 
-export default function DashboardHeader({ onOpenSidebar, isCollapse = false, verticalLayout = false }) {
+export default function DashboardHeader({
+  onOpenSidebar,
+  isCollapse = false,
+  verticalLayout = false,
+}) {
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
 
   const isDesktop = useResponsive('up', 'lg');
+
+  const [title, setTitle] = useState(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    generateTitle();
+  }, [router.pathname]);
+
+  const generateTitle = () => {
+    const value = router.pathname.split('/')[1];
+    setTitle(value.charAt(0).toUpperCase() + value.slice(1));
+  };
 
   return (
     <RootStyle isCollapse={isCollapse} isOffset={isOffset} verticalLayout={verticalLayout}>
@@ -80,7 +101,16 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={{ xs: 0.5, sm: 1.5 }}
+          sx={{ width: '100%' }}
+        >
+          <Typography sx={{ color: '#3D3D3D' }} fontWeight={700} fontSize={22}>
+            {title}
+          </Typography>
           <AccountPopover />
         </Stack>
       </Toolbar>

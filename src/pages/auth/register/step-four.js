@@ -2,7 +2,6 @@
 import { styled } from '@mui/material/styles';
 import { Box, Card, Stack, Container, Typography } from '@mui/material';
 // hooks
-import useAuth from '../../../hooks/useAuth';
 import useResponsive from '../../../hooks/useResponsive';
 // guards
 import GuestGuard from '../../../guards/GuestGuard';
@@ -10,12 +9,9 @@ import GuestGuard from '../../../guards/GuestGuard';
 import Page from '../../../components/Page';
 import Image from '../../../components/Image';
 // sections
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
 import StepFourForm from 'src/sections/auth/register/StepFourForm';
-import { CheckCircle } from '@mui/icons-material';
-import { BtnLightPrimary } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 

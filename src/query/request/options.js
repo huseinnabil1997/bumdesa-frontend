@@ -4,8 +4,6 @@ import axios from 'src/utils/axios';
 const isRegis = !!getSessionToken();
 const service = isRegis ? axiosUnregistered : axios;
 
-console.log(isRegis);
-
 export function getProvincies() {
   return service.get('/address/province');
 }

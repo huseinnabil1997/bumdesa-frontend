@@ -38,7 +38,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const router = useRouter();
 
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 

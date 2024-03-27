@@ -87,7 +87,7 @@ export default function StepThreeForm() {
           name="image"
           label="Foto Kantor BUM Desa"
           accept="image/*"
-          maxSize={900000}
+          maxSize={5000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
@@ -101,7 +101,7 @@ export default function StepThreeForm() {
             >
               Format yang diperbolehkan: png, jpg, jpeg.
               <br />
-              Ukuran maks {fData(900000)}
+              Ukuran maks {fData(5000000)}
             </Typography>
           }
         />
