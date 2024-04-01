@@ -23,7 +23,7 @@ const buttonActiveStyle = {
   height: '48px'
 }
 
-export default function EmailChangeSuccess({ open, onClose, status = 0 }) {
+export default function EmailChangeSuccess({ open, onClose }) {
   return (
     <Dialog
       open={open}
