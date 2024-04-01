@@ -15,11 +15,10 @@ import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 ResetPasswordForm.propTypes = {
   onSent: PropTypes.func,
-  onGetEmail: PropTypes.func,
   sentStatus: PropTypes.bool,
 };
 
-export default function ResetPasswordForm({ onSent, onGetEmail, sentStatus }) {
+export default function ResetPasswordForm({ onSent, sentStatus }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { resetPassword } = useAuth();
@@ -43,10 +42,8 @@ export default function ResetPasswordForm({ onSent, onGetEmail, sentStatus }) {
   const onSubmit = async (data) => {
     try {
       const res = await resetPassword(data);
-      console.log('res', res);
       if (res?.data?.id_user) {
         onSent();
-        onGetEmail(data.email);
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });

@@ -20,7 +20,8 @@ import { _ecommerceBestSalesman } from '../../_mock';
 // components
 import Scrollbar from '../../components/Scrollbar';
 import moment from 'moment';
-import { ArrowDownward, ArrowUpward, Refresh } from '@mui/icons-material';
+import { ArrowDownward, ArrowForwardIos, ArrowUpward, Refresh } from '@mui/icons-material';
+import { StyledButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,16 @@ export default function DashboardBestSalesman() {
               Refresh
             </Button>
           </Stack>
+        }
+        action={
+          <StyledButton
+            variant="outlined"
+            endIcon={<ArrowForwardIos fontSize="small" />}
+            sx={{ mt: 1 }}
+            size="large"
+          >
+            Lihat Semua
+          </StyledButton>
         }
       />
       <Scrollbar>

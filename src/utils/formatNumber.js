@@ -22,3 +22,14 @@ export function fShortenNumber(number) {
 export function fData(number) {
   return numeral(number).format('0.0 b');
 }
+
+export const fBumdesId = (val) => {
+  const cleaned = `${val}`.replace(/\D/g, '');
+  const match = cleaned.match(/(\d{0,10})?(\d{0,1})?(\d{0,6})$/);
+
+  if (match) {
+    const value = [match[1], match[2] ? '-' : '', match[2], match[3] ? '-' : '', match[3]].join('');
+    return value;
+  }
+  return '';
+};

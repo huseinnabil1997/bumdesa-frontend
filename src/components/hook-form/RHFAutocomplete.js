@@ -10,16 +10,24 @@ RHFAutocomplete.propTypes = {
   label: PropTypes.string,
   placeholder: PropTypes.string,
   helperText: PropTypes.string,
+  require: PropTypes.bool,
 };
 
-export default function RHFAutocomplete({ name, label, placeholder, helperText, ...other }) {
+export default function RHFAutocomplete({
+  name,
+  label,
+  placeholder,
+  helperText,
+  require,
+  ...other
+}) {
   const { control, setValue } = useFormContext();
 
   return (
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+          {label} {require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -36,6 +44,10 @@ export default function RHFAutocomplete({ name, label, placeholder, helperText, 
                 helperText={error ? error?.message : helperText}
                 {...params}
                 label={''}
+                sx={{
+                  '.MuiFormHelperText-root': { marginLeft: 0 },
+                  ...other.sx,
+                }}
               />
             )}
             {...other}

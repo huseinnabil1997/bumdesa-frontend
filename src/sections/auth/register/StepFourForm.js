@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Stack, Alert, Divider, Typography, Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -10,7 +9,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import { FormProvider, RHFTextField, RHFUploadPhoto } from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
 import { useRouter } from 'next/router';
-import { StyledButton } from 'src/theme/custom/Button';
+import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 import { ArrowBack } from '@mui/icons-material';
 import { fourDefaultValues, stepFourSchema } from './validation/stepFour';
 import { handleDrop } from 'src/utils/helperFunction';
@@ -80,7 +79,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
           name="image"
           label="Foto Manager BUM Desa"
           accept="image/*"
-          maxSize={5000000}
+          maxSize={10000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
@@ -94,7 +93,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
             >
               Format yang diperbolehkan: png, jpg, jpeg.
               <br />
-              Ukuran maks {fData(5000000)}
+              Ukuran maks {fData(10000000)}
             </Typography>
           }
         />
@@ -105,23 +104,21 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
 
         <Divider />
 
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} justifyContent="flex-end">
           <StyledButton
-            fullWidth
             startIcon={<ArrowBack />}
             onClick={() => router.push('/auth/register/step-three')}
           >
             Sebelumnya
           </StyledButton>
-          <LoadingButton
-            fullWidth
+          <StyledLoadingButton
             size="large"
             type="submit"
             variant="contained"
             loading={isSubmitting}
           >
             Selanjutnya
-          </LoadingButton>
+          </StyledLoadingButton>
         </Stack>
       </Stack>
 

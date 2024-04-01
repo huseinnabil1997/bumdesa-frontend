@@ -1,25 +1,28 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Grid, Box, Card, Button, Typography, Stack } from '@mui/material';
-// utils
-import { fCurrency } from '../../utils/formatNumber';
 // _mock_
 import { _ecommerceLatestProducts } from '../../_mock';
 //
-import Image from '../../components/Image';
 import Scrollbar from '../../components/Scrollbar';
 import { ColorPreview } from '../../components/color-utils';
 import { useTheme } from '@emotion/react';
-import { Book, LocalFireDepartment, StarHalf } from '@mui/icons-material';
+import { ArrowForwardIos, Book, LocalFireDepartment, StarHalf } from '@mui/icons-material';
+import { StyledButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardLatestProducts() {
   return (
     <Stack>
-      <Typography variant="h5" sx={{ mb: 1 }}>
-        Konten Edukasi
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          Konten Edukasi
+        </Typography>
+        <StyledButton variant="outlined" endIcon={<ArrowForwardIos fontSize="small" />}>
+          Lihat Semua
+        </StyledButton>
+      </Stack>
       <Scrollbar>
         <Grid spacing={2} container sx={{ pb: 3, pt: 1 }}>
           {[1, 2, 3].map((product, i) => (
