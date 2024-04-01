@@ -13,11 +13,13 @@ import {
 } from '@mui/icons-material';
 import { fCurrency } from 'src/utils/formatNumber';
 import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
+import Iconify from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
 UserTableRow.propTypes = {
   row: PropTypes.object,
+  index: PropTypes.number,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
@@ -25,16 +27,29 @@ UserTableRow.propTypes = {
   onViewRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onDeleteRow }) {
+export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, index }) {
   const theme = useTheme();
 
   const { no_evidence, date, remark, debt, credit, unit } = row;
 
   const [open, setOpen] = useState(false);
 
+  const generateColor = (i, j) => {
+    const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
+    const b = j % 2 !== 1 ? theme.palette.grey[100] : 'white';
+
+    return i % 2 !== 0 ? a : b;
+  };
+
   return (
     <>
-      <TableRow hover selected={selected}>
+      <TableRow
+        hover
+        selected={selected}
+        sx={{
+          backgroundColor: index % 2 !== 0 ? theme.palette.grey[100] : 'white',
+        }}
+      >
         <TableCell>
           <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -47,13 +62,19 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow }) 
         <TableCell>{debt ? fCurrency(debt) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
 
-        <TableCell align="right">
+        <TableCell align="center">
           <Stack direction="row">
             <IconButton onClick={onEditRow}>
-              <EditOutlined fontSize="small" sx={{ color: theme.palette.primary.main }} />
+              <Iconify
+                icon={'lucide:edit'}
+                sx={{ color: theme.palette.primary.main, fontSize: 16 }}
+              />
             </IconButton>
             <IconButton onClick={onDeleteRow}>
-              <DeleteOutlineOutlined fontSize="small" sx={{ color: theme.palette.error.main }} />
+              <Iconify
+                icon={'lucide:trash'}
+                sx={{ color: theme.palette.error.main, fontSize: 16 }}
+              />
             </IconButton>
           </Stack>
         </TableCell>
@@ -63,8 +84,13 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow }) 
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Table aria-label="purchases">
               <TableBody>
-                {[1, 2, 3].map((historyRow) => (
-                  <TableRow key={historyRow}>
+                {[1, 2, 3].map((historyRow, idx) => (
+                  <TableRow
+                    key={historyRow}
+                    sx={{
+                      backgroundColor: generateColor(index, idx),
+                    }}
+                  >
                     <TableCell sx={{ pl: 5, display: 'flex' }}>
                       <DotIcon /> {remark}
                     </TableCell>

@@ -1,8 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, MenuItem, Alert, Divider, styled, AlertTitle, Typography } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Stack, Alert, Divider, AlertTitle, Typography } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -10,32 +9,28 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import {
   FormProvider,
   RHFAutocomplete,
-  RHFSelect,
   RHFTextField,
   RHFUploadPhoto,
 } from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
 import { useRouter } from 'next/router';
-import { StyledButton } from 'src/theme/custom/Button';
+import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 import { ArrowBack } from '@mui/icons-material';
-import { yearsArray } from 'src/utils/formatTime';
 import { AlertInfo } from 'src/theme/custom/Alert';
 import { StepThreeSchema, threeDefaultValues } from './validation/stepThree';
 import { handleDrop } from 'src/utils/helperFunction';
+import { useGetSector } from 'src/query/hooks/options/useGetSector';
+import { useGetRegisSequence } from 'src/query/hooks/auth/useGetRegisSequence';
+import { useEffect } from 'react';
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
+import moment from 'moment';
 // ----------------------------------------------------------------------
-
-const SERVICE_OPTIONS = [{ text: 'Jakarta', value: 1 }];
-
-const StyledMenuItemValued = styled(MenuItem)(() => ({
-  mx: 1,
-  my: 0.5,
-  borderRadius: 0.75,
-  typography: 'body2',
-  textTransform: 'capitalize',
-}));
 
 export default function StepThreeForm() {
   const { registerForm } = useAuth();
+
+  const { data: sectors } = useGetSector();
+  const { data } = useGetRegisSequence(3);
 
   const isMountedRef = useIsMountedRef();
 
@@ -57,7 +52,8 @@ export default function StepThreeForm() {
   const onSubmit = async (data) => {
     const payload = {
       ...data,
-      sector: data.sector.value,
+      sector: data?.sector?.value,
+      year_founded: moment(data?.year_founded).format('yyyy'),
     };
 
     const formData = new FormData();
@@ -78,6 +74,15 @@ export default function StepThreeForm() {
     }
   };
 
+  useEffect(() => {
+    if (data) {
+      setValue('name', data.name);
+      setValue('email', data.email);
+      setValue('year_founded', new Date(data.year_founded, 0, 1));
+      setValue('sector', data.sector);
+    }
+  }, [data]);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
@@ -87,7 +92,7 @@ export default function StepThreeForm() {
           name="image"
           label="Foto Kantor BUM Desa"
           accept="image/*"
-          maxSize={5000000}
+          maxSize={10000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
@@ -101,51 +106,41 @@ export default function StepThreeForm() {
             >
               Format yang diperbolehkan: png, jpg, jpeg.
               <br />
-              Ukuran maks {fData(5000000)}
+              Ukuran maks {fData(10000000)}
             </Typography>
           }
         />
 
         <RHFTextField name="name" label="Nama Unit Usaha" require />
-        <RHFTextField name="address" label="Alamat Email Unit Usaha" require />
+        <RHFTextField name="email" label="Alamat Email Unit Usaha" require />
 
-        <RHFSelect
-          require
-          fullWidth
+        <RHFDatePicker
           name="year_founded"
           label="Tahun Berdiri"
-          InputLabelProps={{ shrink: true }}
-          SelectProps={{
-            native: false,
-            sx: { textTransform: 'capitalize' },
-            MenuProps: {
-              PaperProps: {
-                style: {
-                  maxHeight: 200,
-                  paddingTop: 4,
-                  paddingBottom: 4,
-                },
-              },
+          placeholder="Pilih Tahun"
+          format="yyyy"
+          views={['year']}
+          openTo="year"
+          sx={{
+            width: '100%',
+            '& .MuiInputBase-root': {
+              height: '56px',
+              borderRadius: '8px',
             },
           }}
-        >
-          {yearsArray.map((option) => (
-            <StyledMenuItemValued key={option} value={option}>
-              {option}
-            </StyledMenuItemValued>
-          ))}
-        </RHFSelect>
+          require
+        />
 
         <RHFAutocomplete
           require
           name="sector"
           label="Sektor Usaha"
           loading={false}
-          options={SERVICE_OPTIONS?.map((option) => option) ?? []}
-          getOptionLabel={(option) => option.text}
+          options={sectors}
+          getOptionLabel={(option) => option.label}
           renderOption={(props, option) => (
             <li {...props} key={option.value}>
-              {option.text}
+              {option.label}
             </li>
           )}
         />
@@ -170,9 +165,14 @@ export default function StepThreeForm() {
           >
             Sebelumnya
           </StyledButton>
-          <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
+          <StyledLoadingButton
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
             Selanjutnya
-          </LoadingButton>
+          </StyledLoadingButton>
         </Stack>
       </Stack>
     </FormProvider>

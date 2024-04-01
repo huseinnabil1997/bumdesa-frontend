@@ -8,7 +8,13 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { FormProvider, RHFAutocomplete, RHFSelect, RHFTextField, RHFUploadPhoto } from 'src/components/hook-form';
+import {
+  FormProvider,
+  RHFAutocomplete,
+  RHFSelect,
+  RHFTextField,
+  RHFUploadPhoto,
+} from 'src/components/hook-form';
 import { fData } from 'src/utils/formatNumber';
 import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
@@ -34,12 +40,14 @@ export default function AddUnitUsaha() {
     sector: null,
     manager_name: '',
     phone: '',
-  }
+  };
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
     name: Yup.string().required('Nama BUM Desa wajib diisi'),
-    email: Yup.string().email('Format email tidak valid').required('Alamat Email Aktif Unit Usaha wajib diisi'),
+    email: Yup.string()
+      .email('Format email tidak valid')
+      .required('Alamat Email Aktif Unit Usaha wajib diisi'),
     year: Yup.string().required('Tahun Berdiri wajib diisi'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
@@ -67,7 +75,7 @@ export default function AddUnitUsaha() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('simpan', data)
+    console.log('simpan', data);
     // try {
 
     // } catch (error) {
@@ -113,7 +121,7 @@ export default function AddUnitUsaha() {
                 name="image"
                 label="Foto Unit Usaha*"
                 accept="image/*"
-                maxSize={5000000}
+                maxSize={10000000}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
                 errorTextAlign="left"
                 helperText={
@@ -139,8 +147,8 @@ export default function AddUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
@@ -151,8 +159,8 @@ export default function AddUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
@@ -160,14 +168,14 @@ export default function AddUnitUsaha() {
                   name="year"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
-                  format='yyyy'
+                  format="yyyy"
                   views={['year']}
                   openTo="year"
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
                       height: '44px',
-                      borderRadius: '8px'
+                      borderRadius: '8px',
                     },
                   }}
                   require
@@ -191,7 +199,7 @@ export default function AddUnitUsaha() {
                     width: '293px',
                     '& .MuiInputBase-root': {
                       height: '44px',
-                    }
+                    },
                   }}
                   require
                 />
@@ -208,8 +216,8 @@ export default function AddUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
@@ -218,7 +226,7 @@ export default function AddUnitUsaha() {
                   label="Jabatan"
                   placeholder="Contoh: budi@gmail.com"
                   inputProps={{
-                    style: { color: "#00549B" },
+                    style: { color: '#00549B' },
                   }}
                   sx={{
                     backgroundColor: '#CCE8FF',
@@ -236,35 +244,48 @@ export default function AddUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
               </Stack>
             </Stack>
             <Divider />
-            <Stack direction="row" p="16px 24px 16px 24px" width="100%" display="flex" justifyContent="space-between" alignItems="center" >
+            <Stack
+              direction="row"
+              p="16px 24px 16px 24px"
+              width="100%"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Stack spacing={0.5}>
-                <Stack direction="row" display="flex" alignItems="center" spacing={0.5} >
-                  <InfoIcon fontSize='13.33px' sx={{ color: '#1078CA' }} />
-                  <Typography fontWeight={600} color="#1078CA" fontSize="14px">Informasi</Typography>
+                <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
+                  <InfoIcon fontSize="13.33px" sx={{ color: '#1078CA' }} />
+                  <Typography fontWeight={600} color="#1078CA" fontSize="14px">
+                    Informasi
+                  </Typography>
                 </Stack>
                 <Typography variant="caption" fontSize="12px" fontWeight={500} color="#929393">
                   Username dan password akan dikirimkan melalui email unit usaha.
-                  <span style={{ fontSize: '12px', fontWeight: 700 }}> Pastikan email yang dimasukkan benar dan aktif.</span>
+                  <span style={{ fontSize: '12px', fontWeight: 700 }}>
+                    {' '}
+                    Pastikan email yang dimasukkan benar dan aktif.
+                  </span>
                 </Typography>
               </Stack>
               <StyledLoadingButton
                 variant="contained"
                 sx={{ width: '160px', height: '48px' }}
                 onClick={handleSubmit(onSubmit)}
-              >Simpan
+              >
+                Simpan
               </StyledLoadingButton>
             </Stack>
           </FormProvider>
         </Card>
       </Container>
     </Page>
-  )
-} 
+  );
+}

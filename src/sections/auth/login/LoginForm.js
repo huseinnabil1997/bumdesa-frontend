@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 // routes
 import { PATH_AUTH } from '../../../routes/paths';
 // hooks
@@ -104,7 +104,7 @@ export default function LoginForm() {
         </NextLink>
       </Stack>
 
-      <LoadingButton
+      <StyledLoadingButton
         fullWidth
         size="large"
         type="submit"
@@ -113,7 +113,7 @@ export default function LoginForm() {
         loading={isSubmitting}
       >
         Masuk
-      </LoadingButton>
+      </StyledLoadingButton>
     </FormProvider>
   );
 }

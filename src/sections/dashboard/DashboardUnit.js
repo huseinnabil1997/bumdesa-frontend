@@ -7,16 +7,22 @@ import { _ecommerceLatestProducts } from '../../_mock';
 import Image from '../../components/Image';
 import Scrollbar from '../../components/Scrollbar';
 import { useTheme } from '@emotion/react';
-import { AddBox } from '@mui/icons-material';
+import { AddBox, ArrowForwardIos } from '@mui/icons-material';
+import { StyledButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardUnit() {
   return (
     <Stack>
-      <Typography variant="h5" sx={{ mb: 1 }}>
-        Daftar Unit Usaha Terkini
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          Daftar Unit Usaha Terkini
+        </Typography>
+        <StyledButton variant="outlined" endIcon={<ArrowForwardIos fontSize="small" />}>
+          Lihat Semua
+        </StyledButton>
+      </Stack>
       <Scrollbar>
         <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1 }}>
           <CreateItem />

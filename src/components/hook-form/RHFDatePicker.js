@@ -72,7 +72,7 @@ export default function RHFDatePicker({
               label=""
               value={field.value}
               onChange={(date) => {
-                field.onChange(date.getFullYear());
+                field.onChange(date);
                 handlePickerClose();
               }}
               renderInput={(params) => (
@@ -86,12 +86,12 @@ export default function RHFDatePicker({
                   sx={{
                     '.MuiFormLabel-asterisk': { color: 'red' },
                     'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
-                      '-webkit-appearance': 'none',
+                      WebkitAppearance: 'none',
                       margin: 0,
                     },
                     '.MuiFormHelperText-root': { marginLeft: 0 },
                     '::-webkit-inner-spin-button,::-webkit-outer-spin-button': {
-                      '-webkit-appearance': 'none',
+                      WebkitAppearance: 'none',
                     },
                     ...other.sx,
                   }}
