@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 // form
 import { useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,6 +15,7 @@ import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 import { ArrowBack } from '@mui/icons-material';
 import { handleDrop } from 'src/utils/helperFunction';
 import { StepTwoSchema, twoDefaultValues } from './validation/stepTwo';
+import { useGetRegisSequence } from 'src/query/hooks/auth/useGetRegisSequence';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,8 @@ export default function StepTwoForm() {
   const isMountedRef = useIsMountedRef();
 
   const router = useRouter();
+
+  const { data } = useGetRegisSequence(2);
 
   const methods = useForm({
     resolver: yupResolver(StepTwoSchema),
@@ -73,6 +76,21 @@ export default function StepTwoForm() {
     }
   };
 
+  useEffect(() => {
+    if (data?.length) {
+      setValue('name', data[0].name);
+      setValue('phone', data[0].phone);
+
+      const temp = data;
+      temp.shift();
+
+      temp.forEach((row, i) => {
+        setValue(`organizations.${i}.name`, row.name);
+        setValue(`organizations.${i}.phone`, row.phone);
+      });
+    }
+  }, [data]);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
@@ -82,7 +100,7 @@ export default function StepTwoForm() {
           name="image"
           label="Foto Direktur BUM Desa"
           accept="image/*"
-          maxSize={5000000}
+          maxSize={10000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography
@@ -96,7 +114,7 @@ export default function StepTwoForm() {
             >
               Format yang diperbolehkan: png, jpg, jpeg.
               <br />
-              Ukuran maks {fData(5000000)}
+              Ukuran maks {fData(10000000)}
             </Typography>
           }
         />
@@ -113,7 +131,7 @@ export default function StepTwoForm() {
               name={`organizations.${i}.image`}
               label="Foto Pengurus BUM Desa"
               accept="image/*"
-              maxSize={5000000}
+              maxSize={10000000}
               onDrop={(file) =>
                 handleDrop(file, (val) => setValue(`organizations.${i}.image`, val))
               }
@@ -129,7 +147,7 @@ export default function StepTwoForm() {
                 >
                   Format yang diperbolehkan: png, jpg, jpeg.
                   <br />
-                  Ukuran maks {fData(5000000)}
+                  Ukuran maks {fData(10000000)}
                 </Typography>
               }
             />

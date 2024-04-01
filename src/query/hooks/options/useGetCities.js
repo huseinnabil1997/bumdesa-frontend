@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getCities } from '../request/options';
+import { getCities } from '../../request/options';
 
 const fetchData = async (param) => {
   try {

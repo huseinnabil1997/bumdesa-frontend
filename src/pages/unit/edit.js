@@ -32,7 +32,9 @@ export default function EditUnitUsaha() {
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
     name: Yup.string().required('Nama BUM Desa wajib diisi'),
-    email: Yup.string().email('Format email tidak valid').required('Alamat Email Aktif Unit Usaha wajib diisi'),
+    email: Yup.string()
+      .email('Format email tidak valid')
+      .required('Alamat Email Aktif Unit Usaha wajib diisi'),
     year: Yup.string().required('Tahun Berdiri wajib diisi'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
@@ -54,7 +56,7 @@ export default function EditUnitUsaha() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('simpan', data)
+    console.log('simpan', data);
     // try {
     //   // Lakukan pengiriman data
     // } catch (error) {
@@ -132,7 +134,7 @@ export default function EditUnitUsaha() {
                 name="image"
                 label="Foto Unit Usaha*"
                 accept="image/*"
-                maxSize={5000000}
+                maxSize={10000000}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
                 errorTextAlign="left"
                 helperText={
@@ -158,8 +160,8 @@ export default function EditUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
@@ -170,8 +172,8 @@ export default function EditUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
@@ -179,14 +181,14 @@ export default function EditUnitUsaha() {
                   name="year"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
-                  format='yyyy'
+                  format="yyyy"
                   views={['year']}
                   openTo="year"
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
                       height: '44px',
-                      borderRadius: '8px'
+                      borderRadius: '8px',
                     },
                   }}
                   require
@@ -210,7 +212,7 @@ export default function EditUnitUsaha() {
                     width: '293px',
                     '& .MuiInputBase-root': {
                       height: '44px',
-                    }
+                    },
                   }}
                   require
                 />
@@ -227,8 +229,8 @@ export default function EditUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
@@ -256,35 +258,48 @@ export default function EditUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px'
-                    }
+                      height: '44px',
+                    },
                   }}
                   require
                 />
               </Stack>
             </Stack>
             <Divider />
-            <Stack direction="row" p="16px 24px 16px 24px" width="100%" display="flex" justifyContent="space-between" alignItems="center" >
+            <Stack
+              direction="row"
+              p="16px 24px 16px 24px"
+              width="100%"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Stack spacing={0.5}>
-                <Stack direction="row" display="flex" alignItems="center" spacing={0.5} >
-                  <InfoIcon fontSize='13.33px' sx={{ color: '#1078CA' }} />
-                  <Typography fontWeight={600} color="#1078CA" fontSize="14px">Informasi</Typography>
+                <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
+                  <InfoIcon fontSize="13.33px" sx={{ color: '#1078CA' }} />
+                  <Typography fontWeight={600} color="#1078CA" fontSize="14px">
+                    Informasi
+                  </Typography>
                 </Stack>
                 <Typography variant="caption" fontSize="12px" fontWeight={500} color="#929393">
                   Username dan password akan dikirimkan melalui email unit usaha.
-                  <span style={{ fontSize: '12px', fontWeight: 700 }}> Pastikan email yang dimasukkan benar dan aktif.</span>
+                  <span style={{ fontSize: '12px', fontWeight: 700 }}>
+                    {' '}
+                    Pastikan email yang dimasukkan benar dan aktif.
+                  </span>
                 </Typography>
               </Stack>
               <StyledLoadingButton
                 variant="contained"
                 sx={{ width: '160px', height: '48px' }}
                 onClick={handleSubmit(onSubmit)}
-              >Simpan
+              >
+                Simpan
               </StyledLoadingButton>
             </Stack>
           </FormProvider>
         </Card>
       </Container>
     </Page>
-  )
-} 
+  );
+}

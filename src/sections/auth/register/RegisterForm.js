@@ -31,6 +31,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
     registerDefaultValues,
+    mode: 'onChange',
   });
 
   const {

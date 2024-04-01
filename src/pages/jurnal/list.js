@@ -75,9 +75,10 @@ export default function JurnalList() {
 
                 <TableBody>
                   {!isLoading &&
-                    data.map((row) => (
+                    data.map((row, i) => (
                       <UserTableRow
                         key={row.id}
+                        index={i}
                         row={row}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row)}

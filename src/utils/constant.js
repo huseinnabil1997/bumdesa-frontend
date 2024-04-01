@@ -5,5 +5,5 @@ export const JURNAL_HEAD = [
   { id: 'unit', label: 'Unit Usaha', align: 'left', width: 300 },
   { id: 'debit', label: 'Debit', align: 'left', width: 250 },
   { id: 'kredit', label: 'Kredit', align: 'left', width: 250 },
-  { id: 'action', label: 'Action', align: 'left', width: 100 },
+  { id: 'action', label: 'Action', align: 'center', width: 100 },
 ];

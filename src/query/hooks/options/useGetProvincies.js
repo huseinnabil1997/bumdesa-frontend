@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getProvincies } from '../request/options';
+import { getProvincies } from '../../request/options';
 
 const fetchData = async () => {
   try {

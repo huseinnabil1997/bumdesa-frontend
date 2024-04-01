@@ -23,3 +23,7 @@ export function getSubdistricts(param) {
 export function getPostalCode(param) {
   return service.get('/address/postal-code', { params: param });
 }
+
+export function getSector(param) {
+  return service.get('/sector', { params: param });
+}

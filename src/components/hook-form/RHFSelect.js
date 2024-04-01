@@ -9,16 +9,17 @@ import { TextField, Typography, Stack } from '@mui/material';
 RHFSelect.propTypes = {
   children: PropTypes.node,
   name: PropTypes.string,
+  require: PropTypes.bool,
 };
 
-export default function RHFSelect({ name, children, ...other }) {
+export default function RHFSelect({ name, children, require, ...other }) {
   const { control } = useFormContext();
 
   return (
     <Stack>
       {other?.label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {other?.label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+          {other?.label} {require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller

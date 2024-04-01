@@ -8,16 +8,17 @@ import { TextField, Typography, Stack } from '@mui/material';
 
 RHFTextField.propTypes = {
   name: PropTypes.string,
+  require: PropTypes.bool,
 };
 
-export default function RHFTextField({ name, ...other }) {
+export default function RHFTextField({ name, require, ...other }) {
   const { control } = useFormContext();
 
   return (
     <Stack>
       {other?.label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {other?.label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+          {other?.label} {require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -33,12 +34,12 @@ export default function RHFTextField({ name, ...other }) {
             sx={{
               '.MuiFormLabel-asterisk': { color: 'red' },
               'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
-                '-webkit-appearance': 'none',
+                WebkitAppearance: 'none',
                 margin: 0,
               },
               '.MuiFormHelperText-root': { marginLeft: 0 },
               '::-webkit-inner-spin-button,::-webkit-outer-spin-button': {
-                '-webkit-appearance': 'none',
+                WebkitAppearance: 'none',
               },
               ...other.sx,
             }}

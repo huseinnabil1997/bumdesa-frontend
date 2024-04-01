@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getDistricts } from '../request/options';
+import { getDistricts } from '../../request/options';
 
 const fetchData = async (param) => {
   try {

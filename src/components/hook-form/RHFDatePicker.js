@@ -75,7 +75,7 @@ export default function RHFDatePicker({
               renderInput={() => (
                 <TextField
                   // {...params}
-                  value={dateValue.getFullYear()}
+                  value={dateValue?.getFullYear()}
                   fullWidth
                   error={!!error}
                   helperText={error?.message}
@@ -84,12 +84,12 @@ export default function RHFDatePicker({
                   sx={{
                     '.MuiFormLabel-asterisk': { color: 'red' },
                     'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
-                      '-webkit-appearance': 'none',
+                      WebkitAppearance: 'none',
                       margin: 0,
                     },
                     '.MuiFormHelperText-root': { marginLeft: 0 },
                     '::-webkit-inner-spin-button,::-webkit-outer-spin-button': {
-                      '-webkit-appearance': 'none',
+                      WebkitAppearance: 'none',
                     },
                     ...other.sx,
                   }}

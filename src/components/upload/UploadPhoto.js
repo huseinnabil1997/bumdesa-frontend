@@ -97,7 +97,7 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
 
   return (
     <>
-      <Typography variant="caption">
+      <Typography variant="caption" fontWeight={600}>
         {label}
         <span style={{ color: 'red' }}> *</span>
       </Typography>
