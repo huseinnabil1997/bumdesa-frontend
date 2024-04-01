@@ -20,7 +20,12 @@ export default function UserTableToolbarUnit({ filterName, onFilterName, handleI
         onChange={(event) => onFilterName(event.target.value)}
         onKeyDown={(event) => handleInputChange(event)}
         placeholder="Cari Unit Usaha"
-        sx={{ width: 424, height: 48 }}
+        sx={{
+          width: '424px',
+          '& .MuiInputBase-root': {
+            height: '44px',
+          },
+        }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

@@ -33,7 +33,7 @@ import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard/unit';
 import { useDispatch } from 'react-redux';
 import { deleteVendor, resetMessage } from '../../redux/slices/vendor';
-// import axiosInstance from 'src/utils/axiosCoreService';
+import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
 
 
@@ -81,20 +81,20 @@ export default function UserList() {
   const [alertDelete, setAlertDelete] = useState(null);
 
   const fetchData = async (search) => {
-    // setIsLoading(true);
-    // try {
-    //   const response = await axiosInstance.get('/business-units', {
-    //     params: {
-    //       page: page,
-    //       limit: rowsPerPage,
-    //       search: search,
-    //     }
-    //   });
-    //   setUnits(response.data);
-    //   setIsLoading(false);
-    // } catch (error) {
-    //   console.log('error setUnits', error);
-    // }
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get('/business-units', {
+        params: {
+          page: page,
+          limit: rowsPerPage,
+          search: search,
+        }
+      });
+      setUnits(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log('error setUnits', error);
+    }
   };
 
 
@@ -144,7 +144,7 @@ export default function UserList() {
           </Box>
 
           <StyledLoadingButton
-            sx={{ width: 210, height: 48, backgroundColor: '#1078CA' }}
+            sx={{ width: 210, height: '48px', backgroundColor: '#1078CA' }}
             variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => router.push('new')}
           >
@@ -153,7 +153,7 @@ export default function UserList() {
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
-          <TableContainer sx={{ minWidth: 960, position: 'relative', borderRadius: 2, }}>
+          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2, }}>
 
             <Table>
               <TableHeadCustom

@@ -39,7 +39,7 @@ export default function RHFDatePicker({
   const { control } = useFormContext();
 
   const [openPicker, setOpenPicker] = useState(false);
-  const [dateValue, setDateValue] = useState(null);
+  const [dateValue, setDateValue] = useState(new Date());
 
   const handlePickerOpen = () => {
     setOpenPicker(true);
@@ -53,7 +53,7 @@ export default function RHFDatePicker({
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }}>
-          {label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+          {label} {other?.required && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -72,14 +72,12 @@ export default function RHFDatePicker({
                 setDateValue(date ?? field.value)
                 handlePickerClose();
               }}
-              renderInput={() => (
+              renderInput={(params) => (
                 <TextField
-                  // {...params}
-                  value={dateValue?.getFullYear()}
+                  {...params}
                   fullWidth
                   error={!!error}
                   helperText={error?.message}
-                  params
                   {...other}
                   sx={{
                     '.MuiFormLabel-asterisk': { color: 'red' },
@@ -103,16 +101,14 @@ export default function RHFDatePicker({
                     ),
                   }}
                 />
-              )
-              }
+              )}
               inputFormat={format}
               views={views}
               openTo={openTo}
               orientation="portrait"
             />
           </ThemeProvider>
-        )
-        }
+        )}
       />
     </Stack>
   );

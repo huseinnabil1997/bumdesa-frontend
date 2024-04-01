@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 // @mui
-import { styled } from '@mui/material/styles';
-import { TableRow, TableCell, Chip, Button, Tooltip, tooltipClasses } from '@mui/material';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { styled, useTheme } from '@mui/material/styles';
+import { TableRow, TableCell, Chip, Tooltip, tooltipClasses, IconButton } from '@mui/material';
 // components
 import Iconify from '../../../components/Iconify';
-import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +41,7 @@ export default function UserTableRowUnit({
   onDeleteRow,
   disableDelete = false,
 }) {
+  const theme = useTheme();
   const { name, email, year_founded, status } = row;
 
   return (
@@ -68,16 +67,20 @@ export default function UserTableRowUnit({
       </TableCell>
 
       <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
-        <StyledLoadingButton
-          variant="contained"
-          sx={{ backgroundColor: '#1078CA', width: 80, height: 32 }}
-          endIcon={<Iconify icon={'lucide:edit'} />}
-          onClick={onEditRow}
-        >
-          Edit
-        </StyledLoadingButton>
+        <IconButton onClick={onEditRow}>
+          <Iconify
+            icon={'lucide:edit'}
+            sx={{ color: theme.palette.primary.main, fontSize: 16 }}
+          />
+        </IconButton>
         <DeleteTooltip title="Setidaknya harus ada 1 unit usaha aktif di BUM Desa.">
-          <Button
+          <IconButton onClick={disableDelete ? null : onDeleteRow}>
+            <Iconify
+              icon={'lucide:trash'}
+              sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
+            />
+          </IconButton>
+          {/* <Button
             variant="outlined"
             // disabled={disableDelete}
             sx={{
@@ -96,7 +99,7 @@ export default function UserTableRowUnit({
             onClick={disableDelete ? null : onDeleteRow}
           >
             Delete
-          </Button>
+          </Button> */}
         </DeleteTooltip>
       </TableCell>
     </TableRow>

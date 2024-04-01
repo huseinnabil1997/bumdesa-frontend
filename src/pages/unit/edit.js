@@ -13,7 +13,7 @@ import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-// import axiosInstance from 'src/utils/axiosCoreService';
+import axiosInstance from 'src/utils/axiosCoreService';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -41,6 +41,7 @@ export default function EditUnitUsaha() {
     position: Yup.string().required('Jabatan wajib diisi'),
     phone: Yup.string()
       .required('Nomor telepon wajib diisi')
+      .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(15, 'Nomor telepon maksimal diisi 15 digit'),
   });
@@ -53,6 +54,7 @@ export default function EditUnitUsaha() {
   const {
     setValue,
     handleSubmit,
+    isSubmitting,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -66,13 +68,13 @@ export default function EditUnitUsaha() {
 
   const fetchData = async () => {
     // setIsLoading(true);
-    // try {
-    //   const response = await axiosInstance.get(`/business-units/${router.query.id}`);
-    //   setData(response.data.data);
-    //   // setIsLoading(false);
-    // } catch (error) {
-    //   console.log('error setData', error);
-    // }
+    try {
+      const response = await axiosInstance.get(`/business-units/${router.query.id}`);
+      setData(response.data.data);
+      // setIsLoading(false);
+    } catch (error) {
+      console.log('error setData', error);
+    }
   };
 
   useEffect(() => {
@@ -293,6 +295,7 @@ export default function EditUnitUsaha() {
                 variant="contained"
                 sx={{ width: '160px', height: '48px' }}
                 onClick={handleSubmit(onSubmit)}
+                loading={isSubmitting}
               >
                 Simpan
               </StyledLoadingButton>
