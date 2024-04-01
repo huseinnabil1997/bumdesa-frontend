@@ -14,6 +14,7 @@ import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+// import axiosInstance from 'src/utils/axiosCoreService';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -68,11 +69,18 @@ export default function AddUnitUsaha() {
 
   const onSubmit = async (data) => {
     console.log('simpan', data)
-    // try {
+    // const postData = {
+    //   key1: 'value1',
+    //   key2: 'value2'
+    // };
 
-    // } catch (error) {
-
-    // }
+    // axiosInstance.post('/post-endpoint', postData)
+    //   .then(response => {
+    //     console.log('Response:', response.data);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error:', error);
+    //   });
   };
 
   return (

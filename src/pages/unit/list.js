@@ -5,14 +5,10 @@ import {
   Box,
   Card,
   Table,
-  Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
   Pagination,
-  Alert,
   FormControl,
   Select,
   MenuItem,
@@ -25,22 +21,20 @@ import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import Scrollbar from '../../components/Scrollbar';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   TableEmptyRows,
   TableHeadCustom,
   TableNoData,
-  TableSelectedActions,
   TableSkeleton,
 } from '../../components/table';
-import ModalAddVendor from '../../components/modal/AddVendor';
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
-import { StyledLoadingButton } from 'src/theme/custom/Button';
+import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
-import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/@dashboard/user/list';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteVendor, getVendors, resetMessage } from '../../redux/slices/vendor';
+import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard/unit';
+import { useDispatch } from 'react-redux';
+import { deleteVendor, resetMessage } from '../../redux/slices/vendor';
+// import axiosInstance from 'src/utils/axiosCoreService';
+import { Add } from '@mui/icons-material';
 
 
 // ----------------------------------------------------------------------
@@ -53,22 +47,6 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Action', align: 'center' },
 ];
 
-const units = [
-  { id: '1', name: 'Toko Ikan Pak Budi', email: 'budi@gmail.com', year: '2023', status: 0 },
-  { id: '2', name: 'Toko Baju Budi', email: 'batabudi@gmail.com', year: '2019', status: 1 },
-  { id: '3', name: 'Toko Ikan Pak Budi', email: 'budi@gmail.com', year: '2023', status: 0 },
-  { id: '4', name: 'Toko Baju Budi', email: 'batabudi@gmail.com', year: '2019', status: 1 },
-  { id: '5', name: 'Toko Ikan Pak Budi', email: 'budi@gmail.com', year: '2023', status: 0 },
-  { id: '6', name: 'Toko Baju Budi', email: 'batabudi@gmail.com', year: '2019', status: 1 },
-  { id: '7', name: 'Toko Ikan Pak Budi', email: 'budi@gmail.com', year: '2023', status: 0 },
-  { id: '8', name: 'Toko Baju Budi', email: 'batabudi@gmail.com', year: '2019', status: 1 },
-  { id: '9', name: 'Toko Ikan Pak Budi', email: 'budi@gmail.com', year: '2023', status: 0 },
-  { id: '10', name: 'Toko Baju Budi', email: 'batabudi@gmail.com', year: '2019', status: 1 }
-];
-
-console.log(units);
-
-
 // ----------------------------------------------------------------------
 
 UserList.getLayout = function getLayout(page) {
@@ -77,46 +55,55 @@ UserList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  let debounceTimeout;
   const {
     page,
     rowsPerPage,
+    onChangeRowsPerPage,
     //
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onChangePage,
   } = useTable({ defaultCurrentPage: 1 });
+
+  console.log('page', page, rowsPerPage);
 
   const router = useRouter()
 
   const { themeStretch } = useSettings();
 
-  const { vendors, isLoading, error, success } = useSelector((state) => state.vendor);
   const dispatch = useDispatch();
 
+  const [units, setUnits] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
-  const [isOpen, setOpen] = useState(false);
-  const [id, setId] = useState(null);
-  const [isEdit, setEdit] = useState(false);
   const [alertDelete, setAlertDelete] = useState(null);
-  const [totalPerPage, setTotalPerPage] = useState(10);
 
-  const fetchData = (key) => {
-    dispatch(getVendors(page, key));
-    setTimeout(() => {
-      dispatch(resetMessage());
-    }, [3000]);
+  const fetchData = async (search) => {
+    // setIsLoading(true);
+    // try {
+    //   const response = await axiosInstance.get('/business-units', {
+    //     params: {
+    //       page: page,
+    //       limit: rowsPerPage,
+    //       search: search,
+    //     }
+    //   });
+    //   setUnits(response.data);
+    //   setIsLoading(false);
+    // } catch (error) {
+    //   console.log('error setUnits', error);
+    // }
   };
+
 
   useEffect(() => {
     fetchData();
-  }, [page]);
+  }, [page, rowsPerPage]);
 
-  const handleDeleteRow = (id) => {
-    setAlertDelete(id);
+  const handleDeleteRow = (id, status) => {
+    setAlertDelete({ id: id, status: status });
     setSelected([]);
   };
 
@@ -128,38 +115,20 @@ export default function UserList() {
     }, [3000]);
   };
 
-  const handleDeleteRows = () => {
-    setSelected([]);
-  };
+  // const handleEditRow = (row) => {
+  //   router.push(`editid=${row.id}`);
+  //   setOpen(true);
+  //   setId(row.id);
+  //   setEdit(true);
+  // };
 
-  const handleEditRow = (row) => {
-    router.push(`edit?id=${row.id}`);
-    // setOpen(true);
-    // setId(row.id);
-    // setEdit(true);
-  };
-
-  const handleViewRow = (row) => {
-    setOpen(true);
-    setId(row.id);
-  };
-
-  const handleClose = () => {
-    setId(null);
-    setOpen(false);
-    setEdit(false);
+  const handleViewRow = () => {
   };
 
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
       fetchData(filterName);
     }
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setTotalPerPage(event.target.value);
-    // reset page ke 1
-    onChangePage(1);
   };
 
   return (
@@ -172,7 +141,6 @@ export default function UserList() {
               onFilterName={setFilterName}
               handleInputChange={handleInputChange}
             />
-            {/* <Breadcrumbs links={links} {...other} /> */}
           </Box>
 
           <StyledLoadingButton
@@ -183,92 +151,70 @@ export default function UserList() {
             Tambah Unit Usaha
           </StyledLoadingButton>
         </Box>
-        {success && (
-          <Alert severity="success" sx={{ m: 1 }}>
-            {success}
-          </Alert>
-        )}
-
-        {error && (
-          <Alert severity="error" sx={{ m: 1 }}>
-            {error}
-          </Alert>
-        )}
 
         <Card sx={{ borderRadius: 2 }}>
-          {/* <Scrollbar sx={{ overflowY: 'auto', height: 350  }}> */}
-            <TableContainer sx={{ minWidth: 960, position: 'relative', borderRadius: 2, }}>
-              {selected.length > 0 && (
-                <TableSelectedActions
-                  numSelected={selected.length}
-                  rowCount={vendors?.data.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      vendors?.data.map((row) => row.id)
-                    )
-                  }
-                  actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
+          <TableContainer sx={{ minWidth: 960, position: 'relative', borderRadius: 2, }}>
+
+            <Table>
+              <TableHeadCustom
+                headLabel={TABLE_HEAD}
+                rowCount={units?.data?.length}
+                numSelected={selected.length}
+                sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+              />
+
+              <TableBody>
+                {!isLoading && units &&
+                  units?.data?.map((row, index) => (
+                    <UserTableRowUnit
+                      id={row.id}
+                      key={row.id}
+                      row={row}
+                      index={index}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => onSelectRow(row.id)}
+                      onDeleteRow={() => handleDeleteRow(row.id, row.status)}
+                      disableDelete={units?.data.length === 1}
+                      onEditRow={() => router.push(`edit?id=${row.id}`)}
+                      onViewRow={() => handleViewRow(row)}
+                      sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                    />
+                  ))}
+
+                <TableEmptyRows emptyRows={emptyRows(page, rowsPerPage, units?.data?.length)} />
+                {isLoading && <TableSkeleton />}
+                <TableNoData
+                  isNotFound={!units?.data}
+                  title="Unit usaha belum tersedia."
+                  description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
+                  action={
+                    <StyledButton
+                      sx={{ mt: 2, width: 200 }}
+                      variant="outlined"
+                      startIcon={<Add fontSize="small" />}
+                    >
+                      Tambah Unit usaha
+                    </StyledButton>
                   }
                 />
-              )}
-
-              <Table>
-                <TableHeadCustom
-                  headLabel={TABLE_HEAD}
-                  rowCount={vendors?.data.length}
-                  numSelected={selected.length}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     vendors?.data.map((row) => row.id)
-                  //   )
-                  // }
-                  sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
-                />
-
-                <TableBody>
-                  {!isLoading &&
-                    units?.map((row, index) => (
-                      <UserTableRowUnit
-                        key={row.id}
-                        row={row}
-                        index={index}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row)}
-                        onViewRow={() => handleViewRow(row)}
-                        sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
-                      />
-                    ))}
-
-                  <TableEmptyRows emptyRows={emptyRows(page, rowsPerPage, vendors?.data.length)} />
-                  {isLoading && <TableSkeleton />}
-                  <TableNoData isNotFound={!vendors?.data} />
-                </TableBody>
-              </Table>
-            </TableContainer>
-          {/* </Scrollbar> */}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Card>
 
         <Box display="flex" justifyContent="space-between" sx={{ p: 3 }}>
           <FormControl>
             <Select
-              value={totalPerPage}
-              onChange={handleChangeRowsPerPage}
+              value={rowsPerPage}
+              onChange={onChangeRowsPerPage}
               displayEmpty
               inputProps={{ 'aria-label': 'Rows per page' }} aria-controls=''
               sx={{ height: 32, width: 70 }}
             >
+              <MenuItem value={5}>5</MenuItem>
               <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={15}>15</MenuItem>
               <MenuItem value={20}>20</MenuItem>
-              <MenuItem value={30}>30</MenuItem>
             </Select>
           </FormControl>
           <Pagination
@@ -277,9 +223,8 @@ export default function UserList() {
             variant="outlined"
             shape="rounded"
             color="primary"
-            // count={vendors?.lastPage}
-            count={10}
-            rowsPerPage={vendors?.totalPerPage}
+            count={units?.metadata?.paging?.total_page}
+            rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
             sx={{
@@ -298,8 +243,7 @@ export default function UserList() {
             }}
           />
         </Box>
-        {/* <ModalAddVendor open={isOpen} onClose={handleClose} id={id} refetch={fetchData} isEdit={isEdit} /> */}
-        <AlertDeleteUnit open={!!alertDelete} onClose={() => setAlertDelete(null)} action={onDelete} />
+        <AlertDeleteUnit open={!!alertDelete} onClose={() => setAlertDelete(null)} action={onDelete} status={alertDelete?.status} />
       </Container>
     </Page>
   );

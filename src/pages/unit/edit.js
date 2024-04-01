@@ -8,12 +8,12 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { FormProvider, RHFAutocomplete, RHFSelect, RHFTextField, RHFUploadPhoto } from 'src/components/hook-form';
-import { fData } from 'src/utils/formatNumber';
+import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from 'src/components/hook-form';
 import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+// import axiosInstance from 'src/utils/axiosCoreService';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -22,21 +22,12 @@ EditUnitUsaha.getLayout = function getLayout(page) {
 const SERVICE_OPTIONS = [{ text: 'Jakarta', value: 1 }];
 
 export default function EditUnitUsaha() {
+  // const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState({})
+  console.log('data', data)
+
   const { themeStretch } = useSettings();
-  
   const router = useRouter();
-  
-  const defaultValues = {
-    id: router.query.id ?? '',
-    image: null,
-    name: '',
-    position: 'Manager',
-    email: '',
-    year: '',
-    sector: null,
-    manager_name: '',
-    phone: '',
-  }
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -48,34 +39,60 @@ export default function EditUnitUsaha() {
     position: Yup.string().required('Jabatan wajib diisi'),
     phone: Yup.string()
       .required('Nomor telepon wajib diisi')
-      // .matches(numberRegex, 'Nomor telepon harus diawali dengan 62 dan minimal 10 digit')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(15, 'Nomor telepon maksimal diisi 15 digit'),
   });
 
   const methods = useForm({
     resolver: yupResolver(NewUnitFormSchema),
-    defaultValues: defaultValues,
     mode: 'onChange',
   });
 
   const {
-    reset,
     setValue,
-    setError,
     handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
     console.log('simpan', data)
     // try {
-
+    //   // Lakukan pengiriman data
     // } catch (error) {
-
+    //   // Tangani kesalahan
     // }
   };
+
+  const fetchData = async () => {
+    // setIsLoading(true);
+    // try {
+    //   const response = await axiosInstance.get(`/business-units/${router.query.id}`);
+    //   setData(response.data.data);
+    //   // setIsLoading(false);
+    // } catch (error) {
+    //   console.log('error setData', error);
+    // }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(data).length > 0) {
+      const defaultValues = {
+        id: router.query.id ?? '',
+        image: data.photo ?? null,
+        name: data.name ?? '',
+        position: 'Manager',
+        email: data.email ?? '',
+        year: data.year_founded.toString() ?? '' ,
+        sector: data.sector ?? null,
+        manager_name: data.organization.Name ?? '',
+        phone: data.organization.Phone ?? '',
+      };
+      methods.reset(defaultValues);
+    }
+  }, [data]);
 
   return (
     <Page title="Unit Usaha: New">
@@ -218,9 +235,10 @@ export default function EditUnitUsaha() {
                 <RHFTextField
                   name="position"
                   label="Jabatan"
-                  placeholder="Contoh: budi@gmail.com"
                   inputProps={{
                     style: { color: "#00549B" },
+                    readOnly: true, 
+                    disableUnderline: true
                   }}
                   sx={{
                     backgroundColor: '#CCE8FF',
