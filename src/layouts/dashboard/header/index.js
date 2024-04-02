@@ -80,7 +80,8 @@ export default function DashboardHeader({
 
   const generateTitle = () => {
     const value = router.pathname.split('/')[1];
-    setTitle(value.charAt(0).toUpperCase() + value.slice(1));
+    if (value === 'unit') setTitle('Unit Usaha BUM Desa')
+    else setTitle(value.charAt(0).toUpperCase() + value.slice(1));
   };
 
   return (

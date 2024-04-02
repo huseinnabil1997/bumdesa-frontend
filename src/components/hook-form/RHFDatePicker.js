@@ -1,14 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import {
-  Typography,
-  Stack,
-  TextField,
-  ThemeProvider,
-  createTheme,
-  IconButton,
-} from '@mui/material';
+import { Typography, Stack, TextField, ThemeProvider, createTheme, IconButton } from '@mui/material';
 import DatePicker from '@mui/lab/DatePicker';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 
@@ -17,6 +10,7 @@ RHFDatePicker.propTypes = {
   format: PropTypes.string,
   label: PropTypes.string,
   required: PropTypes.bool,
+  openTo: PropTypes.string,
   views: PropTypes.array,
 };
 
@@ -39,11 +33,13 @@ export default function RHFDatePicker({
   format = 'MM/dd/yyyy',
   label,
   views = ['year', 'month', 'day'],
+  openTo,
   ...other
 }) {
   const { control } = useFormContext();
 
-  const [openPicker, setOpenPicker] = useState(false); // State to control visibility
+  const [openPicker, setOpenPicker] = useState(false);
+  const [dateValue, setDateValue] = useState(new Date());
 
   const handlePickerOpen = () => {
     setOpenPicker(true);
@@ -57,7 +53,7 @@ export default function RHFDatePicker({
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }}>
-          {label} {other?.require && <span style={{ color: 'red' }}>*</span>}
+          {label} {other?.required && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -70,9 +66,10 @@ export default function RHFDatePicker({
               {...field}
               open={openPicker}
               label=""
-              value={field.value}
+              value={dateValue ?? field.value}
               onChange={(date) => {
-                field.onChange(date);
+                field.onChange(date ?? field.value);
+                setDateValue(date ?? field.value)
                 handlePickerClose();
               }}
               renderInput={(params) => (
@@ -81,7 +78,6 @@ export default function RHFDatePicker({
                   fullWidth
                   error={!!error}
                   helperText={error?.message}
-                  params
                   {...other}
                   sx={{
                     '.MuiFormLabel-asterisk': { color: 'red' },
@@ -108,7 +104,7 @@ export default function RHFDatePicker({
               )}
               inputFormat={format}
               views={views}
-              openTo="year"
+              openTo={openTo}
               orientation="portrait"
             />
           </ThemeProvider>

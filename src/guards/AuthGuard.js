@@ -38,7 +38,8 @@ export default function AuthGuard({ children }) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
-    return <Login />;
+    // return <Login />;
+    window.location.href = '/auth/login'
   }
 
   return <>{children}</>;

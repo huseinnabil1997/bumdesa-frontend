@@ -1,5 +1,4 @@
 import { Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import Layout from 'src/layouts';
@@ -11,15 +10,15 @@ import { useRouter } from 'next/router';
 import {
   FormProvider,
   RHFAutocomplete,
-  RHFSelect,
   RHFTextField,
   RHFUploadPhoto,
 } from 'src/components/hook-form';
-import { fData } from 'src/utils/formatNumber';
 import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import axiosInstance from 'src/utils/axiosCoreService';
+import { useSnackbar } from 'notistack';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -31,15 +30,17 @@ export default function AddUnitUsaha() {
   const { themeStretch } = useSettings();
   const router = useRouter();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const defaultValues = {
     image: null,
     name: '',
     position: 'Manager',
     email: '',
-    year: '',
+    year_founded: new Date(),
     sector: null,
     manager_name: '',
-    phone: '',
+    manager_phone: '',
   };
 
   const NewUnitFormSchema = Yup.object().shape({
@@ -48,13 +49,13 @@ export default function AddUnitUsaha() {
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year: Yup.string().required('Tahun Berdiri wajib diisi'),
+    year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
     position: Yup.string().required('Jabatan wajib diisi'),
-    phone: Yup.string()
+    manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')
-      // .matches(numberRegex, 'Nomor telepon harus diawali dengan 62 dan minimal 10 digit')
+      .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(15, 'Nomor telepon maksimal diisi 15 digit'),
   });
@@ -68,19 +69,38 @@ export default function AddUnitUsaha() {
   const {
     reset,
     setValue,
-    setError,
+    // setError,
     handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
+    // watch,
+    formState: { 
+      // errors, 
+      isSubmitting 
+    },
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('simpan', data);
-    // try {
-
-    // } catch (error) {
-
-    // }
+    const formData = new FormData();
+    formData.append('image', data?.image);
+    formData.append('name', data?.name);
+    formData.append('email', data?.email);
+    formData.append('year_founded', new Date(data.year_founded).getFullYear());
+    formData.append('sector', data?.sector?.text);
+    formData.append('manager_name', data?.manager_name);
+    formData.append('manager_phone', data?.manager_phone);
+  
+    try {
+      const response = await axiosInstance.post('/business-units', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      enqueueSnackbar(response.message, { variant: 'success' });
+      router.push('list');
+      reset();
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+      console.log('error addUnits', error);
+    }
   };
 
   return (
@@ -147,7 +167,7 @@ export default function AddUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '44px',
+                      height: '48px',
                     },
                   }}
                   require
@@ -165,7 +185,7 @@ export default function AddUnitUsaha() {
                   require
                 />
                 <RHFDatePicker
-                  name="year"
+                  name="year_founded"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
                   format="yyyy"
@@ -238,7 +258,7 @@ export default function AddUnitUsaha() {
                   require
                 />
                 <RHFTextField
-                  name="phone"
+                  name="manager_phone"
                   label="Nomor Telepon"
                   placeholder="Contoh: 081xxx"
                   sx={{
@@ -279,6 +299,7 @@ export default function AddUnitUsaha() {
                 variant="contained"
                 sx={{ width: '160px', height: '48px' }}
                 onClick={handleSubmit(onSubmit)}
+                loading={isSubmitting}
               >
                 Simpan
               </StyledLoadingButton>

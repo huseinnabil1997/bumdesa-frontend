@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 // utils
 import axios from '../utils/axiosUnregistered';
 import { isValidToken, setSession } from '../utils/jwt';
+import axiosInstance from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -160,7 +161,7 @@ function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    const response = await axios.post('/signout');
+    const response = await axiosInstance.post('/signout');
     setSession(null);
 
     return response.data;

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import NextLink from 'next/link';
 // @mui
 import { Link, Card, Typography, Stack, Chip, IconButton } from '@mui/material';
 // _mock_
@@ -9,17 +10,20 @@ import Scrollbar from '../../components/Scrollbar';
 import { useTheme } from '@emotion/react';
 import { AddBox, ArrowForwardIos } from '@mui/icons-material';
 import { StyledButton } from 'src/theme/custom/Button';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardUnit() {
+  const router = useRouter();
+
   return (
     <Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
         <Typography variant="h5" sx={{ mb: 1 }}>
           Daftar Unit Usaha Terkini
         </Typography>
-        <StyledButton variant="outlined" endIcon={<ArrowForwardIos fontSize="small" />}>
+        <StyledButton onClick={() => router.push('/unit/list')} variant="outlined" endIcon={<ArrowForwardIos fontSize="small" />}>
           Lihat Semua
         </StyledButton>
       </Stack>
@@ -87,14 +91,16 @@ function CreateItem() {
     >
       <Image alt={name} src="/image/ornament_small.svg" sx={{ position: 'absolute', bottom: 0 }} />
 
-      <Stack sx={{ m: 'auto', height: '100%' }} alignItems="center" justifyContent="center">
-        <IconButton>
-          <AddBox sx={{ color: 'white' }} fontSize="large" />
-        </IconButton>
-        <Typography sx={{ color: 'white' }} variant="h6">
-          Tambah Unit Usaha
-        </Typography>
-      </Stack>
+      <NextLink href="/unit/new" passHref>
+        <Stack sx={{ m: 'auto', height: '100%' }} alignItems="center" justifyContent="center">
+          <IconButton>
+            <AddBox sx={{ color: 'white' }} fontSize="large" />
+          </IconButton>
+          <Typography sx={{ color: 'white' }} variant="h6">
+            Tambah Unit Usaha
+          </Typography>
+        </Stack>
+      </NextLink>
     </Card>
   );
 }
