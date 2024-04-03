@@ -134,7 +134,7 @@ export default function UserList() {
   return (
     <Page title="Unit Usaha: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }} sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ flexGrow: 1 }}>
             <UserTableToolbarUnit
               filterName={filterName}
@@ -144,7 +144,12 @@ export default function UserList() {
           </Box>
 
           <StyledLoadingButton
-            sx={{ width: 210, height: '48px', backgroundColor: '#1078CA' }}
+            sx={{ 
+              width: 210, 
+              height: '48px', 
+              backgroundColor: '#1078CA', 
+              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 } 
+            }}
             variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => router.push('new')}
           >
@@ -202,7 +207,7 @@ export default function UserList() {
           </TableContainer>
         </Card>
 
-        <Box display="flex" justifyContent="space-between" sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" sx={{ p: 3 }} flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
           <FormControl>
             <Select
               value={rowsPerPage}

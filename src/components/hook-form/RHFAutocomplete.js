@@ -27,7 +27,7 @@ export default function RHFAutocomplete({
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {label} {require && <span style={{ color: 'red' }}>*</span>}
+          {label}{require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
