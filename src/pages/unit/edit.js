@@ -33,19 +33,32 @@ export default function EditUnitUsaha() {
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year: Yup.string().required('Tahun Berdiri wajib diisi'),
+    year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
     position: Yup.string().required('Jabatan wajib diisi'),
-    phone: Yup.string()
+    manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')
       .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(13, 'Nomor telepon maksimal diisi 13 digit'),
   });
 
+  const defaultValues = {
+    id: router.query.id ?? '',
+    image: data.photo ?? null,
+    name: data.name ?? '',
+    position: 'Manager',
+    email: data.email ?? '',
+    year_founded: data.year_founded?.toString() ?? '',
+    sector: { value: data.id_sector, label: data.sector } ?? null,
+    manager_name: data.organization?.Name ?? '',
+    phone: data.organization?.Phone ?? '',
+  };
+
   const methods = useForm({
     resolver: yupResolver(NewUnitFormSchema),
+    defaultValues,
     mode: 'onChange',
   });
 
@@ -85,6 +98,12 @@ export default function EditUnitUsaha() {
   }
 
   useEffect(() => {
+    methods.reset(defaultValues);
+  }, [data]);
+
+  console.log('defaultValues', defaultValues)
+
+  useEffect(() => {
     if (Object.keys(data).length === 0) {
       fetchData();
     }
@@ -92,23 +111,6 @@ export default function EditUnitUsaha() {
       fetchSector();
     }
   }, [sectorData, data]);
-
-  useEffect(() => {
-    if (Object.keys(data).length > 0) {
-      const defaultValues = {
-        id: router.query.id ?? '',
-        image: data.photo ?? null,
-        name: data.name ?? '',
-        position: 'Manager',
-        email: data.email ?? '',
-        year: data.year_founded.toString() ?? '' ,
-        sector: data.sector ?? null,
-        manager_name: data.organization.Name ?? '',
-        phone: data.organization.Phone ?? '',
-      };
-      methods.reset(defaultValues);
-    }
-  }, [data]);
 
   return (
     <Page title="Unit Usaha: Edit">
@@ -149,6 +151,7 @@ export default function EditUnitUsaha() {
                 label="Foto Unit Usaha"
                 accept="image/*"
                 maxSize={10000000}
+                imageFrom={'unit'}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
                 errorTextAlign="left"
                 helperText={
@@ -225,6 +228,7 @@ export default function EditUnitUsaha() {
                   placeholder="Pilih Sektor Usaha"
                   size="small"
                   loading={false}
+                  isOptionEqualToValue={(option, value) => option.value === value.value}
                   options={sectorData?.map((option) => option) ?? []}
                   getOptionLabel={(option) => option.label}
                   renderOption={(props, option) => (
@@ -278,7 +282,7 @@ export default function EditUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
-                    "& fieldset": { 
+                    "& fieldset": {
                       border: 'none',
                     },
                   }}

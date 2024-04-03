@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import isString from 'lodash/isString';
 import { useDropzone } from 'react-dropzone';
 // @mui
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Modal, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 //
 import Image from '../Image';
 import Iconify from '../Iconify';
 import RejectionFiles from './RejectionFiles';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 // ----------------------------------------------------------------------
@@ -71,13 +71,29 @@ UploadPhoto.propTypes = {
   helperText: PropTypes.node,
   sx: PropTypes.object,
   label: PropTypes.string,
+  imageFrom: PropTypes.string,
 };
 
-export default function UploadPhoto({ label, error, file, helperText, sx, ...other }) {
+export default function UploadPhoto({ label, error, file, helperText, sx, imageFrom, ...other }) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     ...other,
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
+
+  const handleOpenModal = (image) => {
+    setModalImage(image);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalImage(null);
+    setIsModalOpen(false);
+  };
+
+  console.log('file', file)
 
   const fileInputRef = useRef(null);
   const { setValue } = useFormContext();
@@ -115,11 +131,18 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
             sx={{
               ...(isDragActive && { opacity: 0.72 }),
             }}
+            onClick={() => {
+              if (file) {
+                handleOpenModal(isString(file) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}` : file.preview);
+              } else {
+                handleClickUpload();
+              }
+            }}
           >
             <input {...getInputProps()} ref={fileInputRef} />
 
             {file && (
-              <Image alt="avatar" src={isString(file) ? file : file.preview} sx={{ zIndex: 8 }} />
+              <Image alt="image" src={isString(file) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}` : file.preview} sx={{ zIndex: 8 }} />
             )}
 
             <PlaceholderStyle
@@ -165,6 +188,16 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
 
         {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
       </Container>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24}}>
+          {modalImage && <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
+        </Box>
+      </Modal>
     </>
   );
 }

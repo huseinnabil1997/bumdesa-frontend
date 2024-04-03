@@ -67,7 +67,7 @@ export default function RHFDatePicker({
               {...field}
               open={openPicker}
               label=""
-              value={dateValue ?? field.value}
+              value={field.value}
               onChange={(date) => {
                 field.onChange(date ?? field.value);
                 setDateValue(date ?? field.value)
