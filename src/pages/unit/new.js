@@ -18,15 +18,17 @@ import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import axiosInstance from 'src/utils/axiosCoreService';
+import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-const SERVICE_OPTIONS = [{ text: 'Jakarta', value: 1 }];
-
 export default function AddUnitUsaha() {
+  const [sectorData, setSectorData] = useState([]);
+
   const { themeStretch } = useSettings();
   const router = useRouter();
 
@@ -57,7 +59,7 @@ export default function AddUnitUsaha() {
       .required('Nomor telepon wajib diisi')
       .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
-      .max(15, 'Nomor telepon maksimal diisi 15 digit'),
+      .max(13, 'Nomor telepon maksimal diisi 13 digit'),
   });
 
   const methods = useForm({
@@ -72,9 +74,9 @@ export default function AddUnitUsaha() {
     // setError,
     handleSubmit,
     // watch,
-    formState: { 
+    formState: {
       // errors, 
-      isSubmitting 
+      isSubmitting
     },
   } = methods;
 
@@ -84,10 +86,11 @@ export default function AddUnitUsaha() {
     formData.append('name', data?.name);
     formData.append('email', data?.email);
     formData.append('year_founded', new Date(data.year_founded).getFullYear());
-    formData.append('sector', data?.sector?.text);
+    formData.append('sector', data?.sector?.label);
+    formData.append('id_sector', parseInt(data?.sector?.value));
     formData.append('manager_name', data?.manager_name);
     formData.append('manager_phone', data?.manager_phone);
-  
+
     try {
       const response = await axiosInstance.post('/business-units', formData, {
         headers: {
@@ -102,6 +105,21 @@ export default function AddUnitUsaha() {
       console.log('error addUnits', error);
     }
   };
+
+  const fetchSector = async () => {
+    try {
+      const response = await axios.get('/sector');
+      setSectorData(response?.data?.data)
+    } catch (error) {
+      console.log('error fetchSector', error);
+    }
+  }
+
+  useEffect(() => {
+    if (sectorData.length === 0) {
+      fetchSector();
+    }
+  }, [sectorData]);
 
   return (
     <Page title="Unit Usaha: New">
@@ -139,7 +157,7 @@ export default function AddUnitUsaha() {
               </Typography>
               <RHFUploadPhoto
                 name="image"
-                label="Foto Unit Usaha*"
+                label="Foto Unit Usaha"
                 accept="image/*"
                 maxSize={10000000}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
@@ -167,8 +185,11 @@ export default function AddUnitUsaha() {
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
-                      height: '48px',
+                      height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -178,9 +199,13 @@ export default function AddUnitUsaha() {
                   placeholder="Contoh: budi@gmail.com"
                   sx={{
                     width: '293px',
+                    height: '44px',
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -197,6 +222,9 @@ export default function AddUnitUsaha() {
                       height: '44px',
                       borderRadius: '8px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -208,11 +236,11 @@ export default function AddUnitUsaha() {
                   placeholder="Pilih Sektor Usaha"
                   size="small"
                   loading={false}
-                  options={SERVICE_OPTIONS?.map((option) => option) ?? []}
-                  getOptionLabel={(option) => option.text}
+                  options={sectorData?.map((option) => option) ?? []}
+                  getOptionLabel={(option) => option.label}
                   renderOption={(props, option) => (
                     <li {...props} key={option.value}>
-                      {option.text}
+                      {option.label}
                     </li>
                   )}
                   sx={{
@@ -220,6 +248,9 @@ export default function AddUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -238,21 +269,28 @@ export default function AddUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
                 <RHFTextField
                   name="position"
                   label="Jabatan"
-                  placeholder="Contoh: budi@gmail.com"
                   inputProps={{
                     style: { color: '#00549B' },
+                    readOnly: true
                   }}
                   sx={{
                     backgroundColor: '#CCE8FF',
+                    borderRadius: '8px',
                     width: '293px',
                     '& .MuiInputBase-root': {
                       height: '44px',
+                    },
+                    "& fieldset": { 
+                      border: 'none',
                     },
                   }}
                   require
@@ -266,6 +304,9 @@ export default function AddUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />

@@ -18,7 +18,7 @@ export default function RHFTextField({ name, require, ...other }) {
     <Stack>
       {other?.label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {other?.label} {require && <span style={{ color: 'red' }}>*</span>}
+          {other?.label}{require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller

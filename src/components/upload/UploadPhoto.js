@@ -99,7 +99,7 @@ export default function UploadPhoto({ label, error, file, helperText, sx, ...oth
     <>
       <Typography variant="caption" fontWeight={600}>
         {label}
-        <span style={{ color: 'red' }}> *</span>
+        <span style={{ color: 'red' }}>*</span>
       </Typography>
       <Container>
         <RootStyle

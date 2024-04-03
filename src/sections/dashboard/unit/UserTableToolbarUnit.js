@@ -21,7 +21,8 @@ export default function UserTableToolbarUnit({ filterName, onFilterName, handleI
         onKeyDown={(event) => handleInputChange(event)}
         placeholder="Cari Unit Usaha"
         sx={{
-          width: '424px',
+          width: '100%', // Menggunakan persen agar responsif
+          maxWidth: '424px',
           '& .MuiInputBase-root': {
             height: '44px',
           },

@@ -9,9 +9,9 @@ RHFDatePicker.propTypes = {
   name: PropTypes.string.isRequired,
   format: PropTypes.string,
   label: PropTypes.string,
-  required: PropTypes.bool,
   openTo: PropTypes.string,
   views: PropTypes.array,
+  require: PropTypes.bool,
 };
 
 const theme = createTheme({
@@ -34,6 +34,7 @@ export default function RHFDatePicker({
   label,
   views = ['year', 'month', 'day'],
   openTo,
+  require,
   ...other
 }) {
   const { control } = useFormContext();
@@ -53,7 +54,7 @@ export default function RHFDatePicker({
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }}>
-          {label} {other?.required && <span style={{ color: 'red' }}>*</span>}
+          {label}{require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller

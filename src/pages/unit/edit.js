@@ -14,17 +14,15 @@ import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import axiosInstance from 'src/utils/axiosCoreService';
+import axios from 'src/utils/axios';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-const SERVICE_OPTIONS = [{ text: 'Jakarta', value: 1 }];
-
 export default function EditUnitUsaha() {
-  // const [isLoading, setIsLoading] = useState(false);
+  const [sectorData, setSectorData] = useState([]);
   const [data, setData] = useState({})
-  console.log('data', data)
 
   const { themeStretch } = useSettings();
   const router = useRouter();
@@ -43,7 +41,7 @@ export default function EditUnitUsaha() {
       .required('Nomor telepon wajib diisi')
       .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
-      .max(15, 'Nomor telepon maksimal diisi 15 digit'),
+      .max(13, 'Nomor telepon maksimal diisi 13 digit'),
   });
 
   const methods = useForm({
@@ -77,9 +75,23 @@ export default function EditUnitUsaha() {
     }
   };
 
+  const fetchSector = async () => {
+    try {
+      const response = await axios.get('/sector');
+      setSectorData(response?.data?.data)
+    } catch (error) {
+      console.log('error fetchSector', error);
+    }
+  }
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (Object.keys(data).length === 0) {
+      fetchData();
+    }
+    if (sectorData.length === 0) {
+      fetchSector();
+    }
+  }, [sectorData, data]);
 
   useEffect(() => {
     if (Object.keys(data).length > 0) {
@@ -99,7 +111,7 @@ export default function EditUnitUsaha() {
   }, [data]);
 
   return (
-    <Page title="Unit Usaha: New">
+    <Page title="Unit Usaha: Edit">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Button
           variant="contained"
@@ -134,7 +146,7 @@ export default function EditUnitUsaha() {
               </Typography>
               <RHFUploadPhoto
                 name="image"
-                label="Foto Unit Usaha*"
+                label="Foto Unit Usaha"
                 accept="image/*"
                 maxSize={10000000}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
@@ -164,6 +176,9 @@ export default function EditUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -173,14 +188,18 @@ export default function EditUnitUsaha() {
                   placeholder="Contoh: budi@gmail.com"
                   sx={{
                     width: '293px',
+                    height: '44px',
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
                 <RHFDatePicker
-                  name="year"
+                  name="year_founded"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
                   format="yyyy"
@@ -192,6 +211,9 @@ export default function EditUnitUsaha() {
                       height: '44px',
                       borderRadius: '8px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -203,11 +225,11 @@ export default function EditUnitUsaha() {
                   placeholder="Pilih Sektor Usaha"
                   size="small"
                   loading={false}
-                  options={SERVICE_OPTIONS?.map((option) => option) ?? []}
-                  getOptionLabel={(option) => option.text}
+                  options={sectorData?.map((option) => option) ?? []}
+                  getOptionLabel={(option) => option.label}
                   renderOption={(props, option) => (
                     <li {...props} key={option.value}>
-                      {option.text}
+                      {option.label}
                     </li>
                   )}
                   sx={{
@@ -215,6 +237,9 @@ export default function EditUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -233,6 +258,9 @@ export default function EditUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
@@ -240,21 +268,24 @@ export default function EditUnitUsaha() {
                   name="position"
                   label="Jabatan"
                   inputProps={{
-                    style: { color: "#00549B" },
-                    readOnly: true, 
-                    disableUnderline: true
+                    style: { color: '#00549B' },
+                    readOnly: true
                   }}
                   sx={{
                     backgroundColor: '#CCE8FF',
+                    borderRadius: '8px',
                     width: '293px',
                     '& .MuiInputBase-root': {
                       height: '44px',
+                    },
+                    "& fieldset": { 
+                      border: 'none',
                     },
                   }}
                   require
                 />
                 <RHFTextField
-                  name="phone"
+                  name="manager_phone"
                   label="Nomor Telepon"
                   placeholder="Contoh: 081xxx"
                   sx={{
@@ -262,6 +293,9 @@ export default function EditUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
+                    '& .MuiInputBase-input': {
+                      height: '11px',
+                    }
                   }}
                   require
                 />
