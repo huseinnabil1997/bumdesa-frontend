@@ -28,8 +28,6 @@ export default function AccountChangePassword() {
 
   const dataParam = urlParams.get('data')?.split(' ')?.join('+');
 
-  console.log('dataParam', dataParam);
-
   const { enqueueSnackbar } = useSnackbar();
 
   const ChangePassWordSchema = Yup.object().shape({

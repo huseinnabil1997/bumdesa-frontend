@@ -61,6 +61,7 @@ const AuthContext = createContext({
   registerForm: () => Promise.resolve(),
   resendOtp: () => Promise.resolve(),
   verify: () => Promise.resolve(),
+  verifyEmail: () => Promise.resolve(),
   resetPassword: () => Promise.resolve(),
   changePassword: () => Promise.resolve(),
 });
@@ -142,6 +143,12 @@ function AuthProvider({ children }) {
     return response.data;
   };
 
+  const verifyEmail = async (payload) => {
+    const response = await axios.post('/business-units/email-verify', payload);
+
+    return response.data;
+  };
+
   const resendOtp = async (payload) => {
     const response = await axios.post('/resend-otp', payload);
 
@@ -177,6 +184,7 @@ function AuthProvider({ children }) {
         register,
         resendOtp,
         verify,
+        verifyEmail,
         registerForm,
         resetPassword,
         changePassword,

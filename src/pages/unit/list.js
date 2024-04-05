@@ -35,6 +35,7 @@ import { useDispatch } from 'react-redux';
 import { deleteVendor, resetMessage } from '../../redux/slices/vendor';
 import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 
 
 // ----------------------------------------------------------------------
@@ -61,17 +62,17 @@ export default function UserList() {
     onChangeRowsPerPage,
     //
     selected,
-    setSelected,
+    // setSelected,
     onSelectRow,
     //
     onChangePage,
   } = useTable({ defaultCurrentPage: 1 });
 
-  console.log('page', page, rowsPerPage);
-
   const router = useRouter()
 
   const { themeStretch } = useSettings();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
 
@@ -104,15 +105,24 @@ export default function UserList() {
 
   const handleDeleteRow = (id, status) => {
     setAlertDelete({ id: id, status: status });
-    setSelected([]);
+    // setSelected([]);
   };
 
-  const onDelete = () => {
-    dispatch(deleteVendor(alertDelete));
+  const onDelete = async () => {
+    try {
+      const response = await axiosInstance.delete(`/business-units/${alertDelete?.id}`)
+      enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
+      fetchData();
+      console.log('response delete', response)
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: 'error' });
+      if (error.response?.status === 403) {
+        setAlertDelete({ id: alertDelete?.id, status: 1 });
+      }
+      console.log('error delete', error)
+    }
+
     setAlertDelete(null);
-    setTimeout(() => {
-      dispatch(resetMessage());
-    }, [3000]);
   };
 
   // const handleEditRow = (row) => {
@@ -144,11 +154,11 @@ export default function UserList() {
           </Box>
 
           <StyledLoadingButton
-            sx={{ 
-              width: 210, 
-              height: '48px', 
-              backgroundColor: '#1078CA', 
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 } 
+            sx={{
+              width: 210,
+              height: '48px',
+              backgroundColor: '#1078CA',
+              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 }
             }}
             variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => router.push('new')}

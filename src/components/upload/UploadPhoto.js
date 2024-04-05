@@ -93,8 +93,6 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
     setIsModalOpen(false);
   };
 
-  console.log('file', file)
-
   const fileInputRef = useRef(null);
   const { setValue } = useFormContext();
 

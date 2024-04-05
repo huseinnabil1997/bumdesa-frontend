@@ -97,7 +97,7 @@ export default function AddUnitUsaha() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      enqueueSnackbar(response.message, { variant: 'success' });
+      enqueueSnackbar(response.message ?? "Sukses menyimpan data", { variant: 'success' });
       router.push('list');
       reset();
     } catch (error) {
