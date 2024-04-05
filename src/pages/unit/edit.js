@@ -15,6 +15,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import axiosInstance from 'src/utils/axiosCoreService';
 import axios from 'src/utils/axios';
+import { useSnackbar } from 'notistack';
+import { setSession } from 'src/utils/jwt';
+import { PATH_AUTH } from 'src/routes/paths';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -25,6 +28,9 @@ export default function EditUnitUsaha() {
   const [data, setData] = useState({})
 
   const { themeStretch } = useSettings();
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const router = useRouter();
 
   const NewUnitFormSchema = Yup.object().shape({
@@ -66,15 +72,37 @@ export default function EditUnitUsaha() {
     setValue,
     handleSubmit,
     isSubmitting,
+    reset,
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('simpan', data);
-    // try {
-    //   // Lakukan pengiriman data
-    // } catch (error) {
-    //   // Tangani kesalahan
-    // }
+    const formData = new FormData();
+    formData.append('image', data?.image);
+    formData.append('name', data?.name);
+    formData.append('email', data?.email);
+    formData.append('year_founded', new Date(data.year_founded).getFullYear());
+    formData.append('sector', data?.sector?.label);
+    formData.append('id_sector', parseInt(data?.sector?.value));
+    formData.append('manager_name', data?.manager_name);
+    formData.append('manager_phone', data?.manager_phone);
+
+    try {
+      const response = await axiosInstance.patch(`/business-units/${data.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (data?.email === defaultValues.email) {
+        enqueueSnackbar(response.message ?? "Sukses menyimpan data", { variant: 'success' });
+        router.push('list');
+      } else {
+        router.push(PATH_AUTH.verifyEmail)
+        setSession(null);
+      }
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+      console.log('error addUnits', error);
+    }
   };
 
   const fetchData = async () => {

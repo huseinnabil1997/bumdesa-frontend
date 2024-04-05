@@ -42,7 +42,7 @@ export default function UserTableRowUnit({
   disableDelete = false,
 }) {
   const theme = useTheme();
-  const { name, email, year_founded, status } = row;
+  const { name, email, year_founded, status, is_resend } = row;
 
   return (
     <TableRow
@@ -67,40 +67,39 @@ export default function UserTableRowUnit({
       </TableCell>
 
       <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
+        {is_resend && (
+          <DeleteTooltip title="Re-send email">
+            <IconButton onClick={onEditRow}>
+              <Iconify
+                icon={'mdi:email-resend-outline'}
+                sx={{ color: theme.palette.primary.light, fontSize: 16 }}
+              />
+            </IconButton>
+          </DeleteTooltip>
+        )}
         <IconButton onClick={onEditRow}>
           <Iconify
             icon={'lucide:edit'}
             sx={{ color: theme.palette.primary.main, fontSize: 16 }}
           />
         </IconButton>
-        <DeleteTooltip title="Setidaknya harus ada 1 unit usaha aktif di BUM Desa.">
+        {disableDelete ? (
+          <DeleteTooltip title="Setidaknya harus ada 1 unit usaha aktif di BUM Desa.">
+            <IconButton onClick={disableDelete ? null : onDeleteRow}>
+              <Iconify
+                icon={'lucide:trash'}
+                sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
+              />
+            </IconButton>
+          </DeleteTooltip>
+        ) : (
           <IconButton onClick={disableDelete ? null : onDeleteRow}>
             <Iconify
               icon={'lucide:trash'}
               sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
             />
           </IconButton>
-          {/* <Button
-            variant="outlined"
-            // disabled={disableDelete}
-            sx={{
-              color: disableDelete ? '#777777' : '#E84040',
-              borderColor: disableDelete ? '#777777' : '#E84040',
-              borderWidth: 1,
-              width: 80,
-              height: 32,
-              '&:hover': {
-                color: disableDelete ? '#777777' : 'white',
-                backgroundColor: disableDelete ? 'transparent' : '#E84040',
-                borderColor: disableDelete ? '#777777' : '#E84040',
-              },
-            }}
-            endIcon={<DeleteOutlineOutlinedIcon />}
-            onClick={disableDelete ? null : onDeleteRow}
-          >
-            Delete
-          </Button> */}
-        </DeleteTooltip>
+        )}
       </TableCell>
     </TableRow>
   );
