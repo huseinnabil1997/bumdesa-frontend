@@ -44,9 +44,9 @@ export default function Login() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const fetchVerifyEmail = async (unit_otp) => {
+  const fetchVerifyEmail = async (unit_verify) => {
     try {
-      const res = await axiosInstance.post('/business-units/email-verify', { unit_otp });
+      const res = await axiosInstance.post('/business-units/email-verify', { unit_verify });
       console.log('res verifyEmail', res);
       setAlertVerify(true);
     } catch (error) {
