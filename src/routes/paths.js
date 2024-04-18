@@ -43,7 +43,7 @@ export const PATH_DASHBOARD = {
     ledger: path(ROOTS_APP, 'ledger'),
     report: {
       root: path(ROOTS_APP, 'report'),
-      profit: path(ROOTS_APP, 'report/profit'),
+      profit: path(ROOTS_APP, 'report/profit/list'),
       equity: path(ROOTS_APP, 'report/equity'),
       balance: path(ROOTS_APP, 'report/balance'),
       cashFlow: path(ROOTS_APP, 'report/cash-flow'),
