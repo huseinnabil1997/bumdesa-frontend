@@ -43,7 +43,7 @@ export default function UserTableRowUnit({
 }) {
   const theme = useTheme();
   const { name, email, year_founded, status, is_resend } = row;
-
+  
   return (
     <TableRow
       hover

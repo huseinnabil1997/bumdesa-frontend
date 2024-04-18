@@ -43,13 +43,10 @@ export default function Login() {
   const { verifyEmail } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
-  const token = localStorage.getItem('token');
-  console.log('token', token)
 
-  const fetchVerifyEmail = async () => {
+  const fetchVerifyEmail = async (unit_otp) => {
     try {
-      const res = await axiosInstance.post('/business-units/email-verify', { unit_otp: router.query.unit_otp });
-      // const res = await verifyEmail({ unit_otp: router.query.unit_otp });
+      const res = await axiosInstance.post('/business-units/email-verify', { unit_otp });
       console.log('res verifyEmail', res);
       setAlertVerify(true);
     } catch (error) {
@@ -59,7 +56,7 @@ export default function Login() {
   }
 
   useEffect(() => {
-    fetchVerifyEmail();
+    fetchVerifyEmail(router.query.unit_verify);
     // setAlertVerify(true);
     // setIsExpired(true);
   }, [])
