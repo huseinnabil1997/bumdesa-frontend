@@ -9,12 +9,11 @@ import Page from '../../components/Page';
 import Image from '../../components/Image';
 // sections
 import { useRouter } from 'next/router';
-import AlertVerifyEmail from 'src/components/modal/VerifyEmail';
+// import AlertVerifyEmail from 'src/components/modal/VerifyEmail';
 import { useEffect, useState } from 'react';
 import { PATH_AUTH } from 'src/routes/paths';
-import useAuth from 'src/hooks/useAuth';
-import { useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axiosCoreService';
+import { setSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -37,31 +36,26 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const [alertVerify, setAlertVerify] = useState(false);
+  const [error, setError] = useState('');
   const [isExpired, setIsExpired] = useState(false);
   const router = useRouter();
-  const { verifyEmail } = useAuth();
 
-  const { enqueueSnackbar } = useSnackbar();
-  const token = localStorage.getItem('token');
-  console.log('token', token)
-
-  const fetchVerifyEmail = async () => {
+  const fetchVerifyEmail = async (unit_verify) => {
     try {
-      const res = await axiosInstance.post('/business-units/email-verify', { unit_otp: router.query.unit_otp });
-      // const res = await verifyEmail({ unit_otp: router.query.unit_otp });
-      console.log('res verifyEmail', res);
-      setAlertVerify(true);
+      await axiosInstance.post('/business-units/email-verify', { unit_verify });
+      setIsExpired(false);
+      setError('');
+      setSession(null);
+      router.push(PATH_AUTH.login);
     } catch (error) {
-      console.log('error verifyEmail', error)
-      enqueueSnackbar(error?.message, { variant: 'error' });
+      console.log('error verifyEmail', error);
+      setIsExpired(true);
+      setError(error?.message);
     }
   }
 
   useEffect(() => {
-    fetchVerifyEmail();
-    // setAlertVerify(true);
-    // setIsExpired(true);
+    fetchVerifyEmail(router.query.unit_verify);
   }, [])
 
   return (
@@ -72,7 +66,7 @@ export default function Login() {
             {isExpired ? (
               <Box sx={{ maxWidth: 480, mx: 'auto' }}>
                 <Typography variant="h3" paragraph>
-                  Link pada email sudah kadaluarsa!
+                  {error}
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
                   Silahkan hubungi admin BUM Desa Anda untuk mengirimkan kembali link verifikasi.
@@ -90,30 +84,27 @@ export default function Login() {
             ) : (
               <Box sx={{ maxWidth: 480, mx: 'auto' }}>
                 <Typography variant="h3" paragraph>
-                  Silakan periksa email Anda!
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  Email konfirmasi telah dikirim, mohon segera cek kotak masuk Anda.
+                  Verifikasi Berhasil!
                 </Typography>
                 <Box display="flex" sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}>
                   <Image
                     visibleByDefault
                     disabledEffect
-                    src="/image/delete_unit.svg"
-                    alt="Verify Email"
+                    src="/image/registration_success.svg"
+                    alt="Verifikasi email berhasil"
                     sx={{ width: '216px', height: '216px' }}
                   />
                 </Box>
               </Box>
             )}
           </ContentStyle>
-          <AlertVerifyEmail
+          {/* <AlertVerifyEmail
             open={alertVerify}
             onClose={() => {
               setAlertVerify(false);
               router.replace(PATH_AUTH.login)
             }}
-          />
+          /> */}
         </Container>
       </RootStyle>
     </Page>

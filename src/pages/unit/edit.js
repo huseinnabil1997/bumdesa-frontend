@@ -1,4 +1,5 @@
-import { Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
@@ -16,8 +17,7 @@ import { StyledLoadingButton } from 'src/theme/custom/Button';
 import axiosInstance from 'src/utils/axiosCoreService';
 import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
-import { setSession } from 'src/utils/jwt';
-import { PATH_AUTH } from 'src/routes/paths';
+import Iconify from 'src/components/Iconify';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -72,7 +72,7 @@ export default function EditUnitUsaha() {
     setValue,
     handleSubmit,
     isSubmitting,
-    reset,
+    // reset,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -87,17 +87,58 @@ export default function EditUnitUsaha() {
     formData.append('manager_phone', data?.manager_phone);
 
     try {
-      const response = await axiosInstance.patch(`/business-units/${data.id}`, formData, {
+      await axiosInstance.patch(`/business-units/${data.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       if (data?.email === defaultValues.email) {
-        enqueueSnackbar(response.message ?? "Sukses menyimpan data", { variant: 'success' });
+        await enqueueSnackbar(
+          '',
+          {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                justifyContent="space-around"
+                alignItems="center"
+                sx={{ width: '280px', height: 48, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+              >
+                <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                <Typography mr="12px" fontSize="12px">Data Anda telah berhasil diperbarui.</Typography>
+              </Box>
+            )
+          }
+        );
         router.push('list');
       } else {
-        router.push(PATH_AUTH.verifyEmail)
-        setSession(null);
+        await enqueueSnackbar(
+          '',
+          {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ width: 475, height: 96, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+              >
+                <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  flexDirection="column"
+                >
+                  <Typography fontSize="12px" mb="10px">
+                    Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{data?.email}</span>
+                  </Typography>
+                  <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>
+                </Box>
+              </Box>
+            )
+          }
+        );
+        router.push('list');
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
@@ -370,5 +411,33 @@ export default function EditUnitUsaha() {
         </Card>
       </Container>
     </Page>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+SnackbarIcon.propTypes = {
+  icon: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+};
+
+function SnackbarIcon({ icon, color }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        mr: 1.5,
+        width: 40,
+        height: 40,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: color === 'success' ? '#27AE60' : `${color}.main`,
+        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Box>
   );
 }

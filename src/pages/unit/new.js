@@ -1,4 +1,5 @@
-import { Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import Layout from 'src/layouts';
@@ -21,6 +22,7 @@ import axiosInstance from 'src/utils/axiosCoreService';
 import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
+import Iconify from 'src/components/Iconify';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -92,12 +94,20 @@ export default function AddUnitUsaha() {
     formData.append('manager_phone', data?.manager_phone);
 
     try {
-      const response = await axiosInstance.post('/business-units', formData, {
+      await axiosInstance.post('/business-units', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      enqueueSnackbar(response.message ?? "Sukses menyimpan data", { variant: 'success' });
+      <Box
+        display="flex"
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+      >
+        <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+        <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
+      </Box>
       router.push('list');
       reset();
     } catch (error) {
@@ -289,7 +299,7 @@ export default function AddUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
-                    "& fieldset": { 
+                    "& fieldset": {
                       border: 'none',
                     },
                   }}
@@ -349,5 +359,33 @@ export default function AddUnitUsaha() {
         </Card>
       </Container>
     </Page>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+SnackbarIcon.propTypes = {
+  icon: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+};
+
+function SnackbarIcon({ icon, color }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        mr: 1.5,
+        width: 40,
+        height: 40,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: color === 'success' ? '#27AE60' : `${color}.main`,
+        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Box>
   );
 }

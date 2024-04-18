@@ -26,6 +26,7 @@ UserTableRowUnit.propTypes = {
   index: PropTypes.number,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
+  onResendRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   disableDelete: PropTypes.bool,
@@ -38,12 +39,13 @@ export default function UserTableRowUnit({
   index,
   selected,
   onEditRow,
+  onResendRow,
   onDeleteRow,
   disableDelete = false,
 }) {
   const theme = useTheme();
   const { name, email, year_founded, status, is_resend } = row;
-
+  
   return (
     <TableRow
       hover
@@ -69,10 +71,10 @@ export default function UserTableRowUnit({
       <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
         {is_resend && (
           <DeleteTooltip title="Re-send email">
-            <IconButton onClick={onEditRow}>
+            <IconButton onClick={onResendRow}>
               <Iconify
                 icon={'mdi:email-resend-outline'}
-                sx={{ color: theme.palette.primary.light, fontSize: 16 }}
+                sx={{ color: theme.palette.primary.main, fontSize: 16 }}
               />
             </IconButton>
           </DeleteTooltip>
