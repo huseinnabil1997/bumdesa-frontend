@@ -22,6 +22,7 @@ import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
 import { LabaRugiHeader } from 'src/sections/report/profit';
 import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
+import { dataLabaRugi } from './data';
 
 // ----------------------------------------------------------------------
 
@@ -31,12 +32,14 @@ LaporanLabaRugi.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function LaporanLabaRugi() {
-  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  const { data, isLoading } = useGetProfit();
+  // const { data, isLoading } = useGetProfit();
+
+  const data = dataLabaRugi;
+  const isLoading = false;
 
   console.log('data---', data)
 
@@ -76,7 +79,7 @@ export default function LaporanLabaRugi() {
                 />
 
                 <TableBody>
-                  {/* {!isLoading &&
+                  {!isLoading &&
                     data.map((row, i) => (
                       <UserTableRow
                         key={row.id}
@@ -84,7 +87,7 @@ export default function LaporanLabaRugi() {
                         row={row}
                         onViewRow={() => handleViewRow(row)}
                       />
-                    ))} */}
+                    ))}
 
                   {isLoading && <TableSkeleton />}
                   {!data?.length > 0 && (
