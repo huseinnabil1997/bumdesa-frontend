@@ -57,11 +57,8 @@ export default function UserList() {
     page,
     rowsPerPage,
     onChangeRowsPerPage,
-    //
     selected,
-    // setSelected,
     onSelectRow,
-    //
     onChangePage,
   } = useTable({ defaultCurrentPage: 1 });
 
@@ -113,7 +110,6 @@ export default function UserList() {
 
   const handleDeleteRow = (id) => {
     setAlertDelete({ id: id });
-    // setSelected([]);
   };
 
   const onDelete = async () => {
@@ -131,13 +127,6 @@ export default function UserList() {
       console.log('error delete', error)
     }
   };
-
-  // const handleEditRow = (row) => {
-  //   router.push(`editid=${row.id}`);
-  //   setOpen(true);
-  //   setId(row.id);
-  //   setEdit(true);
-  // };
 
   const handleViewRow = () => {
   };
@@ -212,6 +201,7 @@ export default function UserList() {
                       sx={{ mt: 2, width: 200 }}
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
+                      onClick={() => router.push('new')}
                     >
                       Tambah Unit usaha
                     </StyledButton>
