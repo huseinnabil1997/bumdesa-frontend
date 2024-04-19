@@ -15,14 +15,13 @@ import {
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useTable, { emptyRows } from '../../hooks/useTable';
+import useTable from '../../hooks/useTable';
 // layouts
 import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import {
-  TableEmptyRows,
   TableHeadCustom,
   TableNoData,
   TableSkeleton,
@@ -101,9 +100,10 @@ export default function UserList() {
   const handleResendRow = async (id) => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get(`/business-units/resend-verify/${id}`);
+      const response = await axiosInstance.post(`/business-units/resend-verify/${id}`);
       await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
       setIsLoading(false);
+      fetchData();
     } catch (error) {
       await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
       console.log('error handleResendRow', error);
@@ -111,8 +111,8 @@ export default function UserList() {
     }
   }
 
-  const handleDeleteRow = (id, status) => {
-    setAlertDelete({ id: id, status: status });
+  const handleDeleteRow = (id) => {
+    setAlertDelete({ id: id });
     // setSelected([]);
   };
 
@@ -121,16 +121,15 @@ export default function UserList() {
       const response = await axiosInstance.delete(`/business-units/${alertDelete?.id}`)
       enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
       fetchData();
+      setAlertDelete(null);
       console.log('response delete', response)
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
-      if (error.response?.status === 403) {
+      if (error.code === 412) {
         setAlertDelete({ id: alertDelete?.id, status: 1 });
       }
       console.log('error delete', error)
     }
-
-    setAlertDelete(null);
   };
 
   // const handleEditRow = (row) => {
@@ -204,25 +203,21 @@ export default function UserList() {
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
-
-                <TableEmptyRows emptyRows={emptyRows(page, rowsPerPage, units?.data?.length)} />
-                {isLoading ? (<TableSkeleton />) :
-                  (
-                    <TableNoData
-                      isNotFound={!units?.data}
-                      title="Unit usaha belum tersedia."
-                      description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
-                      action={
-                        <StyledButton
-                          sx={{ mt: 2, width: 200 }}
-                          variant="outlined"
-                          startIcon={<Add fontSize="small" />}
-                        >
-                          Tambah Unit usaha
-                        </StyledButton>
-                      }
-                    />
-                  )}
+                <TableNoData
+                  isNotFound={units?.data?.length === 0}
+                  title="Unit usaha belum tersedia."
+                  description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
+                  action={
+                    <StyledButton
+                      sx={{ mt: 2, width: 200 }}
+                      variant="outlined"
+                      startIcon={<Add fontSize="small" />}
+                    >
+                      Tambah Unit usaha
+                    </StyledButton>
+                  }
+                />
+                {isLoading && (<TableSkeleton />)}
               </TableBody>
             </Table>
           </TableContainer>

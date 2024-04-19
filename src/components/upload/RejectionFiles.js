@@ -18,7 +18,7 @@ export default function RejectionFiles({ fileRejections }) {
       sx={{
         py: 1,
         px: 2,
-        mt: 3,
+        maxWidth: 350,
         borderColor: 'error.light',
         bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
       }}

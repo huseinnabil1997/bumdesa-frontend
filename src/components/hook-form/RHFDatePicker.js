@@ -40,7 +40,9 @@ export default function RHFDatePicker({
   const { control } = useFormContext();
 
   const [openPicker, setOpenPicker] = useState(false);
-  const [dateValue, setDateValue] = useState(new Date());
+  // const [dateValue, setDateValue] = useState(new Date());
+
+  const currentYear = new Date().getFullYear();
 
   const handlePickerOpen = () => {
     setOpenPicker(true);
@@ -70,7 +72,7 @@ export default function RHFDatePicker({
               value={field.value}
               onChange={(date) => {
                 field.onChange(date ?? field.value);
-                setDateValue(date ?? field.value)
+                // setDateValue(date ?? field.value)
                 handlePickerClose();
               }}
               renderInput={(params) => (
@@ -107,6 +109,7 @@ export default function RHFDatePicker({
               views={views}
               openTo={openTo}
               orientation="portrait"
+              maxDate={new Date(currentYear, 11, 31)}
             />
           </ThemeProvider>
         )}
