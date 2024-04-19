@@ -13,30 +13,32 @@ import Scrollbar from '../../../components/Scrollbar';
 import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 // sections
-import { UserTableRow } from '../../../sections/@dashboard/user/list';
+import { UserTableRow } from '../../../sections/report/profit';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { PROFIT_HEAD } from 'src/utils/constant';
-import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
 import { LabaRugiHeader } from 'src/sections/report/profit';
+import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
 
 // ----------------------------------------------------------------------
 
-JurnalList.getLayout = function getLayout(page) {
+LaporanLabaRugi.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function JurnalList() {
+export default function LaporanLabaRugi() {
   const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  const { data, isLoading } = useGetJurnals();
+  const { data, isLoading } = useGetProfit();
+
+  console.log('data---', data)
 
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
@@ -70,21 +72,19 @@ export default function JurnalList() {
                 <TableHeadCustom
                   headLabel={PROFIT_HEAD}
                   rowCount={data?.length}
-                  sx={{ background: theme.palette.grey[200] }}
+                  sx={{ background: theme.palette.grey[200], height: '56px' }}
                 />
 
                 <TableBody>
-                  {!isLoading &&
+                  {/* {!isLoading &&
                     data.map((row, i) => (
                       <UserTableRow
                         key={row.id}
                         index={i}
                         row={row}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row)}
                         onViewRow={() => handleViewRow(row)}
                       />
-                    ))}
+                    ))} */}
 
                   {isLoading && <TableSkeleton />}
                   {!data?.length > 0 && (
@@ -106,20 +106,6 @@ export default function JurnalList() {
               </Table>
             </TableContainer>
           </Scrollbar>
-
-          {data?.length > 0 && (
-            <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
-              <Pagination
-                showFirstButton
-                showLastButton
-                color="primary"
-                count={data?.lastPage}
-                rowsPerPage={data?.totalPerPage}
-                page={page}
-                onChange={onChangePage}
-              />
-            </Box>
-          )}
         </Card>
         <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} />
       </Container>
