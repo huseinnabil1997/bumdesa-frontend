@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { PATH_AUTH } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axiosCoreService';
 import { setSession } from 'src/utils/jwt';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +47,6 @@ export default function Login() {
       setIsExpired(false);
       setError('');
       setSession(null);
-      router.push(PATH_AUTH.login);
     } catch (error) {
       console.log('error verifyEmail', error);
       setIsExpired(true);
@@ -86,14 +86,21 @@ export default function Login() {
                 <Typography variant="h3" paragraph>
                   Verifikasi Berhasil!
                 </Typography>
-                <Box display="flex" sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}
+                >
                   <Image
                     visibleByDefault
                     disabledEffect
                     src="/image/registration_success.svg"
                     alt="Verifikasi email berhasil"
-                    sx={{ width: '216px', height: '216px' }}
+                    sx={{ width: '216px', height: '216px', mb: 3 }}
                   />
+                  <StyledLoadingButton variant="contained" onClick={() => router.push(PATH_AUTH.login)}>
+                    Masuk
+                  </StyledLoadingButton>
                 </Box>
               </Box>
             )}

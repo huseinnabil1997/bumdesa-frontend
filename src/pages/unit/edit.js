@@ -58,8 +58,8 @@ export default function EditUnitUsaha() {
     email: data.email ?? '',
     year_founded: data.year_founded?.toString() ?? '',
     sector: { value: data.id_sector, label: data.sector } ?? null,
-    manager_name: data.organization?.Name ?? '',
-    phone: data.organization?.Phone ?? '',
+    manager_name: data.organization?.name ?? '',
+    manager_phone: data.organization?.phone ?? '',
   };
 
   const methods = useForm({
@@ -76,6 +76,7 @@ export default function EditUnitUsaha() {
   } = methods;
 
   const onSubmit = async (data) => {
+    console.log('click')
     const formData = new FormData();
     formData.append('image', data?.image);
     formData.append('name', data?.name);

@@ -99,15 +99,24 @@ export default function AddUnitUsaha() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      <Box
-        display="flex"
-        justifyContent="space-around"
-        alignItems="center"
-        sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-      >
-        <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-        <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
-      </Box>
+      await enqueueSnackbar(
+        '',
+        {
+          variant: 'success',
+          content: () => (
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+            >
+              <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+              <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
+            </Box>
+          )
+        },
+      )
+
       router.push('list');
       reset();
     } catch (error) {
