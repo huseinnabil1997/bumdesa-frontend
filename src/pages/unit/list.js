@@ -31,8 +31,6 @@ import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard/unit';
-import { useDispatch } from 'react-redux';
-import { deleteVendor, resetMessage } from '../../redux/slices/vendor';
 import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -74,8 +72,6 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const dispatch = useDispatch();
-
   const [units, setUnits] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
@@ -98,10 +94,22 @@ export default function UserList() {
     }
   };
 
-
   useEffect(() => {
     fetchData();
   }, [page, rowsPerPage]);
+
+  const handleResendRow = async (id) => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get(`/business-units/resend-verify/${id}`);
+      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
+      setIsLoading(false);
+    } catch (error) {
+      await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
+      console.log('error handleResendRow', error);
+      setIsLoading(false);
+    }
+  }
 
   const handleDeleteRow = (id, status) => {
     setAlertDelete({ id: id, status: status });
@@ -189,29 +197,32 @@ export default function UserList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id, row.status)}
-                      disableDelete={units?.data.length === 1}
+                      disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
+                      onResendRow={() => handleResendRow(row.id)}
                       onViewRow={() => handleViewRow(row)}
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
 
                 <TableEmptyRows emptyRows={emptyRows(page, rowsPerPage, units?.data?.length)} />
-                {isLoading && <TableSkeleton />}
-                <TableNoData
-                  isNotFound={!units?.data}
-                  title="Unit usaha belum tersedia."
-                  description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
-                  action={
-                    <StyledButton
-                      sx={{ mt: 2, width: 200 }}
-                      variant="outlined"
-                      startIcon={<Add fontSize="small" />}
-                    >
-                      Tambah Unit usaha
-                    </StyledButton>
-                  }
-                />
+                {isLoading ? (<TableSkeleton />) :
+                  (
+                    <TableNoData
+                      isNotFound={!units?.data}
+                      title="Unit usaha belum tersedia."
+                      description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
+                      action={
+                        <StyledButton
+                          sx={{ mt: 2, width: 200 }}
+                          variant="outlined"
+                          startIcon={<Add fontSize="small" />}
+                        >
+                          Tambah Unit usaha
+                        </StyledButton>
+                      }
+                    />
+                  )}
               </TableBody>
             </Table>
           </TableContainer>
