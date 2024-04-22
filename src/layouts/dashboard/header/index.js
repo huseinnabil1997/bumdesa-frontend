@@ -9,17 +9,17 @@ import useResponsive from '../../../hooks/useResponsive';
 // utils
 import cssStyles from '../../../utils/cssStyles';
 // config
-import { HEADER, NAVBAR } from '../../../config';
+import { HEADER } from '../../../config';
 // components
 import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
 //
-import Searchbar from './Searchbar';
+// import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
-import ContactsPopover from './ContactsPopover';
-import NotificationsPopover from './NotificationsPopover';
+// import LanguagePopover from './LanguagePopover';
+// import ContactsPopover from './ContactsPopover';
+// import NotificationsPopover from './NotificationsPopover';
 import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
@@ -80,7 +80,9 @@ export default function DashboardHeader({
 
   const generateTitle = () => {
     const value = router.pathname.split('/')[1];
-    if (value === 'unit') setTitle('Unit Usaha BUM Desa')
+    const value2 = router.pathname.split('/')[2];
+    if (value === 'unit') setTitle('Unit Usaha BUM Desa');
+    if (value2 === 'profit') setTitle('Laporan Laba Rugi');
     else setTitle(value.charAt(0).toUpperCase() + value.slice(1));
   };
 

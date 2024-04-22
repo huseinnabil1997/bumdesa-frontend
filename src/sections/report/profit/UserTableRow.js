@@ -2,14 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, TableRow, TableCell, IconButton, Collapse, Table, TableBody } from '@mui/material';
+import { Stack, TableRow, TableCell, IconButton } from '@mui/material';
 // components
-import moment from 'moment';
-import {
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-} from '@mui/icons-material';
-import { fCurrency } from 'src/utils/formatNumber';
 import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
 import Iconify from 'src/components/Iconify';
 
@@ -22,33 +16,46 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
   return (
     <>
       <TableRow
-        key={row.nama} // Use a unique key for array iteration
+        key={row.nama}
         hover
+        onClick={() => setOpen(!open)}
         sx={{
           backgroundColor: 'white',
           height: '56px',
           "&:hover": {
-            backgroundColor: `${generateColor(index, index)} !important`, // Adjust color generation
+            backgroundColor: `${generateColor(index, index)} !important`,
           },
         }}
       >
-        <TableCell>
-          <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          </IconButton>
+        <TableCell sx={{ color: '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+          {row?.child2 && (
+            <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
+              {open ?
+                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-up-box'} />
+                :
+                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-down-box'} />
+              }
+            </IconButton>
+          )}
           {nama}
         </TableCell>
-        <TableCell>
+        <TableCell sx={{ color: '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {saldo && formatCurrency(saldo)}
         </TableCell>
       </TableRow>
       {open && row?.child2?.map((historyRow, idx) => (
         <TableRow key={historyRow.nama} sx={{ backgroundColor: generateColor(index, idx), height: '56px' }}>
-          <TableCell sx={{ display: 'flex', flexDirection: 'row' }}>
+          <TableCell
+            sx={{ display: 'flex', flexDirection: 'row', fontSize: '12px', fontWeight: 500, color: '#777777' }}
+          >
             <Stack><DotIcon /></Stack>
             {historyRow.nama}
           </TableCell>
-          <TableCell>{formatCurrency(historyRow?.saldo)}</TableCell>
+          <TableCell
+            sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
+          >
+            {formatCurrency(historyRow?.saldo)}
+          </TableCell>
         </TableRow>
       ))}
     </>
@@ -73,12 +80,12 @@ UserTableRow.propTypes = {
   onViewRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, index }) {
+export default function UserTableRow({ row, selected }) {
   const theme = useTheme();
 
   const { level, title, saldo } = row;
 
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   const generateColor = (i, j) => {
     const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
@@ -99,7 +106,6 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
       maximumFractionDigits: 0,
     }).format(amount);
 
-    // Menambahkan titik setelah "Rp" jika tidak ada koma setelahnya
     if (!formattedAmount.includes(',')) {
       return formattedAmount.replace('Rp', 'Rp.');
     }
@@ -126,10 +132,6 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
     }
   }
 
-  const rowAnimation = {
-    transition: 'height 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out',
-  };
-
   console.log('row', row)
 
   return (
@@ -146,61 +148,22 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
           borderLeft: level === '1' ? '6px solid #F87304' : null
         }}
       >
-        <TableCell>
+        <TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {title}
         </TableCell>
-        <TableCell>
+        <TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {saldo && formatCurrency(saldo)}
         </TableCell>
       </TableRow>
       {row?.child && row?.child.map((nestedRow, i) => (
         <NestedTableRow
-          key={nestedRow.nama} // Use a unique key for array iteration
+          key={nestedRow.nama}
           row={nestedRow}
           index={i}
           generateColor={generateColor}
           formatCurrency={formatCurrency}
         />
       ))}
-      {/* {row?.child && row?.child.map((row, i) => {
-        const { nama, saldo } = row;
-        console.log('row?.child', row)
-        return (
-          <>
-            <TableRow
-              key={row.nama}
-              hover
-              selected={selected}
-              sx={{
-                backgroundColor: 'white',
-                height: '56px',
-                "&:hover": {
-                  backgroundColor: `${bgColorHover()} !important`
-                },
-              }}
-            >
-              <TableCell>
-                <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
-                  {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                </IconButton>
-                {nama}
-              </TableCell>
-              <TableCell>
-                {saldo && formatCurrency(saldo)}
-              </TableCell>
-            </TableRow>
-            {open && row?.child2?.map((historyRow, idx) => (
-              <TableRow key={historyRow} sx={{ backgroundColor: generateColor(index, idx), height: '56px' }}>
-                <TableCell sx={{ display: 'flex', flexDirection: 'row' }}>
-                  <Stack><DotIcon /></Stack>
-                  {historyRow.nama}
-                </TableCell>
-                <TableCell>{formatCurrency(historyRow?.saldo)}</TableCell>
-              </TableRow>
-            ))}
-          </>
-        )
-      })} */}
     </>
   );
 }

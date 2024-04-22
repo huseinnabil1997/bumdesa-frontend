@@ -1,8 +1,10 @@
-import { Add, ArrowDropDown, Download, Description } from '@mui/icons-material';
-import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList } from '@mui/material';
+import { ArrowDropDown, Download, Description } from '@mui/icons-material';
+import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+// import { useFormContext } from 'react-hook-form';
+import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 
@@ -10,10 +12,12 @@ const options = ['Download .PDF', 'Download .xlsx'];
 
 export default function LabaRugiHeader() {
   const router = useRouter();
-  const { watch } = useFormContext();
+  const datePickerRef = useRef(null);
+  const { enqueueSnackbar } = useSnackbar();
+  // const { watch } = useFormContext();
 
-  const sectorValue = watch('sector');
-  const dateValue = watch('date');
+  // const sectorValue = watch('sector');
+  // const dateValue = watch('date');
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -26,6 +30,22 @@ export default function LabaRugiHeader() {
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     console.log('LabaRugiHeader handleMenuItemClick', event, index)
+    enqueueSnackbar(
+      '',
+      {
+        variant: 'success',
+        content: () => (
+          <Box
+            display="flex"
+            alignItems="center"
+            sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+          >
+            <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
+            <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
+          </Box>
+        )
+      },
+    )
     setOpen(false);
   };
 
@@ -39,6 +59,13 @@ export default function LabaRugiHeader() {
     }
 
     setOpen(false);
+  };
+
+  const getMaxDateForMonthInput = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
   };
 
   return (
@@ -59,7 +86,19 @@ export default function LabaRugiHeader() {
             </li>
           )}
         />
-        <RHFTextField size="small" sx={{ width: 165 }} name="date" type="month" />
+        <RHFTextField
+          inputRef={datePickerRef}
+          size="small"
+          sx={{ width: 165 }}
+          name="date"
+          type="month"
+          onClick={() => {
+            datePickerRef.current.showPicker()
+          }}
+          inputProps={{
+            max: getMaxDateForMonthInput(),
+          }}
+        />
       </Stack>
       <Stack direction="row" spacing={1}>
         <StyledButton
@@ -99,7 +138,7 @@ export default function LabaRugiHeader() {
                 transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
               }}
             >
-              <Paper>
+              <Paper sx={{ width: 210 }}>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList id="split-button-menu" autoFocusItem>
                     {options.map((option, index) => (

@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
 // @mui
-import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
+import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
 // hooks
 import useSettings from '../../../hooks/useSettings';
-import useTable from '../../../hooks/useTable';
 // layouts
 import Layout from '../../../layouts';
 // components
@@ -21,7 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
 import { LabaRugiHeader } from 'src/sections/report/profit';
-import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
+// import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
 import { dataLabaRugi } from './data';
 
 // ----------------------------------------------------------------------
@@ -43,14 +42,14 @@ export default function LaporanLabaRugi() {
 
   console.log('data---', data)
 
-  const [filterName, setFilterName] = useState('');
+  // const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
 
-  const handleDeleteRow = (id) => {};
+  // const handleDeleteRow = (id) => {};
 
-  const handleEditRow = (row) => {};
+  // const handleEditRow = (row) => {};
 
-  const handleViewRow = (row) => {};
+  // const handleViewRow = (row) => {};
 
   const methods = useForm({
     defaultValues: { unit: null, year: null },
@@ -85,7 +84,7 @@ export default function LaporanLabaRugi() {
                         key={row.id}
                         index={i}
                         row={row}
-                        onViewRow={() => handleViewRow(row)}
+                        // onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 

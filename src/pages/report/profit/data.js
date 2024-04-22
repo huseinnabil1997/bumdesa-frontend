@@ -20,15 +20,35 @@ export const dataLabaRugi = [
       },
       {
         nama: 'Pendapatan Penjualan Barang Dagangan',
-        saldo: 14000000,
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
       },
       {
         nama: 'Pendapatan Penjualan Barang Jadi',
-        saldo: 14000000,
+        saldo: 500000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
       },
       {
         nama: 'Total Pendapatan Usaha',
-        saldo: 14000000,
+        saldo: 14800000,
       },
     ]
   },
@@ -36,16 +56,132 @@ export const dataLabaRugi = [
     id: 2,
     level: "1",
     title: "Harga Pokok Penjualan",
+    child: [
+      {
+        nama: 'Pendapatan Penjualan Barang Dagangan',
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Harga Pokok Penjualan Barang Jadi',
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Total Harga Pokok Penjualan',
+        saldo: 14800000,
+      },
+    ]
   },
   {
     id: 3,
     level: "1",
     title: "Beban- Beban Usaha",
+    child: [
+      {
+        nama: 'Beban Administrasi dan Umum',
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Beban Operasional',
+        saldo: 900000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Total Beban - Beban Usaha',
+        saldo: 1200000,
+      },
+    ]
   },
   {
     id: 4,
     level: "1",
     title: "Pendapatan dan Beban Lain-Lain",
+    child: [
+      {
+        nama: 'Pendapatan Lain-lain',
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Beban Pajak',
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Beban Lain-lain',
+        saldo: 300000,
+        child2: [
+          {
+            nama: 'Pendapatan Wisata',
+            saldo: 10000000,
+          },
+          {
+            nama: 'Pendapatan Pengelolaan Air Bersih',
+            saldo: 0,
+          },
+        ]
+      },
+      {
+        nama: 'Total Pendapatan dan Beban Lain-Lain',
+        saldo: 300000,
+      },
+    ]
   },
   {
     id: 5,
