@@ -1,6 +1,6 @@
-import { ArrowDropDown, Download, Description } from '@mui/icons-material';
+import { Download, Description, KeyboardArrowDown } from '@mui/icons-material';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 // import { useFormContext } from 'react-hook-form';
@@ -11,7 +11,7 @@ import { StyledButton } from 'src/theme/custom/Button';
 const options = ['Download .PDF', 'Download .xlsx'];
 
 export default function LabaRugiHeader() {
-  const router = useRouter();
+  // const router = useRouter();
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
   // const { watch } = useFormContext();
@@ -23,8 +23,8 @@ export default function LabaRugiHeader() {
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
-  const handleClick = () => {
-    router.push('/jurnal/create');
+  const handleClick = (url) => {
+    window.open(url, '_blank');
   };
 
   const handleMenuItemClick = (event, index) => {
@@ -105,20 +105,20 @@ export default function LabaRugiHeader() {
           sx={{ width: 186 }}
           startIcon={<Description />}
           variant="outlined"
-          onClick={handleClick}
+          onClick={() => window.open('https://www.google.com/', '_blank')}
         >
           Preview Dokumen
         </StyledButton>
         <StyledButton
           ref={anchorRef}
-          sx={{ width: 210 }}
+          sx={{ width: 210, justifyContent: 'space-around' }}
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
-          startIcon={<Download />}
-          endIcon={<ArrowDropDown />}
+          startIcon={<Iconify width={14} height={14} icon={'bi:download'} />}
+          endIcon={<Iconify icon={'oui:arrow-down'} />}
           variant="contained"
         >
           Unduh Dokumen
