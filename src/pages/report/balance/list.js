@@ -25,12 +25,12 @@ import NeracaHeader from 'src/sections/report/balance/NeracaHeader';
 
 // ----------------------------------------------------------------------
 
-LaporanLabaRugi.getLayout = function getLayout(page) {
+LaporanNeraca.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function LaporanLabaRugi() {
+export default function LaporanNeraca() {
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
