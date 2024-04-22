@@ -45,7 +45,7 @@ export const PATH_DASHBOARD = {
       root: path(ROOTS_APP, 'report'),
       profit: path(ROOTS_APP, 'report/profit/list'),
       equity: path(ROOTS_APP, 'report/equity'),
-      balance: path(ROOTS_APP, 'report/balance'),
+      balance: path(ROOTS_APP, 'report/balance/list'),
       cashFlow: path(ROOTS_APP, 'report/cash-flow'),
     },
     unit: path(ROOTS_APP, 'unit/list'),

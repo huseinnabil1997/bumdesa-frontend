@@ -43,7 +43,7 @@ const navConfig = [
         children: [
           { title: 'Laporan Laba Rugi', path: PATH_DASHBOARD.bumdes.report.profit },
           { title: 'Laporan Ekuitas', path: PATH_DASHBOARD.other.content },
-          { title: 'Laporan Neraca', path: PATH_DASHBOARD.other.content },
+          { title: 'Laporan Posisi Keuangan', path: PATH_DASHBOARD.bumdes.report.balance },
           { title: 'Laporan Arus kas', path: PATH_DASHBOARD.other.content },
         ],
       },

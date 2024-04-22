@@ -92,6 +92,7 @@ export default function DashboardHeader({
       return setTitle('Unit Usaha BUM Desa');
     }
     if (value2 === 'profit') return setTitle('Laporan Laba Rugi');
+    if (value2 === 'balance') return setTitle('Laporan Posisi Keuangan');
     else setTitle(value.charAt(0).toUpperCase() + value.slice(1));
   };
 
