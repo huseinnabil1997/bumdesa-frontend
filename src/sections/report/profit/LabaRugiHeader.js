@@ -1,4 +1,4 @@
-import { Download, Description, KeyboardArrowDown } from '@mui/icons-material';
+import { Description } from '@mui/icons-material';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
 // import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -22,10 +22,6 @@ export default function LabaRugiHeader() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
-
-  const handleClick = (url) => {
-    window.open(url, '_blank');
-  };
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
