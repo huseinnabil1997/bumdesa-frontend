@@ -98,7 +98,6 @@ export default function MyApp(props) {
     if (router.asPath.includes('/login') && !isLogin) {
       router.replace(PATH_AUTH.login);
     }
-    console.log('router.asPath', router.pathname)
   }, [router.asPath]);
 
   return (
