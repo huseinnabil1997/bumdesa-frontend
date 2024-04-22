@@ -48,7 +48,15 @@ const navConfig = [
         ],
       },
       { title: 'Unit Usaha BUM Des', path: PATH_DASHBOARD.bumdes.unit, icon: ICONS.unit },
-      { title: 'Profil BUM Desa', path: PATH_DASHBOARD.bumdes.profile, icon: ICONS.profile },
+      {
+        title: 'Profil BUM Desa',
+        path: PATH_DASHBOARD.bumdes.profile,
+        icon: ICONS.profile,
+        children: [
+          { title: 'Detail BUM Desa', path: PATH_DASHBOARD.bumdes.profile.detail },
+          { title: 'Pengurus BUM Desa', path: PATH_DASHBOARD.bumdes.profile.administrator},
+        ],
+      },
     ],
   },
   {
