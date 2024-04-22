@@ -44,7 +44,7 @@ const navConfig = [
           { title: 'Laporan Laba Rugi', path: PATH_DASHBOARD.bumdes.report.profit },
           { title: 'Laporan Ekuitas', path: PATH_DASHBOARD.other.content },
           { title: 'Laporan Posisi Keuangan', path: PATH_DASHBOARD.bumdes.report.balance },
-          { title: 'Laporan Arus kas', path: PATH_DASHBOARD.other.content },
+          { title: 'Laporan Arus kas', path: PATH_DASHBOARD.bumdes.report.cashFlow },
         ],
       },
       { title: 'Unit Usaha BUM Des', path: PATH_DASHBOARD.bumdes.unit, icon: ICONS.unit },
