@@ -18,11 +18,11 @@ import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import axiosInstance from 'src/utils/axiosCoreService';
 import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import Iconify from 'src/components/Iconify';
+import usePost from 'src/query/hooks/mutation/usePost';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -35,6 +35,8 @@ export default function AddUnitUsaha() {
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const mutation = usePost();
 
   const defaultValues = {
     image: null,
@@ -93,30 +95,32 @@ export default function AddUnitUsaha() {
     formData.append('manager_name', data?.manager_name);
     formData.append('manager_phone', data?.manager_phone);
 
-    try {
-      await axiosInstance.post('/business-units', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      await enqueueSnackbar(
-        '',
-        {
-          variant: 'success',
-          content: () => (
-            <Box
-              display="flex"
-              justifyContent="space-around"
-              alignItems="center"
-              sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-            >
-              <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-              <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
-            </Box>
-          )
-        },
-      )
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
 
+    try {
+      await mutation.mutateAsync({
+        endpoint: '/business-units',
+        payload: formData,
+        headers: headers,
+      });
+
+      enqueueSnackbar('', {
+        variant: 'success',
+        content: () => (
+          <Box
+            display="flex"
+            justifyContent="space-around"
+            alignItems="center"
+            sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+          >
+            <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+            <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
+          </Box>
+        )
+      });
+      
       router.push('list');
       reset();
     } catch (error) {

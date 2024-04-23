@@ -30,10 +30,11 @@ import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard/unit';
-import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
+import usePost from 'src/query/hooks/mutation/usePost';
+import useDelete from 'src/query/hooks/mutation/useDelete';
 
 
 // ----------------------------------------------------------------------
@@ -69,6 +70,10 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const mutationPost = usePost();
+
+  const mutationDelete = useDelete();
+
   // const [units, setUnits] = useState({});
   // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
@@ -92,7 +97,9 @@ export default function UserList() {
 
   const handleResendRow = async (id) => {
     try {
-      const response = await axiosInstance.post(`/business-units/resend-verify/${id}`);
+      const response = await mutationPost.mutateAsync({
+        endpoint: `/business-units/resend-verify/${id}`,
+      });
       await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
       refetch();
     } catch (error) {
@@ -107,7 +114,9 @@ export default function UserList() {
 
   const onDelete = async () => {
     try {
-      const response = await axiosInstance.delete(`/business-units/${alertDelete?.id}`)
+      const response = await mutationDelete.mutateAsync({
+        endpoint: `/business-units/${alertDelete?.id}`,
+      });
       enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
       refetch();
       setAlertDelete(null);
