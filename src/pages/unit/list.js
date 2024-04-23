@@ -33,6 +33,7 @@ import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard
 import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
 
 
 // ----------------------------------------------------------------------
@@ -68,43 +69,35 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [units, setUnits] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  // const [units, setUnits] = useState({});
+  // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
 
-  const fetchData = async (search) => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get('/business-units', {
-        params: {
-          page: page,
-          limit: rowsPerPage,
-          search: search,
-        }
-      });
-      setUnits(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.log('error setUnits', error);
-    }
-  };
+  const { data, isLoading, refetch } = useGetUnits({
+    page: page,
+    limit: rowsPerPage,
+    search: filterName,
+  });
+
+  const units = data;
 
   useEffect(() => {
-    fetchData();
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    refetch();
   }, [page, rowsPerPage]);
 
   const handleResendRow = async (id) => {
-    setIsLoading(true);
     try {
       const response = await axiosInstance.post(`/business-units/resend-verify/${id}`);
       await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
-      setIsLoading(false);
-      fetchData();
+      refetch();
     } catch (error) {
       await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
       console.log('error handleResendRow', error);
-      setIsLoading(false);
     }
   }
 
@@ -116,7 +109,7 @@ export default function UserList() {
     try {
       const response = await axiosInstance.delete(`/business-units/${alertDelete?.id}`)
       enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
-      fetchData();
+      refetch();
       setAlertDelete(null);
       console.log('response delete', response)
     } catch (error) {
@@ -133,7 +126,7 @@ export default function UserList() {
 
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
-      fetchData(filterName);
+      refetch();
     }
   };
 
