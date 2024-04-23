@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 // import { useFormContext } from 'react-hook-form';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
+import { useGetBusinessUnits } from 'src/query/hooks/report/profit/useGetBusinessUnit';
 import { StyledButton } from 'src/theme/custom/Button';
 
 const options = ['Download .PDF', 'Download .xlsx'];
@@ -18,6 +19,10 @@ export default function LabaRugiHeader() {
 
   // const sectorValue = watch('sector');
   // const dateValue = watch('date');
+
+  const { data, isLoading } = useGetBusinessUnits();
+
+  console.log('dataBusinessUnit', data, isLoading)
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -72,8 +77,8 @@ export default function LabaRugiHeader() {
           size="small"
           name="sector"
           placeholder="Sektor Usaha"
-          loading={false}
-          options={[{ text: 'Semua Unit', value: '' }].map((option) => option) ?? []}
+          loading={isLoading}
+          options={data?.map((option) => option) ?? [{ text: 'Semua Unit', value: '' }]}
           getOptionLabel={(option) => option.text}
           defaultValue={{ text: 'Semua Unit', value: '' }}
           renderOption={(props, option) => (

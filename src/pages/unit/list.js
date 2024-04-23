@@ -30,9 +30,11 @@ import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard/unit';
-import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
+import usePost from 'src/query/hooks/mutation/usePost';
+import useDelete from 'src/query/hooks/mutation/useDelete';
 
 
 // ----------------------------------------------------------------------
@@ -68,43 +70,41 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [units, setUnits] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const mutationPost = usePost();
+
+  const mutationDelete = useDelete();
+
+  // const [units, setUnits] = useState({});
+  // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
 
-  const fetchData = async (search) => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get('/business-units', {
-        params: {
-          page: page,
-          limit: rowsPerPage,
-          search: search,
-        }
-      });
-      setUnits(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.log('error setUnits', error);
-    }
-  };
+  const { data, isLoading, refetch } = useGetUnits({
+    page: page,
+    limit: rowsPerPage,
+    search: filterName,
+  });
+
+  const units = data;
 
   useEffect(() => {
-    fetchData();
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    refetch();
   }, [page, rowsPerPage]);
 
   const handleResendRow = async (id) => {
-    setIsLoading(true);
     try {
-      const response = await axiosInstance.post(`/business-units/resend-verify/${id}`);
+      const response = await mutationPost.mutateAsync({
+        endpoint: `/business-units/resend-verify/${id}`,
+      });
       await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
-      setIsLoading(false);
-      fetchData();
+      refetch();
     } catch (error) {
       await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
       console.log('error handleResendRow', error);
-      setIsLoading(false);
     }
   }
 
@@ -114,9 +114,11 @@ export default function UserList() {
 
   const onDelete = async () => {
     try {
-      const response = await axiosInstance.delete(`/business-units/${alertDelete?.id}`)
+      const response = await mutationDelete.mutateAsync({
+        endpoint: `/business-units/${alertDelete?.id}`,
+      });
       enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
-      fetchData();
+      refetch();
       setAlertDelete(null);
       console.log('response delete', response)
     } catch (error) {
@@ -133,7 +135,7 @@ export default function UserList() {
 
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
-      fetchData(filterName);
+      refetch();
     }
   };
 
