@@ -77,8 +77,8 @@ export default function LabaRugiHeader() {
           size="small"
           name="sector"
           placeholder="Sektor Usaha"
-          loading={false}
-          options={ data ?? [{ text: 'Semua Unit', value: '' }].map((option) => option) ?? []}
+          loading={isLoading}
+          options={data?.map((option) => option) ?? [{ text: 'Semua Unit', value: '' }]}
           getOptionLabel={(option) => option.text}
           defaultValue={{ text: 'Semua Unit', value: '' }}
           renderOption={(props, option) => (
