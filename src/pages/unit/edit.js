@@ -35,8 +35,6 @@ export default function EditUnitUsaha() {
   const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
   const { data, isLoading } = useGetUnitById(router.query.id);
 
-  console.log('husein', sectorData)
-
   const mutation = usePatch();
 
   const NewUnitFormSchema = Yup.object().shape({
@@ -159,8 +157,6 @@ export default function EditUnitUsaha() {
   useEffect(() => {
     methods.reset(defaultValues);
   }, [data]);
-
-  console.log('defaultValues', defaultValues)
 
   return (
     <Page title="Unit Usaha: Edit">

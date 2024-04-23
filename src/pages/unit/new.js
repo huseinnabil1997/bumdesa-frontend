@@ -18,18 +18,16 @@ import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
 import Iconify from 'src/components/Iconify';
 import usePost from 'src/query/hooks/mutation/usePost';
+import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
 export default function AddUnitUsaha() {
-  const [sectorData, setSectorData] = useState([]);
 
   const { themeStretch } = useSettings();
   const router = useRouter();
@@ -37,6 +35,8 @@ export default function AddUnitUsaha() {
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = usePost();
+
+  const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
 
   const defaultValues = {
     image: null,
@@ -128,21 +128,6 @@ export default function AddUnitUsaha() {
       console.log('error addUnits', error);
     }
   };
-
-  const fetchSector = async () => {
-    try {
-      const response = await axios.get('/sector');
-      setSectorData(response?.data?.data)
-    } catch (error) {
-      console.log('error fetchSector', error);
-    }
-  }
-
-  useEffect(() => {
-    if (sectorData.length === 0) {
-      fetchSector();
-    }
-  }, [sectorData]);
 
   return (
     <Page title="Unit Usaha: New">
@@ -258,7 +243,7 @@ export default function AddUnitUsaha() {
                   label="Sektor Usaha"
                   placeholder="Pilih Sektor Usaha"
                   size="small"
-                  loading={false}
+                  loading={isLoadingSectors}
                   options={sectorData?.map((option) => option) ?? []}
                   getOptionLabel={(option) => option.label}
                   renderOption={(props, option) => (
