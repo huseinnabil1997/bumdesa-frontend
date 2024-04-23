@@ -40,8 +40,6 @@ export default function LaporanLabaRugi() {
   const data = dataLabaRugi;
   const isLoading = false;
 
-  console.log('data---', data)
-
   // const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
 
