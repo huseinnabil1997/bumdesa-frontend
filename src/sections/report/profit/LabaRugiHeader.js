@@ -1,9 +1,9 @@
+import PropTypes from 'prop-types';
 import { Description } from '@mui/icons-material';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
 // import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-// import { useFormContext } from 'react-hook-form';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/profit/useGetBusinessUnit';
@@ -11,22 +11,22 @@ import { StyledButton } from 'src/theme/custom/Button';
 
 const options = ['Download .PDF', 'Download .xlsx'];
 
-export default function LabaRugiHeader() {
+LabaRugiHeader.propTypes = {
+  onSubmit: PropTypes.func,
+};
+
+export default function LabaRugiHeader({ onSubmit }) {
   // const router = useRouter();
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
-  // const { watch } = useFormContext();
-
-  // const sectorValue = watch('sector');
-  // const dateValue = watch('date');
 
   const { data, isLoading } = useGetBusinessUnits();
-
-  console.log('dataBusinessUnit', data, isLoading)
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
+  const [selectedDate, setSelectedDate] = useState('');
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -75,17 +75,22 @@ export default function LabaRugiHeader() {
         <RHFAutocomplete
           sx={{ width: 305 }}
           size="small"
-          name="sector"
+          name="unit"
           placeholder="Sektor Usaha"
           loading={isLoading}
-          options={data?.map((option) => option) ?? [{ text: 'Semua Unit', value: '' }]}
-          getOptionLabel={(option) => option.text}
-          defaultValue={{ text: 'Semua Unit', value: '' }}
+          options={data?.map((option) => option) ?? [{ name: 'Semua Unit', id: '' }]}
+          getOptionLabel={(option) => option.name}
+          defaultValue={{ name: 'Semua Unit', id: '' }}
           renderOption={(props, option) => (
-            <li {...props} key={option.value}>
-              {option.text}
+            <li {...props} key={option.id}>
+              {option.name}
             </li>
           )}
+          onChange={(event, newValue) => {
+            setSelectedUnit(newValue);
+            onSubmit({ unit: newValue?.id, date: selectedDate })
+          }}
+          value={selectedUnit}
         />
         <RHFTextField
           inputRef={datePickerRef}
@@ -98,6 +103,10 @@ export default function LabaRugiHeader() {
           }}
           inputProps={{
             max: getMaxDateForMonthInput(),
+          }}
+          onChange={(event) => {
+            setSelectedDate(event.target.value);
+            onSubmit({ unit: selectedUnit?.id, date: event.target.value })
           }}
         />
       </Stack>

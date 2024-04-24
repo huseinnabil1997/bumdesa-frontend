@@ -20,8 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
 import { LabaRugiHeader } from 'src/sections/report/profit';
-// import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
-import { dataLabaRugi } from './data';
+import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
 
 // ----------------------------------------------------------------------
 
@@ -31,17 +30,14 @@ LaporanLabaRugi.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function LaporanLabaRugi() {
-
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  // const { data, isLoading } = useGetProfit();
-
-  const data = dataLabaRugi;
-  const isLoading = false;
-
   // const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
+  const [submitValue, setSubmitValue] = useState({});
+
+  const { data, isLoading, refetch } = useGetProfit(submitValue);
 
   // const handleDeleteRow = (id) => {};
 
@@ -50,20 +46,21 @@ export default function LaporanLabaRugi() {
   // const handleViewRow = (row) => {};
 
   const methods = useForm({
-    defaultValues: { unit: null, year: null },
+    defaultValues: { unit: null, date: null },
   });
 
   const { handleSubmit } = methods;
 
   const onSubmit = async (data) => {
-    console.log(data);
+    setSubmitValue(data);
+    await refetch()
   };
 
   return (
     <Page title="Laporan: Laba Rugi">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <LabaRugiHeader />
+          <LabaRugiHeader onSubmit={onSubmit} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
@@ -77,31 +74,21 @@ export default function LaporanLabaRugi() {
 
                 <TableBody>
                   {!isLoading &&
-                    data.map((row, i) => (
+                    data?.map((row, i) => (
                       <UserTableRow
                         key={row.id}
                         index={i}
                         row={row}
-                        // onViewRow={() => handleViewRow(row)}
+                      // onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 
                   {isLoading && <TableSkeleton />}
-                  {!data?.length > 0 && (
-                    <TableNoData
-                      title="Jurnal belum tersedia."
-                      description="Silakan buat jurnal dengan klik tombol di bawah ini."
-                      action={
-                        <StyledButton
-                          sx={{ mt: 2, width: 200 }}
-                          variant="outlined"
-                          startIcon={<Add fontSize="small" />}
-                        >
-                          Buat Jurnal
-                        </StyledButton>
-                      }
-                    />
-                  )}
+                  <TableNoData
+                    isNotFound={!isLoading && data === undefined}
+                    title="Laporan Laba Rugi belum tersedia."
+                    description="Silakan pilih unit usaha dan tanggal laporan"
+                  />
                 </TableBody>
               </Table>
             </TableContainer>
