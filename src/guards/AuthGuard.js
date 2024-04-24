@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 // hooks
 import useAuth from '../hooks/useAuth';
-import Login from '../pages/auth/login';
+// import Login from '../pages/auth/login';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -19,7 +19,7 @@ export default function AuthGuard({ children }) {
 
   const isLogin = localStorage.getItem('token');
 
-  const { pathname, push } = useRouter();
+  const { router, pathname, push } = useRouter();
 
   const [requestedLocation, setRequestedLocation] = useState(null);
 
@@ -42,5 +42,7 @@ export default function AuthGuard({ children }) {
     window.location.href = '/auth/login'
   }
 
-  return <>{children}</>;
+  if (router?.asPath?.includes('/auth')) return <>{children}</>;
+  else if (isLogin) return <>{children}</>;
+  return <></>;
 }
