@@ -15,10 +15,7 @@ import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 import { UserTableRow } from '../../../sections/report/balance';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { PROFIT_HEAD } from 'src/utils/constant';
 import { useTheme } from '@mui/material/styles';
-import { StyledButton } from 'src/theme/custom/Button';
-import { Add } from '@mui/icons-material';
 import NeracaHeader from 'src/sections/report/balance/NeracaHeader';
 import { useGetBalance } from 'src/query/hooks/report/balance/useGetBalance';
 
