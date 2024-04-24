@@ -1,60 +1,72 @@
-import { m } from 'framer-motion';
-// next
-import NextLink from 'next/link';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Button, Typography, Container } from '@mui/material';
-// layouts
-import Layout from '../layouts';
+import { Box, Typography } from '@mui/material';
+// routes
+// hooks
+// guards
 // components
 import Page from '../components/Page';
-import { MotionContainer, varBounce } from '../components/animate';
-// assets
+// sections
+import { useRouter } from 'next/router';
 import { PageNotFoundIllustration } from '../assets';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
+}));
+
+const ContentStyle = styled('div')(() => ({
+  maxWidth: '100vw',
+  width: '100%',
+  margin: 'auto',
   display: 'flex',
-  height: '100%',
-  alignItems: 'center',
-  paddingTop: theme.spacing(15),
-  paddingBottom: theme.spacing(10),
+  minHeight: '100vh',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  backgroundImage: 'url("/image/email-verification.svg")',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
 }));
 
 // ----------------------------------------------------------------------
 
-Page404.getLayout = function getLayout(page) {
-  return <Layout variant="logoOnly">{page}</Layout>;
-};
+export default function PageNotFound() {
+  const router = useRouter();
 
-// ----------------------------------------------------------------------
-
-export default function Page404() {
   return (
-    <Page title="404 Page Not Found" sx={{ height: 1 }}>
+    <Page title="404 Halaman Tidak di temukan">
       <RootStyle>
-        <Container component={MotionContainer}>
-          <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
-            <m.div variants={varBounce().in}>
+        {/* <Container> */}
+        <ContentStyle>
+          <Box sx={{ maxWidth: 500, mx: 'auto' }}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px', textAlign: 'center' }}
+            >
               <Typography variant="h3" paragraph>
-                Sorry, page not found!
+                Maaf, halaman tidak ditemukan!
               </Typography>
-            </m.div>
-            <Typography sx={{ color: 'text.secondary' }}>
-              Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be sure to check
-              your spelling.
-            </Typography>
-            <m.div variants={varBounce().in}>
-              <PageNotFoundIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
-            </m.div>
-            <NextLink href="/" passHref>
-              <Button size="large" variant="contained">
-                Go to Home
-              </Button>
-            </NextLink>
+              <Typography sx={{ color: 'text.secondary' }}>
+                Maaf, kami tidak dapat menemukan halaman yang anda cari. Mungkin saja anda mengalami kesalahan mengetik URL?
+                Pastikan untuk memeriksa ejaan Anda.
+              </Typography>
+              <PageNotFoundIllustration sx={{ height: '216px', m: 5 }} />
+              <StyledLoadingButton
+                sx={{ width: 432, height: 48, fontSize: '16px', fontWeight: 700 }}
+                variant="contained"
+                onClick={() => router.push(PATH_DASHBOARD.root)}>
+                Kembali ke Halaman Utama
+              </StyledLoadingButton>
+            </Box>
           </Box>
-        </Container>
+        </ContentStyle>
       </RootStyle>
     </Page>
   );

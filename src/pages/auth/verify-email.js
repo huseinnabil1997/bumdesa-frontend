@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 // routes
 // hooks
 // guards
@@ -133,14 +133,6 @@ export default function Login() {
             )}
           </ContentStyle>
         )}
-        {/* <AlertVerifyEmail
-            open={alertVerify}
-            onClose={() => {
-              setAlertVerify(false);
-              router.replace(PATH_AUTH.login)
-            }}
-          /> */}
-        {/* </Container> */}
       </RootStyle>
     </Page>
   );
