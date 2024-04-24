@@ -83,9 +83,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected }) {
   const theme = useTheme();
 
-  const { level, title, saldo } = row;
-
-  // const [open, setOpen] = useState(false);
+  const { level, title, saldo, child } = row;
 
   const generateColor = (i, j) => {
     const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
@@ -115,19 +113,19 @@ export default function UserTableRow({ row, selected }) {
 
 
   const bgColor = () => {
-    if (saldo) {
+    if (level === '1' && !child) {
       return '#DDEFFC'
     }
-    if (level === '1') {
+    if (level === '1' && child) {
       return 'white'
     }
   }
 
   const bgColorHover = () => {
-    if (saldo) {
+    if (level === '1' && !child) {
       return '#A6D6FF'
     }
-    if (level === '1') {
+    if (level === '1' && child) {
       return '#EAEBEB'
     }
   }
@@ -145,10 +143,10 @@ export default function UserTableRow({ row, selected }) {
           "&:hover": {
             backgroundColor: `${bgColorHover()} !important`
           },
-          borderLeft: level === '1' && saldo === 0 ? '6px solid #F87304' : null
+          borderLeft: level === '1' && child ? '6px solid #F87304' : null
         }}
       >
-        <TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>
+        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {title}
         </TableCell>
         {<TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>

@@ -1,27 +1,30 @@
 import { Description } from '@mui/icons-material';
+import PropTypes from 'prop-types';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
-// import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useRef, useState } from 'react';
-// import { useFormContext } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
+import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 
 const options = ['Download .PDF', 'Download .xlsx'];
 
-export default function NeracaHeader() {
-  // const router = useRouter();
+NeracaHeader.propTypes = {
+  onSubmit: PropTypes.func,
+};
+
+export default function NeracaHeader({ onSubmit }) {
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
-  // const { watch } = useFormContext();
 
-  // const sectorValue = watch('sector');
-  // const dateValue = watch('date');
+  const { data, isLoading } = useGetBusinessUnits();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
+  const [selectedDate, setSelectedDate] = useState('');
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -64,6 +67,19 @@ export default function NeracaHeader() {
     return `${year}-${month}`;
   };
 
+  const getPreviousMonth = () => {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  };
+
+  useEffect(() => {
+    setSelectedDate(getPreviousMonth());
+    onSubmit({ unit: selectedUnit?.id, date: getPreviousMonth() })
+  }, [])
+
   return (
     <>
       <Stack direction="row">
@@ -83,8 +99,8 @@ export default function NeracaHeader() {
           >
             <Typography
               sx={{
-                width: '47px', 
-                height: '26px', 
+                width: '47px',
+                height: '26px',
                 fontSize: '12px',
                 fontWeight: 600,
                 color: '#27AE60',
@@ -106,17 +122,22 @@ export default function NeracaHeader() {
           <RHFAutocomplete
             sx={{ width: 305 }}
             size="small"
-            name="sector"
+            name="unit"
             placeholder="Sektor Usaha"
-            loading={false}
-            options={[{ text: 'Semua Unit', value: '' }].map((option) => option) ?? []}
-            getOptionLabel={(option) => option.text}
-            defaultValue={{ text: 'Semua Unit', value: '' }}
+            loading={isLoading}
+            options={data?.map((option) => option) ?? [{ name: 'Semua Unit', id: '' }]}
+            getOptionLabel={(option) => option.name}
+            defaultValue={{ name: 'Semua Unit', id: '' }}
             renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.text}
+              <li {...props} key={option.id}>
+                {option.name}
               </li>
             )}
+            onChange={(event, newValue) => {
+              setSelectedUnit(newValue);
+              onSubmit({ unit: newValue?.id, date: selectedDate })
+            }}
+            value={selectedUnit}
           />
           <RHFTextField
             inputRef={datePickerRef}
@@ -130,6 +151,11 @@ export default function NeracaHeader() {
             inputProps={{
               max: getMaxDateForMonthInput(),
             }}
+            onChange={(event) => {
+              setSelectedDate(event.target.value);
+              onSubmit({ unit: selectedUnit?.id, date: event.target.value })
+            }}
+            value={selectedDate}
           />
         </Stack>
         <Stack direction="row" spacing={1}>

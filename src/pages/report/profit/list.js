@@ -17,8 +17,6 @@ import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { PROFIT_HEAD } from 'src/utils/constant';
 import { useTheme } from '@mui/material/styles';
-import { StyledButton } from 'src/theme/custom/Button';
-import { Add } from '@mui/icons-material';
 import { LabaRugiHeader } from 'src/sections/report/profit';
 import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
 
@@ -33,17 +31,10 @@ export default function LaporanLabaRugi() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  // const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [submitValue, setSubmitValue] = useState({});
 
   const { data, isLoading, refetch } = useGetProfit(submitValue);
-
-  // const handleDeleteRow = (id) => {};
-
-  // const handleEditRow = (row) => {};
-
-  // const handleViewRow = (row) => {};
 
   const methods = useForm({
     defaultValues: { unit: null, date: null },
@@ -79,7 +70,6 @@ export default function LaporanLabaRugi() {
                         key={row.id}
                         index={i}
                         row={row}
-                      // onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 
