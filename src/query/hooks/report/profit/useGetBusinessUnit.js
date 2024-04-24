@@ -5,7 +5,7 @@ const fetchData = async (param) => {
   try {
     const { data } = await getBusinessUnits(param);
     
-    return data ?? []
+    return data.data ?? []
   } catch (err) {
     throw new Error();
   }
