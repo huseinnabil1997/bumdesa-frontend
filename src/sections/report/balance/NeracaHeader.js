@@ -12,9 +12,10 @@ const options = ['Download .PDF', 'Download .xlsx'];
 
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
+  indicatorBalance: PropTypes.string,
 };
 
-export default function NeracaHeader({ onSubmit }) {
+export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -88,7 +89,7 @@ export default function NeracaHeader({ onSubmit }) {
           <Box
             sx={{
               display: 'flex',
-              width: '95px',
+              width: indicatorBalance === 'Balance' ? '95px' : '128px',
               height: '34px',
               p: '8px, 8px, 0px, 8px',
               borderRadius: '8px',
@@ -99,7 +100,7 @@ export default function NeracaHeader({ onSubmit }) {
           >
             <Typography
               sx={{
-                width: '47px',
+                width: indicatorBalance === 'Balance' ? '47px' : '80px',
                 height: '26px',
                 fontSize: '12px',
                 fontWeight: 600,
@@ -112,7 +113,7 @@ export default function NeracaHeader({ onSubmit }) {
                 borderStyle: 'solid'
               }}
             >
-              Balance
+              {indicatorBalance}
             </Typography>
           </Box>
         </Stack>
