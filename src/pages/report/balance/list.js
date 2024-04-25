@@ -63,11 +63,23 @@ export default function LaporanNeraca() {
     return 'Saldo';
   }
 
+  const getIndicatorBalance = () => {
+
+    const totalAset = data?.find(item => item.title === "ASET").child?.find(childItem => childItem.nama === "Total ASET").saldo;
+
+    const totalKewajibanDanEkuitas = data?.find(item => item.title === "TOTAL KEWAJIBAN DAN EKUITAS").saldo;
+
+    const selisih = totalAset - totalKewajibanDanEkuitas;
+
+    if (selisih === 0) return 'Balance';
+    if (selisih !== 0 || !data) return 'Tidak Balance';
+  }
+
   return (
     <Page title="Laporan: Posisi Keuangan">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <NeracaHeader onSubmit={onSubmit} />
+          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance()} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
