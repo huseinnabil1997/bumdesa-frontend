@@ -12,16 +12,12 @@ import Scrollbar from '../../../components/Scrollbar';
 import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 // sections
-import { UserTableRow } from '../../../sections/report/profit';
+import { UserTableRow } from '../../../sections/report/balance';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { PROFIT_HEAD } from 'src/utils/constant';
 import { useTheme } from '@mui/material/styles';
-import { StyledButton } from 'src/theme/custom/Button';
-import { Add } from '@mui/icons-material';
-// import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
-import { dataLabaRugi } from './data';
-import { ArusKasHeader } from 'src/sections/report/cash-flow';
+import { useGetCashFlow } from 'src/query/hooks/report/cashflow/useGetCashFlow';
+import { ArusKasHeader } from 'src/sections/report/cashflow';
 
 // ----------------------------------------------------------------------
 
@@ -35,75 +31,73 @@ export default function LaporanArusKas() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  // const { data, isLoading } = useGetProfit();
-
-  const data = dataLabaRugi;
-  const isLoading = false;
-
-  console.log('data---', data)
-
-  // const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
+  const [submitValue, setSubmitValue] = useState({});
 
-  // const handleDeleteRow = (id) => {};
-
-  // const handleEditRow = (row) => {};
-
-  // const handleViewRow = (row) => {};
+  const { data, isLoading, refetch } = useGetCashFlow(submitValue);
 
   const methods = useForm({
-    defaultValues: { unit: null, year: null },
+    defaultValues: { unit: null, date: null },
   });
 
   const { handleSubmit } = methods;
 
   const onSubmit = async (data) => {
-    console.log(data);
+    setSubmitValue(data);
+    await refetch()
   };
+
+  function convertToMonthYear(dateString) {
+    if (dateString) {
+      const [year, month] = dateString.split('-');
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+      ];
+
+      const monthIndex = parseInt(month, 10) - 1;
+      const monthName = monthNames[monthIndex];
+
+      return `${monthName} ${year}`;
+    }
+    return 'Saldo';
+  }
 
   return (
     <Page title="Laporan: Arus Kas">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <ArusKasHeader />
+          <ArusKasHeader onSubmit={onSubmit} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={PROFIT_HEAD}
+                  headLabel={[
+                    { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
+                    { id: 'saldo', label: convertToMonthYear(submitValue?.date), align: 'left', width: 480 },
+                  ]}
                   rowCount={data?.length}
                   sx={{ background: theme.palette.grey[200], height: '56px' }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data.map((row, i) => (
+                    data?.map((row, i) => (
                       <UserTableRow
                         key={row.id}
                         index={i}
                         row={row}
-                        // onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 
                   {isLoading && <TableSkeleton />}
-                  {!data?.length > 0 && (
-                    <TableNoData
-                      title="Jurnal belum tersedia."
-                      description="Silakan buat jurnal dengan klik tombol di bawah ini."
-                      action={
-                        <StyledButton
-                          sx={{ mt: 2, width: 200 }}
-                          variant="outlined"
-                          startIcon={<Add fontSize="small" />}
-                        >
-                          Buat Jurnal
-                        </StyledButton>
-                      }
-                    />
-                  )}
+                  <TableNoData
+                    isNotFound={!isLoading && data === undefined}
+                    title="Laporan Arus Kas belum tersedia."
+                    description="Silakan pilih unit usaha dan tanggal laporan"
+                  />
                 </TableBody>
               </Table>
             </TableContainer>
