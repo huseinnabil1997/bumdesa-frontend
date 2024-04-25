@@ -80,6 +80,10 @@ export default function LabaRugiHeader({ onSubmit }) {
     onSubmit({ unit: selectedUnit?.id, date: getPreviousMonth() })
   }, [])
 
+  useEffect(async () => {
+    await setSelectedUnit(data?.[0])
+  }, [data])
+
   return (
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>

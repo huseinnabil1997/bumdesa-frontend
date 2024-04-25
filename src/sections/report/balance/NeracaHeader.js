@@ -81,6 +81,10 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
     onSubmit({ unit: selectedUnit?.id, date: getPreviousMonth() })
   }, [])
 
+  useEffect(async () => {
+    await setSelectedUnit(data?.[0])
+  }, [data])
+
   return (
     <>
       <Stack direction="row">
@@ -126,9 +130,8 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             name="unit"
             placeholder="Sektor Usaha"
             loading={isLoading}
-            options={data?.map((option) => option) ?? [{ name: 'Semua Unit', id: '' }]}
+            options={data?.map((option) => option) ?? []}
             getOptionLabel={(option) => option.name}
-            defaultValue={{ name: 'Semua Unit', id: '' }}
             renderOption={(props, option) => (
               <li {...props} key={option.id}>
                 {option.name}
