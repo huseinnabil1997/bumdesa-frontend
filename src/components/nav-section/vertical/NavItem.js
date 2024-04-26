@@ -7,6 +7,7 @@ import { Box, Link, ListItemText } from '@mui/material';
 import Iconify from '../../Iconify';
 import { ListItemStyle, ListItemTextStyle, ListItemIconStyle } from './style';
 import { isExternalLink } from '..';
+import SvgIconStyle from 'src/components/SvgIconStyle';
 
 // ----------------------------------------------------------------------
 
@@ -24,12 +25,14 @@ NavItemRoot.propTypes = {
   }),
 };
 
+const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+
 export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) {
   const { title, path, icon, info, children } = item;
 
   const renderContent = (
     <>
-      {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
+      {icon && <ListItemIconStyle>{getIcon(icon)}</ListItemIconStyle>}
       <ListItemTextStyle disableTypography primary={title} isCollapse={isCollapse} />
       {!isCollapse && (
         <>

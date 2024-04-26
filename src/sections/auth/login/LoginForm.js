@@ -64,7 +64,7 @@ export default function LoginForm() {
       } else {
         setSession(res?.metadata?.token ?? '');
         enqueueSnackbar(res.message, { variant: 'success' });
-        window.location.reload();
+        window.location.href = `/dashboard`;
       }
     } catch (error) {
       reset();

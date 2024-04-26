@@ -1,5 +1,6 @@
 import axiosUnregistered, { getSessionToken } from 'src/utils/axiosUnregistered';
 import axios from 'src/utils/axios';
+import axiosCore from 'src/utils/axiosCoreService';
 
 const isRegis = !!getSessionToken();
 const service = isRegis ? axiosUnregistered : axios;
@@ -26,4 +27,12 @@ export function getPostalCode(param) {
 
 export function getSector(param) {
   return service.get('/sector', { params: param });
+}
+
+export function getAccountOpt() {
+  return axiosCore.get('/accounts');
+}
+
+export function getCashFlowOpt(params) {
+  return axiosCore.get('/cash-flow', { params });
 }
