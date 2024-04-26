@@ -18,6 +18,7 @@ import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const router = useRouter();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -62,9 +65,10 @@ export default function LoginForm() {
         await localStorage.setItem('@token', res?.metadata?.token ?? '');
         window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
       } else {
-        setSession(res?.metadata?.token ?? '');
+        await setSession(res?.metadata?.token ?? '');
         enqueueSnackbar(res.message, { variant: 'success' });
-        window.location.href = PATH_DASHBOARD.root;
+        // window.location.href = PATH_DASHBOARD.root;
+        router.replace(PATH_DASHBOARD.root)
       }
     } catch (error) {
       reset();
