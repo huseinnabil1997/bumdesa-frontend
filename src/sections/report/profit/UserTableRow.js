@@ -31,9 +31,9 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
           {row?.child2 && (
             <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
               {open ?
-                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-up-box'} />
-                :
                 <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-down-box'} />
+                :
+                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-right-box'} />
               }
             </IconButton>
           )}
