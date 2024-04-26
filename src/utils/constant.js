@@ -19,6 +19,11 @@ export const LEDGER_HEAD = [
   { id: 'saldo', label: 'Saldo', align: 'left', width: 250 },
 ];
 
+export const PROFIT_HEAD = [
+  { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
+  { id: 'saldo', label: 'Saldo', align: 'left', width: 480 },
+];
+
 export const DEFAULT_FILTER = {
   limit: 10,
   page: 1,

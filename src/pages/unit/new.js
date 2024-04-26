@@ -1,4 +1,5 @@
-import { Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import Layout from 'src/layouts';
@@ -17,22 +18,25 @@ import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import axiosInstance from 'src/utils/axiosCoreService';
-import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+import Iconify from 'src/components/Iconify';
+import usePost from 'src/query/hooks/mutation/usePost';
+import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
 export default function AddUnitUsaha() {
-  const [sectorData, setSectorData] = useState([]);
 
   const { themeStretch } = useSettings();
   const router = useRouter();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const mutation = usePost();
+
+  const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
 
   const defaultValues = {
     image: null,
@@ -91,13 +95,32 @@ export default function AddUnitUsaha() {
     formData.append('manager_name', data?.manager_name);
     formData.append('manager_phone', data?.manager_phone);
 
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+
     try {
-      const response = await axiosInstance.post('/business-units', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      await mutation.mutateAsync({
+        endpoint: '/business-units',
+        payload: formData,
+        headers: headers,
       });
-      enqueueSnackbar(response.message ?? "Sukses menyimpan data", { variant: 'success' });
+
+      enqueueSnackbar('', {
+        variant: 'success',
+        content: () => (
+          <Box
+            display="flex"
+            justifyContent="space-around"
+            alignItems="center"
+            sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+          >
+            <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+            <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
+          </Box>
+        )
+      });
+      
       router.push('list');
       reset();
     } catch (error) {
@@ -105,21 +128,6 @@ export default function AddUnitUsaha() {
       console.log('error addUnits', error);
     }
   };
-
-  const fetchSector = async () => {
-    try {
-      const response = await axios.get('/sector');
-      setSectorData(response?.data?.data)
-    } catch (error) {
-      console.log('error fetchSector', error);
-    }
-  }
-
-  useEffect(() => {
-    if (sectorData.length === 0) {
-      fetchSector();
-    }
-  }, [sectorData]);
 
   return (
     <Page title="Unit Usaha: New">
@@ -235,7 +243,7 @@ export default function AddUnitUsaha() {
                   label="Sektor Usaha"
                   placeholder="Pilih Sektor Usaha"
                   size="small"
-                  loading={false}
+                  loading={isLoadingSectors}
                   options={sectorData?.map((option) => option) ?? []}
                   getOptionLabel={(option) => option.label}
                   renderOption={(props, option) => (
@@ -289,7 +297,7 @@ export default function AddUnitUsaha() {
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
-                    "& fieldset": { 
+                    "& fieldset": {
                       border: 'none',
                     },
                   }}
@@ -349,5 +357,33 @@ export default function AddUnitUsaha() {
         </Card>
       </Container>
     </Page>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+SnackbarIcon.propTypes = {
+  icon: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+};
+
+function SnackbarIcon({ icon, color }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        mr: 1.5,
+        width: 40,
+        height: 40,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: color === 'success' ? '#27AE60' : `${color}.main`,
+        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Box>
   );
 }

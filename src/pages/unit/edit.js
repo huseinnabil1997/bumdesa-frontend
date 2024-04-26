@@ -1,5 +1,6 @@
-import { Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import Layout from 'src/layouts';
@@ -13,25 +14,28 @@ import { handleDrop } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import axiosInstance from 'src/utils/axiosCoreService';
-import axios from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
-import { setSession } from 'src/utils/jwt';
-import { PATH_AUTH } from 'src/routes/paths';
+import Iconify from 'src/components/Iconify';
+import usePatch from 'src/query/hooks/mutation/usePatch';
+import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
+import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
 export default function EditUnitUsaha() {
-  const [sectorData, setSectorData] = useState([]);
-  const [data, setData] = useState({})
 
   const { themeStretch } = useSettings();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
+
+  const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
+  const { data, isLoading } = useGetUnitById(router.query.id);
+
+  const mutation = usePatch();
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -52,14 +56,14 @@ export default function EditUnitUsaha() {
 
   const defaultValues = {
     id: router.query.id ?? '',
-    image: data.photo ?? null,
-    name: data.name ?? '',
+    image: data?.photo ?? null,
+    name: data?.name ?? '',
     position: 'Manager',
-    email: data.email ?? '',
-    year_founded: data.year_founded?.toString() ?? '',
-    sector: { value: data.id_sector, label: data.sector } ?? null,
-    manager_name: data.organization?.Name ?? '',
-    phone: data.organization?.Phone ?? '',
+    email: data?.email ?? '',
+    year_founded: data?.year_founded?.toString() ?? '',
+    sector: { value: data?.id_sector, label: data?.sector } ?? null,
+    manager_name: data?.organization?.name ?? '',
+    manager_phone: data?.organization?.phone ?? '',
   };
 
   const methods = useForm({
@@ -72,7 +76,7 @@ export default function EditUnitUsaha() {
     setValue,
     handleSubmit,
     isSubmitting,
-    reset,
+    // reset,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -86,59 +90,73 @@ export default function EditUnitUsaha() {
     formData.append('manager_name', data?.manager_name);
     formData.append('manager_phone', data?.manager_phone);
 
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+
     try {
-      const response = await axiosInstance.patch(`/business-units/${data.id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      await mutation.mutateAsync({
+        endpoint: `/business-units/${data.id}`,
+        payload: formData,
+        headers: headers,
       });
       if (data?.email === defaultValues.email) {
-        enqueueSnackbar(response.message ?? "Sukses menyimpan data", { variant: 'success' });
+        await enqueueSnackbar(
+          '',
+          {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                justifyContent="space-around"
+                alignItems="center"
+                sx={{ width: '280px', height: 48, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+              >
+                <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                <Typography mr="12px" fontSize="12px">Data Anda telah berhasil diperbarui.</Typography>
+              </Box>
+            )
+          }
+        );
         router.push('list');
       } else {
-        router.push(PATH_AUTH.verifyEmail)
-        setSession(null);
+        await enqueueSnackbar(
+          '',
+          {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ width: 475, height: 96, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+              >
+                <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  flexDirection="column"
+                >
+                  <Typography fontSize="12px" mb="10px">
+                    Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{data?.email}</span>
+                  </Typography>
+                  <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>
+                </Box>
+              </Box>
+            )
+          }
+        );
+        router.push('list');
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
-      console.log('error addUnits', error);
+      console.log('error Edit Units', error);
     }
   };
-
-  const fetchData = async () => {
-    // setIsLoading(true);
-    try {
-      const response = await axiosInstance.get(`/business-units/${router.query.id}`);
-      setData(response.data.data);
-      // setIsLoading(false);
-    } catch (error) {
-      console.log('error setData', error);
-    }
-  };
-
-  const fetchSector = async () => {
-    try {
-      const response = await axios.get('/sector');
-      setSectorData(response?.data?.data)
-    } catch (error) {
-      console.log('error fetchSector', error);
-    }
-  }
 
   useEffect(() => {
     methods.reset(defaultValues);
   }, [data]);
-
-  console.log('defaultValues', defaultValues)
-
-  useEffect(() => {
-    if (Object.keys(data).length === 0) {
-      fetchData();
-    }
-    if (sectorData.length === 0) {
-      fetchSector();
-    }
-  }, [sectorData, data]);
 
   return (
     <Page title="Unit Usaha: Edit">
@@ -255,7 +273,7 @@ export default function EditUnitUsaha() {
                   label="Sektor Usaha"
                   placeholder="Pilih Sektor Usaha"
                   size="small"
-                  loading={false}
+                  loading={isLoading || isLoadingSectors}
                   isOptionEqualToValue={(option, value) => option.value === value.value}
                   options={sectorData?.map((option) => option) ?? []}
                   getOptionLabel={(option) => option.label}
@@ -370,5 +388,33 @@ export default function EditUnitUsaha() {
         </Card>
       </Container>
     </Page>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+SnackbarIcon.propTypes = {
+  icon: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+};
+
+function SnackbarIcon({ icon, color }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        mr: 1.5,
+        width: 40,
+        height: 40,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: color === 'success' ? '#27AE60' : `${color}.main`,
+        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Box>
   );
 }

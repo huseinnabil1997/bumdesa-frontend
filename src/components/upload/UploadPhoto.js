@@ -23,7 +23,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   width: 90,
   height: 90,
   borderRadius: '12px',
-  padding: theme.spacing(1),
+  // padding: theme.spacing(1),
   marginRight: theme.spacing(2),
   border: `1px dashed ${theme.palette.grey[500_32]}`,
 }));
@@ -162,8 +162,8 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
           </DropZoneStyle>
         </RootStyle>
 
-        <Stack sx={{ width: 'calc(100% - 116px)', display: 'flex', justifyContent: 'center' }}>
-          <Box>
+        <Stack sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
+          <Box mr={2}>
             <StyledLoadingButton
               variant="contained"
               color="primary"
@@ -180,11 +180,10 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
             >
               Hapus Foto
             </StyledLoadingButton>
+            {helperText && helperText}
           </Box>
-          {helperText && helperText}
+          {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
         </Stack>
-
-        {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
       </Container>
       <Modal
         open={isModalOpen}
@@ -192,7 +191,7 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24}}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24 }}>
           {modalImage && <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
         </Box>
       </Modal>

@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 // routes
-import { PATH_AUTH } from '../../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -59,12 +59,12 @@ export default function LoginForm() {
     try {
       const res = await login(data.email, data.password);
       if (res?.data?.full_register === 0) {
-        localStorage.setItem('@token', res?.metadata?.token ?? '');
+        await localStorage.setItem('@token', res?.metadata?.token ?? '');
         window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
       } else {
         setSession(res?.metadata?.token ?? '');
         enqueueSnackbar(res.message, { variant: 'success' });
-        window.location.href = `/dashboard`;
+        window.location.href = PATH_DASHBOARD.root;
       }
     } catch (error) {
       reset();

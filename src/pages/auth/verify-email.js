@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 // routes
 // hooks
 // guards
@@ -9,12 +9,12 @@ import Page from '../../components/Page';
 import Image from '../../components/Image';
 // sections
 import { useRouter } from 'next/router';
-import AlertVerifyEmail from 'src/components/modal/VerifyEmail';
+// import AlertVerifyEmail from 'src/components/modal/VerifyEmail';
 import { useEffect, useState } from 'react';
 import { PATH_AUTH } from 'src/routes/paths';
-import useAuth from 'src/hooks/useAuth';
-import { useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axiosCoreService';
+import { setSession } from 'src/utils/jwt';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -25,96 +25,114 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
+  maxWidth: '100vw',
+  width: '100%',
   margin: 'auto',
   display: 'flex',
   minHeight: '100vh',
   flexDirection: 'column',
   justifyContent: 'center',
   padding: theme.spacing(12, 0),
+  backgroundImage: 'url("/image/email-verification.svg")',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
 }));
 
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const [alertVerify, setAlertVerify] = useState(false);
+  const [error, setError] = useState('');
   const [isExpired, setIsExpired] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { verifyEmail } = useAuth();
 
-  const { enqueueSnackbar } = useSnackbar();
-  const token = localStorage.getItem('token');
-  console.log('token', token)
-
-  const fetchVerifyEmail = async () => {
+  const fetchVerifyEmail = async (unit_verify) => {
+    setLoading(false);
     try {
-      const res = await axiosInstance.post('/business-units/email-verify', { unit_otp: router.query.unit_otp });
-      // const res = await verifyEmail({ unit_otp: router.query.unit_otp });
-      console.log('res verifyEmail', res);
-      setAlertVerify(true);
+
+      await axiosInstance.post('/business-units/email-verify', { unit_verify });
+      setLoading(false);
+      setIsExpired(false);
+      setError('');
+      setSession(null);
     } catch (error) {
-      console.log('error verifyEmail', error)
-      enqueueSnackbar(error?.message, { variant: 'error' });
+      console.log('error verifyEmail', error);
+      setIsExpired(true);
+      setError(error?.message);
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchVerifyEmail();
-    // setAlertVerify(true);
-    // setIsExpired(true);
+    fetchVerifyEmail(router.query.unit_verify);
   }, [])
 
   return (
     <Page title="Verify Email">
       <RootStyle>
-        <Container maxWidth="sm">
+        {/* <Container> */}
+        {!loading && (
           <ContentStyle>
             {isExpired ? (
               <Box sx={{ maxWidth: 480, mx: 'auto' }}>
-                <Typography variant="h3" paragraph>
-                  Link pada email sudah kadaluarsa!
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  Silahkan hubungi admin BUM Desa Anda untuk mengirimkan kembali link verifikasi.
-                </Typography>
-                <Box display="flex" sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}
+                >
                   <Image
                     visibleByDefault
                     disabledEffect
                     src="/image/delete_active_unit.svg"
                     alt="Verify Email"
-                    sx={{ width: '216px', height: '216px' }}
+                    sx={{ width: '216px', height: '216px', mb: 3 }}
                   />
+                  <Typography fontSize="24px" fontWeight={700} color="#292929" paragraph>
+                    {error}
+                  </Typography>
+                  <Typography textAlign="center" fontSize="16px" fontWeight={500} color="#666666">
+                    Silahkan hubungi admin BUM Desa Anda untuk mengirimkan kembali link verifikasi.
+                  </Typography>
                 </Box>
               </Box>
             ) : (
               <Box sx={{ maxWidth: 480, mx: 'auto' }}>
-                <Typography variant="h3" paragraph>
-                  Silakan periksa email Anda!
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  Email konfirmasi telah dikirim, mohon segera cek kotak masuk Anda.
-                </Typography>
-                <Box display="flex" sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px' }}
+                >
                   <Image
                     visibleByDefault
                     disabledEffect
-                    src="/image/delete_unit.svg"
-                    alt="Verify Email"
-                    sx={{ width: '216px', height: '216px' }}
+                    src="/image/email-verification-success.svg"
+                    alt="Verifikasi email berhasil"
+                    sx={{ width: '216px', height: '216px', mb: 3 }}
                   />
+                  <Typography fontSize="24px" fontWeight={700} color="#292929" paragraph>
+                    Email Anda Telah Terverifikasi
+                  </Typography>
+                  <Typography fontSize="16px" fontWeight={500} color="#666666">
+                    Verifikasi Anda telah berhasil diproses.
+                  </Typography>
+                  <Typography fontSize="16px" fontWeight={500} color="#666666">
+                    Anda dapat menggunakan akun Anda untuk mengakses
+                  </Typography>
+                  <Typography fontSize="16px" fontWeight={500} color="#666666" mb={3}>
+                    semua fitur yang tersedia.
+                  </Typography>
+                  <StyledLoadingButton
+                    sx={{ width: 432, height: 48, fontSize: '16px', fontWeight: 700 }}
+                    variant="contained"
+                    onClick={() => router.push(PATH_AUTH.login)}>
+                    Kembali ke Halaman Login
+                  </StyledLoadingButton>
                 </Box>
               </Box>
             )}
           </ContentStyle>
-          <AlertVerifyEmail
-            open={alertVerify}
-            onClose={() => {
-              setAlertVerify(false);
-              router.replace(PATH_AUTH.login)
-            }}
-          />
-        </Container>
+        )}
       </RootStyle>
     </Page>
   );

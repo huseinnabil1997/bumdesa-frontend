@@ -15,14 +15,13 @@ import {
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useTable, { emptyRows } from '../../hooks/useTable';
+import useTable from '../../hooks/useTable';
 // layouts
 import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import {
-  TableEmptyRows,
   TableHeadCustom,
   TableNoData,
   TableSkeleton,
@@ -31,11 +30,11 @@ import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard/unit';
-import { useDispatch } from 'react-redux';
-import { deleteVendor, resetMessage } from '../../redux/slices/vendor';
-import axiosInstance from 'src/utils/axiosCoreService';
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
+import usePost from 'src/query/hooks/mutation/usePost';
+import useDelete from 'src/query/hooks/mutation/useDelete';
 
 
 // ----------------------------------------------------------------------
@@ -60,11 +59,8 @@ export default function UserList() {
     page,
     rowsPerPage,
     onChangeRowsPerPage,
-    //
     selected,
-    // setSelected,
     onSelectRow,
-    //
     onChangePage,
   } = useTable({ defaultCurrentPage: 1 });
 
@@ -74,70 +70,72 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const dispatch = useDispatch();
+  const mutationPost = usePost();
 
-  const [units, setUnits] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const mutationDelete = useDelete();
+
+  // const [units, setUnits] = useState({});
+  // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
 
-  const fetchData = async (search) => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get('/business-units', {
-        params: {
-          page: page,
-          limit: rowsPerPage,
-          search: search,
-        }
-      });
-      setUnits(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.log('error setUnits', error);
-    }
-  };
+  const { data, isLoading, refetch } = useGetUnits({
+    page: page,
+    limit: rowsPerPage,
+    search: filterName,
+  });
 
+  const units = data;
 
   useEffect(() => {
-    fetchData();
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    refetch();
   }, [page, rowsPerPage]);
 
-  const handleDeleteRow = (id, status) => {
-    setAlertDelete({ id: id, status: status });
-    // setSelected([]);
+  const handleResendRow = async (id) => {
+    try {
+      const response = await mutationPost.mutateAsync({
+        endpoint: `/business-units/resend-verify/${id}`,
+      });
+      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
+      refetch();
+    } catch (error) {
+      await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
+      console.log('error handleResendRow', error);
+    }
+  }
+
+  const handleDeleteRow = (id) => {
+    setAlertDelete({ id: id });
   };
 
   const onDelete = async () => {
     try {
-      const response = await axiosInstance.delete(`/business-units/${alertDelete?.id}`)
+      const response = await mutationDelete.mutateAsync({
+        endpoint: `/business-units/${alertDelete?.id}`,
+      });
       enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
-      fetchData();
+      refetch();
+      setAlertDelete(null);
       console.log('response delete', response)
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
-      if (error.response?.status === 403) {
+      if (error.code === 412) {
         setAlertDelete({ id: alertDelete?.id, status: 1 });
       }
       console.log('error delete', error)
     }
-
-    setAlertDelete(null);
   };
-
-  // const handleEditRow = (row) => {
-  //   router.push(`editid=${row.id}`);
-  //   setOpen(true);
-  //   setId(row.id);
-  //   setEdit(true);
-  // };
 
   const handleViewRow = () => {
   };
 
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
-      fetchData(filterName);
+      refetch();
     }
   };
 
@@ -189,17 +187,15 @@ export default function UserList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id, row.status)}
-                      disableDelete={units?.data.length === 1}
+                      disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
+                      onResendRow={() => handleResendRow(row.id)}
                       onViewRow={() => handleViewRow(row)}
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
-
-                <TableEmptyRows emptyRows={emptyRows(page, rowsPerPage, units?.data?.length)} />
-                {isLoading && <TableSkeleton />}
                 <TableNoData
-                  isNotFound={!units?.data}
+                  isNotFound={units?.data?.length === 0}
                   title="Unit usaha belum tersedia."
                   description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
                   action={
@@ -207,11 +203,13 @@ export default function UserList() {
                       sx={{ mt: 2, width: 200 }}
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
+                      onClick={() => router.push('new')}
                     >
                       Tambah Unit usaha
                     </StyledButton>
                   }
                 />
+                {isLoading && (<TableSkeleton />)}
               </TableBody>
             </Table>
           </TableContainer>
