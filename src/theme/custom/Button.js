@@ -5,6 +5,7 @@ export const BtnLightPrimary = styled(Button)(() => ({
   textTransform: 'none',
   background: '#DDEFFC',
   color: '#1078CA',
+  boxShadow: 'none',
 }));
 
 export const BtnLightError = styled(Button)(() => ({

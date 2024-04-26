@@ -2,23 +2,25 @@ import PropTypes from 'prop-types';
 // form
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
-import { TextField, Typography, Stack } from '@mui/material';
+import { TextField, Typography, Stack, CircularProgress } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 RHFTextField.propTypes = {
   name: PropTypes.string,
   require: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
-export default function RHFTextField({ name, require, ...other }) {
+export default function RHFTextField({ name, require, isLoading, ...other }) {
   const { control } = useFormContext();
 
   return (
     <Stack>
       {other?.label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {other?.label}{require && <span style={{ color: 'red' }}>*</span>}
+          {other?.label}
+          {require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -44,6 +46,12 @@ export default function RHFTextField({ name, require, ...other }) {
               ...other.sx,
             }}
             label=""
+            InputProps={{
+              ...other.InputProps,
+              startAdornment: (
+                <>{isLoading && <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />}</>
+              ),
+            }}
           />
         )}
       />

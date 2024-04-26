@@ -86,7 +86,13 @@ export default function MyApp(props) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
   const router = useRouter();
 

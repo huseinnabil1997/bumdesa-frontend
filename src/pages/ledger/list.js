@@ -24,15 +24,12 @@ import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/ta
 // sections
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { JurnalHeader, TableRow } from 'src/sections/jurnal';
-import { DEFAULT_FILTER, JURNAL_HEAD } from 'src/utils/constant';
+import { LedgerHeader, TableRow } from 'src/sections/ledger';
+import { DEFAULT_FILTER, LEDGER_HEAD } from 'src/utils/constant';
 import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
-import { useDeleteJurnal } from 'src/query/hooks/jurnals/useDeleteJurnal';
-import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -46,33 +43,10 @@ export default function JurnalList() {
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const router = useRouter();
 
   const [filter, setFilter] = useState(DEFAULT_FILTER);
 
   const { data, isLoading, refetch } = useGetJurnals(filter);
-  const { mutate: onDelete, isLoading: deleting } = useDeleteJurnal();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const handleDeleteRow = (id) => {
-    onDelete(id, {
-      onSuccess: (res) => {
-        enqueueSnackbar(res.message, { variant: 'success' });
-        refetch();
-      },
-      onError: (err) => {
-        console.log(err);
-        enqueueSnackbar('Gagal', { variant: 'error' });
-      },
-    });
-  };
-
-  const handleEditRow = (row) => {
-    router.push(`/jurnal/${row.id}`);
-  };
-
-  const handleViewRow = (row) => {};
 
   const methods = useForm({
     defaultValues: { unit: null, year: null },
@@ -88,43 +62,25 @@ export default function JurnalList() {
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <JurnalHeader />
+          <LedgerHeader />
         </FormProvider>
-        {deleting && (
-          <Alert
-            sx={{ mt: 3 }}
-            severity="warning"
-            variant="outlined"
-            icon={<CircularProgress size={20} color="warning" />}
-          >
-            Sedang menghapus...
-          </Alert>
-        )}
+
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={JURNAL_HEAD}
+                  headLabel={LEDGER_HEAD}
                   rowCount={data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data.map((row, i) => (
-                      <TableRow
-                        key={row.id}
-                        index={i}
-                        row={row}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row)}
-                        onViewRow={() => handleViewRow(row)}
-                      />
-                    ))}
+                    data.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
 
                   {isLoading && <TableSkeleton />}
-                  {!data?.length > 0 && (
+                  {data?.length === 0 && (
                     <TableNoData
                       title="Jurnal belum tersedia."
                       description="Silakan buat jurnal dengan klik tombol di bawah ini."

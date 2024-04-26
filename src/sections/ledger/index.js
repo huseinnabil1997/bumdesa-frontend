@@ -1,4 +1,4 @@
-export { default as JurnalHeader } from './JurnalHeader';
+export { default as LedgerHeader } from './LedgerHeader';
 export { default as TableRow } from './TableRow';
 export { default as TableRowUnit } from './TableRowUnit';
 export { default as TableToolbar } from './TableToolbar';
