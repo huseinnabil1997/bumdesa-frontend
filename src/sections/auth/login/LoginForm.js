@@ -62,7 +62,7 @@ export default function LoginForm() {
         await localStorage.setItem('@token', res?.metadata?.token ?? '');
         window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
       } else {
-        await setSession(res?.metadata?.token ?? '');
+        setSession(res?.metadata?.token ?? '');
         enqueueSnackbar(res.message, { variant: 'success' });
         window.location.href = PATH_DASHBOARD.root;
       }
