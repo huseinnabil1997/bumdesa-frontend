@@ -10,5 +10,5 @@ export function getBusinessUnits() {
 }
 
 export function getDownloadProfits(params) {
-  return axiosInstance.get(`/report/generate/laba-rugi?unit=${params.unit}&date=${params.date}&type=${params.type}`);
+  return axiosInstance.get(`/report/generate/laba-rugi?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
 }

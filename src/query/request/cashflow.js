@@ -9,5 +9,5 @@ export function getBusinessUnits() {
 }
 
 export function getDownloadCashflows(params) {
-  return axiosInstance.get(`/report/generate/arus-kas?unit=${params.unit}&date=${params.date}&type=${params.type}`);
+  return axiosInstance.get(`/report/generate/arus-kas?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
 }
