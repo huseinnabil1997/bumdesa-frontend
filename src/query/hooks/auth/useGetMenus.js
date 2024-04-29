@@ -11,7 +11,8 @@ const fetchData = async () => {
 };
 
 export const useGetMenus = (param) => {
-  const getQuery = useQuery(['GET_MENUS'], () => fetchData(), { enabled: param.length === 0 });
+  // const getQuery = useQuery(['GET_MENUS'], () => fetchData(), { enabled: param.length === 0 });
+  const getQuery = useQuery(['GET_MENUS'], () => fetchData(), { param });
 
   return getQuery;
 };

@@ -7,8 +7,9 @@ import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
+import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadProfit';
 
-const options = ['Download .PDF', 'Download .xlsx'];
+const options = [{ type: 1, name: 'Download .PDF' }, { type: 2, name: 'Download .xlsx' }];
 
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
@@ -17,35 +18,55 @@ NeracaHeader.propTypes = {
 
 export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   const datePickerRef = useRef(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const anchorRef = useRef(null);
 
+  const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading } = useGetBusinessUnits();
+  const { mutate: onDownload, isLoading: downloading } = useDownloadBalance();
 
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
   const [selectedDate, setSelectedDate] = useState('');
 
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    console.log('LabaRugiHeader handleMenuItemClick', event, index)
-    enqueueSnackbar(
-      '',
-      {
-        variant: 'success',
-        content: () => (
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-          >
-            <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
-            <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
-          </Box>
+  const handleMenuItemClick = async (type) => {
+    setSelectedType(type);
+    const payload = {
+      type: type,
+      unit: selectedUnit?.id,
+      date: selectedDate,
+    }
+    onDownload(payload, {
+      onSuccess: (res) => {
+        const url = window.URL.createObjectURL(new Blob([res]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `Laporan_Laba_Rugi_${selectedUnit?.id}_${selectedDate}.${type === 1 ? 'pdf' : 'xlsx'}`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        enqueueSnackbar(
+          '',
+          {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+              >
+                <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
+                <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
+              </Box>
+            )
+          },
         )
       },
-    )
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      },
+    });
     setOpen(false);
   };
 
@@ -182,6 +203,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             startIcon={<Iconify width={14} height={14} icon={'bi:download'} />}
             endIcon={<Iconify icon={'oui:arrow-down'} />}
             variant="contained"
+            disabled={downloading}
           >
             Unduh Dokumen
           </StyledButton>
@@ -201,19 +223,19 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
                 }}
               >
                 <Paper sx={{ width: 210 }}>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList id="split-button-menu" autoFocusItem>
-                      {options.map((option, index) => (
-                        <MenuItem
-                          key={option}
-                          selected={index === selectedIndex}
-                          onClick={(event) => handleMenuItemClick(event, index)}
-                        >
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </ClickAwayListener>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList id="split-button-menu" autoFocusItem>
+                    {options.map((option) => (
+                      <MenuItem
+                        key={option.type}
+                        selected={option.type === selectedType}
+                        onClick={() => handleMenuItemClick(option.type)}
+                      >
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
                 </Paper>
               </Grow>
             )}

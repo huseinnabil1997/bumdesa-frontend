@@ -74,11 +74,11 @@ export default function LaporanLabaRugi() {
                     ))}
 
                   {isLoading && <TableSkeleton />}
-                  <TableNoData
+                  {/* <TableNoData
                     isNotFound={!isLoading && data === undefined}
                     title="Laporan Laba Rugi belum tersedia."
                     description="Silakan pilih unit usaha dan tanggal laporan"
-                  />
+                  /> */}
                 </TableBody>
               </Table>
             </TableContainer>
