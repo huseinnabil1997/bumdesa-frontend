@@ -38,9 +38,11 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
     }
     onDownload(payload, {
       onSuccess: (res) => {
-        const url = window.URL.createObjectURL(new Blob([res]));
+        const blob = new Blob([res], { type: 'application/pdf' });
+        const url = URL.createObjectURL(new Blob([res]));
         if (type === 'preview') {
-          window.open(url, '_blank');
+          const blobUrl = URL.createObjectURL(blob);
+          window.open(blobUrl);
         } else {
           const link = document.createElement('a');
           link.href = url;
@@ -188,14 +190,14 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
           />
         </Stack>
         <Stack direction="row" spacing={1}>
-          {/* <StyledButton
+          <StyledButton
             sx={{ width: 186 }}
             startIcon={<Description />}
             variant="outlined"
             onClick={() => handleMenuItemClick('preview')}
           >
-            Preview Dokumen
-          </StyledButton> */}
+            Pratinjau Dokumen
+          </StyledButton>
           <StyledButton
             ref={anchorRef}
             sx={{ width: 210, justifyContent: 'space-around' }}
