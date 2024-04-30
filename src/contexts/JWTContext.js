@@ -63,6 +63,7 @@ const AuthContext = createContext({
   verify: () => Promise.resolve(),
   verifyEmail: () => Promise.resolve(),
   resetPassword: () => Promise.resolve(),
+  verifyReset: () => Promise.resolve(),
   changePassword: () => Promise.resolve(),
 });
 
@@ -161,6 +162,12 @@ function AuthProvider({ children }) {
     return response.data;
   };
 
+  const verifyReset = async (payload) => {
+    const response = await axios.post('/verify-reset', payload);
+
+    return response.data;
+  };
+
   const changePassword = async (payload) => {
     const response = await axios.post('/force-change-password', payload);
 
@@ -188,6 +195,7 @@ function AuthProvider({ children }) {
         registerForm,
         resetPassword,
         changePassword,
+        verifyReset,
       }}
     >
       {children}

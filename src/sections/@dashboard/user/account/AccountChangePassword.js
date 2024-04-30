@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,12 +17,13 @@ import useAuth from 'src/hooks/useAuth';
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
+  const [verified, setVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
 
-  const { changePassword } = useAuth();
+  const { changePassword, verifyReset } = useAuth();
 
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -65,12 +66,29 @@ export default function AccountChangePassword() {
     }
   };
 
+  const checkVerify = async (data) => {
+    try {
+      const res = await verifyReset({ data: dataParam });
+      reset();
+      enqueueSnackbar(res?.message, { variant: 'success' });
+      setVerified(true);
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+      setVerified(false);
+    }
+  };
+
+  useEffect(() => {
+    checkVerify();
+  }, [])
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {/* <RHFTextField name="oldPassword" type="password" label="Old Password" /> */}
 
         <RHFTextField
+          disabled={!verified}
           name="password"
           label="Buat Password"
           type={showPassword ? 'text' : 'password'}
@@ -86,6 +104,7 @@ export default function AccountChangePassword() {
         />
 
         <RHFTextField
+          disabled={!verified}
           name="confirm_password"
           label="Konfirmasi Password"
           type={showConfirmPassword ? 'text' : 'password'}
@@ -100,7 +119,7 @@ export default function AccountChangePassword() {
           }}
         />
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton disabled={!verified} type="submit" variant="contained" loading={isSubmitting}>
           Simpan Password baru
         </LoadingButton>
       </Stack>
