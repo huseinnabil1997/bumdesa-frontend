@@ -1,17 +1,7 @@
 import { useState } from 'react';
 
 // @mui
-import {
-  Box,
-  Card,
-  Table,
-  TableBody,
-  Container,
-  TableContainer,
-  Pagination,
-  Alert,
-  CircularProgress,
-} from '@mui/material';
+import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
@@ -46,7 +36,7 @@ export default function JurnalList() {
 
   const [filter, setFilter] = useState(DEFAULT_FILTER);
 
-  const { data, isLoading, refetch } = useGetJurnals(filter);
+  const { data, isLoading } = useGetJurnals(filter);
 
   const methods = useForm({
     defaultValues: { unit: null, year: null },

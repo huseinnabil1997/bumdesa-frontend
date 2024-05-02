@@ -82,7 +82,7 @@ export default function JurnalCreate() {
       ...data,
       accounts: data.accounts.map((row) => ({
         account_code: row.account_code.value,
-        cash_flow_code: row?.cash_flow_code?.value ?? null,
+        cash_flow_code: +row?.cash_flow_code?.value ?? null,
         debit: +row.debit,
         credit: +row.credit,
       })),
