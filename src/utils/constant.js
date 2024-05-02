@@ -28,3 +28,12 @@ export const DEFAULT_FILTER = {
   limit: 10,
   page: 1,
 };
+
+export const fileType = [
+  '',
+  'application/pdf',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/csv',
+];
+
+export const extType = ['', '.pdf', '.xlsx', '.csv'];

@@ -36,6 +36,7 @@ import { jurnalDefaultValues, jurnalSchema } from 'src/sections/jurnal/validatio
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { LoadingButton } from '@mui/lab';
+import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -108,14 +109,18 @@ export default function JurnalCreate() {
   const generateTotalDebt = () => {
     setValue(
       'debit',
-      accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.debit), 0)
+      fCurrency(
+        accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.debit), 0)
+      )
     );
   };
 
   const generateTotalCred = () => {
     setValue(
       'credit',
-      accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.credit), 0)
+      fCurrency(
+        accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.credit), 0)
+      )
     );
   };
 
@@ -214,6 +219,7 @@ export default function JurnalCreate() {
                         name={`accounts.${i}.debit`}
                         onKeyUp={generateTotalDebt}
                         type="number"
+                        disabled={+watch(`accounts.${i}.credit`) > 0}
                       />
                     </Grid>
                     <Grid item xs={2}>
@@ -222,8 +228,9 @@ export default function JurnalCreate() {
                         label={i === 0 ? 'Kredit' : ''}
                         require
                         name={`accounts.${i}.credit`}
-                        onKeyUp={generateTotalCred}
+                        onKeyUp={generateTotalDebt}
                         type="number"
+                        disabled={+watch(`accounts.${i}.debit`) > 0}
                       />
                     </Grid>
                     <Grid item xs={fields.length > 2 ? 3 : 4}>

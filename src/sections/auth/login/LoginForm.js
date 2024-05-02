@@ -71,6 +71,10 @@ export default function LoginForm() {
         router.replace(PATH_DASHBOARD.root)
       }
     } catch (error) {
+      if (error.code === 412) {
+        router.push(`/auth/create-password?token=${error?.metadata?.token}`);
+        return;
+      }
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });
