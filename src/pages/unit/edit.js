@@ -161,20 +161,68 @@ export default function EditUnitUsaha() {
   return (
     <Page title="Unit Usaha: Edit">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Button
-          variant="contained"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => router.push('list')}
+      <Stack direction="row" justifyContent="space-between">
+          <Button
+            variant="contained"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => router.push('list')}
+            sx={{
+              '&:hover': { backgroundColor: '#1976D2', color: 'white' },
+              backgroundColor: '#DDEFFC',
+              color: '#1976D2',
+              height: 48,
+              width: 124,
+            }}
+          >
+            Kembali
+          </Button>
+          <StyledLoadingButton
+            variant="contained"
+            sx={{ width: '106px', height: '48px' }}
+            onClick={handleSubmit(onSubmit)}
+            loading={isSubmitting}
+          >
+            Simpan
+          </StyledLoadingButton>
+        </Stack>
+
+        <Box
           sx={{
-            '&:hover': { backgroundColor: '#1976D2', color: 'white' },
             backgroundColor: '#DDEFFC',
-            color: '#1976D2',
-            height: 48,
-            width: 124,
+            border: 'solid 1px #56ADF2',
+            height: '66px',
+            borderRadius: '4px',
+            p: '12px',
+            my: 2,
           }}
         >
-          Kembali
-        </Button>
+          <Stack spacing={0.5}>
+            <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
+              <Box width={20} direction="row" display="flex" alignItems="center">
+                <InfoIcon fontSize="13.33px" sx={{ color: '#1078CA' }} />
+              </Box>
+              <Typography fontWeight={700} color="#3D3D3D" fontSize="14px">
+                Informasi
+              </Typography>
+            </Stack>
+            <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
+              <Box width={20} direction="row" display="flex" alignItems="center" />
+              <Typography variant="caption" fontSize="12px" fontWeight={500} color="#525252">
+                Pastikan semua data
+                <span style={{ fontSize: '12px', fontWeight: 700 }}>
+                  {' '}
+                  semua data
+                  {' '}
+                </span>
+                yang dimasukkan sudah
+                <span style={{ fontSize: '12px', fontWeight: 700 }}>
+                  {' '}
+                  benar.
+                </span>
+              </Typography>
+            </Stack>
+          </Stack>
+        </Box>
 
         <Card
           elevation={3}
@@ -352,7 +400,7 @@ export default function EditUnitUsaha() {
               </Stack>
             </Stack>
             <Divider />
-            <Stack
+            {/* <Stack
               direction="row"
               p="16px 24px 16px 24px"
               width="100%"
@@ -383,7 +431,7 @@ export default function EditUnitUsaha() {
               >
                 Simpan
               </StyledLoadingButton>
-            </Stack>
+            </Stack> */}
           </FormProvider>
         </Card>
       </Container>
