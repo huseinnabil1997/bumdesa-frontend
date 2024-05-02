@@ -71,8 +71,8 @@ export default function LaporanNeraca() {
 
     const selisih = totalAset - totalKewajibanDanEkuitas;
 
-    if (selisih === 0) return 'Balance';
-    if (selisih !== 0 || !data) return 'Tidak Balance';
+    if (selisih === 0) return 'Seimbang';
+    if (selisih !== 0 || !data) return 'Tidak seimbang';
   }
 
   return (
