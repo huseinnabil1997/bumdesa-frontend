@@ -1,21 +1,24 @@
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 // @mui
-import { Link, Card, Typography, Stack, Chip, IconButton } from '@mui/material';
-// _mock_
-import { _ecommerceLatestProducts } from '../../_mock';
+import { Link, Card, Typography, Stack, Chip, IconButton, Box } from '@mui/material';
 //
 import Image from '../../components/Image';
 import Scrollbar from '../../components/Scrollbar';
 import { useTheme } from '@emotion/react';
-import { AddBox, ArrowForwardIos } from '@mui/icons-material';
+import { AddBox, ArrowForwardIos, Verified } from '@mui/icons-material';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
+import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
+
+const CDN_URL = process.env.NEXT_PUBLIC_BUMDESA_ASSET;
 
 // ----------------------------------------------------------------------
 
 export default function DashboardUnit() {
   const router = useRouter();
+
+  const { data, isLoading, isFetched } = useGetUnits({ page: 1, limit: 3 });
 
   return (
     <Stack>
@@ -23,16 +26,18 @@ export default function DashboardUnit() {
         <Typography variant="h5" sx={{ mb: 1 }}>
           Daftar Unit Usaha Terkini
         </Typography>
-        <StyledButton onClick={() => router.push('/unit/list')} variant="outlined" endIcon={<ArrowForwardIos fontSize="small" />}>
+        <StyledButton
+          onClick={() => router.push('/unit/list')}
+          variant="outlined"
+          endIcon={<ArrowForwardIos fontSize="small" />}
+        >
           Lihat Semua
         </StyledButton>
       </Stack>
       <Scrollbar>
-        <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1 }}>
+        <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
           <CreateItem />
-          {[1, 2, 3].map((product, i) => (
-            <ProductItem key={product} product={_ecommerceLatestProducts[i]} />
-          ))}
+          {isFetched && data.map((row) => <ProductItem key={row.id} data={row} />)}
         </Stack>
       </Scrollbar>
     </Stack>
@@ -42,33 +47,35 @@ export default function DashboardUnit() {
 // ----------------------------------------------------------------------
 
 ProductItem.propTypes = {
-  product: PropTypes.shape({
-    colors: PropTypes.arrayOf(PropTypes.string),
-    image: PropTypes.string,
+  data: PropTypes.shape({
     name: PropTypes.string,
-    price: PropTypes.number,
-    priceSale: PropTypes.number,
+    status: PropTypes.number,
+    address: PropTypes.string,
+    sector: PropTypes.string,
+    photo: PropTypes.string,
   }),
 };
 
-function ProductItem({ product }) {
-  const { name, image } = product;
+function ProductItem({ data }) {
+  const { name, status, photo, address, sector } = data;
 
   return (
     <Card elevation={3} sx={{ width: 360, borderRadius: 1.5 }}>
       <Image
         alt={name}
-        src={image}
+        src={`${CDN_URL}unit/${photo}`}
         sx={{ width: '100%', height: 170, borderRadius: `12px 0px 0px`, flexShrink: 0 }}
       />
 
       <Stack sx={{ flexGrow: 1, minWidth: 200, p: 2 }} spacing={1}>
-        <Chip label="Jasa" color="primary" size="small" sx={{ width: 50 }} />
-        <Link sx={{ color: 'text.primary', typography: 'subtitle2' }}>{name}</Link>
+        <Chip label={sector} color="primary" size="small" sx={{ width: 'fit-content' }} />
+        <Box display={'flex'}>
+          <Link sx={{ color: 'text.primary', typography: 'subtitle2' }}>{name}</Link>
+          {status && <Verified color="primary" fontSize="small" sx={{ ml: 1 }} />}
+        </Box>
 
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet repudiandae adipisci harum
-          eos.
+          {address}
         </Typography>
       </Stack>
     </Card>
