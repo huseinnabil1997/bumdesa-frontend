@@ -93,6 +93,7 @@ export default function DashboardHeader({
     }
     if (value2 === 'profit') return setTitle('Laporan Laba Rugi');
     if (value2 === 'balance') return setTitle('Laporan Posisi Keuangan');
+    if (value2 === 'equity') return setTitle('Laporan Prubahan Ekuitas');
     if (value2 === 'cashflow') return setTitle('Laporan Arus Kas');
     else setTitle(value.charAt(0).toUpperCase() + value.slice(1));
   };

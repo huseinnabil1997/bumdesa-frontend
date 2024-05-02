@@ -11,7 +11,7 @@ import { StyledButton } from 'src/theme/custom/Button';
 import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 import { getSessionToken } from 'src/utils/axios';
 
-const options = ['Download .PDF', 'Download .xlsx'];
+const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
 ArusKasHeader.propTypes = {
   onSubmit: PropTypes.func,

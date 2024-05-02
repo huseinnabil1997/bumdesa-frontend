@@ -11,7 +11,7 @@ import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBalance';
 import { getSessionToken } from 'src/utils/axios';
 
-const options = [{ type: 1, name: 'Download .PDF' }, { type: 2, name: 'Download .xlsx' }];
+const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
@@ -127,27 +127,27 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
     <>
       <Stack direction="row">
         <Stack direction="row" spacing={1} justifyContent="flex-end" flexGrow={1} mb={5} alignItems="center">
-          <Typography fontSize="12px" fontWeight={600} color="black">Indicator Balance :</Typography>
+          <Typography fontSize="12px" fontWeight={600} color="black">Indikator Keseimbangan :</Typography>
           <Box
             sx={{
               display: 'flex',
-              width: indicatorBalance === 'Balance' ? '95px' : '128px',
+              width: indicatorBalance === 'Seimbang' ? '93px' : '128px',
               height: '34px',
               p: '8px, 8px, 0px, 8px',
               borderRadius: '8px',
-              backgroundColor: indicatorBalance === 'Balance' ? '#27AE60' : '#E84040',
+              backgroundColor: indicatorBalance === 'Seimbang' ? '#27AE60' : '#E84040',
               justifyContent: 'center',
               alignItems: 'flex-end',
             }}
           >
             <Typography
               sx={{
-                width: indicatorBalance === 'Balance' ? '47px' : '80px',
+                width: indicatorBalance === 'Seimbang' ? '57px' : '90px',
                 height: '26px',
                 fontSize: '12px',
                 fontWeight: 600,
                 color: 'white',
-                borderColor: indicatorBalance === 'Balance' ? '#E1F8EB' : '#F49F9F',
+                borderColor: indicatorBalance === 'Seimbang' ? '#E1F8EB' : '#F49F9F',
                 borderBottomWidth: '3px',
                 borderTopWidth: 0,
                 borderRightWidth: 0,

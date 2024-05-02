@@ -11,7 +11,7 @@ import { StyledButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
 
-const options = [{ type: 1, name: 'Download .PDF' }, { type: 2, name: 'Download .xlsx' }];
+const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
 LabaRugiHeader.propTypes = {
   onSubmit: PropTypes.func,
