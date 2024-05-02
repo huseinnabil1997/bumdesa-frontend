@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import jwtDecode from 'jwt-decode';
 import { Description } from '@mui/icons-material';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -8,6 +9,7 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
+import { getSessionToken } from 'src/utils/axios';
 
 const options = ['Download .PDF', 'Download .xlsx'];
 
@@ -18,6 +20,15 @@ ArusKasHeader.propTypes = {
 export default function ArusKasHeader({ onSubmit }) {
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
+
+  const token = getSessionToken();
+  let decoded = {};
+  if (token) {
+    decoded = jwtDecode(token);
+    console.log('decoded token:', decoded);
+  } else {
+    console.error('Token not available');
+  }
 
   const { data, isLoading } = useGetBusinessUnits();
   const { mutate: onDownload, isLoading: downloading } = useDownloadCashflow();
@@ -104,7 +115,7 @@ export default function ArusKasHeader({ onSubmit }) {
 
   useEffect(() => {
     setSelectedDate(getPreviousMonth());
-    onSubmit({ unit: selectedUnit?.id, date: getPreviousMonth() })
+    onSubmit({ unit: decoded?.sub?.businessid ?? selectedUnit?.id, date: getPreviousMonth() })
   }, [])
 
   useEffect(async () => {
@@ -114,26 +125,27 @@ export default function ArusKasHeader({ onSubmit }) {
   return (
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
-        <RHFAutocomplete
-          sx={{ width: 305 }}
-          size="small"
-          name="unit"
-          placeholder="Sektor Usaha"
-          loading={isLoading}
-          options={data?.map((option) => option) ?? [{ name: 'Semua Unit', id: '' }]}
-          getOptionLabel={(option) => option.name}
-          defaultValue={{ name: 'Semua Unit', id: '' }}
-          renderOption={(props, option) => (
-            <li {...props} key={option.id}>
-              {option.name}
-            </li>
-          )}
-          onChange={(event, newValue) => {
-            setSelectedUnit(newValue);
-            onSubmit({ unit: newValue?.id, date: selectedDate })
-          }}
-          value={selectedUnit}
-        />
+        {decoded?.sub?.businessid === 0 && (
+          <RHFAutocomplete
+            sx={{ width: 305 }}
+            size="small"
+            name="unit"
+            placeholder="Sektor Usaha"
+            loading={isLoading}
+            options={data?.map((option) => option) ?? []}
+            getOptionLabel={(option) => option.name}
+            renderOption={(props, option) => (
+              <li {...props} key={option.id}>
+                {option.name}
+              </li>
+            )}
+            onChange={(event, newValue) => {
+              setSelectedUnit(newValue);
+              onSubmit({ unit: newValue?.id, date: selectedDate })
+            }}
+            value={selectedUnit}
+          />
+        )}
         <RHFTextField
           inputRef={datePickerRef}
           size="small"

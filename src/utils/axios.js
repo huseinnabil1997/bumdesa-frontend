@@ -9,8 +9,6 @@ const axiosInstance = axios.create({
   },
 });
 
-console.log('token--', getSessionToken())
-
 const checkAuth = (error) => {
   // if ([444].includes(error.response?.status ?? 0)) {
   if ([401, 403].includes(error.response?.status ?? 0)) {
