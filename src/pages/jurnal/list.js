@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // @mui
 import {
@@ -33,6 +33,7 @@ import { Add } from '@mui/icons-material';
 import { useDeleteJurnal } from 'src/query/hooks/jurnals/useDeleteJurnal';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
+import TableError from 'src/components/table/TableError';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ JurnalList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function JurnalList() {
-  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
+  const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
@@ -50,7 +51,7 @@ export default function JurnalList() {
 
   const [filter, setFilter] = useState(DEFAULT_FILTER);
 
-  const { data, isLoading, refetch } = useGetJurnals(filter);
+  const { data, isLoading, isError, refetch } = useGetJurnals(filter);
   const { mutate: onDelete, isLoading: deleting } = useDeleteJurnal();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -72,22 +73,30 @@ export default function JurnalList() {
     router.push(`/jurnal/${row.id}`);
   };
 
-  const handleViewRow = (row) => {};
-
   const methods = useForm({
-    defaultValues: { unit: null, year: null },
+    defaultValues: { date: null },
   });
 
-  const { handleSubmit } = methods;
+  const { watch } = methods;
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const handleChangeFilter = () => {
+    setPage(1);
+
+    setFilter((prevState) => ({
+      ...prevState,
+      date: watch('date'),
+      page: 1,
+    }));
   };
+
+  useEffect(() => {
+    handleChangeFilter();
+  }, [watch('date')]);
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider methods={methods}>
           <JurnalHeader />
         </FormProvider>
         {deleting && (
@@ -112,6 +121,7 @@ export default function JurnalList() {
 
                 <TableBody>
                   {!isLoading &&
+                    data?.length > 0 &&
                     data.map((row, i) => (
                       <TableRow
                         key={row.id}
@@ -119,12 +129,12 @@ export default function JurnalList() {
                         row={row}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row)}
-                        onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 
                   {isLoading && <TableSkeleton />}
-                  {!data?.length > 0 && (
+
+                  {!data?.length > 0 && !isError && !isLoading && (
                     <TableNoData
                       title="Jurnal belum tersedia."
                       description="Silakan buat jurnal dengan klik tombol di bawah ini."
@@ -133,10 +143,18 @@ export default function JurnalList() {
                           sx={{ mt: 2, width: 200 }}
                           variant="outlined"
                           startIcon={<Add fontSize="small" />}
+                          onClick={() => router.push('/jurnal/create')}
                         >
                           Buat Jurnal
                         </StyledButton>
                       }
+                    />
+                  )}
+
+                  {!isLoading && isError && (
+                    <TableError
+                      title="Koneksi Error"
+                      description="Silakan cek koneksi Anda dan muat ulang halaman."
                     />
                   )}
                 </TableBody>

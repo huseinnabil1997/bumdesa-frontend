@@ -100,7 +100,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
       <TableRow>
         <TableCell sx={{ p: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            {isFetched && (
+            {isFetched && details && (
               <Table aria-label="purchases">
                 <TableBody>
                   {details.accounts.length > 0 ? (
@@ -112,12 +112,12 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
                         }}
                       >
                         <TableCell colSpan={5} sx={{ pl: 5, display: 'flex' }}>
-                          <DotIcon /> {account.account_code}
+                          <DotIcon /> {account?.account_code?.label ?? '-'}
                         </TableCell>
-                        <TableCell width={120}>
+                        <TableCell width={134.5}>
                           {account.debit ? fCurrency(account.debit) : '-'}
                         </TableCell>
-                        <TableCell width={120}>
+                        <TableCell width={134.5}>
                           {account.credit ? fCurrency(account.credit) : '-'}
                         </TableCell>
                         <TableCell width={100} />

@@ -1,11 +1,23 @@
 import { Add, ArrowDropDown, Download } from '@mui/icons-material';
-import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList } from '@mui/material';
+import {
+  MenuItem,
+  Stack,
+  Grow,
+  Paper,
+  Popper,
+  ClickAwayListener,
+  MenuList,
+  CircularProgress,
+} from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
+import { RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
+import onDownload from '../../utils/onDownload';
+import { useDownloadJurnal } from 'src/query/hooks/jurnals/useDownloadJurnal';
 
-const options = ['Create a merge commit', 'Squash and merge', 'Rebase and merge'];
+const options = ['', 'Unduh format .pdf', 'Unduh format .xlsx'];
 
 export default function JurnalHeader() {
   const router = useRouter();
@@ -14,13 +26,27 @@ export default function JurnalHeader() {
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { mutate: download, isLoading } = useDownloadJurnal();
+
   const handleClick = () => {
     router.push('/jurnal/create');
   };
 
   const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setOpen(false);
+    download(index, {
+      onSuccess: (res) => {
+        console.log(res);
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        onDownload({ file: res, title: 'Jurnal', type: index });
+        setSelectedIndex(index);
+        setOpen(false);
+      },
+      onError: () => {
+        enqueueSnackbar('Gagal mengunduh!', { variant: 'error' });
+      },
+    });
   };
 
   const handleToggle = () => {
@@ -38,21 +64,7 @@ export default function JurnalHeader() {
   return (
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
-        <RHFAutocomplete
-          sx={{ width: 200 }}
-          size="small"
-          name="sector"
-          placeholder="Sektor Usaha"
-          loading={false}
-          options={[].map((option) => option) ?? []}
-          getOptionLabel={(option) => option.text}
-          renderOption={(props, option) => (
-            <li {...props} key={option.value}>
-              {option.text}
-            </li>
-          )}
-        />
-        <RHFTextField size="small" sx={{ width: 200 }} name="date" type="month" />
+        <RHFTextField size="small" sx={{ width: 180 }} name="date" type="month" />
       </Stack>
       <Stack direction="row" spacing={1}>
         <StyledButton
@@ -63,7 +75,7 @@ export default function JurnalHeader() {
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
-          startIcon={<Download />}
+          startIcon={isLoading ? <CircularProgress /> : <Download />}
           endIcon={<ArrowDropDown />}
           variant="outlined"
         >
