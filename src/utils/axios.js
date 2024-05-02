@@ -25,7 +25,6 @@ export function getSessionToken() {
   // Check if window is defined before accessing localStorage
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
-    console.log('token window', token)
     return token ? `Bearer ${token}` : undefined;
   }
   return undefined;

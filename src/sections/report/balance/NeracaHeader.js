@@ -1,4 +1,5 @@
 import { Description } from '@mui/icons-material';
+import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -8,6 +9,7 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBalance';
+import { getSessionToken } from 'src/utils/axios';
 
 const options = [{ type: 1, name: 'Download .PDF' }, { type: 2, name: 'Download .xlsx' }];
 
@@ -19,6 +21,15 @@ NeracaHeader.propTypes = {
 export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   const datePickerRef = useRef(null);
   const anchorRef = useRef(null);
+
+  const token = getSessionToken();
+  let decoded = {};
+  if (token) {
+    decoded = jwtDecode(token);
+    console.log('decoded token:', decoded);
+  } else {
+    console.error('Token not available');
+  }
 
   const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading } = useGetBusinessUnits();
@@ -105,7 +116,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
 
   useEffect(() => {
     setSelectedDate(getPreviousMonth());
-    onSubmit({ unit: selectedUnit?.id, date: getPreviousMonth() })
+    onSubmit({ unit: decoded?.sub?.businessid ?? selectedUnit?.id, date: getPreviousMonth() })
   }, [])
 
   useEffect(async () => {
@@ -151,25 +162,27 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
       </Stack>
       <Stack direction="row">
         <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
-          <RHFAutocomplete
-            sx={{ width: 305 }}
-            size="small"
-            name="unit"
-            placeholder="Sektor Usaha"
-            loading={isLoading}
-            options={data?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.name}
-            renderOption={(props, option) => (
-              <li {...props} key={option.id}>
-                {option.name}
-              </li>
-            )}
-            onChange={(event, newValue) => {
-              setSelectedUnit(newValue);
-              onSubmit({ unit: newValue?.id, date: selectedDate })
-            }}
-            value={selectedUnit}
-          />
+          {decoded?.sub?.businessid === 0 && (
+            <RHFAutocomplete
+              sx={{ width: 305 }}
+              size="small"
+              name="unit"
+              placeholder="Sektor Usaha"
+              loading={isLoading}
+              options={data?.map((option) => option) ?? []}
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <li {...props} key={option.id}>
+                  {option.name}
+                </li>
+              )}
+              onChange={(event, newValue) => {
+                setSelectedUnit(newValue);
+                onSubmit({ unit: newValue?.id, date: selectedDate })
+              }}
+              value={selectedUnit}
+            />
+          )}
           <RHFTextField
             inputRef={datePickerRef}
             size="small"
@@ -229,19 +242,19 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
                 }}
               >
                 <Paper sx={{ width: 210 }}>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList id="split-button-menu" autoFocusItem>
-                    {options.map((option) => (
-                      <MenuItem
-                        key={option.type}
-                        selected={option.type === selectedType}
-                        onClick={() => handleMenuItemClick(option.type)}
-                      >
-                        {option.name}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList id="split-button-menu" autoFocusItem>
+                      {options.map((option) => (
+                        <MenuItem
+                          key={option.type}
+                          selected={option.type === selectedType}
+                          onClick={() => handleMenuItemClick(option.type)}
+                        >
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </ClickAwayListener>
                 </Paper>
               </Grow>
             )}
