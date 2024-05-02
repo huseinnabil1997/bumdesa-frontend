@@ -8,16 +8,16 @@ import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledButton } from 'src/theme/custom/Button';
-import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
+import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 import { getSessionToken } from 'src/utils/axios';
 
-const options = [{ type: 1, name: 'Download .PDF' }, { type: 2, name: 'Download .xlsx' }];
+const options = ['Download .PDF', 'Download .xlsx'];
 
-LabaRugiHeader.propTypes = {
+EkuitasHeader.propTypes = {
   onSubmit: PropTypes.func,
 };
 
-export default function LabaRugiHeader({ onSubmit }) {
+export default function EkuitasHeader({ onSubmit }) {
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -31,7 +31,7 @@ export default function LabaRugiHeader({ onSubmit }) {
   }
 
   const { data, isLoading } = useGetBusinessUnits();
-  const { mutate: onDownload, isLoading: downloading } = useDownloadProfit();
+  const { mutate: onDownload, isLoading: downloading } = useDownloadCashflow();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);

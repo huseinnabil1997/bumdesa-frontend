@@ -6,7 +6,7 @@ import { List, Box, ListSubheader, Skeleton } from '@mui/material';
 import { NavListRoot } from './NavList';
 import { useGetMenus } from 'src/query/hooks/auth/useGetMenus';
 import { useEffect, useState } from 'react';
-import { stringify } from 'stylis';
+// import { stringify } from 'stylis';
 
 // ----------------------------------------------------------------------
 
@@ -34,10 +34,10 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
   const defaultValue = JSON.parse(localStorage.getItem('@menu')) ?? [];
   const [navConfig, setNavConfig] = useState(defaultValue);
 
-  const { data, isLoading } = useGetMenus(navConfig);
+  const { data, isLoading } = useGetMenus();
 
   useEffect(() => {
-    if (data && defaultValue.length === 0) {
+    if (data) {
       localStorage.setItem('@menu', JSON.stringify(data));
       setNavConfig(data);
     }
@@ -45,8 +45,8 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
 
   return (
     <Box {...other}>
-      {navConfig.map((group) => (
-        <List key={group.subheader} disablePadding sx={{ px: 2 }}>
+      {navConfig?.map((group) => (
+        <List key={group?.subheader} disablePadding sx={{ px: 2 }}>
           <ListSubheaderStyle
             sx={{
               ...(isCollapse && {
@@ -54,10 +54,10 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
               }),
             }}
           >
-            {group.subheader}
+            {group?.subheader}
           </ListSubheaderStyle>
 
-          {group.items.map((list) => (
+          {group?.items?.map((list) => (
             <NavListRoot key={list.title} list={list} isCollapse={isCollapse} />
           ))}
         </List>

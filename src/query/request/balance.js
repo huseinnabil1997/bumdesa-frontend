@@ -7,3 +7,7 @@ export function getBalances(params) {
 export function getBusinessUnits() {
   return axiosInstance.get('/units');
 }
+
+export function getDownloadBalances(params) {
+  return axiosInstance.get(`/report/generate/neraca?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
+}

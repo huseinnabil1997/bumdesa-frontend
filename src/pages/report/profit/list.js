@@ -9,7 +9,7 @@ import Layout from '../../../layouts';
 // components
 import Page from '../../../components/Page';
 import Scrollbar from '../../../components/Scrollbar';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
+import { TableHeadCustom, TableSkeleton } from '../../../components/table';
 import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 // sections
 import { UserTableRow } from '../../../sections/report/profit';
@@ -74,11 +74,11 @@ export default function LaporanLabaRugi() {
                     ))}
 
                   {isLoading && <TableSkeleton />}
-                  <TableNoData
+                  {/* <TableNoData
                     isNotFound={!isLoading && data === undefined}
                     title="Laporan Laba Rugi belum tersedia."
                     description="Silakan pilih unit usaha dan tanggal laporan"
-                  />
+                  /> */}
                 </TableBody>
               </Table>
             </TableContainer>

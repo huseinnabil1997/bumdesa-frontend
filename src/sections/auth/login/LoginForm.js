@@ -67,7 +67,8 @@ export default function LoginForm() {
       } else {
         setSession(res?.metadata?.token ?? '');
         enqueueSnackbar(res.message, { variant: 'success' });
-        window.location.href = PATH_DASHBOARD.root;
+        // window.location.href = PATH_DASHBOARD.root;
+        router.replace(PATH_DASHBOARD.root)
       }
     } catch (error) {
       if (error.code === 412) {

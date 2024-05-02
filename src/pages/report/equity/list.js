@@ -16,17 +16,17 @@ import { UserTableRow } from '../../../sections/report/balance';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { useTheme } from '@mui/material/styles';
-import NeracaHeader from 'src/sections/report/balance/NeracaHeader';
-import { useGetBalance } from 'src/query/hooks/report/balance/useGetBalance';
+import { useGetEquity } from 'src/query/hooks/report/equity/useGetEquity';
+import EkuitasHeader from 'src/sections/report/equity/EkuitasHeader';
 
 // ----------------------------------------------------------------------
 
-LaporanNeraca.getLayout = function getLayout(page) {
+LaporanEkuitas.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function LaporanNeraca() {
+export default function LaporanEkuitas() {
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
@@ -34,7 +34,7 @@ export default function LaporanNeraca() {
   const [alertDelete, setAlertDelete] = useState(null);
   const [submitValue, setSubmitValue] = useState({});
 
-  const { data, isLoading, refetch } = useGetBalance(submitValue);
+  const { data, isLoading, refetch } = useGetEquity(submitValue);
 
   const methods = useForm({
     defaultValues: { unit: null, date: null },
@@ -63,23 +63,11 @@ export default function LaporanNeraca() {
     return 'Saldo';
   }
 
-  const getIndicatorBalance = () => {
-
-    const totalAset = data?.find(item => item.title === "ASET").child?.find(childItem => childItem.nama === "Total ASET").saldo;
-
-    const totalKewajibanDanEkuitas = data?.find(item => item.title === "TOTAL KEWAJIBAN DAN EKUITAS").saldo;
-
-    const selisih = totalAset - totalKewajibanDanEkuitas;
-
-    if (selisih === 0) return 'Balance';
-    if (selisih !== 0 || !data) return 'Tidak Balance';
-  }
-
   return (
-    <Page title="Laporan: Posisi Keuangan">
+    <Page title="Laporan: Perubahan Ekuitas">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance()} />
+          <EkuitasHeader onSubmit={onSubmit} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
@@ -107,7 +95,7 @@ export default function LaporanNeraca() {
                   {isLoading && <TableSkeleton />}
                   {/* <TableNoData
                     isNotFound={!isLoading && data === undefined}
-                    title="Laporan Posisi Keuangan (Neraca) belum tersedia."
+                    title="Laporan Arus Kas belum tersedia."
                     description="Silakan pilih unit usaha dan tanggal laporan"
                   /> */}
                 </TableBody>
