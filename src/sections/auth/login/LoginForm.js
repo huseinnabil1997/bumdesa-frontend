@@ -18,6 +18,7 @@ import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const router = useRouter();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -67,6 +70,10 @@ export default function LoginForm() {
         window.location.href = PATH_DASHBOARD.root;
       }
     } catch (error) {
+      if (error.code === 412) {
+        router.push(`/auth/create-password?token=${error?.metadata?.token}`);
+        return;
+      }
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });

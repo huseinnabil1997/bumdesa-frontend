@@ -63,6 +63,7 @@ const AuthContext = createContext({
   verify: () => Promise.resolve(),
   verifyEmail: () => Promise.resolve(),
   resetPassword: () => Promise.resolve(),
+  createPassword: () => Promise.resolve(),
   changePassword: () => Promise.resolve(),
 });
 
@@ -161,6 +162,14 @@ function AuthProvider({ children }) {
     return response.data;
   };
 
+  const createPassword = async (payload, token) => {
+    const response = await axios.post('/change-password', payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data;
+  };
+
   const changePassword = async (payload) => {
     const response = await axios.post('/force-change-password', payload);
 
@@ -188,6 +197,7 @@ function AuthProvider({ children }) {
         registerForm,
         resetPassword,
         changePassword,
+        createPassword,
       }}
     >
       {children}

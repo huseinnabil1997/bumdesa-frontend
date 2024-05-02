@@ -36,3 +36,7 @@ export function getAccountOpt() {
 export function getCashFlowOpt(params) {
   return axiosCore.get('/cash-flow', { params });
 }
+
+export function getUnitOpt() {
+  return axiosCore.get('/units');
+}

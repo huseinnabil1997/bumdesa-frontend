@@ -20,6 +20,12 @@ export function deleteJurnal(id) {
   return axios.delete(`journals/${id}`);
 }
 
+export function downloadJurnal(type) {
+  return axios.get(`journals/report-generate?type=${type}`, {
+    responseType: 'blob',
+  });
+}
+
 export function generateEvidenceNumber() {
   return axios.get('number-of-evidence');
 }
