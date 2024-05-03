@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { handleDrop } from "src/utils/helperFunction";
 import { formatISO } from "date-fns";
 import { useGetProvincies } from "src/query/hooks/options/useGetProvincies";
@@ -13,6 +13,7 @@ import { useGetCities } from "src/query/hooks/options/useGetCities";
 import { useGetDistricts } from "src/query/hooks/options/useGetDistricts";
 import { useGetSubdistricts } from "src/query/hooks/options/useGetSubdistricts";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
+import { isEqual } from "lodash";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -75,8 +76,8 @@ export default function ProfileInfoForm({ setIsEdit }) {
   const datePickerRef = useRef(null);
 
   const defaultValues = {
-    foto_kantor: null,
-    logo: null,
+    foto_kantor: '1772525273_contoh_gambar_unit_usaha.png' ?? null,
+    logo: '1772525273_contoh_gambar_unit_usaha.png' ?? null,
     nama: 'BUM DESA DASTIO AMBORGANG',
     id: '1101032012101231231',
     tanggal_berdiri: currentDate,
@@ -85,7 +86,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
     kota: { value: 1212, label: "TOBA SAMOSIR" },
     desa: { value: 1212072004, label: "AMBORGANG" },
     kecamatan: { value: 121207, label: "PORSEA" },
-    kode_pos: '',
+    kode_pos: '22384',
   };
 
   const methods = useForm({
@@ -99,15 +100,28 @@ export default function ProfileInfoForm({ setIsEdit }) {
     handleSubmit,
     isSubmitting,
     watch,
-    formState,
   } = methods;
 
   const provinsi = watch('provinsi');
   const kota = watch('kota');
   const kecamatan = watch('kecamatan');
   const desa = watch('desa');
-  const foto_kantor = watch('foto_kantor');
-  const logo = watch('logo');
+
+  const currentValues = {
+    foto_kantor: watch('foto_kantor'),
+    logo: watch('logo'),
+    nama: watch('nama'),
+    id: watch('id'),
+    tanggal_berdiri: watch('tanggal_berdiri'),
+    alamat: watch('alamat'),
+    provinsi: watch('provinsi'),
+    kota: watch('kota'),
+    kecamatan: watch('kecamatan'),
+    desa: watch('desa'),
+    kode_pos: watch('kode_pos')
+  };
+
+  const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
   const { data: provincies } = useGetProvincies();
   const { data: cities } = useGetCities({ prov_id: provinsi?.value });
@@ -139,23 +153,6 @@ export default function ProfileInfoForm({ setIsEdit }) {
     setValue('kode_pos', null);
   }
 
-  // useEffect(() => {
-  //   methods.reset(defaultValues);
-  // }, []);
-  const isPhotoUploaded = () => {
-    if (foto_kantor && logo) return true
-    else return false
-  };
-
-  const disableSimpan = () => {
-    if (formState.isDirty === false && isPhotoUploaded() === true) return false;
-    if (formState.isDirty === true) {
-      if (formState.isValid && isPhotoUploaded()) return false;
-      else return true;
-    } 
-    else return true;
-  }
-
   const onSubmit = (data) => {
     console.log('onSubmit', data);
   };
@@ -170,7 +167,9 @@ export default function ProfileInfoForm({ setIsEdit }) {
             accept="image/*"
             maxSize={10000000}
             imageFrom={'unit'}
-            onDrop={(file) => handleDrop(file, (val) => setValue(`foto_kantor`, val))}
+            onDrop={(file) => handleDrop(file, (val) => {
+              setValue(`foto_kantor`, val);
+            })}
             errorTextAlign="left"
             errorPosition="bottom"
             helperText={
@@ -345,7 +344,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
           </StyledLoadingButton>
           <StyledLoadingButton
             loading={isSubmitting}
-            disabled={disableSimpan()}
+            disabled={areValuesEqual()}
             onClick={handleSubmit(onSubmit)}
             sx={styles.action.button}
             variant='contained'
