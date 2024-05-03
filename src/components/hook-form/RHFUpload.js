@@ -43,9 +43,10 @@ RHFUploadPhoto.propTypes = {
   label: PropTypes.string,
   errorTextAlign: PropTypes.string,
   imageFrom: PropTypes.string,
+  errorPosition: PropTypes.string,
 };
 
-export function RHFUploadPhoto({ errorTextAlign, label, name, imageFrom, ...other }) {
+export function RHFUploadPhoto({ errorPosition = 'right', errorTextAlign, label, name, imageFrom, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -57,7 +58,7 @@ export function RHFUploadPhoto({ errorTextAlign, label, name, imageFrom, ...othe
 
         return (
           <div>
-            <UploadPhoto error={checkError} {...other} file={field.value} imageFrom={imageFrom} label={label} />
+            <UploadPhoto name={name} errorPosition={errorPosition} error={checkError} {...other} file={field.value} imageFrom={imageFrom} label={label} />
             {checkError && (
               <FormHelperText
                 error
