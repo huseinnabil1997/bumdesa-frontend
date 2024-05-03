@@ -37,7 +37,7 @@ export default function DashboardUnit() {
       <Scrollbar>
         <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
           <CreateItem />
-          {isFetched && data.map((row) => <ProductItem key={row.id} data={row} />)}
+          {isFetched && data?.data?.map((row) => <ProductItem key={row.id} data={row} />)}
         </Stack>
       </Scrollbar>
     </Stack>

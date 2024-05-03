@@ -9,15 +9,17 @@ import { fData } from '../../utils/formatNumber';
 
 RejectionFiles.propTypes = {
   fileRejections: PropTypes.array,
+  errorPosition: PropTypes.string,
 };
 
-export default function RejectionFiles({ fileRejections }) {
+export default function RejectionFiles({ errorPosition, fileRejections }) {
   return (
     <Paper
       variant="outlined"
       sx={{
         py: 1,
         px: 2,
+        mt: errorPosition === 'bottom' ? 1 : 0,
         maxWidth: 350,
         borderColor: 'error.light',
         bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
