@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
-import { List, Box, ListSubheader } from '@mui/material';
+import { List, Box, ListSubheader, Skeleton } from '@mui/material';
 //
 import { NavListRoot } from './NavList';
+import { useGetMenus } from 'src/query/hooks/auth/useGetMenus';
+import { useEffect, useState } from 'react';
+// import { stringify } from 'stylis';
 
 // ----------------------------------------------------------------------
 
@@ -27,11 +30,23 @@ NavSectionVertical.propTypes = {
   navConfig: PropTypes.array,
 };
 
-export default function NavSectionVertical({ navConfig, isCollapse = false, ...other }) {
+export default function NavSectionVertical({ isCollapse = false, ...other }) {
+  const defaultValue = JSON.parse(localStorage.getItem('@menu')) ?? [];
+  const [navConfig, setNavConfig] = useState(defaultValue);
+
+  const { data, isLoading } = useGetMenus();
+
+  useEffect(() => {
+    if (data) {
+      localStorage.setItem('@menu', JSON.stringify(data));
+      setNavConfig(data);
+    }
+  }, [data]);
+
   return (
     <Box {...other}>
-      {navConfig.map((group) => (
-        <List key={group.subheader} disablePadding sx={{ px: 2 }}>
+      {navConfig?.map((group) => (
+        <List key={group?.subheader} disablePadding sx={{ px: 2 }}>
           <ListSubheaderStyle
             sx={{
               ...(isCollapse && {
@@ -39,14 +54,24 @@ export default function NavSectionVertical({ navConfig, isCollapse = false, ...o
               }),
             }}
           >
-            {group.subheader}
+            {group?.subheader}
           </ListSubheaderStyle>
 
-          {group.items.map((list) => (
+          {group?.items?.map((list) => (
             <NavListRoot key={list.title} list={list} isCollapse={isCollapse} />
           ))}
         </List>
       ))}
+
+      {isLoading && (
+        <Box sx={{ p: 3 }}>
+          <Skeleton height={50} />
+          <Skeleton height={50} />
+          <Skeleton height={50} />
+          <Skeleton height={50} />
+          <Skeleton height={50} />
+        </Box>
+      )}
     </Box>
   );
 }

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
-import { TextField, Stack, Typography, Autocomplete } from '@mui/material';
+import { TextField, Stack, Typography, Autocomplete, CircularProgress } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -11,6 +11,7 @@ RHFAutocomplete.propTypes = {
   placeholder: PropTypes.string,
   helperText: PropTypes.string,
   require: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 export default function RHFAutocomplete({
@@ -19,6 +20,7 @@ export default function RHFAutocomplete({
   placeholder,
   helperText,
   require,
+  isLoading,
   ...other
 }) {
   const { control, setValue } = useFormContext();
@@ -27,7 +29,8 @@ export default function RHFAutocomplete({
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
-          {label}{require && <span style={{ color: 'red' }}>*</span>}
+          {label}
+          {require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -47,6 +50,14 @@ export default function RHFAutocomplete({
                 sx={{
                   '.MuiFormHelperText-root': { marginLeft: 0 },
                   ...other.sx,
+                }}
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: (
+                    <>
+                      {isLoading && <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />}
+                    </>
+                  ),
                 }}
               />
             )}

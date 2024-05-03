@@ -69,7 +69,6 @@ import { AuthProvider } from '../contexts/JWTContext';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { getSessionToken } from 'src/utils/axiosUnregistered';
-import { PATH_AUTH } from 'src/routes/paths';
 // import { AuthProvider } from '../contexts/Auth0Context';
 // import { AuthProvider } from '../contexts/FirebaseContext';
 // import { AuthProvider } from '../contexts/AwsCognitoContext';
@@ -87,7 +86,13 @@ export default function MyApp(props) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
   const router = useRouter();
 
@@ -95,9 +100,6 @@ export default function MyApp(props) {
 
   useEffect(() => {
     if (router.asPath.includes('/login') && isLogin) router.push('/auth/register/step-one');
-    if (router.asPath.includes('/login') && !isLogin) {
-      router.replace(PATH_AUTH.login);
-    }
   }, [router.asPath]);
 
   return (

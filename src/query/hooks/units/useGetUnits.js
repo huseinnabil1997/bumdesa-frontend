@@ -5,7 +5,7 @@ const fetchData = async (param) => {
   try {
     const { data } = await getUnits(param);
 
-    return data ?? [];
+    return data?.data ?? [];
   } catch (err) {
     throw new Error();
   }

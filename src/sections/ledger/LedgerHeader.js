@@ -1,47 +1,25 @@
-import { Description } from '@mui/icons-material';
-import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
-// import { useRouter } from 'next/router';
-import { useSnackbar } from 'notistack';
+import { Add, ArrowDropDown, Download } from '@mui/icons-material';
+import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-// import { useFormContext } from 'react-hook-form';
-import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 
-const options = ['Download .PDF', 'Download .xlsx'];
+const options = ['Create a merge commit', 'Squash and merge', 'Rebase and merge'];
 
-export default function ArusKasHeader() {
-  // const router = useRouter();
-  const datePickerRef = useRef(null);
-  const { enqueueSnackbar } = useSnackbar();
-  // const { watch } = useFormContext();
-
-  // const sectorValue = watch('sector');
-  // const dateValue = watch('date');
+export default function LedgerHeader() {
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
+  const handleClick = () => {
+    router.push('/jurnal/create');
+  };
+
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
-    console.log('LabaRugiHeader handleMenuItemClick', event, index)
-    enqueueSnackbar(
-      '',
-      {
-        variant: 'success',
-        content: () => (
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-          >
-            <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
-            <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
-          </Box>
-        )
-      },
-    )
     setOpen(false);
   };
 
@@ -57,65 +35,37 @@ export default function ArusKasHeader() {
     setOpen(false);
   };
 
-  const getMaxDateForMonthInput = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-  };
-
   return (
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
         <RHFAutocomplete
-          sx={{ width: 305 }}
+          sx={{ width: 200 }}
           size="small"
           name="sector"
           placeholder="Sektor Usaha"
           loading={false}
-          options={[{ text: 'Semua Unit', value: '' }].map((option) => option) ?? []}
+          options={[].map((option) => option) ?? []}
           getOptionLabel={(option) => option.text}
-          defaultValue={{ text: 'Semua Unit', value: '' }}
           renderOption={(props, option) => (
             <li {...props} key={option.value}>
               {option.text}
             </li>
           )}
         />
-        <RHFTextField
-          inputRef={datePickerRef}
-          size="small"
-          sx={{ width: 165 }}
-          name="date"
-          type="month"
-          onClick={() => {
-            datePickerRef.current.showPicker()
-          }}
-          inputProps={{
-            max: getMaxDateForMonthInput(),
-          }}
-        />
+        <RHFTextField size="small" sx={{ width: 200 }} name="date" type="month" />
       </Stack>
       <Stack direction="row" spacing={1}>
         <StyledButton
-          sx={{ width: 186 }}
-          startIcon={<Description />}
-          variant="outlined"
-          onClick={() => window.open('https://www.google.com/', '_blank')}
-        >
-          Preview Dokumen
-        </StyledButton>
-        <StyledButton
           ref={anchorRef}
-          sx={{ width: 210, justifyContent: 'space-around' }}
+          sx={{ width: 200 }}
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
-          startIcon={<Iconify width={14} height={14} icon={'bi:download'} />}
-          endIcon={<Iconify icon={'oui:arrow-down'} />}
-          variant="contained"
+          startIcon={<Download />}
+          endIcon={<ArrowDropDown />}
+          variant="outlined"
         >
           Unduh Dokumen
         </StyledButton>
@@ -134,7 +84,7 @@ export default function ArusKasHeader() {
                 transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
               }}
             >
-              <Paper sx={{ width: 210 }}>
+              <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList id="split-button-menu" autoFocusItem>
                     {options.map((option, index) => (

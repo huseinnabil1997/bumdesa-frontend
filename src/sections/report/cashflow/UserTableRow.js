@@ -132,8 +132,6 @@ export default function UserTableRow({ row, selected }) {
     }
   }
 
-  console.log('row', row)
-
   return (
     <>
       <TableRow

@@ -5,12 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { Stack, TableRow, TableCell, IconButton, Collapse, Table, TableBody } from '@mui/material';
 // components
 import moment from 'moment';
-import {
-  DeleteOutlineOutlined,
-  EditOutlined,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-} from '@mui/icons-material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { fCurrency } from 'src/utils/formatNumber';
 import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
 import Iconify from 'src/components/Iconify';
@@ -30,7 +25,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, index }) {
   const theme = useTheme();
 
-  const { no_evidence, date, remark, debt, credit, unit } = row;
+  const { number_of_evidence, date, transaction_information, debt, credit, unit } = row;
 
   const [open, setOpen] = useState(false);
 
@@ -54,10 +49,10 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
           <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
-          {no_evidence}
+          {number_of_evidence}
         </TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
-        <TableCell>{remark}</TableCell>
+        <TableCell>{transaction_information}</TableCell>
         <TableCell>{unit}</TableCell>
         <TableCell>{debt ? fCurrency(debt) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
@@ -92,7 +87,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
                     }}
                   >
                     <TableCell sx={{ pl: 5, display: 'flex' }}>
-                      <DotIcon /> {remark}
+                      <DotIcon /> {transaction_information}
                     </TableCell>
                     <TableCell width={140}>{debt ? fCurrency(debt) : '-'}</TableCell>
                     <TableCell width={140}>{credit ? fCurrency(credit) : '-'}</TableCell>

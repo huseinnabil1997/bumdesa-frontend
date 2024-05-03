@@ -23,7 +23,9 @@ export default function AlertDeleteVendor({ open, onClose, action }) {
     >
       <DialogTitle id="alert-dialog-title">Delete Confirmation</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">Are you sure want to delete this data?</DialogContentText>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure want to delete this data?
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

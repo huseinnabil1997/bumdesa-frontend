@@ -1,7 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // @mui
-import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
+import {
+  Box,
+  Card,
+  Table,
+  TableBody,
+  Container,
+  TableContainer,
+  Pagination,
+  Alert,
+  CircularProgress,
+} from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
@@ -11,17 +21,19 @@ import Layout from '../../layouts';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
-import AlertDeleteVendor from '../../components/modal/DeleteVendor';
 // sections
-import { UserTableRow } from '../../sections/@dashboard/user/list';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { JurnalHeader } from 'src/sections/jurnal';
-import { JURNAL_HEAD } from 'src/utils/constant';
+import { JurnalHeader, TableRow } from 'src/sections/jurnal';
+import { DEFAULT_FILTER, JURNAL_HEAD } from 'src/utils/constant';
 import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
+import { useDeleteJurnal } from 'src/query/hooks/jurnals/useDeleteJurnal';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import TableError from 'src/components/table/TableError';
 
 // ----------------------------------------------------------------------
 
@@ -31,38 +43,72 @@ JurnalList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function JurnalList() {
-  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
+  const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
+  const router = useRouter();
 
-  const { data, isLoading } = useGetJurnals();
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
 
-  const [filterName, setFilterName] = useState('');
-  const [alertDelete, setAlertDelete] = useState(null);
+  const { data, isLoading, isError, refetch } = useGetJurnals(filter);
+  const { mutate: onDelete, isLoading: deleting } = useDeleteJurnal();
 
-  const handleDeleteRow = (id) => {};
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleEditRow = (row) => {};
+  const handleDeleteRow = (id) => {
+    onDelete(id, {
+      onSuccess: (res) => {
+        enqueueSnackbar(res.message, { variant: 'success' });
+        refetch();
+      },
+      onError: (err) => {
+        console.log(err);
+        enqueueSnackbar('Gagal', { variant: 'error' });
+      },
+    });
+  };
 
-  const handleViewRow = (row) => {};
+  const handleEditRow = (row) => {
+    router.push(`/jurnal/${row.id}`);
+  };
 
   const methods = useForm({
-    defaultValues: { unit: null, year: null },
+    defaultValues: { date: null },
   });
 
-  const { handleSubmit } = methods;
+  const { watch } = methods;
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const handleChangeFilter = () => {
+    setPage(1);
+
+    setFilter((prevState) => ({
+      ...prevState,
+      date: watch('date'),
+      page: 1,
+    }));
   };
+
+  useEffect(() => {
+    handleChangeFilter();
+  }, [watch('date')]);
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider methods={methods}>
           <JurnalHeader />
         </FormProvider>
+        {deleting && (
+          <Alert
+            sx={{ mt: 3 }}
+            severity="warning"
+            variant="outlined"
+            icon={<CircularProgress size={20} color="warning" />}
+          >
+            Sedang menghapus...
+          </Alert>
+        )}
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -75,19 +121,20 @@ export default function JurnalList() {
 
                 <TableBody>
                   {!isLoading &&
+                    data?.length > 0 &&
                     data.map((row, i) => (
-                      <UserTableRow
+                      <TableRow
                         key={row.id}
                         index={i}
                         row={row}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row)}
-                        onViewRow={() => handleViewRow(row)}
                       />
                     ))}
 
                   {isLoading && <TableSkeleton />}
-                  {!data?.length > 0 && (
+
+                  {!data?.length > 0 && !isError && !isLoading && (
                     <TableNoData
                       title="Jurnal belum tersedia."
                       description="Silakan buat jurnal dengan klik tombol di bawah ini."
@@ -96,10 +143,18 @@ export default function JurnalList() {
                           sx={{ mt: 2, width: 200 }}
                           variant="outlined"
                           startIcon={<Add fontSize="small" />}
+                          onClick={() => router.push('/jurnal/create')}
                         >
                           Buat Jurnal
                         </StyledButton>
                       }
+                    />
+                  )}
+
+                  {!isLoading && isError && (
+                    <TableError
+                      title="Koneksi Error"
+                      description="Silakan cek koneksi Anda dan muat ulang halaman."
                     />
                   )}
                 </TableBody>
@@ -121,7 +176,6 @@ export default function JurnalList() {
             </Box>
           )}
         </Card>
-        <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} />
       </Container>
     </Page>
   );

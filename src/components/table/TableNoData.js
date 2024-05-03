@@ -7,13 +7,13 @@ import EmptyContent from '../EmptyContent';
 // ----------------------------------------------------------------------
 
 TableNoData.propTypes = {
+  isNotFound: PropTypes.bool,
   title: PropTypes.string,
   description: PropTypes.string,
   action: PropTypes.node,
-  isNotFound: PropTypes.bool,
 };
 
-export default function TableNoData({ title, description, action, isNotFound }) {
+export default function TableNoData({ isNotFound, title, description, action }) {
   if (isNotFound) {
     return (
       <TableRow>
@@ -29,6 +29,6 @@ export default function TableNoData({ title, description, action, isNotFound }) 
         </TableCell>
       </TableRow>
     );
-  } 
+  }
   return null;
 }

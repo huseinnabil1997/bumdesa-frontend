@@ -1,10 +1,14 @@
-import axios from 'src/utils/axios';
-import axiosInstance from 'src/utils/axiosCoreService';
+import axiosInstance from 'src/utils/axiosReportService';
 
-export function getProfits() {
-  return axios.get('https://8cd325cc6b2c428e96ca7ccc9d1155e8.api.mockbin.io/');
+export function getProfits(params) {
+  return axiosInstance.get(`report/laba-rugi?unit=${params.unit}&date=${params.date}`);
+  // return axiosInstance.get('report/laba-rugi?unit=38&date=2024-04');
 }
 
 export function getBusinessUnits() {
   return axiosInstance.get('/units');
+}
+
+export function getDownloadProfits(params) {
+  return axiosInstance.get(`/report/generate/laba-rugi?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
 }

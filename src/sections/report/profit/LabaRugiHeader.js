@@ -1,52 +1,88 @@
+import PropTypes from 'prop-types';
+import jwtDecode from 'jwt-decode';
 import { Description } from '@mui/icons-material';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
-// import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useRef, useState } from 'react';
-// import { useFormContext } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
-import { useGetBusinessUnits } from 'src/query/hooks/report/profit/useGetBusinessUnit';
+import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledButton } from 'src/theme/custom/Button';
+import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
+import { getSessionToken } from 'src/utils/axios';
 
-const options = ['Download .PDF', 'Download .xlsx'];
+const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
-export default function LabaRugiHeader() {
-  // const router = useRouter();
+LabaRugiHeader.propTypes = {
+  onSubmit: PropTypes.func,
+};
+
+export default function LabaRugiHeader({ onSubmit }) {
   const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
-  // const { watch } = useFormContext();
 
-  // const sectorValue = watch('sector');
-  // const dateValue = watch('date');
+  const token = getSessionToken();
+  let decoded = {};
+  if (token) {
+    decoded = jwtDecode(token);
+    console.log('decoded token:', decoded);
+  } else {
+    console.error('Token not available');
+  }
 
   const { data, isLoading } = useGetBusinessUnits();
-
-  console.log('dataBusinessUnit', data, isLoading)
+  const { mutate: onDownload, isLoading: downloading } = useDownloadProfit();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedType, setSelectedType] = useState(1);
+  const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
+  const [selectedDate, setSelectedDate] = useState('');
 
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    console.log('LabaRugiHeader handleMenuItemClick', event, index)
-    enqueueSnackbar(
-      '',
-      {
-        variant: 'success',
-        content: () => (
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-          >
-            <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
-            <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
-          </Box>
-        )
+  const handleMenuItemClick = async (type) => {
+    setSelectedType(type);
+    const payload = {
+      type: type === 'preview' ? 1 : type,
+      unit: selectedUnit?.id,
+      date: selectedDate,
+    }
+    onDownload(payload, {
+      onSuccess: (res) => {
+        const blob = new Blob([res], { type: 'application/pdf' });
+        const url = URL.createObjectURL(new Blob([res]));
+        if (type === 'preview') {
+          const blobUrl = URL.createObjectURL(blob);
+          window.open(blobUrl);
+        } else {
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `Laporan_Laba_Rugi_${selectedUnit?.id}_${selectedDate}.${type === 1 ? 'pdf' : 'xlsx'}`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          enqueueSnackbar(
+            '',
+            {
+              variant: 'success',
+              content: () => (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+                >
+                  <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
+                  <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
+                </Box>
+              )
+            },
+          )
+        }
       },
-    )
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      },
+    });
     setOpen(false);
   };
 
@@ -69,24 +105,47 @@ export default function LabaRugiHeader() {
     return `${year}-${month}`;
   };
 
+  const getPreviousMonth = () => {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  };
+
+  useEffect(() => {
+    setSelectedDate(getPreviousMonth());
+    onSubmit({ unit: decoded?.sub?.businessid ?? selectedUnit?.id, date: getPreviousMonth() })
+  }, [])
+
+  useEffect(async () => {
+    await setSelectedUnit(data?.[0])
+  }, [data])
+
   return (
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
-        <RHFAutocomplete
-          sx={{ width: 305 }}
-          size="small"
-          name="sector"
-          placeholder="Sektor Usaha"
-          loading={isLoading}
-          options={data?.map((option) => option) ?? [{ text: 'Semua Unit', value: '' }]}
-          getOptionLabel={(option) => option.text}
-          defaultValue={{ text: 'Semua Unit', value: '' }}
-          renderOption={(props, option) => (
-            <li {...props} key={option.value}>
-              {option.text}
-            </li>
-          )}
-        />
+        {decoded?.sub?.businessid === 0 && (
+          <RHFAutocomplete
+            sx={{ width: 305 }}
+            size="small"
+            name="unit"
+            placeholder="Sektor Usaha"
+            loading={isLoading}
+            options={data?.map((option) => option) ?? []}
+            getOptionLabel={(option) => option.name}
+            renderOption={(props, option) => (
+              <li {...props} key={option.id}>
+                {option.name}
+              </li>
+            )}
+            onChange={(event, newValue) => {
+              setSelectedUnit(newValue);
+              onSubmit({ unit: newValue?.id, date: selectedDate })
+            }}
+            value={selectedUnit}
+          />
+        )}
         <RHFTextField
           inputRef={datePickerRef}
           size="small"
@@ -99,6 +158,11 @@ export default function LabaRugiHeader() {
           inputProps={{
             max: getMaxDateForMonthInput(),
           }}
+          onChange={(event) => {
+            setSelectedDate(event.target.value);
+            onSubmit({ unit: selectedUnit?.id, date: event.target.value })
+          }}
+          value={selectedDate}
         />
       </Stack>
       <Stack direction="row" spacing={1}>
@@ -106,9 +170,9 @@ export default function LabaRugiHeader() {
           sx={{ width: 186 }}
           startIcon={<Description />}
           variant="outlined"
-          onClick={() => window.open('https://www.google.com/', '_blank')}
+          onClick={() => handleMenuItemClick('preview')}
         >
-          Preview Dokumen
+          Pratinjau Dokumen
         </StyledButton>
         <StyledButton
           ref={anchorRef}
@@ -121,6 +185,7 @@ export default function LabaRugiHeader() {
           startIcon={<Iconify width={14} height={14} icon={'bi:download'} />}
           endIcon={<Iconify icon={'oui:arrow-down'} />}
           variant="contained"
+          disabled={downloading}
         >
           Unduh Dokumen
         </StyledButton>
@@ -142,13 +207,13 @@ export default function LabaRugiHeader() {
               <Paper sx={{ width: 210 }}>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList id="split-button-menu" autoFocusItem>
-                    {options.map((option, index) => (
+                    {options.map((option) => (
                       <MenuItem
-                        key={option}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
+                        key={option.type}
+                        selected={option.type === selectedType}
+                        onClick={() => handleMenuItemClick(option.type)}
                       >
-                        {option}
+                        {option.name}
                       </MenuItem>
                     ))}
                   </MenuList>

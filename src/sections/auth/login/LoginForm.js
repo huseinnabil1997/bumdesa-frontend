@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 // routes
-import { PATH_AUTH } from '../../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -18,6 +18,7 @@ import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const router = useRouter();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -59,14 +62,19 @@ export default function LoginForm() {
     try {
       const res = await login(data.email, data.password);
       if (res?.data?.full_register === 0) {
-        localStorage.setItem('@token', res?.metadata?.token ?? '');
+        await localStorage.setItem('@token', res?.metadata?.token ?? '');
         window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
       } else {
         setSession(res?.metadata?.token ?? '');
         enqueueSnackbar(res.message, { variant: 'success' });
-        window.location.reload();
+        // window.location.href = PATH_DASHBOARD.root;
+        router.replace(PATH_DASHBOARD.root)
       }
     } catch (error) {
+      if (error.code === 412) {
+        router.push(`/auth/create-password?token=${error?.metadata?.token}`);
+        return;
+      }
       reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });

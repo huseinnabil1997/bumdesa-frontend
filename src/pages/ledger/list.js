@@ -1,55 +1,42 @@
 import { useState } from 'react';
 
 // @mui
-import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
+import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
 // hooks
-import useSettings from '../../../hooks/useSettings';
+import useSettings from '../../hooks/useSettings';
+import useTable from '../../hooks/useTable';
 // layouts
-import Layout from '../../../layouts';
+import Layout from '../../layouts';
 // components
-import Page from '../../../components/Page';
-import Scrollbar from '../../../components/Scrollbar';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
-import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
+import Page from '../../components/Page';
+import Scrollbar from '../../components/Scrollbar';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
 // sections
-import { UserTableRow } from '../../../sections/report/profit';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { PROFIT_HEAD } from 'src/utils/constant';
+import { LedgerHeader, TableRow } from 'src/sections/ledger';
+import { DEFAULT_FILTER, LEDGER_HEAD } from 'src/utils/constant';
+import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
 import { Add } from '@mui/icons-material';
-// import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
-import { dataLabaRugi } from './data';
-import { ArusKasHeader } from 'src/sections/report/cash-flow';
 
 // ----------------------------------------------------------------------
 
-LaporanArusKas.getLayout = function getLayout(page) {
+JurnalList.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function LaporanArusKas() {
+export default function JurnalList() {
+  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  // const { data, isLoading } = useGetProfit();
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
 
-  const data = dataLabaRugi;
-  const isLoading = false;
-
-  console.log('data---', data)
-
-  // const [filterName, setFilterName] = useState('');
-  const [alertDelete, setAlertDelete] = useState(null);
-
-  // const handleDeleteRow = (id) => {};
-
-  // const handleEditRow = (row) => {};
-
-  // const handleViewRow = (row) => {};
+  const { data, isLoading } = useGetJurnals(filter);
 
   const methods = useForm({
     defaultValues: { unit: null, year: null },
@@ -62,34 +49,28 @@ export default function LaporanArusKas() {
   };
 
   return (
-    <Page title="Laporan: Arus Kas">
+    <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <ArusKasHeader />
+          <LedgerHeader />
         </FormProvider>
+
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={PROFIT_HEAD}
+                  headLabel={LEDGER_HEAD}
                   rowCount={data?.length}
-                  sx={{ background: theme.palette.grey[200], height: '56px' }}
+                  sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data.map((row, i) => (
-                      <UserTableRow
-                        key={row.id}
-                        index={i}
-                        row={row}
-                        // onViewRow={() => handleViewRow(row)}
-                      />
-                    ))}
+                    data.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
 
                   {isLoading && <TableSkeleton />}
-                  {!data?.length > 0 && (
+                  {data?.length === 0 && (
                     <TableNoData
                       title="Jurnal belum tersedia."
                       description="Silakan buat jurnal dengan klik tombol di bawah ini."
@@ -108,8 +89,21 @@ export default function LaporanArusKas() {
               </Table>
             </TableContainer>
           </Scrollbar>
+
+          {data?.length > 0 && (
+            <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
+              <Pagination
+                showFirstButton
+                showLastButton
+                color="primary"
+                count={data?.lastPage}
+                rowsPerPage={data?.totalPerPage}
+                page={page}
+                onChange={onChangePage}
+              />
+            </Box>
+          )}
         </Card>
-        <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} />
       </Container>
     </Page>
   );
