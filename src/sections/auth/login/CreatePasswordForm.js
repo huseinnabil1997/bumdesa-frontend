@@ -168,6 +168,7 @@ export default function CreatePasswordForm() {
       </Stack>
 
       <StyledLoadingButton
+        onClick={handleSubmit(onSubmit)}
         fullWidth
         size="large"
         type="submit"
