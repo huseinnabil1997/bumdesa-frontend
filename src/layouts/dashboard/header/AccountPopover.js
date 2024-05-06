@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { MenuItem } from '@mui/material';
+import { Box, MenuItem, Typography } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../../routes/paths';
 // hooks
@@ -15,6 +15,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { Logout, Person, Settings } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,21 @@ import { IconButtonAnimate } from '../../../components/animate';
 //     linkTo: PATH_DASHBOARD.user.account,
 //   },
 // ];
+
+const styles = {
+  box: {
+    display: 'flex',
+    flexDirection: 'row',
+    border: '1px solid #EAEBEB',
+    p: '12px 16px 12px 16px',
+    borderRadius: '8px',
+    flexGrow: 1,
+    width: '231px',
+    alignItems: 'center'
+  },
+  icon: { width: 20, height: 20, mr: 1, color: '#1078CA' },
+  text: { color: '#292929', fontSize: '16px', fontWeight: 600 }
+}
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +68,17 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleProfile = async () => {
+    router.push('/profile/detail')
+    handleClose();
+
+  };
+
+  const handleSetting = async () => {
+    router.push('/profile/account')
+    handleClose();
   };
 
   const handleLogout = async () => {
@@ -95,17 +122,26 @@ export default function AccountPopover() {
         anchorEl={open}
         onClose={handleClose}
         sx={{
-          p: 0,
-          mt: 1.5,
-          ml: 0.75,
-          '& .MuiMenuItem-root': {
-            typography: 'body2',
-            borderRadius: 0.75,
-          },
+          width: '271px',
         }}
       >
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+        <MenuItem onClick={handleProfile} sx={{ my: 1 }}>
+          <Box sx={styles.box}>
+            <Person sx={styles.icon} />
+            <Typography sx={styles.text}>Profil</Typography>
+          </Box>
+        </MenuItem>
+        <MenuItem onClick={handleSetting} sx={{ my: 1 }}>
+          <Box sx={styles.box}>
+            <Settings sx={styles.icon} />
+            <Typography sx={styles.text}>Pengaturan Akun</Typography>
+          </Box>
+        </MenuItem>
+        <MenuItem onClick={handleLogout} sx={{ my: 1 }}>
+          <Box sx={styles.box}>
+            <Logout sx={styles.icon} />
+            <Typography sx={styles.text}>Log Out</Typography>
+          </Box>
         </MenuItem>
       </MenuPopover>
     </>

@@ -2,18 +2,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
 import { Grid, Stack, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from "src/components/hook-form";
+import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
 import { useEffect, useRef } from "react";
-import { handleDrop } from "src/utils/helperFunction";
 import { formatISO } from "date-fns";
-import { useGetProvincies } from "src/query/hooks/options/useGetProvincies";
-import { useGetCities } from "src/query/hooks/options/useGetCities";
-import { useGetDistricts } from "src/query/hooks/options/useGetDistricts";
-import { useGetSubdistricts } from "src/query/hooks/options/useGetSubdistricts";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
+import Image from "src/components/Image";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -44,6 +40,8 @@ const styles = {
     '& .MuiInputBase-input': {
       height: '11px',
     },
+    '& .MuiInput-underline:before': { borderBottomColor: '#D3D4D4' },
+    '& .MuiInput-underline:after': { borderBottomColor: '#D3D4D4' },
     id: {
       backgroundColor: '#CCE8FF',
       borderRadius: '8px',
@@ -76,8 +74,8 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
   const datePickerRef = useRef(null);
 
   const defaultValues = {
-    foto_kantor: null,
-    logo: null,
+    foto_kantor: '1772525273_contoh_gambar_unit_usaha.png' ?? null,
+    logo: '3742560361_Frame2608718.png' ?? null,
     nama: 'BUM DESA DASTIO AMBORGANG',
     id: '1101032012101231231',
     tanggal_berdiri: currentDate,
@@ -86,7 +84,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
     kota: { value: 1212, label: "TOBA SAMOSIR" },
     desa: { value: 1212072004, label: "AMBORGANG" },
     kecamatan: { value: 121207, label: "PORSEA" },
-    kode_pos: '',
+    kode_pos: '22384',
   };
 
   const methods = useForm({
@@ -100,41 +98,13 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
     handleSubmit,
     watch,
   } = methods;
-
-  const provinsi = watch('provinsi');
-  const kota = watch('kota');
-  const kecamatan = watch('kecamatan');
   const desa = watch('desa');
-
-  const { data: provincies } = useGetProvincies();
-  const { data: cities } = useGetCities({ prov_id: provinsi?.value });
-  const { data: districts } = useGetDistricts({ city_id: kota?.value });
-  const { data: subdistricts } = useGetSubdistricts({ dis_id: kecamatan?.value });
   const { data: postalCode } = useGetPostalCode({ subdis_id: desa?.value });
 
   useEffect(() => {
     if (postalCode) setValue('kode_pos', postalCode?.label);
     else setValue('kode_pos', '');
   }, [postalCode]);
-
-  const handleProvinsi = (value) => {
-    setValue('provinsi', value)
-    setValue('kota', null);
-    setValue('kecamatan', null);
-    setValue('desa', null);
-  }
-
-  const handleKota = (value) => {
-    setValue('kota', value)
-    setValue('kecamatan', null);
-    setValue('desa', null);
-  }
-
-  const handleKecamatan = (value) => {
-    setValue('kecamatan', value)
-    setValue('desa', null);
-    setValue('kode_pos', null);
-  }
 
   const onSubmit = (data) => {
     console.log('onSubmit', data);
@@ -143,68 +113,39 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
-        <Grid item xs={6}>
-          <RHFUploadPhoto
-            name="foto_kantor"
-            label="Foto Kantor BUM Desa"
-            accept="image/*"
-            maxSize={10000000}
-            imageFrom={'unit'}
-            onDrop={(file) => handleDrop(file, (val) => setValue(`foto_kantor`, val))}
-            errorTextAlign="left"
-            errorPosition="bottom"
-            helperText={
-              <Typography
-                variant="caption"
-                sx={{
-                  mt: 1,
-                  display: 'block',
-                  textAlign: 'start',
-                  color: 'text.secondary',
-                }}
-              >
-                Format yang diperbolehkan: png, jpg, jpeg.
-              </Typography>
-            }
+        <Grid item xs={3}>
+          <Typography variant="caption" fontWeight={600}>
+            Foto Kantor BUM Desa
+          </Typography>
+          <Image
+            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.foto_kantor}`}
+            sx={{ zIndex: 8, width: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
-        <Grid item xs={6}>
-          <RHFUploadPhoto
-            name="logo"
-            label="Logo BUM Desa"
-            accept="image/*"
-            maxSize={10000000}
-            imageFrom={'unit'}
-            onDrop={(file) => handleDrop(file, (val) => setValue(`logo`, val))}
-            errorTextAlign="left"
-            errorPosition="bottom"
-            helperText={
-              <Typography
-                variant="caption"
-                sx={{
-                  mt: 1,
-                  display: 'block',
-                  textAlign: 'start',
-                  color: 'text.secondary',
-                }}
-              >
-                Format yang diperbolehkan: png, jpg, jpeg.
-              </Typography>
-            }
+        <Grid item xs={3}>
+          <Typography variant="caption" fontWeight={600}>
+            Logo BUM Desa
+          </Typography>
+          <Image
+            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.logo}`}
+            sx={{ zIndex: 8, width: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
+        <Grid item xs={3} />
+        <Grid item xs={3} />
         <Grid item xs={4}>
           <RHFTextField
-            disabled={!isEdit}
             name="nama"
             label="Nama BUM Desa"
+            inputProps={{
+              readOnly: true
+            }}
             sx={styles.textfield}
-            require
+            variant="standard"
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            disabled={!isEdit}
             name="id"
             label="ID BUM Desa"
             inputProps={{
@@ -212,113 +153,94 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
               readOnly: true
             }}
             sx={styles.textfield.id}
-            require
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            disabled={!isEdit}
             inputRef={datePickerRef}
+            variant="standard"
             size="small"
             label="Tanggal Didirikan BUM Desa"
             name="tanggal_berdiri"
             type="date"
             sx={styles.textfield}
             onClick={() => {
-              datePickerRef.current.showPicker()
+              if (isEdit) datePickerRef.current.showPicker()
             }}
             inputProps={{
               max: currentDate,
+              readOnly: true
             }}
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            disabled={!isEdit}
             name="alamat"
             label="Alamat"
+            variant="standard"
             sx={styles.textfield}
-            require
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            disabled={!isEdit}
-            require
-            name="provinsi"
-            label="Provinsi"
-            loading={false}
-            sx={styles.textfield}
-            onChange={(e, value) => handleProvinsi(value)}
-            options={provincies?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            disabled={!isEdit}
-            require
-            name="kota"
-            label="Kabupaten"
-            loading={false}
-            sx={styles.textfield}
-            onChange={(e, value) => handleKota(value)}
-            options={cities?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            disabled={!isEdit}
-            require
-            name="kecamatan"
-            label="Kecamatan"
-            loading={false}
-            sx={styles.textfield}
-            onChange={(e, value) => handleKecamatan(value)}
-            options={districts?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            disabled={!isEdit}
-            require
-            name="desa"
-            label="Desa"
-            loading={false}
-            sx={styles.textfield}
-            options={subdistricts?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
+            inputProps={{
+              readOnly: true
+            }}
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
+            name="provinsi"
+            label="Provinsi"
+            variant="standard"
+            sx={styles.textfield}
+            inputProps={{
+              readOnly: true
+            }}
+            value={defaultValues.provinsi.label}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
+            name="kota"
+            label="Kabupaten"
+            variant="standard"
+            sx={styles.textfield}
+            inputProps={{
+              readOnly: true
+            }}
+            value={defaultValues.kota.label}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
+            name="kecamatan"
+            label="Kecamatan"
+            variant="standard"
+            sx={styles.textfield}
+            inputProps={{
+              readOnly: true
+            }}
+            value={defaultValues.kecamatan.label}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
+            name="desa"
+            label="Desa"
+            variant="standard"
+            sx={styles.textfield}
+            inputProps={{
+              readOnly: true
+            }}
+            value={defaultValues.desa.label}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
+            variant="standard"
             name="kode_pos"
             label="Kode Pos"
             sx={styles.textfield}
-            disabled={!!postalCode?.label || !isEdit}
-            // value={postalCode?.label}
+            inputProps={{
+              readOnly: true
+            }}
             placeholder="Masukan Kode Pos"
           />
         </Grid>
@@ -335,7 +257,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
       </Stack>
     </FormProvider>
   )
-} 
+}
 
 ProfileInfo.propTypes = {
   isEdit: PropTypes.bool,

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { handleDrop } from "src/utils/helperFunction";
 import { formatISO } from "date-fns";
 import { useGetProvincies } from "src/query/hooks/options/useGetProvincies";
@@ -246,6 +246,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
             inputProps={{
               max: currentDate,
             }}
+            require
           />
         </Grid>
         <Grid item xs={4}>
@@ -330,6 +331,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
             sx={styles.textfield}
             disabled={!!postalCode?.label}
             placeholder="Masukan Kode Pos"
+            require
           />
         </Grid>
       </Grid>
