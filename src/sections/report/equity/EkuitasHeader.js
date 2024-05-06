@@ -8,8 +8,8 @@ import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledButton } from 'src/theme/custom/Button';
-import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 import { getSessionToken } from 'src/utils/axios';
+import { useDownloadEquity } from 'src/query/hooks/report/equity/useDownloadEquity';
 
 const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
@@ -31,7 +31,7 @@ export default function EkuitasHeader({ onSubmit }) {
   }
 
   const { data, isLoading } = useGetBusinessUnits();
-  const { mutate: onDownload, isLoading: downloading } = useDownloadCashflow();
+  const { mutate: onDownload, isLoading: downloading } = useDownloadEquity();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -40,6 +40,7 @@ export default function EkuitasHeader({ onSubmit }) {
   const [selectedDate, setSelectedDate] = useState('');
 
   const handleMenuItemClick = async (type) => {
+    enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
     setSelectedType(type);
     const payload = {
       type: type === 'preview' ? 1 : type,
@@ -167,6 +168,7 @@ export default function EkuitasHeader({ onSubmit }) {
       </Stack>
       <Stack direction="row" spacing={1}>
         <StyledButton
+          disabled={downloading}
           sx={{ width: 186 }}
           startIcon={<Description />}
           variant="outlined"
