@@ -33,11 +33,11 @@ const currentDate = formatISO(new Date(), { representation: "date" });
 
 const styles = {
   content: {
-    height: 483,
+    minHeight: 483,
     p: '24px'
   },
   textfield: {
-    width: '293px',
+    // width: '293px',
     '& .MuiInputBase-root': {
       height: '44px',
     },
@@ -47,7 +47,6 @@ const styles = {
     id: {
       backgroundColor: '#CCE8FF',
       borderRadius: '8px',
-      width: '293px',
       '& .MuiInputBase-root': {
         height: '44px',
       },
@@ -57,7 +56,7 @@ const styles = {
     }
   },
   action: {
-    height: 80,
+    minHeight: 80,
     p: '16px',
     borderTop: 'solid 1px #EAEBEB',
     justifyContent: 'center',

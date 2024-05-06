@@ -2,16 +2,15 @@ import { Box, Card, Container, Stack, Typography } from '@mui/material';
 import useSettings from '../../hooks/useSettings';
 import Layout from '../../layouts';
 import Page from '../../components/Page';
-import { ProfileInfo, ProfileInfoForm } from 'src/sections/profile';
-import { useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
+import { AccountInfo } from 'src/sections/setting';
 
 // ----------------------------------------------------------------------
 
 const styles = {
   card: {
     maxWidth: 960,
-    minHeight: 605
+    minHeight: 172
   },
   segment: {
     title: {
@@ -26,7 +25,7 @@ const styles = {
       }
     },
     content: {
-      height: 461
+      minHeight: 116,
     },
     action: {
       height: 80,
@@ -42,19 +41,18 @@ const styles = {
   }
 }
 
-DetailProfil.getLayout = function getLayout(page) {
+AccountSetting.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
 // ----------------------------------------------------------------------
 
-export default function DetailProfil() {
-  const [isEdit, setIsEdit] = useState(false)
+export default function AccountSetting() {
 
   const { themeStretch } = useSettings();
 
   return (
-    <Page title="Profil: Detail">
+    <Page title="Pengaturan: Akun">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Box
           sx={{
@@ -100,14 +98,10 @@ export default function DetailProfil() {
         <Card sx={styles.card}>
           <Stack direction="column">
             <Stack sx={styles.segment.title}>
-              <Typography sx={styles.segment.title.text}>Informasi BUM Desa</Typography>
+              <Typography sx={styles.segment.title.text}>Akun BUM Desa</Typography>
             </Stack>
-            <Stack minHeight={461}>
-              {isEdit ? (
-                <ProfileInfoForm setIsEdit={() => setIsEdit(!isEdit)} />
-              ) : (
-                <ProfileInfo isEdit={isEdit} setIsEdit={() => setIsEdit(!isEdit)} />
-              )}
+            <Stack sx={styles.segment.content}>
+              <AccountInfo />
             </Stack>
           </Stack>
         </Card>

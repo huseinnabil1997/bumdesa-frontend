@@ -77,7 +77,7 @@ export default function AccountPopover() {
   };
 
   const handleSetting = async () => {
-    router.push('/profile/account')
+    router.push('/setting/account')
     handleClose();
   };
 

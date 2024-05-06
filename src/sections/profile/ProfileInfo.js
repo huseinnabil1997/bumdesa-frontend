@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
-import { Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Modal, Stack, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatISO } from "date-fns";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
@@ -29,11 +29,10 @@ const currentDate = formatISO(new Date(), { representation: "date" });
 
 const styles = {
   content: {
-    height: 483,
+    minHeight: 483,
     p: '24px'
   },
   textfield: {
-    width: '293px',
     '& .MuiInputBase-root': {
       height: '44px',
     },
@@ -45,7 +44,6 @@ const styles = {
     id: {
       backgroundColor: '#CCE8FF',
       borderRadius: '8px',
-      width: '293px',
       '& .MuiInputBase-root': {
         height: '44px',
       },
@@ -55,7 +53,7 @@ const styles = {
     }
   },
   action: {
-    height: 80,
+    minHeight: 80,
     p: '16px',
     borderTop: 'solid 1px #EAEBEB',
     justifyContent: 'center',
@@ -70,6 +68,8 @@ const styles = {
 }
 
 export default function ProfileInfo({ isEdit, setIsEdit }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
 
   const datePickerRef = useRef(null);
 
@@ -106,6 +106,16 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
     else setValue('kode_pos', '');
   }, [postalCode]);
 
+  const handleCloseModal = () => {
+    setModalImage(null);
+    setIsModalOpen(false);
+  };
+
+  const handleModalImage = (image) => {
+    setModalImage(image);
+    setIsModalOpen(true);
+  };
+
   const onSubmit = (data) => {
     console.log('onSubmit', data);
   };
@@ -119,7 +129,8 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
           </Typography>
           <Image
             alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.foto_kantor}`}
-            sx={{ zIndex: 8, width: 132, height: 132, borderRadius: '16px' }}
+            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.foto_kantor}`)}
+            sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
         <Grid item xs={3}>
@@ -128,7 +139,8 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
           </Typography>
           <Image
             alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.logo}`}
-            sx={{ zIndex: 8, width: 132, height: 132, borderRadius: '16px' }}
+            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.logo}`)}
+            sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
         <Grid item xs={3} />
@@ -255,6 +267,16 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
           Ubah
         </StyledLoadingButton>
       </Stack>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24 }}>
+          {modalImage && <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
+        </Box>
+      </Modal>
     </FormProvider>
   )
 }
