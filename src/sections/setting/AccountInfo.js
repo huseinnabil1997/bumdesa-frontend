@@ -66,9 +66,11 @@ export default function AccountInfo() {
   const [openEmail, setOpenEmail] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
 
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
   const defaultValues = {
     id: '1101032012101231231',
-    email: 'bumdessimatupang@gmail.com',
+    email: userData?.email ?? '',
     password: 'P@ssw0rd1234@',
   };
 

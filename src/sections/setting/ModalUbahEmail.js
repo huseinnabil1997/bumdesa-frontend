@@ -95,8 +95,10 @@ export default function ModalUbahEmail({ open, onClose }) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
   const defaultValues = {
-    email: 'bumdessimatupang@gmail.com',
+    email: userData?.email ?? '',
     new_email: '',
   };
 
