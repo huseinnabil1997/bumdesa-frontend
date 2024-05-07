@@ -81,7 +81,6 @@ export default function DashboardHeader({
   const generateTitle = () => {
     const value = router.pathname.split('/')[1];
     const value2 = router.pathname.split('/')[2];
-    console.log('route', value, value2)
     if (value === 'unit') {
       if (value2 === 'new') {
         return setTitle('Tambah Unit Usaha');
@@ -91,6 +90,7 @@ export default function DashboardHeader({
       }
       return setTitle('Unit Usaha BUM Desa');
     }
+    if (value === 'faqs') return setTitle('Frequently Asked Questions ');
     if (value2 === 'profit') return setTitle('Laporan Laba Rugi');
     if (value2 === 'balance') return setTitle('Laporan Posisi Keuangan');
     if (value2 === 'equity') return setTitle('Laporan Prubahan Ekuitas');
