@@ -4,9 +4,9 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL || '',
-  headers: {
-    Authorization: getSessionToken(),
-  },
+  // headers: {
+  //   Authorization: getSessionToken(),
+  // },
 });
 
 const checkAuth = (error) => {
