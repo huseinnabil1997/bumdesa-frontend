@@ -91,7 +91,7 @@ export default function FaqsList({ data }) {
               icon={
                 expandedIds.includes(index)
                   ? 'f7:chevron-up-square-fill'
-                  : 'f7:chevron-right-square-fill'
+                  : 'f7:chevron-down-square-fill'
               }
               sx={styles.iconStyle} />
           </Stack>

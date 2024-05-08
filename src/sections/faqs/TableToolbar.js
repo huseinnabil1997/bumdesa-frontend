@@ -13,7 +13,7 @@ UserTableToolbar.propTypes = {
 
 export default function UserTableToolbar({ filterName, onFilterName, handleInputChange }) {
   return (
-    <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5, px: 3 }}>
+    <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5 }}>
       <TextField
         fullWidth
         // helperText="Click enter to search"
