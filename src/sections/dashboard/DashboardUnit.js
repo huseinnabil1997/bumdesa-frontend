@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 // @mui
-import { Link, Card, Typography, Stack, Chip, IconButton, Box } from '@mui/material';
+import { Link, Card, Typography, Stack, Chip, IconButton, Box, Skeleton } from '@mui/material';
 //
 import Image from '../../components/Image';
 import Scrollbar from '../../components/Scrollbar';
@@ -35,10 +35,21 @@ export default function DashboardUnit() {
         </StyledButton>
       </Stack>
       <Scrollbar>
-        <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
-          <CreateItem />
-          {isFetched && data.map((row) => <ProductItem key={row.id} data={row} />)}
-        </Stack>
+        {isLoading && (
+          <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
+            <CreateItem />
+            {isFetched && data.map((row) => <ProductItem key={row.id} data={row} />)}
+          </Stack>
+        )}
+
+        {!isLoading && (
+          <Stack direction="row" spacing={3}>
+            <Skeleton height={250} width={250} />
+            <Skeleton height={250} width={250} />
+            <Skeleton height={250} width={250} />
+            <Skeleton height={250} width={250} />
+          </Stack>
+        )}
       </Scrollbar>
     </Stack>
   );

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 // @mui
 import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
 // hooks
@@ -16,10 +14,9 @@ import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { LedgerHeader, TableRow } from 'src/sections/ledger';
 import { DEFAULT_FILTER, LEDGER_HEAD } from 'src/utils/constant';
-import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
-import { StyledButton } from 'src/theme/custom/Button';
-import { Add } from '@mui/icons-material';
+import { useGetLedgers } from 'src/query/hooks/ledger/useGetLedgers';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -34,24 +31,24 @@ export default function JurnalList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  const [filter, setFilter] = useState(DEFAULT_FILTER);
-
-  const { data, isLoading } = useGetJurnals(filter);
-
   const methods = useForm({
     defaultValues: { unit: null, year: null },
   });
 
-  const { handleSubmit } = methods;
+  const { watch } = methods;
 
-  const onSubmit = async (data) => {
-    console.log(data);
-  };
+  const { data, isLoading } = useGetLedgers({
+    ...DEFAULT_FILTER,
+    account_code: watch('account')?.value ?? null,
+    date: moment(watch('year')).format('yyyy') ?? null,
+  });
+
+  console.log(data);
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider methods={methods}>
           <LedgerHeader />
         </FormProvider>
 
@@ -67,24 +64,15 @@ export default function JurnalList() {
 
                 <TableBody>
                   {!isLoading &&
-                    data.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
+                    data &&
+                    data?.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
 
                   {isLoading && <TableSkeleton />}
-                  {data?.length === 0 && (
-                    <TableNoData
-                      title="Jurnal belum tersedia."
-                      description="Silakan buat jurnal dengan klik tombol di bawah ini."
-                      action={
-                        <StyledButton
-                          sx={{ mt: 2, width: 200 }}
-                          variant="outlined"
-                          startIcon={<Add fontSize="small" />}
-                        >
-                          Buat Jurnal
-                        </StyledButton>
-                      }
-                    />
-                  )}
+                  <TableNoData
+                    isNotFound={!data}
+                    title="Buku Besar Belum Tersedia."
+                    description="Silakan pilih tipe akun dan tahun."
+                  />
                 </TableBody>
               </Table>
             </TableContainer>

@@ -81,7 +81,7 @@ export default function DashboardHeader({
   const generateTitle = () => {
     const value = router.pathname.split('/')[1];
     const value2 = router.pathname.split('/')[2];
-    console.log('route', value, value2)
+    if (value === 'ledger') return setTitle('Buku Besar');
     if (value === 'unit') {
       if (value2 === 'new') {
         return setTitle('Tambah Unit Usaha');
