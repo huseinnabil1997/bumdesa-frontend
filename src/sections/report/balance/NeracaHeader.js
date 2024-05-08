@@ -41,6 +41,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   const [selectedDate, setSelectedDate] = useState('');
 
   const handleMenuItemClick = async (type) => {
+    enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
     setSelectedType(type);
     const payload = {
       type: type === 'preview' ? 1 : type,
@@ -208,6 +209,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             startIcon={<Description />}
             variant="outlined"
             onClick={() => handleMenuItemClick('preview')}
+            disabled={downloading}
           >
             Pratinjau Dokumen
           </StyledButton>

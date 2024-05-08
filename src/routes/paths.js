@@ -49,7 +49,11 @@ export const PATH_DASHBOARD = {
       cashFlow: path(ROOTS_APP, 'report/cashflow/list'),
     },
     unit: path(ROOTS_APP, 'unit/list'),
-    profile: path(ROOTS_APP, 'profile'),
+    profile: {
+      root: path(ROOTS_APP, 'profile'),
+      detail: path(ROOTS_APP, 'profile/detail/detail'),
+      administrator: path(ROOTS_APP, 'profile/administrator/detail'),
+    },
   },
   other: {
     evaluation: path(ROOTS_OTHER, 'evaluation'),

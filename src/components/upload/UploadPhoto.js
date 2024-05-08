@@ -67,14 +67,16 @@ const PlaceholderStyle = styled('div')(({ theme }) => ({
 
 UploadPhoto.propTypes = {
   error: PropTypes.bool,
+  name: PropTypes.string,
   file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   helperText: PropTypes.node,
   sx: PropTypes.object,
   label: PropTypes.string,
   imageFrom: PropTypes.string,
+  errorPosition: PropTypes.string
 };
 
-export default function UploadPhoto({ label, error, file, helperText, sx, imageFrom, ...other }) {
+export default function UploadPhoto({ name, label, error, file, helperText, sx, imageFrom, errorPosition, ...other }) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     ...other,
@@ -103,7 +105,7 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
   };
 
   const handleDeletePhoto = () => {
-    setValue('image', null);
+    setValue(`${name}`, null);
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
     }
@@ -143,6 +145,8 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
               <Image alt="image" src={isString(file) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}` : file.preview} sx={{ zIndex: 8 }} />
             )}
 
+            {console.log('file', file)}
+
             <PlaceholderStyle
               className="placeholder"
               sx={{
@@ -162,7 +166,7 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
           </DropZoneStyle>
         </RootStyle>
 
-        <Stack sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center'}}>
+        <Stack sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
           <Box mr={2}>
             <StyledLoadingButton
               variant="contained"
@@ -182,9 +186,10 @@ export default function UploadPhoto({ label, error, file, helperText, sx, imageF
             </StyledLoadingButton>
             {helperText && helperText}
           </Box>
-          {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
+          {fileRejections.length > 0 && errorPosition === 'right' && <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />}
         </Stack>
       </Container>
+      {fileRejections.length > 0 && errorPosition === 'bottom' && <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />}
       <Modal
         open={isModalOpen}
         onClose={handleCloseModal}

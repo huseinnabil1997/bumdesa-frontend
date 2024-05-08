@@ -147,8 +147,8 @@ export default function UserTableRow({ row, selected }) {
         <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {title}
         </TableCell>
-        {<TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>
-          {saldo !== 0 && formatCurrency(saldo)}
+        {<TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
+          {level === '1' && !child ? 'Rp. -' : null}
         </TableCell>}
       </TableRow>
       {row?.child && row?.child.map((nestedRow, i) => (

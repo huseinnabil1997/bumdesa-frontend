@@ -61,14 +61,18 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const res = await login(data.email, data.password);
-      if (res?.data?.full_register === 0) {
-        await localStorage.setItem('@token', res?.metadata?.token ?? '');
-        window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
-      } else {
-        setSession(res?.metadata?.token ?? '');
-        enqueueSnackbar(res.message, { variant: 'success' });
-        // window.location.href = PATH_DASHBOARD.root;
-        router.replace(PATH_DASHBOARD.root)
+      if (res?.data) {
+        // Menyimpan data ke localStorage
+        localStorage.setItem('userData', JSON.stringify(res.data));
+        
+        if (res?.data?.full_register === 0) {
+          await localStorage.setItem('@token', res?.metadata?.token ?? '');
+          window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
+        } else {
+          await setSession(res?.metadata?.token ?? '');
+          enqueueSnackbar(res.message, { variant: 'success' });
+          router.push(PATH_DASHBOARD.root);
+        }
       }
     } catch (error) {
       if (error.code === 412) {

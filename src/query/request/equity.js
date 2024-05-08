@@ -1,7 +1,7 @@
 import axiosInstance from 'src/utils/axiosReportService';
 
 export function getEquities(params) {
-  return axiosInstance.get(`report/ekuitas?unit=${params.unit}&date=${params.date}`);
+  return axiosInstance.get(`report/lpe?unit=${params.unit}&date=${params.date}`);
 }
 
 export function getBusinessUnits() {
@@ -9,5 +9,5 @@ export function getBusinessUnits() {
 }
 
 export function getDownloadEquities(params) {
-  return axiosInstance.get(`/report/generate/ekuitas?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
+  return axiosInstance.get(`/report/generate/lpe?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
 }
