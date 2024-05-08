@@ -4,6 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Chip, Tooltip, tooltipClasses, IconButton } from '@mui/material';
 // components
 import Iconify from '../../../components/Iconify';
+import { Info } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -39,13 +40,14 @@ export default function UserTableRowUnit({
   index,
   selected,
   onEditRow,
+  onViewRow,
   onResendRow,
   onDeleteRow,
   disableDelete = false,
 }) {
   const theme = useTheme();
   const { name, email, year_founded, status, is_resend } = row;
-  
+
   return (
     <TableRow
       hover
@@ -69,6 +71,9 @@ export default function UserTableRowUnit({
       </TableCell>
 
       <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
+        <IconButton onClick={onViewRow}>
+          <Info sx={{ color: theme.palette.primary.main, fontSize: 18 }} />
+        </IconButton>
         {is_resend && (
           <DeleteTooltip title="Re-send email">
             <IconButton onClick={onResendRow}>

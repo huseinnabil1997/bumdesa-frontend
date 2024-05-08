@@ -227,7 +227,7 @@ export default function EditUnitUsaha() {
         <Card
           elevation={3}
           sx={{
-            maxWidth: '960px',
+            // maxWidth: '960px',
             maxHeight: 'auto',
             minHeight: '556px',
             // p: '24px',

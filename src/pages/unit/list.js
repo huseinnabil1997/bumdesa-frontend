@@ -130,9 +130,6 @@ export default function UserList() {
     }
   };
 
-  const handleViewRow = () => {
-  };
-
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
       refetch();
@@ -190,7 +187,7 @@ export default function UserList() {
                       disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => handleViewRow(row)}
+                      onViewRow={() => router.push(`detail?id=${row.id}`)}
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
