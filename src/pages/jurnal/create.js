@@ -228,7 +228,7 @@ export default function JurnalCreate() {
                         label={i === 0 ? 'Kredit' : ''}
                         require
                         name={`accounts.${i}.credit`}
-                        onKeyUp={generateTotalDebt}
+                        onKeyUp={generateTotalCred}
                         type="number"
                         disabled={+watch(`accounts.${i}.debit`) > 0}
                       />
