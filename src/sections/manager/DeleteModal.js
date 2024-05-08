@@ -22,6 +22,7 @@ const subtitleStyle = {
   color: '#666666',
   fontWeight: 500,
   fontSize: '16px',
+  textAlign: 'center'
 }
 
 const buttonStyle = {
