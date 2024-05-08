@@ -130,9 +130,6 @@ export default function UserList() {
     }
   };
 
-  const handleViewRow = () => {
-  };
-
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
       refetch();

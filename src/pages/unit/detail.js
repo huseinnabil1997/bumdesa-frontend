@@ -9,16 +9,12 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from 'src/components/hook-form';
-import { handleDrop } from 'src/utils/helperFunction';
-import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
-import InfoIcon from '@mui/icons-material/Info';
+import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
-import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import Image from "src/components/Image";
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import useDelete from 'src/query/hooks/mutation/useDelete';
@@ -62,8 +58,7 @@ export default function DetailUnitUsaha() {
 
   const router = useRouter();
 
-  const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
-  const { data, isLoading } = useGetUnitById(router.query.id);
+  const { data } = useGetUnitById(router.query.id);
 
   const mutation = usePatch();
 
@@ -105,7 +100,6 @@ export default function DetailUnitUsaha() {
   });
 
   const {
-    setValue,
     handleSubmit,
     isSubmitting,
     // reset,
