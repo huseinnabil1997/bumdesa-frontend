@@ -1,22 +1,19 @@
-import { Add, ArrowDropDown, Download } from '@mui/icons-material';
+import { ArrowDropDown, Download } from '@mui/icons-material';
 import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList } from '@mui/material';
-import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
+import { RHFAutocomplete } from 'src/components/hook-form';
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
+import { useGetAccount } from 'src/query/hooks/options/useGetAccount';
 import { StyledButton } from 'src/theme/custom/Button';
 
 const options = ['Create a merge commit', 'Squash and merge', 'Rebase and merge'];
 
 export default function LedgerHeader() {
-  const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
-  const handleClick = () => {
-    router.push('/jurnal/create');
-  };
+  const { data } = useGetAccount();
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -41,18 +38,34 @@ export default function LedgerHeader() {
         <RHFAutocomplete
           sx={{ width: 200 }}
           size="small"
-          name="sector"
-          placeholder="Sektor Usaha"
+          name="account"
+          placeholder="Nama Akun"
           loading={false}
-          options={[].map((option) => option) ?? []}
-          getOptionLabel={(option) => option.text}
+          options={data?.map((option) => option) ?? []}
           renderOption={(props, option) => (
             <li {...props} key={option.value}>
-              {option.text}
+              {option.label}
             </li>
           )}
         />
-        <RHFTextField size="small" sx={{ width: 200 }} name="date" type="month" />
+        <RHFDatePicker
+          name="year"
+          placeholder="Pilih Tahun"
+          format="yyyy"
+          views={['year']}
+          openTo="year"
+          sx={{
+            width: '200px',
+            '& .MuiInputBase-root': {
+              height: '40px',
+              borderRadius: '8px',
+            },
+            '& .MuiInputBase-input': {
+              height: '11px',
+            },
+          }}
+          require
+        />
       </Stack>
       <Stack direction="row" spacing={1}>
         <StyledButton
