@@ -71,9 +71,10 @@ const styles = {
 ModalUbahEmail.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
+  email: PropTypes.string,
 };
 
-export default function ModalUbahEmail({ open, onClose }) {
+export default function ModalUbahEmail({ open, onClose, email }) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [otp, setOtp] = useState('');
   const [timeLeft, setTimeLeft] = useState(1);
@@ -95,10 +96,8 @@ export default function ModalUbahEmail({ open, onClose }) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
-
   const defaultValues = {
-    email: userData?.email ?? '',
+    email: email ?? '',
     new_email: '',
   };
 
@@ -117,7 +116,6 @@ export default function ModalUbahEmail({ open, onClose }) {
   const new_email = watch('new_email');
 
   const handleResend = () => {
-    console.log('resend')
     setIsClicked(true);
     setTimeLeft(60);
     setTimeout(() => {
