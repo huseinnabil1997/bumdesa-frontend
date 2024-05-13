@@ -93,6 +93,8 @@ export default function DashboardHeader({
     }
     if (value === 'faqs') return setTitle('Frequently Asked Questions');
     if (value === 'manager') return setTitle('Pengurus BUM Desa');
+    if (value === 'profile') return setTitle('Profil');
+    if (value === 'setting') return setTitle('Pengaturan Akun');
     if (value2 === 'profit') return setTitle('Laporan Laba Rugi');
     if (value2 === 'balance') return setTitle('Laporan Posisi Keuangan');
     if (value2 === 'equity') return setTitle('Laporan Prubahan Ekuitas');

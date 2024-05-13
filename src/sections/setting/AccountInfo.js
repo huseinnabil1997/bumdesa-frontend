@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
-import { Grid} from "@mui/material";
+import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { useState } from "react";
 import ModalUbahEmail from "./ModalUbahEmail";
 import ModalChangePassword from "./ModalChangePassword";
+import { useGetUserMe } from "src/query/hooks/auth/useGetUserMe";
 
 const AccountInfoSchema = Yup.object().shape({
   id: Yup.string().required('ID BUM Desa wajib diisi'),
@@ -66,11 +67,11 @@ export default function AccountInfo() {
   const [openEmail, setOpenEmail] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const { data, refetch } = useGetUserMe();
 
   const defaultValues = {
-    id: '1101032012101231231',
-    email: userData?.email ?? '',
+    id: data?.bumdesa_id ?? '',
+    email: data?.email ?? '',
     password: 'P@ssw0rd1234@',
   };
 
@@ -92,6 +93,7 @@ export default function AccountInfo() {
               readOnly: true
             }}
             sx={styles.textfield.id}
+            value={defaultValues?.id}
             require
           />
         </Grid>
@@ -104,6 +106,7 @@ export default function AccountInfo() {
             }}
             sx={styles.textfield}
             variant="standard"
+            value={defaultValues?.email}
           />
           <StyledLoadingButton
             onClick={() => setOpenEmail(true)}
@@ -131,8 +134,21 @@ export default function AccountInfo() {
           </StyledLoadingButton>
         </Grid>
       </Grid>
-      <ModalUbahEmail open={openEmail} onClose={() => setOpenEmail(false)} />
-      <ModalChangePassword open={openPassword} onClose={() => setOpenPassword(false)} />
+      <ModalUbahEmail
+        open={openEmail}
+        onClose={() => {
+          setOpenEmail(false);
+          refetch();
+        }} 
+        email={data?.email}
+      />
+      <ModalChangePassword
+        open={openPassword}
+        onClose={() => {
+          setOpenPassword(false);
+          refetch();
+        }}
+      />
     </FormProvider>
   )
 }
