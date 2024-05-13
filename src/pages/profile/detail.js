@@ -5,6 +5,7 @@ import Page from '../../components/Page';
 import { ProfileInfo, ProfileInfoForm } from 'src/sections/profile';
 import { useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,10 @@ export default function DetailProfil() {
   const [isEdit, setIsEdit] = useState(false)
 
   const { themeStretch } = useSettings();
+
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
+  const { data, refetch } = useGetProfile(userData?.bumdesa_id)
 
   return (
     <Page title="Profil: Detail">
@@ -104,9 +109,15 @@ export default function DetailProfil() {
             </Stack>
             <Stack minHeight={461}>
               {isEdit ? (
-                <ProfileInfoForm setIsEdit={() => setIsEdit(!isEdit)} />
+                <ProfileInfoForm
+                  data={data}
+                  setIsEdit={() => {
+                    setIsEdit(!isEdit);
+                    refetch();
+                  }}
+                />
               ) : (
-                <ProfileInfo isEdit={isEdit} setIsEdit={() => setIsEdit(!isEdit)} />
+                <ProfileInfo data={data} isEdit={isEdit} setIsEdit={() => setIsEdit(!isEdit)} />
               )}
             </Stack>
           </Stack>

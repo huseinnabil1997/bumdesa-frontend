@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import PropTypes from 'prop-types';
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from "src/components/hook-form";
@@ -14,6 +14,9 @@ import { useGetDistricts } from "src/query/hooks/options/useGetDistricts";
 import { useGetSubdistricts } from "src/query/hooks/options/useGetSubdistricts";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import { isEqual } from "lodash";
+import { useUpdateProfile } from "src/query/hooks/profile/useUpdateProfile";
+import { useSnackbar } from "notistack";
+import Iconify from "src/components/Iconify";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -67,26 +70,49 @@ const styles = {
       borderRadius: '8px',
       borderColor: '#1078CA'
     }
+  },
+  snackbar: {
+    width: '344px',
+    height: '42px',
+    backgroundColor: '#E1F8EB',
+    gap: '8px',
+    padding: '12px',
+    borderRadius: '4px'
+  },
+  snackbarIcon: {
+    width: '16px',
+    height: '16px',
+    color: '#27AE60'
   }
 }
 
-export default function ProfileInfoForm({ setIsEdit }) {
+export default function ProfileInfoForm({ data, setIsEdit }) {
 
   const datePickerRef = useRef(null);
 
+  console.log('data:', data);
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
+  const { mutate: onUpdate, isLoading: updating } = useUpdateProfile();
+
   const defaultValues = {
-    foto_kantor: '1772525273_contoh_gambar_unit_usaha.png' ?? null,
-    logo: '1772525273_contoh_gambar_unit_usaha.png' ?? null,
-    nama: 'BUM DESA DASTIO AMBORGANG',
-    id: '1101032012101231231',
-    tanggal_berdiri: currentDate,
-    alamat: 'Jl. Tanah Lapang Dusun I Desa Amborgang Kecamatan Porsea Kabupaten Toba.',
-    provinsi: { value: 12, label: "SUMATERA UTARA" },
-    kota: { value: 1212, label: "TOBA SAMOSIR" },
-    desa: { value: 1212072004, label: "AMBORGANG" },
-    kecamatan: { value: 121207, label: "PORSEA" },
-    kode_pos: '22384',
+    foto_kantor: data?.photo ?? null,
+    logo: data?.photo_logo ?? null,
+    nama: data?.name ?? '',
+    id: data?.bumdesa_id ?? '',
+    tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
+    alamat: data?.address ?? '',
+    provinsi: data?.province ?? null,
+    kota: data?.city ?? null,
+    desa: data?.subdistrict ?? null,
+    kecamatan: data?.district ?? null,
+    kode_pos: data?.postal_code?.label ?? '',
   };
+
+  console.log('defaultValues:', defaultValues);
 
   const methods = useForm({
     resolver: yupResolver(ProfileInfoFormSchema),
@@ -119,6 +145,8 @@ export default function ProfileInfoForm({ setIsEdit }) {
     desa: watch('desa'),
     kode_pos: watch('kode_pos')
   };
+
+  console.log('currentValues:', currentValues);
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
@@ -153,7 +181,46 @@ export default function ProfileInfoForm({ setIsEdit }) {
   }
 
   const onSubmit = (data) => {
-    console.log('onSubmit', data);
+    const formData = new FormData();
+    formData.append('name', data?.nama);
+    formData.append('address', data?.alamat);
+    formData.append('province', data?.provinsi);
+    formData.append('city', data?.kota);
+    formData.append('district', data?.kecamatan);
+    formData.append('subdistrict', data?.desa);
+    formData.append('postal_code', data?.kode_pos);
+    formData.append('founded_at', data?.tanggal_berdiri);
+    formData.append('logo', data?.logo);
+    formData.append('photo', data?.foto_kantor);
+    formData.append('area_code', data?.desa?.value);
+    onUpdate(
+      {
+        id: userData?.bumdesa_id,
+        payload: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+      {
+        onSuccess: () => {
+          enqueueSnackbar('', {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={styles.snackbar}
+              >
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
+                <Typography fontSize="12px">Informasi Baru BUM Desa sudah diperbarui!</Typography>
+              </Box>
+            )
+          });
+          setIsEdit();
+        },
+        onError: (err) => {
+          enqueueSnackbar(err.message, { variant: 'error' });
+        },
+      }
+    );
   };
 
   return (
@@ -165,7 +232,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
             label="Foto Kantor BUM Desa"
             accept="image/*"
             maxSize={10000000}
-            imageFrom={'unit'}
+            imageFrom={'bumdesa'}
             onDrop={(file) => handleDrop(file, (val) => {
               setValue(`foto_kantor`, val);
             })}
@@ -192,7 +259,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
             label="Logo BUM Desa"
             accept="image/*"
             maxSize={10000000}
-            imageFrom={'unit'}
+            imageFrom={'bumdesa'}
             onDrop={(file) => handleDrop(file, (val) => setValue(`logo`, val))}
             errorTextAlign="left"
             errorPosition="bottom"
@@ -345,7 +412,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
           </StyledLoadingButton>
           <StyledLoadingButton
             loading={isSubmitting}
-            disabled={areValuesEqual()}
+            disabled={areValuesEqual() || updating}
             onClick={handleSubmit(onSubmit)}
             sx={styles.action.button}
             variant='contained'
@@ -359,5 +426,7 @@ export default function ProfileInfoForm({ setIsEdit }) {
 }
 
 ProfileInfoForm.propTypes = {
+  data: PropTypes.object,
   setIsEdit: PropTypes.func,
 };
+
