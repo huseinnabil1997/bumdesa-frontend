@@ -16,11 +16,11 @@ export default function UserTableToolbar({ filterName, onFilterName, handleInput
     <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5 }}>
       <TextField
         fullWidth
-        // helperText="Click enter to search"
+        helperText="Klik enter untuk mencari"
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
         onKeyDown={(event) => handleInputChange(event)}
-        placeholder="Search vendor..."
+        placeholder="Cari Pertanyaan"
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
