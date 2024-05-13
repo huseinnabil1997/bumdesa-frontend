@@ -122,7 +122,7 @@ export default function ModalChangePassword({ open, onClose }) {
       PaperProps={{
         sx: {
           width: 480,
-          height: watch('password')?.length > 0 ? 'auto' : 450,
+          minheight: 450,
           borderRadius: '8pxpx',
           display: 'flex',
         },
