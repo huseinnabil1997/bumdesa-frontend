@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
-import axios from '../utils/axiosUnregistered';
+import axios, { getSessionToken } from '../utils/axiosUnregistered';
 import { isValidToken, setSession } from '../utils/jwt';
 import axiosInstance from 'src/utils/axios';
 
@@ -164,9 +164,16 @@ function AuthProvider({ children }) {
   };
 
   const createPassword = async (payload, token) => {
-    const response = await axios.post('/change-password', payload, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const isRegis = !!getSessionToken();
+    const service = isRegis ? axios : axiosInstance;
+    let response;
+    if (isRegis) {
+      response = await service.post('/change-password', payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } else {
+      response = await service.post('/change-password', payload);
+    }
 
     return response.data;
   };
