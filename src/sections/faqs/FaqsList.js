@@ -37,7 +37,6 @@ const styles = {
     flexDirection: 'row',
     width: '100%',
     display: 'flex',
-    alignItems: 'center',
     flexGrow: 1,
     justifyContent: 'space-between'
   },
