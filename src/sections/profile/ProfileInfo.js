@@ -67,24 +67,24 @@ const styles = {
   }
 }
 
-export default function ProfileInfo({ isEdit, setIsEdit }) {
+export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
   const datePickerRef = useRef(null);
 
   const defaultValues = {
-    foto_kantor: '1772525273_contoh_gambar_unit_usaha.png' ?? null,
-    logo: '3742560361_Frame2608718.png' ?? null,
-    nama: 'BUM DESA DASTIO AMBORGANG',
-    id: '1101032012101231231',
-    tanggal_berdiri: currentDate,
-    alamat: 'Jl. Tanah Lapang Dusun I Desa Amborgang Kecamatan Porsea Kabupaten Toba.',
-    provinsi: { value: 12, label: "SUMATERA UTARA" },
-    kota: { value: 1212, label: "TOBA SAMOSIR" },
-    desa: { value: 1212072004, label: "AMBORGANG" },
-    kecamatan: { value: 121207, label: "PORSEA" },
-    kode_pos: '22384',
+    foto_kantor: data?.photo ?? null,
+    logo: data?.photo_logo ?? null,
+    nama: data?.name ?? '',
+    id: data?.bumdesa_id ?? '',
+    tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
+    alamat: data?.address ?? '',
+    provinsi: data?.province ?? null,
+    kota: data?.city ?? null,
+    desa: data?.subdistrict ?? null,
+    kecamatan: data?.district ?? null,
+    kode_pos: data?.postal_code ?? '',
   };
 
   const methods = useForm({
@@ -128,8 +128,8 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             Foto Kantor BUM Desa
           </Typography>
           <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.foto_kantor}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.foto_kantor}`)}
+            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`}
+            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
@@ -138,8 +138,8 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             Logo BUM Desa
           </Typography>
           <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.logo}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.logo}`)}
+            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`}
+            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`)}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
@@ -154,6 +154,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             }}
             sx={styles.textfield}
             variant="standard"
+            value={defaultValues?.nama}
           />
         </Grid>
         <Grid item xs={4}>
@@ -165,6 +166,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
               readOnly: true
             }}
             sx={styles.textfield.id}
+            value={defaultValues?.id}
           />
         </Grid>
         <Grid item xs={4}>
@@ -183,6 +185,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
               max: currentDate,
               readOnly: true
             }}
+            value={defaultValues?.tanggal_berdiri}
           />
         </Grid>
         <Grid item xs={4}>
@@ -194,6 +197,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             inputProps={{
               readOnly: true
             }}
+            value={defaultValues?.alamat}
           />
         </Grid>
         <Grid item xs={4}>
@@ -205,7 +209,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues.provinsi.label}
+            value={defaultValues?.provinsi?.label}
           />
         </Grid>
         <Grid item xs={4}>
@@ -217,7 +221,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues.kota.label}
+            value={defaultValues?.kota?.label}
           />
         </Grid>
         <Grid item xs={4}>
@@ -229,7 +233,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues.kecamatan.label}
+            value={defaultValues?.kecamatan?.label}
           />
         </Grid>
         <Grid item xs={4}>
@@ -241,7 +245,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues.desa.label}
+            value={defaultValues?.desa?.label}
           />
         </Grid>
         <Grid item xs={4}>
@@ -254,6 +258,7 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
               readOnly: true
             }}
             placeholder="Masukan Kode Pos"
+            value={defaultValues?.kode_pos.label}
           />
         </Grid>
       </Grid>
@@ -284,4 +289,6 @@ export default function ProfileInfo({ isEdit, setIsEdit }) {
 ProfileInfo.propTypes = {
   isEdit: PropTypes.bool,
   setIsEdit: PropTypes.func,
+  data: PropTypes.object,
 };
+
