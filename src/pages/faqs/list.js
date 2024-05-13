@@ -5,6 +5,7 @@ import Page from '../../components/Page';
 import { FaqsList, FaqsTableToolbar } from 'src/sections/faqs';
 import { useState } from 'react';
 import { useGetFaqs } from 'src/query/hooks/faqs/useGetFaqs';
+import { TableNoData } from 'src/components/table';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,14 @@ export default function FAQs() {
             handleInputChange={handleInputChange}
           />
         </Box>
+        <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <TableNoData
+            isNotFound={data?.length === 0}
+            title="FAQs belum tersedia."
+            description="Cari FAQs dengan kata kunci lain"
+          />
+        </Box>
+
         <FaqsList data={data} />
       </Container>
     </Page >
