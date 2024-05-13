@@ -10,6 +10,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
+import useAuth from 'src/hooks/useAuth';
+import { getSessionToken } from 'src/utils/axios';
 
 const ChangePassSchema = Yup.object().shape({
   old_password: Yup.string().required('Kata sandi lama wajib diisi'),
@@ -50,6 +52,12 @@ export default function ModalChangePassword({ open, onClose }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const token = getSessionToken();
+
+  console.log('token:', token)
+
+  const { createPassword } = useAuth();
+
   const defaultValues = {
     old_password: '',
     password: '',
@@ -67,34 +75,38 @@ export default function ModalChangePassword({ open, onClose }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('onSubmit', data)
-    onClose();
-    methods.reset();
-    enqueueSnackbar('', {
-      variant: 'success',
-      content: () => (
-        <Box
-          display="flex"
-          sx={{
-            width: '344px',
-            height: '42px',
-            backgroundColor: '#E1F8EB',
-            padding: '12px',
-            borderRadius: '4px',
-            border: '1px solid #27AE60'
-          }}
-        >
-          <Iconify icon={'eva:checkmark-circle-2-fill'} color="#27AE60" mr={1} />
-          <Typography
-            fontWeight={500}
-            color="#525252"
-            fontSize="12px"
+    try {
+      await createPassword(data, token);
+      onClose();
+      methods.reset();
+      enqueueSnackbar('', {
+        variant: 'success',
+        content: () => (
+          <Box
+            display="flex"
+            sx={{
+              width: '344px',
+              height: '42px',
+              backgroundColor: '#E1F8EB',
+              padding: '12px',
+              borderRadius: '4px',
+              border: '1px solid #27AE60'
+            }}
           >
-            Password Baru BUM Desa sudah diperbarui!
-          </Typography>
-        </Box>
-      )
-    })
+            <Iconify icon={'eva:checkmark-circle-2-fill'} color="#27AE60" mr={1} />
+            <Typography
+              fontWeight={500}
+              color="#525252"
+              fontSize="12px"
+            >
+              Password Baru BUM Desa sudah diperbarui!
+            </Typography>
+          </Box>
+        )
+      })
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+    }
   };
 
   return (
@@ -110,7 +122,7 @@ export default function ModalChangePassword({ open, onClose }) {
       PaperProps={{
         sx: {
           width: 480,
-          height: 544,
+          height: watch('password')?.length > 0 ? 544 : 444,
           borderRadius: '8pxpx',
           display: 'flex',
         },

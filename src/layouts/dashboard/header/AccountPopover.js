@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, MenuItem, Typography } from '@mui/material';
+import { MenuItem, Typography } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../../routes/paths';
 // hooks
@@ -123,25 +123,24 @@ export default function AccountPopover() {
         onClose={handleClose}
         sx={{
           width: '271px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: '20px'
         }}
       >
-        <MenuItem onClick={handleProfile} sx={{ my: 1 }}>
-          <Box sx={styles.box}>
-            <Person sx={styles.icon} />
-            <Typography sx={styles.text}>Profil</Typography>
-          </Box>
+        <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
+          <Person sx={styles.icon} />
+          <Typography sx={styles.text}>Profil</Typography>
         </MenuItem>
-        <MenuItem onClick={handleSetting} sx={{ my: 1 }}>
-          <Box sx={styles.box}>
-            <Settings sx={styles.icon} />
-            <Typography sx={styles.text}>Pengaturan Akun</Typography>
-          </Box>
+        <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
+          <Settings sx={styles.icon} />
+          <Typography sx={styles.text}>Pengaturan Akun</Typography>
         </MenuItem>
-        <MenuItem onClick={handleLogout} sx={{ my: 1 }}>
-          <Box sx={styles.box}>
-            <Logout sx={styles.icon} />
-            <Typography sx={styles.text}>Log Out</Typography>
-          </Box>
+        <MenuItem onClick={handleLogout} sx={{ my: 1, ...styles.box }}>
+          <Logout sx={styles.icon} />
+          <Typography sx={styles.text}>Log Out</Typography>
         </MenuItem>
       </MenuPopover>
     </>
