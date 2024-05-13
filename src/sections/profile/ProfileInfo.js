@@ -71,8 +71,6 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
-  console.log('data:', data);
-
   const datePickerRef = useRef(null);
 
   const defaultValues = {

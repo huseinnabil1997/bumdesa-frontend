@@ -90,8 +90,6 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
 
   const datePickerRef = useRef(null);
 
-  console.log('data:', data);
-
   const { enqueueSnackbar } = useSnackbar();
 
   const userData = JSON.parse(localStorage.getItem('userData'));
@@ -111,8 +109,6 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     kecamatan: data?.district ?? null,
     kode_pos: data?.postal_code?.label ?? '',
   };
-
-  console.log('defaultValues:', defaultValues);
 
   const methods = useForm({
     resolver: yupResolver(ProfileInfoFormSchema),
@@ -145,8 +141,6 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     desa: watch('desa'),
     kode_pos: watch('kode_pos')
   };
-
-  console.log('currentValues:', currentValues);
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
