@@ -4,7 +4,7 @@ import Layout from '../../layouts';
 import Page from '../../components/Page';
 import { FaqsList, FaqsTableToolbar } from 'src/sections/faqs';
 import { useState } from 'react';
-import { data } from './data';
+import { useGetFaqs } from 'src/query/hooks/faqs/useGetFaqs';
 
 // ----------------------------------------------------------------------
 
@@ -19,9 +19,11 @@ export default function FAQs() {
 
   const { themeStretch } = useSettings();
 
+  const { data, refetch } = useGetFaqs({ search: filterName });
+
   const handleInputChange = (event) => {
     if (event.key === 'Enter') {
-      // refetch();
+      refetch();
     }
   };
 

@@ -70,7 +70,7 @@ export default function FaqsList({ data }) {
 
   return (
     <Masonry columns={2} spacing={2}>
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <Box
           key={index}
           sx={{
@@ -97,7 +97,7 @@ export default function FaqsList({ data }) {
           {expandedIds.includes(index) &&
             <Collapse in={expandedIds.includes(index)} timeout="auto" unmountOnExit>
               <Typography sx={styles.answerTypographyStyle}>
-                {item?.answer?.map(ans => {
+                {item?.Answer?.map(ans => {
                   if (ans.type === "text") {
                     return (
                       <Typography
