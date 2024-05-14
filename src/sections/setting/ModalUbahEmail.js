@@ -11,6 +11,8 @@ import { Check, Close } from '@mui/icons-material';
 import OTPInput from 'react-otp-input';
 import Iconify from 'src/components/Iconify';
 import { useSnackbar } from 'notistack';
+import { useSendOtp } from 'src/query/hooks/setting/useSendOtp';
+import { useChangeUserEmail } from 'src/query/hooks/setting/useChangeUserEmail';
 
 const AccountInfoSchema = Yup.object().shape({
   email: Yup.string()
@@ -116,54 +118,79 @@ export default function ModalUbahEmail({ open, onClose, email }) {
 
   const new_email = watch('new_email');
 
+  const { mutate: onSend, isLoading: sending } = useSendOtp({});
+
   const handleResend = () => {
-    setIsClicked(true);
-    setTimeLeft(60);
-    setTimeout(() => {
-      setIsClicked(false);
-    }, 200);
+    const payload = {
+      email: new_email,
+    };
+    onSend(payload, {
+      onSuccess: () => {
+        setIsClicked(true);
+        setTimeLeft(60);
+        setTimeout(() => {
+          setIsClicked(false);
+        }, 200);
+        setIsSuccess(true);
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+      },
+    });
+
   };
 
   useEffect(() => {
     setValue('email', email);
   }, [defaultValues]);
 
-  const onSubmit = (data) => {
-    console.log('onSubmit', data);
-    if (otp) {
-      onClose();
-      methods.reset();
-      setOtp('');
-      setIsSuccess(false);
-      enqueueSnackbar('', {
-        variant: 'success',
-        content: () => (
-          <Box
-            display="flex"
-            sx={{
-              width: '344px',
-              height: '42px',
-              backgroundColor: '#E1F8EB',
-              padding: '12px',
-              borderRadius: '4px',
-              border: '1px solid #27AE60'
-            }}
-          >
-            <Iconify icon={'eva:checkmark-circle-2-fill'} color="#27AE60" mr={1} />
-            <Typography
-              fontWeight={500}
-              color="#525252"
-              fontSize="12px"
-            >
-              Alamat Email Baru BUM Desa sudah diperbarui!
-            </Typography>
-          </Box>
-        )
-      })
-    } else {
-      setTimeLeft(60);
-      setIsSuccess(true);
-    }
+  const { mutate: onChange, isLoading: updating } = useChangeUserEmail();
+
+  const onSubmit = () => {
+    const payload = {
+      old_email: email,
+      new_email: new_email,
+      otp: otp,
+    };
+    onChange(
+      { payload },
+      {
+        onSuccess: () => {
+          onClose();
+          methods.reset();
+          setOtp('');
+          setIsSuccess(false);
+          enqueueSnackbar('', {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                sx={{
+                  width: '344px',
+                  height: '42px',
+                  backgroundColor: '#E1F8EB',
+                  padding: '12px',
+                  borderRadius: '4px',
+                  border: '1px solid #27AE60'
+                }}
+              >
+                <Iconify icon={'eva:checkmark-circle-2-fill'} color="#27AE60" mr={1} />
+                <Typography
+                  fontWeight={500}
+                  color="#525252"
+                  fontSize="12px"
+                >
+                  Alamat Email Baru BUM Desa sudah diperbarui!
+                </Typography>
+              </Box>
+            )
+          })
+        },
+        onError: (err) => {
+          enqueueSnackbar(err.message, { variant: 'error' });
+        },
+      }
+    );
   }
 
   return (
@@ -257,7 +284,8 @@ export default function ModalUbahEmail({ open, onClose, email }) {
                   width: '60px',
                   borderRadius: '6px',
                   border: '2px solid #ccc',
-
+                  fontSize: '26px',
+                  fontWeight: 600,
                 }}
               />
               <Typography color="#F87304" fontSize="16px" fontWeight={700}>{formatTime()}</Typography>
@@ -271,6 +299,7 @@ export default function ModalUbahEmail({ open, onClose, email }) {
                     textDecoration: 'underline',
                     opacity: isClicked ? 0.7 : 1,
                     transition: 'opacity 0.2s',
+                    cursor: 'pointer',
                   }}
                   onClick={timeLeft === 0 ? handleResend : null}
                 >
@@ -284,8 +313,8 @@ export default function ModalUbahEmail({ open, onClose, email }) {
           <StyledLoadingButton
             variant="contained"
             sx={styles.button}
-            disabled={isSuccess ? otp?.length !== 6 : !formState.isValid}
-            onClick={handleSubmit(onSubmit)}
+            disabled={isSuccess ? otp?.length !== 6 || updating : !formState.isValid || sending}
+            onClick={isSuccess ? handleSubmit(onSubmit) : handleResend}
           >
             {isSuccess ? 'Simpan Alamat Email Baru' : 'Kirim Kode OTP'}
           </StyledLoadingButton>

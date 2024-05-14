@@ -54,8 +54,6 @@ export default function ModalChangePassword({ open, onClose }) {
 
   const token = getSessionToken();
 
-  console.log('token:', token)
-
   const { createPassword } = useAuth();
 
   const defaultValues = {
