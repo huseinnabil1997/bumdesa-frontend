@@ -111,6 +111,7 @@ export default function ModalUbahEmail({ open, onClose, email }) {
     handleSubmit,
     formState,
     watch,
+    setValue,
   } = methods;
 
   const new_email = watch('new_email');
@@ -122,6 +123,10 @@ export default function ModalUbahEmail({ open, onClose, email }) {
       setIsClicked(false);
     }, 200);
   };
+
+  useEffect(() => {
+    setValue('email', email);
+  }, [defaultValues]);
 
   const onSubmit = (data) => {
     console.log('onSubmit', data);
