@@ -70,9 +70,11 @@ export default function AccountInfo() {
 
   const { data, refetch } = useGetUserMe();
 
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
   const defaultValues = {
     id: fBumdesId(data?.bumdesa_id) ?? '',
-    email: data?.email ?? '',
+    email: userData?.email ?? '',
     password: 'P@ssw0rd1234@',
   };
 
