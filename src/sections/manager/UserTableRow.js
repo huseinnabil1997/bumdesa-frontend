@@ -66,7 +66,7 @@ export default function UserTableRowUnit({
           />
         </IconButton>
         {disableDelete ? (
-          <DeleteTooltip title="Setidaknya harus ada 1 unit usaha aktif di BUM Desa.">
+          <DeleteTooltip title="Setidaknya harus ada 3 Pengurus aktif di BUM Desa.">
             <IconButton onClick={disableDelete ? null : onDeleteRow}>
               <Iconify
                 icon={'lucide:trash'}
