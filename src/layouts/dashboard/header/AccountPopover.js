@@ -121,13 +121,19 @@ export default function AccountPopover() {
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleClose}
+        disabledArrow
+        BackdropProps={{
+          open: true,
+          style: { backgroundColor: 'rgba(0,0,0,0.5)' }
+        }}
         sx={{
           width: '271px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          p: '20px'
+          p: '20px',
+          mt: '25px'
         }}
       >
         <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
