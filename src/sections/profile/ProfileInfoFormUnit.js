@@ -20,11 +20,11 @@ import Iconify from "src/components/Iconify";
 import { fBumdesId } from "src/utils/formatNumber";
 
 const ProfileInfoFormSchema = Yup.object().shape({
-  foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
-  logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
-  nama: Yup.string().required('Nama BUM Desa wajib diisi'),
-  id: Yup.string().required('ID BUM Desa wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan BUM Desa wajib diisi'),
+  foto_kantor: Yup.mixed().required('Foto Kantor Unit Usaha wajib diisi'),
+  logo: Yup.mixed().required('Logo Unit Usaha wajib diisi'),
+  nama: Yup.string().required('Nama Unit Usaha wajib diisi'),
+  id: Yup.string().required('ID Unit Usaha wajib diisi'),
+  tanggal_berdiri: Yup.string().required('Tanggal Didirikan Unit Usaha wajib diisi'),
   alamat: Yup.string().required('Alamat wajib diisi'),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),
@@ -87,7 +87,7 @@ const styles = {
   }
 }
 
-export default function ProfileInfoForm({ data, setIsEdit }) {
+export default function ProfileInfoFormUnit({ data, setIsEdit }) {
 
   const datePickerRef = useRef(null);
 
@@ -205,7 +205,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
                 sx={styles.snackbar}
               >
                 <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
-                <Typography fontSize="12px">Informasi Baru BUM Desa sudah diperbarui!</Typography>
+                <Typography fontSize="12px">Informasi Baru Unit Usaha sudah diperbarui!</Typography>
               </Box>
             )
           });
@@ -228,7 +228,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
         <Grid item xs={6}>
           <RHFUploadPhoto
             name="foto_kantor"
-            label="Foto Kantor BUM Desa"
+            label="Foto Kantor Unit Usaha"
             accept="image/*"
             maxSize={10000000}
             imageFrom={'bumdesa'}
@@ -255,7 +255,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
         <Grid item xs={6}>
           <RHFUploadPhoto
             name="logo"
-            label="Logo BUM Desa"
+            label="Logo Unit Usaha"
             accept="image/*"
             maxSize={10000000}
             imageFrom={'bumdesa'}
@@ -280,7 +280,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
         <Grid item xs={4}>
           <RHFTextField
             name="nama"
-            label="Nama BUM Desa"
+            label="Nama Unit Usaha"
             sx={styles.textfield}
             require
           />
@@ -288,7 +288,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
         <Grid item xs={4}>
           <RHFTextField
             name="id"
-            label="ID BUM Desa"
+            label="ID Unit Usaha"
             inputProps={{
               style: { color: '#00549B' },
               readOnly: true
@@ -302,7 +302,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
           <RHFTextField
             inputRef={datePickerRef}
             size="small"
-            label="Tanggal Didirikan BUM Desa"
+            label="Tanggal Didirikan Unit Usaha"
             name="tanggal_berdiri"
             type="date"
             sx={styles.textfield}
@@ -425,7 +425,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
   )
 }
 
-ProfileInfoForm.propTypes = {
+ProfileInfoFormUnit.propTypes = {
   data: PropTypes.object,
   setIsEdit: PropTypes.func,
 };

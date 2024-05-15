@@ -2,7 +2,7 @@ import { Box, Card, Container, Stack, Typography } from '@mui/material';
 import useSettings from '../../hooks/useSettings';
 import Layout from '../../layouts';
 import Page from '../../components/Page';
-import { ProfileInfo, ProfileInfoForm } from 'src/sections/profile';
+import { ProfileInfo, ProfileInfoForm, ProfileInfoFormUnit, ProfileInfoUnit } from 'src/sections/profile';
 import { useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
@@ -84,7 +84,6 @@ export default function DetailProfil() {
               <Box width={20} direction="row" display="flex" alignItems="center" />
               <Typography variant="caption" fontSize="12px" fontWeight={500} color="#525252">
                 ID BUM Desa
-                Pastikan semua data
                 <span style={{ fontSize: '12px', fontWeight: 700 }}>
                   {' '}
                   tidak dapat diubah.
@@ -102,13 +101,13 @@ export default function DetailProfil() {
           </Stack>
         </Box>
 
-        <Card sx={styles.card}>
+        <Card sx={userData?.unit_id !== 0 ? { ...styles.card, minHeight: 520 } : styles.card}>
           <Stack direction="column">
             <Stack sx={styles.segment.title}>
               <Typography sx={styles.segment.title.text}>Informasi BUM Desa</Typography>
             </Stack>
             <Stack minHeight={461}>
-              {isEdit ? (
+              {isEdit && userData?.unit_id === 0 ? (
                 <ProfileInfoForm
                   data={data}
                   setIsEdit={() => {
@@ -117,11 +116,40 @@ export default function DetailProfil() {
                   }}
                 />
               ) : (
-                <ProfileInfo data={data} isEdit={isEdit} setIsEdit={() => setIsEdit(!isEdit)} />
+                <ProfileInfo
+                  data={data}
+                  isEdit={isEdit}
+                  setIsEdit={() => setIsEdit(!isEdit)}
+                />
               )}
             </Stack>
           </Stack>
         </Card>
+
+        {userData?.unit_id !== 0 && <Card sx={userData?.unit_id !== 0 ? { ...styles.card, minHeight: 520, mt: 2 } : styles.card}>
+          <Stack direction="column">
+            <Stack sx={styles.segment.title}>
+              <Typography sx={styles.segment.title.text}>Informasi Unit Usaha</Typography>
+            </Stack>
+            <Stack minHeight={461}>
+              {isEdit ? (
+                <ProfileInfoFormUnit
+                  data={data}
+                  setIsEdit={() => {
+                    setIsEdit(!isEdit);
+                    refetch();
+                  }}
+                />
+              ) : (
+                <ProfileInfoUnit
+                  data={data}
+                  isEdit={isEdit}
+                  setIsEdit={() => setIsEdit(!isEdit)}
+                />
+              )}
+            </Stack>
+          </Stack>
+        </Card>}
       </Container>
     </Page >
   );
