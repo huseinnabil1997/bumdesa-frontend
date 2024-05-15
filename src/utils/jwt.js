@@ -1,6 +1,8 @@
 import jwtDecode from 'jwt-decode';
 //
 import axios from './axios';
+import axiosCoreService from './axiosCoreService';
+import axiosReportService from './axiosReportService';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +33,8 @@ const setSession = (accessToken) => {
   if (accessToken) {
     localStorage.setItem('token', accessToken);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    axiosCoreService.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    axiosReportService.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     // This function below will handle when token is expired
     // const { exp } = jwtDecode(accessToken);
     // handleTokenExpired(exp);
@@ -38,6 +42,8 @@ const setSession = (accessToken) => {
     localStorage.removeItem('token');
     localStorage.removeItem('@menu');
     delete axios.defaults.headers.common.Authorization;
+    delete axiosCoreService.defaults.headers.common.Authorization;
+    delete axiosReportService.defaults.headers.common.Authorization;
   }
 };
 
