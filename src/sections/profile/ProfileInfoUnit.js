@@ -13,11 +13,11 @@ import Image from "src/components/Image";
 import { fBumdesId } from "src/utils/formatNumber";
 
 const ProfileInfoFormSchema = Yup.object().shape({
-  foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
-  logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
-  nama: Yup.string().required('Nama BUM Desa wajib diisi'),
-  id: Yup.string().required('ID BUM Desa wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan BUM Desa wajib diisi'),
+  foto_kantor: Yup.mixed().required('Foto Kantor Unit Usaha wajib diisi'),
+  logo: Yup.mixed().required('Logo Unit Usaha wajib diisi'),
+  nama: Yup.string().required('Nama Unit Usaha wajib diisi'),
+  id: Yup.string().required('ID Unit Usaha wajib diisi'),
+  tanggal_berdiri: Yup.string().required('Tanggal Didirikan Unit Usaha wajib diisi'),
   alamat: Yup.string().required('Alamat wajib diisi'),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),
@@ -68,13 +68,11 @@ const styles = {
   }
 }
 
-export default function ProfileInfo({ data, isEdit, setIsEdit }) {
+export default function ProfileInfoUnit({ data, isEdit, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
   const datePickerRef = useRef(null);
-
-  const userData = JSON.parse(localStorage.getItem('userData'));
 
   const defaultValues = {
     foto_kantor: data?.photo ?? null,
@@ -128,7 +126,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
       <Grid container spacing={2} sx={styles.content}>
         <Grid item xs={3}>
           <Typography variant="caption" fontWeight={600}>
-            Foto Kantor BUM Desa
+            Foto Kantor Unit Usaha
           </Typography>
           <Image
             alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`}
@@ -138,7 +136,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
         </Grid>
         <Grid item xs={3}>
           <Typography variant="caption" fontWeight={600}>
-            Logo BUM Desa
+            Logo Unit Usaha
           </Typography>
           <Image
             alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`}
@@ -151,7 +149,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
         <Grid item xs={4}>
           <RHFTextField
             name="nama"
-            label="Nama BUM Desa"
+            label="Nama Unit Usaha"
             inputProps={{
               readOnly: true
             }}
@@ -163,7 +161,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
         <Grid item xs={4}>
           <RHFTextField
             name="id"
-            label="ID BUM Desa"
+            label="ID Unit Usaha"
             inputProps={{
               style: { color: '#00549B' },
               readOnly: true
@@ -177,7 +175,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
             inputRef={datePickerRef}
             variant="standard"
             size="small"
-            label="Tanggal Didirikan BUM Desa"
+            label="Tanggal Didirikan Unit Usaha"
             name="tanggal_berdiri"
             type="date"
             sx={styles.textfield}
@@ -265,18 +263,16 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
           />
         </Grid>
       </Grid>
-      {userData?.unit_id === 0 &&
-        <Stack sx={styles.action}>
-          <StyledLoadingButton
-            onClick={setIsEdit}
-            sx={styles.action.button}
-            startIcon={<EditIcon />}
-            variant='outlined'
-          >
-            Ubah
-          </StyledLoadingButton>
-        </Stack>
-      }
+      <Stack sx={styles.action}>
+        <StyledLoadingButton
+          onClick={setIsEdit}
+          sx={styles.action.button}
+          startIcon={<EditIcon />}
+          variant='outlined'
+        >
+          Ubah
+        </StyledLoadingButton>
+      </Stack>
       <Modal
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -291,7 +287,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   )
 }
 
-ProfileInfo.propTypes = {
+ProfileInfoUnit.propTypes = {
   isEdit: PropTypes.bool,
   setIsEdit: PropTypes.func,
   data: PropTypes.object,
