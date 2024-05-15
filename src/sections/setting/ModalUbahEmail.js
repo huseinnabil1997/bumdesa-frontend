@@ -13,6 +13,9 @@ import Iconify from 'src/components/Iconify';
 import { useSnackbar } from 'notistack';
 import { useSendOtp } from 'src/query/hooks/setting/useSendOtp';
 import { useChangeUserEmail } from 'src/query/hooks/setting/useChangeUserEmail';
+import { useRouter } from 'next/router';
+import useAuth from 'src/hooks/useAuth';
+import { PATH_AUTH } from 'src/routes/paths';
 
 const AccountInfoSchema = Yup.object().shape({
   email: Yup.string()
@@ -84,6 +87,10 @@ export default function ModalUbahEmail({ open, onClose, email }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const router = useRouter();
+
+  const { logout } = useAuth();
+
   useEffect(() => {
     if (timeLeft === 0) return;
     const timer = setTimeout(() => {
@@ -98,8 +105,10 @@ export default function ModalUbahEmail({ open, onClose, email }) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
   const defaultValues = {
-    email: email ?? '',
+    email: userData.email ?? '',
     new_email: '',
   };
 
@@ -119,6 +128,10 @@ export default function ModalUbahEmail({ open, onClose, email }) {
   const new_email = watch('new_email');
 
   const { mutate: onSend, isLoading: sending } = useSendOtp({});
+
+  useEffect(() => {
+    setValue('email', userData.email);
+  }, [userData.email]);
 
   const handleResend = () => {
     const payload = {
@@ -140,9 +153,15 @@ export default function ModalUbahEmail({ open, onClose, email }) {
 
   };
 
-  useEffect(() => {
-    setValue('email', email);
-  }, [defaultValues]);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.replace(PATH_AUTH.login);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const { mutate: onChange, isLoading: updating } = useChangeUserEmail();
 
@@ -159,6 +178,8 @@ export default function ModalUbahEmail({ open, onClose, email }) {
           onClose();
           methods.reset();
           setOtp('');
+          handleLogout();
+          router.push('/auth/login');
           setIsSuccess(false);
           enqueueSnackbar('', {
             variant: 'success',
@@ -231,10 +252,12 @@ export default function ModalUbahEmail({ open, onClose, email }) {
             label="Alamat Email Sekarang"
             sx={styles.textfield}
             require
+            disabled
+            value={defaultValues.email}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <Check color="success" />
+                  {userData.email ? <Check color="success" /> : <Close color="error" />}
                 </InputAdornment>
               ),
             }}

@@ -9,6 +9,7 @@ import { useState } from "react";
 import ModalUbahEmail from "./ModalUbahEmail";
 import ModalChangePassword from "./ModalChangePassword";
 import { useGetUserMe } from "src/query/hooks/auth/useGetUserMe";
+import { fBumdesId } from "src/utils/formatNumber";
 
 const AccountInfoSchema = Yup.object().shape({
   id: Yup.string().required('ID BUM Desa wajib diisi'),
@@ -70,7 +71,7 @@ export default function AccountInfo() {
   const { data, refetch } = useGetUserMe();
 
   const defaultValues = {
-    id: data?.bumdesa_id ?? '',
+    id: fBumdesId(data?.bumdesa_id) ?? '',
     email: data?.email ?? '',
     password: 'P@ssw0rd1234@',
   };
