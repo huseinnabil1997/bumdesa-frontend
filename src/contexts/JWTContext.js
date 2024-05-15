@@ -192,7 +192,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     const response = await axiosInstance.post('/signout');
-    setSession(null);
+    await setSession(null);
 
     return response.data;
   };
