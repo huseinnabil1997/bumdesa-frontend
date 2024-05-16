@@ -33,6 +33,7 @@ import { useSnackbar } from 'notistack';
 import { DeleteModal, EditModal, NewModal, UserTableRow, UserTableToolbar } from 'src/sections/manager';
 import { useGetManagers } from 'src/query/hooks/manager/useGetManagers';
 import { useDeleteManager } from 'src/query/hooks/manager/useDeleteManager';
+import { useGetPositions } from 'src/query/hooks/manager/useGetPositions';
 
 
 // ----------------------------------------------------------------------
@@ -82,6 +83,8 @@ export default function ManagerList() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutate: onDeleteManager } = useDeleteManager();
+
+  const { data: positions } = useGetPositions();
 
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
@@ -261,21 +264,24 @@ export default function ManagerList() {
             setAlertDelete(null);
             refetch();
           }}
-          action={onDelete} />
-        <NewModal 
-        open={openNewModal}
-        onClose={() => {
-          setOpenNewModal(false);
-          refetch();
-        }}
+          action={onDelete}
+        />
+        <NewModal
+          open={openNewModal}
+          positions={positions}
+          onClose={() => {
+            setOpenNewModal(false);
+            refetch();
+          }}
         />
         <EditModal
-        open={!!openEditModal}
-        onClose={() => {
-          setOpenEditModal(null);
-          refetch();
-        }}
-        id={openEditModal}
+          open={!!openEditModal}
+          positions={positions}
+          onClose={() => {
+            setOpenEditModal(null);
+            refetch();
+          }}
+          id={openEditModal}
         />
       </Container>
     </Page>

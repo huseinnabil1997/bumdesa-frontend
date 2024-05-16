@@ -27,6 +27,9 @@ export default function UserTableToolbarUnit({ filterName, onFilterName, handleI
           '& .MuiInputBase-root': {
             height: '48px',
           },
+          '& .MuiInputBase-input:-webkit-autofill': {
+            WebkitBoxShadow: '0 0 0 100px #fff inset',
+          }
         }}
         InputProps={{
           startAdornment: (

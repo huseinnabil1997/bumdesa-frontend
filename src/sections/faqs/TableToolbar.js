@@ -34,6 +34,9 @@ export default function UserTableToolbar({ filterName, onFilterName, handleInput
         sx={{
           '& .MuiInputBase-root': {
             height: '44px',
+          },
+          '& .MuiInputBase-input:-webkit-autofill': {
+            WebkitBoxShadow: '0 0 0 100px #fff inset',
           }
         }}
       />

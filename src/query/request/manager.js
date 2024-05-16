@@ -20,3 +20,7 @@ export function deleteOrganization(id) {
   return axios.delete(`/organizations/${id}`);
 }
 
+export function getPositions(params) {
+  return axios.get('/positions', { params });
+}
+

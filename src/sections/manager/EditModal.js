@@ -13,13 +13,6 @@ import Iconify from 'src/components/Iconify';
 import { useGetManagerById } from 'src/query/hooks/manager/useGetManagerById';
 import { useUpdateManager } from 'src/query/hooks/manager/useUpdateManager';
 
-const positions = [
-  { position: 1, position_name: 'Direktur' },
-  { position: 2, position_name: 'Sekretaris' },
-  { position: 3, position_name: 'Bendahara' },
-  { position: 4, position_name: 'Manager' },
-];
-
 const NewModalSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Anggota BUM Desa wajib diisi'),
   name: Yup.string().required('Nama Anggota BUM Desa wajib diisi'),
@@ -102,7 +95,7 @@ const styles = {
   }
 };
 
-function EditModal({ open, onClose, id }) {
+function EditModal({ open, onClose, id, positions }) {
 
   const { data: manager } = useGetManagerById(id);
   const { mutate: updateManager, isLoading: isUpdating } = useUpdateManager();
@@ -112,7 +105,7 @@ function EditModal({ open, onClose, id }) {
   const defaultValues = {
     image: manager?.photo ?? null,
     name: manager?.name ?? '',
-    position: manager?.position ? { position: manager?.position, position_name: manager?.position_name } : positions[0],
+    position: manager?.position ? { position: manager?.position, position_name: manager?.position_name } : null,
     phone: manager?.phone ?? '',
   };
 
@@ -135,7 +128,7 @@ function EditModal({ open, onClose, id }) {
 
   const resetForm = () => {
     setValue('name', manager?.name);
-    setValue('position', manager?.position ? { position: manager?.position, position_name: manager?.position_name } : positions[0]);
+    setValue('position', manager?.position ? { position: manager?.position, position_name: manager?.position_name } : null);
     setValue('phone', manager?.phone);
     setValue('image', manager?.photo);
   };
@@ -226,7 +219,7 @@ function EditModal({ open, onClose, id }) {
             require
             name="position"
             label="Jabatan Anggota"
-            placeholder="Pilih Sektor Usaha"
+            placeholder="Pilih Jabatan"
             loading={true}
             sx={styles.textfield.id}
             options={positions?.map((option) => option) ?? []}
@@ -297,6 +290,7 @@ EditModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
+  positions: PropTypes.array,
 };
 
 export default EditModal;

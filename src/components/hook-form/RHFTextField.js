@@ -43,6 +43,9 @@ export default function RHFTextField({ name, require, isLoading, ...other }) {
               '::-webkit-inner-spin-button,::-webkit-outer-spin-button': {
                 WebkitAppearance: 'none',
               },
+              '& .MuiInputBase-input:-webkit-autofill': {
+                WebkitBoxShadow: '0 0 0 100px #fff inset',
+              },
               ...other.sx,
             }}
             label=""
