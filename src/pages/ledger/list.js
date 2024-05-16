@@ -17,6 +17,7 @@ import { DEFAULT_FILTER, LEDGER_HEAD } from 'src/utils/constant';
 import { useTheme } from '@mui/material/styles';
 import { useGetLedgers } from 'src/query/hooks/ledger/useGetLedgers';
 import moment from 'moment';
+import TableError from 'src/components/table/TableError';
 
 // ----------------------------------------------------------------------
 
@@ -32,24 +33,28 @@ export default function JurnalList() {
   const theme = useTheme();
 
   const methods = useForm({
-    defaultValues: { unit: null, year: null },
+    defaultValues: { unit: null, year: new Date() },
   });
 
   const { watch } = methods;
 
-  const { data, isLoading } = useGetLedgers({
+  const { data, isLoading, isError } = useGetLedgers({
     ...DEFAULT_FILTER,
     account_code: watch('account')?.value ?? null,
     date: moment(watch('year')).format('yyyy') ?? null,
   });
 
-  console.log(data);
-
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
-          <LedgerHeader />
+          <LedgerHeader
+            filter={{
+              page,
+              account_code: watch('account')?.value ?? null,
+              date: moment(watch('year')).format('yyyy') ?? null,
+            }}
+          />
         </FormProvider>
 
         <Card sx={{ mt: 3 }} elevation={3}>
@@ -64,15 +69,25 @@ export default function JurnalList() {
 
                 <TableBody>
                   {!isLoading &&
-                    data &&
+                    data?.length > 0 &&
                     data?.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
 
                   {isLoading && <TableSkeleton />}
-                  <TableNoData
-                    isNotFound={!data}
-                    title="Buku Besar Belum Tersedia."
-                    description="Silakan pilih tipe akun dan tahun."
-                  />
+
+                  {!data?.length > 0 && !isError && !isLoading && (
+                    <TableNoData
+                      isNotFound
+                      title="Data Kosong"
+                      description="Buku besar belum tersedia."
+                    />
+                  )}
+
+                  {!isLoading && isError && (
+                    <TableError
+                      title="Koneksi Error"
+                      description="Silakan cek koneksi Anda dan muat ulang halaman."
+                    />
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
