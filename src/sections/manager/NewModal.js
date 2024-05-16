@@ -12,13 +12,6 @@ import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import { useAddManager } from 'src/query/hooks/manager/useAddManager';
 
-const positions = [
-  { position: 1, position_name: 'Direktur' },
-  { position: 2, position_name: 'Sekretaris' },
-  { position: 3, position_name: 'Bendahara' },
-  { position: 4, position_name: 'Manager' },
-];
-
 const NewModalSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Anggota BUM Desa wajib diisi'),
   name: Yup.string().required('Nama Anggota BUM Desa wajib diisi'),
@@ -101,7 +94,7 @@ const styles = {
   }
 };
 
-function EditModal({ open, onClose }) {
+function EditModal({ open, onClose, positions }) {
 
   const { mutate: addManager } = useAddManager();
 
@@ -110,7 +103,7 @@ function EditModal({ open, onClose }) {
   const defaultValues = {
     image: null,
     name: '',
-    position: positions[0],
+    position: null,
     phone: '',
   };
 
@@ -155,7 +148,7 @@ function EditModal({ open, onClose }) {
             )
           });
           setValue('name', '');
-          setValue('position', positions[0]);
+          setValue('position', null);
           setValue('phone', '');
           setValue('image', null);
         },
@@ -211,7 +204,7 @@ function EditModal({ open, onClose }) {
             require
             name="position"
             label="Jabatan Anggota"
-            placeholder="Pilih Sektor Usaha"
+            placeholder="Pilih Jabatan"
             loading={false}
             sx={styles.textfield}
             options={positions?.map((option) => option) ?? []}
@@ -277,6 +270,7 @@ function EditModal({ open, onClose }) {
 EditModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  positions: PropTypes.array,
 };
 
 export default EditModal;
