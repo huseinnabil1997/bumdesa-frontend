@@ -10,18 +10,13 @@ import * as Yup from 'yup';
 import { Info } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
+import { useAddManager } from 'src/query/hooks/manager/useAddManager';
 
 const positions = [
-  { value: 'Kepala Desa', label: 'Kepala Desa' },
-  { value: 'Sekretaris', label: 'Sekretaris' },
-  { value: 'Bendahara', label: 'Bendahara' },
-  { value: 'Kepala Sekretariat', label: 'Kepala Sekretariat' },
-  { value: 'Kepala BUM Desa', label: 'Kepala BUM Desa' },
-  { value: 'Kepala BUM Kecamatan', label: 'Kepala BUM Kecamatan' },
-  { value: 'Kepala BUM Kabupaten', label: 'Kepala BUM Kabupaten' },
-  { value: 'Kepala BUM Provinsi', label: 'Kepala BUM Provinsi' },
-  { value: 'Kepala BUM Nasional', label: 'Kepala BUM Nasional' },
-  { value: 'Kepala BUM Internasional', label: 'Kepala BUM Internasional' },
+  { position: 1, position_name: 'Direktur' },
+  { position: 2, position_name: 'Sekretaris' },
+  { position: 3, position_name: 'Bendahara' },
+  { position: 4, position_name: 'Manager' },
 ];
 
 const NewModalSchema = Yup.object().shape({
@@ -108,12 +103,14 @@ const styles = {
 
 function EditModal({ open, onClose }) {
 
+  const { mutate: addManager } = useAddManager();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
     image: null,
     name: '',
-    position: positions?.[0],
+    position: positions[0],
     phone: '',
   };
 
@@ -131,21 +128,41 @@ function EditModal({ open, onClose }) {
   } = methods;
 
   const onSubmit = (data) => {
-    console.log('onSubmit', data);
-    onClose();
-    enqueueSnackbar('', {
-      variant: 'success',
-      content: () => (
-        <Box
-          display="flex"
-          alignItems="center"
-          sx={styles.snackbar}
-        >
-          <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
-          <Typography fontSize="12px">Data Pengurus Telah Diperbarui!</Typography>
-        </Box>
-      )
-    });
+    const formData = new FormData();
+    formData.append('name', data?.name);
+    formData.append('position', data?.position?.position);
+    formData.append('phone', data?.phone);
+    formData.append('image', data?.image);
+    addManager(
+      {
+        payload: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+      {
+        onSuccess: () => {
+          onClose();
+          enqueueSnackbar('', {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={styles.snackbar}
+              >
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
+                <Typography fontSize="12px">Data Pengurus Telah Ditambahkan!</Typography>
+              </Box>
+            )
+          });
+          setValue('name', '');
+          setValue('position', positions[0]);
+          setValue('phone', '');
+          setValue('image', null);
+        },
+        onError: (error) => {
+          enqueueSnackbar(error.message, { variant: 'error' });
+        }
+      });
   };
 
   return (
@@ -165,7 +182,7 @@ function EditModal({ open, onClose }) {
             label="Foto Anggota BUM Desa"
             accept="image/*"
             maxSize={10000000}
-            imageFrom={'unit'}
+            imageFrom={'organization'}
             onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
             errorTextAlign="left"
             errorPosition="bottom"
@@ -198,10 +215,10 @@ function EditModal({ open, onClose }) {
             loading={false}
             sx={styles.textfield}
             options={positions?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.position_name}
             renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
+              <li {...props} key={option.position}>
+                {option.position_name}
               </li>
             )}
           />
@@ -223,7 +240,7 @@ function EditModal({ open, onClose }) {
           }}>
             <Info sx={styles.infoIcon} />
             <Typography sx={styles.infoText}>
-              Data profil Anda akan digunakan untuk berbagai keperluan BUM Desa, seperti penyaluran 
+              Data profil Anda akan digunakan untuk berbagai keperluan BUM Desa, seperti penyaluran
               informasi, undangan kegiatan, dan lainnya.
             </Typography>
           </Box>

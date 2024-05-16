@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 // @mui
 import {
   Box,
@@ -31,9 +30,9 @@ import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
-import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
 import { DeleteModal, EditModal, NewModal, UserTableRow, UserTableToolbar } from 'src/sections/manager';
-import { useDeleteJurnal } from 'src/query/hooks/jurnals/useDeleteJurnal';
+import { useGetManagers } from 'src/query/hooks/manager/useGetManagers';
+import { useDeleteManager } from 'src/query/hooks/manager/useDeleteManager';
 
 
 // ----------------------------------------------------------------------
@@ -47,16 +46,18 @@ const TABLE_HEAD = [
 
 const styles = {
   snackbar: {
-    backgroundColor: '#1078CA',
-    color: '#fff',
-    borderRadius: 8,
-    padding: '4px 8px',
+    width: '344px',
+    height: '48px',
+    backgroundColor: '#E1F8EB',
+    gap: '8px',
+    padding: '8px',
+    borderRadius: '4px'
   },
   snackbarIcon: {
-    width: 16,
-    height: 16,
-    marginRight: 0.5,
-  },
+    width: '16px',
+    height: '16px',
+    color: '#27AE60'
+  }
 };
 
 // ----------------------------------------------------------------------
@@ -76,26 +77,22 @@ export default function ManagerList() {
     onChangePage,
   } = useTable({ defaultCurrentPage: 1 });
 
-  const router = useRouter()
-
   const { themeStretch } = useSettings();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutate: onDeleteManager } = useDeleteJurnal();
+  const { mutate: onDeleteManager } = useDeleteManager();
 
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [openNewModal, setOpenNewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(null);
 
-  const { data, isLoading, refetch } = useGetUnits({
+  const { data: managers, isLoading, refetch } = useGetManagers({
     page: page,
     limit: rowsPerPage,
     search: filterName,
   });
-
-  const units = data;
 
   useEffect(() => {
     refetch();
@@ -129,8 +126,7 @@ export default function ManagerList() {
         setAlertDelete(null);
       },
       onError: (err) => {
-        console.log(err);
-        enqueueSnackbar('Gagal', { variant: 'error' });
+        enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
   };
@@ -176,14 +172,14 @@ export default function ManagerList() {
             <Table>
               <TableHeadCustom
                 headLabel={TABLE_HEAD}
-                rowCount={units?.data?.length}
+                rowCount={managers?.data?.length}
                 numSelected={selected.length}
                 sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
               />
 
               <TableBody>
-                {!isLoading && units &&
-                  units?.data?.map((row, index) => (
+                {!isLoading && managers &&
+                  managers?.data?.map((row, index) => (
                     <UserTableRow
                       id={row.id}
                       key={row.id}
@@ -192,13 +188,13 @@ export default function ManagerList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={units?.data.length === 3 && page === 1}
+                      disableDelete={managers?.data.length <= 3 && page === 1}
                       onEditRow={() => setOpenEditModal(row.id)}
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
                 <TableNoData
-                  isNotFound={units?.data?.length === 0}
+                  isNotFound={(managers?.data?.length === 0 || managers?.data?.length === undefined) && !isLoading}
                   title="Pengurus BUM Desa belum tersedia."
                   description="Silakan tambah Pengurus BUM Desa dengan klik tombol di bawah ini."
                   action={
@@ -206,7 +202,7 @@ export default function ManagerList() {
                       sx={{ mt: 2, width: 200 }}
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
-                      onClick={() => router.push('new')}
+                      onClick={() => setOpenNewModal(true)}
                     >
                       Tambah Anggota
                     </StyledButton>
@@ -239,7 +235,7 @@ export default function ManagerList() {
             variant="outlined"
             shape="rounded"
             color="primary"
-            count={units?.metadata?.paging?.total_page}
+            count={managers?.metadata?.paging?.total_page}
             rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
@@ -259,9 +255,28 @@ export default function ManagerList() {
             }}
           />
         </Box>
-        <DeleteModal open={!!alertDelete} onClose={() => setAlertDelete(null)} action={onDelete} />
-        <NewModal open={openNewModal} onClose={() => setOpenNewModal(false)} />
-        <EditModal open={!!openEditModal} onClose={() => setOpenEditModal(null)} id={openEditModal} />
+        <DeleteModal
+          open={!!alertDelete}
+          onClose={() => {
+            setAlertDelete(null);
+            refetch();
+          }}
+          action={onDelete} />
+        <NewModal 
+        open={openNewModal}
+        onClose={() => {
+          setOpenNewModal(false);
+          refetch();
+        }}
+        />
+        <EditModal
+        open={!!openEditModal}
+        onClose={() => {
+          setOpenEditModal(null);
+          refetch();
+        }}
+        id={openEditModal}
+        />
       </Container>
     </Page>
   );

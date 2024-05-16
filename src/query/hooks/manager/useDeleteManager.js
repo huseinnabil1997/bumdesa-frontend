@@ -1,8 +1,8 @@
 import { useMutation } from 'react-query';
-import { deleteManager } from 'src/query/request/manager';
+import { deleteOrganization } from 'src/query/request/manager';
 
 const deleteData = async (id) => {
-  const { data } = await deleteManager(id);
+  const { data } = await deleteOrganization(id);
 
   return data;
 };
