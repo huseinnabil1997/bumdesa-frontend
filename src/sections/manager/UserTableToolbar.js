@@ -19,6 +19,7 @@ export default function UserTableToolbarUnit({ filterName, onFilterName, handleI
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
         onKeyDown={(event) => handleInputChange(event)}
+        helperText="Klik enter untuk mencari"
         placeholder="Cari nama pengurus"
         sx={{
           width: '100%', // Menggunakan persen agar responsif
