@@ -17,7 +17,7 @@ import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { useDownloadJurnal } from 'src/query/hooks/jurnals/useDownloadJurnal';
 
-const options = ['', 'Unduh format .pdf', 'Unduh format .xlsx'];
+const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
 export default function JurnalHeader() {
   const router = useRouter();
@@ -37,7 +37,6 @@ export default function JurnalHeader() {
   const handleMenuItemClick = (event, index) => {
     download(index, {
       onSuccess: (res) => {
-        console.log(res);
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({ file: res, title: 'Jurnal', type: index });
         setSelectedIndex(index);
@@ -69,13 +68,13 @@ export default function JurnalHeader() {
       <Stack direction="row" spacing={1}>
         <StyledButton
           ref={anchorRef}
-          sx={{ width: 200 }}
+          sx={{ width: 240 }}
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
-          startIcon={isLoading ? <CircularProgress /> : <Download />}
+          startIcon={isLoading ? <CircularProgress size="1rem" /> : <Download />}
           endIcon={<ArrowDropDown />}
           variant="outlined"
         >

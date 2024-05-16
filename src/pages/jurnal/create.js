@@ -70,7 +70,14 @@ export default function JurnalCreate() {
     if (evidenceNumber) setValue('number_of_evidence', evidenceNumber?.number_of_evidence);
   }, [evidenceNumber]);
 
-  const { handleSubmit, control, watch, setValue } = methods;
+  const {
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    trigger,
+    formState: { errors },
+  } = methods;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -101,8 +108,10 @@ export default function JurnalCreate() {
 
   const accounts = watch('accounts');
 
-  const handleAppend = () =>
+  const handleAppend = () => {
+    trigger();
     append({ account_code: null, debit: 0, credit: 0, cash_flow_code: null });
+  };
 
   const handleBack = () => router.push('/jurnal/list');
 
@@ -136,6 +145,28 @@ export default function JurnalCreate() {
 
     return true;
   };
+
+  const generateBalance = (type) => {
+    let color = 'default';
+    let label = 'Netral';
+
+    console.log(watch('debit'));
+
+    if (watch('debit') === 'Rp 0' && watch('credit') === 'Rp 0')
+      return type === 'color' ? color : label;
+
+    if (watch('debit') !== watch('credit')) {
+      color = 'error';
+      label = 'Tidak Seimbang';
+    } else {
+      color = 'success';
+      label = 'Seimbang';
+    }
+
+    return type === 'color' ? color : label;
+  };
+
+  console.log(errors);
 
   return (
     <Page>
@@ -203,7 +234,7 @@ export default function JurnalCreate() {
                         options={accOpt?.map((option) => option) ?? []}
                         // getOptionLabel={(option) => option.label}
                         isLoading={loadingAcc}
-                        disabled={loadingAcc}
+                        disabled={loadingAcc || !watch('transaction_information')}
                         renderOption={(props, option) => (
                           <li {...props} key={option.value}>
                             {option.label}
@@ -219,7 +250,9 @@ export default function JurnalCreate() {
                         name={`accounts.${i}.debit`}
                         onKeyUp={generateTotalDebt}
                         type="number"
-                        disabled={+watch(`accounts.${i}.credit`) > 0}
+                        disabled={
+                          +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
+                        }
                       />
                     </Grid>
                     <Grid item xs={2}>
@@ -230,7 +263,9 @@ export default function JurnalCreate() {
                         name={`accounts.${i}.credit`}
                         onKeyUp={generateTotalCred}
                         type="number"
-                        disabled={+watch(`accounts.${i}.debit`) > 0}
+                        disabled={
+                          +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
+                        }
                       />
                     </Grid>
                     <Grid item xs={fields.length > 2 ? 3 : 4}>
@@ -260,6 +295,7 @@ export default function JurnalCreate() {
                     variant="outlined"
                     startIcon={<Add fontSize="small" />}
                     onClick={handleAppend}
+                    disabled={errors?.accounts?.length > 0}
                   >
                     Tambah Akun
                   </StyledButton>
@@ -272,16 +308,29 @@ export default function JurnalCreate() {
                     Indikator Keseimbangan:
                   </Typography>
                   <Chip
-                    variant="outlined"
-                    color={watch('debit') !== watch('credit') ? 'error' : 'success'}
-                    label={watch('debit') !== watch('credit') ? 'Tidak Seimbang' : 'Seimbang'}
+                    variant="contained"
+                    color={generateBalance('color')}
+                    label={generateBalance('label')}
+                    sx={{ color: 'white', fontWeight: 'bold' }}
                   />
                 </Stack>
 
                 <Stack direction="row" alignItems="center" spacing={3}>
                   <Typography variant="h6">Total</Typography>
-                  <RHFTextField require name="debit" variant="standard" sx={{ width: 240 }} />
-                  <RHFTextField require name="credit" variant="standard" sx={{ width: 240 }} />
+                  <RHFTextField
+                    require
+                    name="debit"
+                    variant="standard"
+                    sx={{ width: 240 }}
+                    disabled
+                  />
+                  <RHFTextField
+                    require
+                    name="credit"
+                    variant="standard"
+                    sx={{ width: 240 }}
+                    disabled
+                  />
                 </Stack>
               </Stack>
             </Box>

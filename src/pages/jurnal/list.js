@@ -136,6 +136,7 @@ export default function JurnalList() {
 
                   {!data?.length > 0 && !isError && !isLoading && (
                     <TableNoData
+                      isNotFound
                       title="Jurnal belum tersedia."
                       description="Silakan buat jurnal dengan klik tombol di bawah ini."
                       action={
