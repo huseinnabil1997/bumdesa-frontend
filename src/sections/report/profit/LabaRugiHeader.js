@@ -5,7 +5,7 @@ import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box,
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
-import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
+import { RHFAutocomplete, RHFDateRangePicker } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
@@ -13,12 +13,19 @@ import { getSessionToken } from 'src/utils/axios';
 
 const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
+function formatDate(inputDate) {
+  const date = inputDate;
+  const year = date?.getFullYear();
+  const month = String(date?.getMonth() + 1).padStart(2, '0');
+  const day = String(date?.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+}
+
 LabaRugiHeader.propTypes = {
   onSubmit: PropTypes.func,
 };
 
 export default function LabaRugiHeader({ onSubmit }) {
-  const datePickerRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
@@ -37,7 +44,7 @@ export default function LabaRugiHeader({ onSubmit }) {
   const anchorRef = useRef(null);
   const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState([null, null]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
@@ -45,7 +52,8 @@ export default function LabaRugiHeader({ onSubmit }) {
     const payload = {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
-      date: selectedDate,
+      start_date: formatDate(selectedDate[0]),
+      end_date: formatDate(selectedDate[1])
     }
     onDownload(payload, {
       onSuccess: (res) => {
@@ -99,24 +107,15 @@ export default function LabaRugiHeader({ onSubmit }) {
     setOpen(false);
   };
 
-  const getMaxDateForMonthInput = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-  };
-
-  const getPreviousMonth = () => {
-    const currentDate = new Date();
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-  };
-
   useEffect(() => {
-    setSelectedDate(getPreviousMonth());
-    onSubmit({ unit: decoded?.sub?.businessid ?? selectedUnit?.id, date: getPreviousMonth() })
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    setSelectedDate([firstDayOfMonth, currentDate]);
+    onSubmit({
+      unit: decoded?.sub?.businessid ?? selectedUnit?.id,
+      start_date: formatDate(firstDayOfMonth),
+      end_date: formatDate(currentDate)
+    });
   }, [])
 
   useEffect(async () => {
@@ -124,7 +123,7 @@ export default function LabaRugiHeader({ onSubmit }) {
   }, [data])
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" spacing={1}>
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
         {decoded?.sub?.businessid === 0 && (
           <RHFAutocomplete
@@ -142,26 +141,16 @@ export default function LabaRugiHeader({ onSubmit }) {
             )}
             onChange={(event, newValue) => {
               setSelectedUnit(newValue);
-              onSubmit({ unit: newValue?.id, date: selectedDate })
+              onSubmit({ unit: newValue?.id, start_date: formatDate(selectedDate[0]), end_date: formatDate(selectedDate[1]) })
             }}
             value={selectedUnit}
           />
         )}
-        <RHFTextField
-          inputRef={datePickerRef}
-          size="small"
-          sx={{ width: 165 }}
+        <RHFDateRangePicker
           name="date"
-          type="month"
-          onClick={() => {
-            datePickerRef.current.showPicker()
-          }}
-          inputProps={{
-            max: getMaxDateForMonthInput(),
-          }}
-          onChange={(event) => {
-            setSelectedDate(event.target.value);
-            onSubmit({ unit: selectedUnit?.id, date: event.target.value })
+          onChange={(newValue) => {
+            setSelectedDate(newValue);
+            onSubmit({ unit: selectedUnit?.id, start_date: formatDate(newValue[0]), end_date: formatDate(newValue[1]) })
           }}
           value={selectedDate}
         />
