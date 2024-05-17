@@ -105,7 +105,7 @@ function EditModal({ open, onClose, id, positions }) {
   const defaultValues = {
     image: manager?.photo ?? null,
     name: manager?.name ?? '',
-    position: manager?.position ? { position: manager?.position, position_name: manager?.position_name } : null,
+    position: manager?.position ? { value: manager?.position, label: manager?.position_name } : null,
     phone: manager?.phone ?? '',
   };
 
@@ -128,7 +128,7 @@ function EditModal({ open, onClose, id, positions }) {
 
   const resetForm = () => {
     setValue('name', manager?.name);
-    setValue('position', manager?.position ? { position: manager?.position, position_name: manager?.position_name } : null);
+    setValue('position', manager?.position ? { value: manager?.position, label: manager?.position_name } : null);
     setValue('phone', manager?.phone);
     setValue('image', manager?.photo);
   };
@@ -136,7 +136,7 @@ function EditModal({ open, onClose, id, positions }) {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append('name', data?.name);
-    formData.append('position', data?.position?.position);
+    formData.append('position', data?.position?.value);
     formData.append('phone', data?.phone);
     formData.append('image', data?.image);
     updateManager(
@@ -223,10 +223,10 @@ function EditModal({ open, onClose, id, positions }) {
             loading={true}
             sx={styles.textfield.id}
             options={positions?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.position_name}
+            getOptionLabel={(option) => option.label}
             renderOption={(props, option) => (
-              <li {...props} key={option.position}>
-                {option.position_name}
+              <li {...props} key={option.value}>
+                {option.label}
               </li>
             )}
           />

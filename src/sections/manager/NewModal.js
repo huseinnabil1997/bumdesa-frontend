@@ -123,7 +123,7 @@ function EditModal({ open, onClose, positions }) {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append('name', data?.name);
-    formData.append('position', data?.position?.position);
+    formData.append('position', data?.position?.value);
     formData.append('phone', data?.phone);
     formData.append('image', data?.image);
     addManager(
@@ -208,10 +208,10 @@ function EditModal({ open, onClose, positions }) {
             loading={false}
             sx={styles.textfield}
             options={positions?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.position_name}
+            getOptionLabel={(option) => option.label}
             renderOption={(props, option) => (
-              <li {...props} key={option.position}>
-                {option.position_name}
+              <li {...props} key={option.value}>
+                {option.label}
               </li>
             )}
           />
