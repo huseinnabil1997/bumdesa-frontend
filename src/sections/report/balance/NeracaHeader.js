@@ -5,7 +5,7 @@ import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box,
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
-import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
+import { RHFAutocomplete, RHFDateRangePicker } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBalance';
@@ -13,13 +13,21 @@ import { getSessionToken } from 'src/utils/axios';
 
 const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
+function formatDate(inputDate) {
+  const date = inputDate;
+  const year = date?.getFullYear();
+  const month = String(date?.getMonth() + 1).padStart(2, '0');
+  const day = String(date?.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+}
+
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
   indicatorBalance: PropTypes.string,
 };
 
 export default function NeracaHeader({ onSubmit, indicatorBalance }) {
-  const datePickerRef = useRef(null);
+  // const datePickerRef = useRef(null);
   const anchorRef = useRef(null);
 
   const token = getSessionToken();
@@ -38,7 +46,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   const [open, setOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState([null, null]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
@@ -46,7 +54,8 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
     const payload = {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
-      date: selectedDate,
+      start_date: formatDate(selectedDate[0]),
+      end_date: formatDate(selectedDate[1]),
     }
     onDownload(payload, {
       onSuccess: (res) => {
@@ -58,7 +67,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
         } else {
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', `Laporan_Laba_Rugi_${selectedUnit?.id}_${selectedDate}.${type === 1 ? 'pdf' : 'xlsx'}`);
+          link.setAttribute('download', `Laporan_Neraca_${selectedUnit?.id}_${formatDate(selectedDate[0])}_${formatDate(selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`);
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -100,24 +109,30 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
     setOpen(false);
   };
 
-  const getMaxDateForMonthInput = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-  };
+  // const getMaxDateForMonthInput = () => {
+  //   const currentDate = new Date();
+  //   const year = currentDate.getFullYear();
+  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  //   return `${year}-${month}`;
+  // };
 
-  const getPreviousMonth = () => {
-    const currentDate = new Date();
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-  };
+  // const getPreviousMonth = () => {
+  //   const currentDate = new Date();
+  //   currentDate.setMonth(currentDate.getMonth() - 1);
+  //   const year = currentDate.getFullYear();
+  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  //   return `${year}-${month}`;
+  // };
 
   useEffect(() => {
-    setSelectedDate(getPreviousMonth());
-    onSubmit({ unit: decoded?.sub?.businessid ?? selectedUnit?.id, date: getPreviousMonth() })
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    setSelectedDate([firstDayOfMonth, currentDate]);
+    onSubmit({
+      unit: decoded?.sub?.businessid ?? selectedUnit?.id,
+      start_date: formatDate(firstDayOfMonth),
+      end_date: formatDate(currentDate)
+    });
   }, [])
 
   useEffect(async () => {
@@ -161,7 +176,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
           </Box>
         </Stack>
       </Stack>
-      <Stack direction="row">
+      <Stack direction="row" spacing={1}>
         <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
           {decoded?.sub?.businessid === 0 && (
             <RHFAutocomplete
@@ -179,12 +194,12 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
               )}
               onChange={(event, newValue) => {
                 setSelectedUnit(newValue);
-                onSubmit({ unit: newValue?.id, date: selectedDate })
+                onSubmit({ unit: newValue?.id, start_date: formatDate(selectedDate[0]), end_date: formatDate(selectedDate[1]) })
               }}
               value={selectedUnit}
             />
           )}
-          <RHFTextField
+          {/* <RHFTextField
             inputRef={datePickerRef}
             size="small"
             sx={{ width: 165 }}
@@ -199,6 +214,14 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             onChange={(event) => {
               setSelectedDate(event.target.value);
               onSubmit({ unit: selectedUnit?.id, date: event.target.value })
+            }}
+            value={selectedDate}
+          /> */}
+          <RHFDateRangePicker
+            name="date"
+            onChange={(newValue) => {
+              setSelectedDate(newValue);
+              onSubmit({ unit: selectedUnit?.id, start_date: formatDate(newValue[0]), end_date: formatDate(newValue[1]) })
             }}
             value={selectedDate}
           />
