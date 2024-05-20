@@ -9,6 +9,15 @@ import Iconify from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
+const isTotalName = (nama) => {
+  if (nama.toLowerCase() === 'total aset' 
+  || nama.toLowerCase() === 'total kewajiban' 
+  || nama.toLowerCase() === 'total ekuitas') {
+    return true;
+  }
+  return false;
+}
+
 function NestedTableRow({ row, index, generateColor, formatCurrency }) {
   const [open, setOpen] = useState(false);
   const { nama, saldo } = row;
@@ -20,14 +29,14 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
         hover
         onClick={() => setOpen(!open)}
         sx={{
-          backgroundColor: 'white',
+          backgroundColor: isTotalName(nama) ? '#E1F8EB' : 'white',
           height: '56px',
           "&:hover": {
             backgroundColor: `${generateColor(index, index)} !important`,
           },
         }}
       >
-        <TableCell sx={{ color: '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {row?.child2 && (
             <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
               {open ?
@@ -39,7 +48,7 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
           )}
           {nama}
         </TableCell>
-        <TableCell sx={{ color: '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {saldo === 0 ? 'Rp. -' : formatCurrency(saldo)}
         </TableCell>
       </TableRow>
