@@ -65,7 +65,7 @@ export default function LabaRugiHeader({ onSubmit }) {
         } else {
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', `Laporan_Laba_Rugi_${selectedUnit?.id}_${selectedDate}.${type === 1 ? 'pdf' : 'xlsx'}`);
+          link.setAttribute('download', `Laporan_Laba_Rugi_${selectedUnit?.id}_${formatDate(selectedDate[0])}_${formatDate(selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`);
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

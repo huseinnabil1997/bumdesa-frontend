@@ -1,7 +1,7 @@
 import axiosInstance from 'src/utils/axiosReportService';
 
 export function getCashFlows(params) {
-  return axiosInstance.get(`report/lak?unit=${params.unit}&date=${params.date}`);
+  return axiosInstance.get(`report/lak`, { params });
 }
 
 export function getBusinessUnits() {
@@ -9,5 +9,6 @@ export function getBusinessUnits() {
 }
 
 export function getDownloadCashflows(params) {
-  return axiosInstance.get(`/report/generate/lak?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
+  return axiosInstance.get(`/report/generate/lak`, { params, responseType: 'blob' });
 }
+
