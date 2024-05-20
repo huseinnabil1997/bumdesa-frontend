@@ -29,7 +29,7 @@ import moment from 'moment';
 export default function StepThreeForm() {
   const { registerForm } = useAuth();
 
-  const { data: sectors } = useGetSector();
+  const { data: sectors, loading: sectorsLoading } = useGetSector();
   const { data } = useGetRegisSequence(3);
 
   const isMountedRef = useIsMountedRef();
@@ -92,6 +92,7 @@ export default function StepThreeForm() {
           name="image"
           label="Foto Kantor BUM Desa"
           accept="image/*"
+          imageFrom={'bumdesa'}
           maxSize={10000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
@@ -135,8 +136,8 @@ export default function StepThreeForm() {
           require
           name="sector"
           label="Sektor Usaha"
-          loading={false}
-          options={sectors}
+          loading={sectorsLoading}
+          options={sectors ?? []}
           getOptionLabel={(option) => option.label}
           renderOption={(props, option) => (
             <li {...props} key={option.value}>

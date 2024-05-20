@@ -100,6 +100,7 @@ export default function StepTwoForm() {
           name="image"
           label="Foto Direktur BUM Desa"
           accept="image/*"
+          imageFrom={'organization'}
           maxSize={10000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
@@ -131,6 +132,7 @@ export default function StepTwoForm() {
               name={`organizations.${i}.image`}
               label="Foto Pengurus BUM Desa"
               accept="image/*"
+              imageFrom={'organization'}
               maxSize={10000000}
               onDrop={(file) =>
                 handleDrop(file, (val) => setValue(`organizations.${i}.image`, val))
@@ -158,7 +160,7 @@ export default function StepTwoForm() {
               name={`organizations.${i}.phone`}
               label="Nomor HP"
               require
-              type="number"
+              type="tel"
             />
 
             <Divider />

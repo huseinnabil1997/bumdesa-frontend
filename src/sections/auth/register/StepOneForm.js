@@ -146,6 +146,7 @@ export default function StepOneForm() {
             name="image"
             label="Foto Kantor BUM Desa"
             accept="image/*"
+            imageFrom={'bumdesa'}
             maxSize={10000000}
             onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
             helperText={
@@ -170,6 +171,7 @@ export default function StepOneForm() {
             name="image_logo"
             label="Logo BUM Desa"
             accept="image/*"
+            imageFrom={'bumdesa'}
             maxSize={10000000}
             onDrop={(file) => handleDrop(file, (val) => setValue(`image_logo`, val))}
             helperText={
