@@ -18,6 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import { useGetLedgers } from 'src/query/hooks/ledger/useGetLedgers';
 import moment from 'moment';
 import TableError from 'src/components/table/TableError';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -26,23 +27,48 @@ JurnalList.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
+const currentDate = new Date();
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
 export default function JurnalList() {
-  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
+  const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
+
   const methods = useForm({
-    defaultValues: { unit: null, year: new Date() },
+    defaultValues: {
+      account: { value: '1.1.01.01', label: 'Kas Tunai' },
+      year: [firstDayOfMonth, currentDate],
+    },
   });
 
   const { watch } = methods;
 
   const { data, isLoading, isError } = useGetLedgers({
-    ...DEFAULT_FILTER,
+    ...filter,
     account_code: watch('account')?.value ?? null,
-    date: moment(watch('year')).format('yyyy') ?? null,
+    start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
+    end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
   });
+
+  const handleChangeFilter = () => {
+    setPage(1);
+
+    setFilter((prevState) => ({
+      ...prevState,
+      account_code: watch('account')?.value ?? null,
+      start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
+      end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
+      page: 1,
+    }));
+  };
+
+  useEffect(() => {
+    handleChangeFilter();
+  }, [watch('year'), watch('account_code')]);
 
   return (
     <Page>
@@ -52,7 +78,8 @@ export default function JurnalList() {
             filter={{
               page,
               account_code: watch('account')?.value ?? null,
-              date: moment(watch('year')).format('yyyy') ?? null,
+              start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
+              end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
             }}
           />
         </FormProvider>
