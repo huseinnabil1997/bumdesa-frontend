@@ -12,8 +12,7 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-import { RHFAutocomplete } from 'src/components/hook-form';
-import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
+import { RHFAutocomplete, RHFDateRangePicker } from 'src/components/hook-form';
 import { useDownloadLedger } from 'src/query/hooks/ledger/useDownloadLedger';
 import { useGetAccount } from 'src/query/hooks/options/useGetAccount';
 import { StyledButton } from 'src/theme/custom/Button';
@@ -86,26 +85,9 @@ export default function LedgerHeader({ filter }) {
             </li>
           )}
         />
-        <RHFDatePicker
-          name="year"
-          placeholder="Pilih Tahun"
-          format="yyyy"
-          views={['year']}
-          openTo="year"
-          sx={{
-            width: '200px',
-            '& .MuiInputBase-root': {
-              height: '40px',
-              borderRadius: '8px',
-            },
-            '& .MuiInputBase-input': {
-              height: '11px',
-            },
-          }}
-          require
-        />
+        <RHFDateRangePicker name="year" />
       </Stack>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ ml: 1 }}>
         <StyledButton
           disabled={isLoading}
           sx={{ width: 186 }}

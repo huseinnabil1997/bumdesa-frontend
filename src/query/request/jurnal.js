@@ -20,8 +20,9 @@ export function deleteJurnal(id) {
   return axios.delete(`journals/${id}`);
 }
 
-export function downloadJurnal(type) {
-  return axios.get(`journals/report-generate?type=${type}`, {
+export function downloadJurnal(param) {
+  return axios.get(`journals/report-generate`, {
+    params: param,
     responseType: 'blob',
   });
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // @mui
 import {
@@ -25,7 +25,7 @@ import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/ta
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { JurnalHeader, TableRow } from 'src/sections/jurnal';
-import { DEFAULT_FILTER, JURNAL_HEAD } from 'src/utils/constant';
+import { JURNAL_HEAD } from 'src/utils/constant';
 import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
@@ -34,6 +34,7 @@ import { useDeleteJurnal } from 'src/query/hooks/jurnals/useDeleteJurnal';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import TableError from 'src/components/table/TableError';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,9 @@ JurnalList.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
+const currentDate = new Date();
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
 export default function JurnalList() {
   const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
 
@@ -49,9 +53,19 @@ export default function JurnalList() {
   const theme = useTheme();
   const router = useRouter();
 
-  const [filter, setFilter] = useState(DEFAULT_FILTER);
+  const methods = useForm({
+    defaultValues: { date: [firstDayOfMonth, currentDate] },
+  });
 
-  const { data, isLoading, isError, refetch } = useGetJurnals(filter);
+  const { watch } = methods;
+
+  const { data, isLoading, isError, refetch } = useGetJurnals({
+    limit: 10,
+    page,
+    start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
+    end_date: moment(watch('date')[1]).format('yyyy-MM-DD') ?? null,
+  });
+
   const { mutate: onDelete, isLoading: deleting } = useDeleteJurnal();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -73,31 +87,21 @@ export default function JurnalList() {
     router.push(`/jurnal/${row.id}`);
   };
 
-  const methods = useForm({
-    defaultValues: { date: null },
-  });
-
-  const { watch } = methods;
-
-  const handleChangeFilter = () => {
-    setPage(1);
-
-    setFilter((prevState) => ({
-      ...prevState,
-      date: watch('date'),
-      page: 1,
-    }));
-  };
-
   useEffect(() => {
-    handleChangeFilter();
+    setPage(1);
   }, [watch('date')]);
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
-          <JurnalHeader />
+          <JurnalHeader
+            filter={{
+              page,
+              start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
+              end_date: moment(watch('date')[1]).format('yyyy-MM-DD') ?? null,
+            }}
+          />
         </FormProvider>
         {deleting && (
           <Alert

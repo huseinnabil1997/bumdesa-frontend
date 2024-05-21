@@ -13,10 +13,17 @@ const fetchData = async (param) => {
 
 export const useGetLedgers = (param) => {
   const getQuery = useQuery(
-    ['GET_LEDGERS', param.page, param.date, param?.account_code, param?.date],
+    [
+      'GET_LEDGERS',
+      param.page,
+      param.date,
+      param?.account_code,
+      param?.start_date,
+      param?.end_date,
+    ],
     () => fetchData(param),
     {
-      enabled: !!(param?.account_code && param?.date),
+      enabled: !!(param?.account_code && param?.start_date && param?.end_date),
     }
   );
 
