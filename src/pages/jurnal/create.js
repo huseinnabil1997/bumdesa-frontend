@@ -150,8 +150,6 @@ export default function JurnalCreate() {
     let color = 'default';
     let label = 'Netral';
 
-    console.log(watch('debit'));
-
     if (watch('debit') === 'Rp 0' && watch('credit') === 'Rp 0')
       return type === 'color' ? color : label;
 
@@ -165,8 +163,6 @@ export default function JurnalCreate() {
 
     return type === 'color' ? color : label;
   };
-
-  console.log(errors);
 
   return (
     <Page>
@@ -272,7 +268,7 @@ export default function JurnalCreate() {
                       <CreateCashFlow
                         formChecking={formChecking}
                         i={i}
-                        type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
+                        type={watch(`accounts.${i}.debit`) > 0 ? 'C' : 'D'}
                         account={watch(`accounts.${i}.account_code`)?.value ?? ''}
                       />
                     </Grid>
