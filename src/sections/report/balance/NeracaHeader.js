@@ -21,6 +21,9 @@ function formatDate(inputDate) {
   return `${year}/${month}/${day}`;
 }
 
+const currentDate = new Date();
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
   indicatorBalance: PropTypes.string,
@@ -46,7 +49,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   const [open, setOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState([null, null]);
+  const [selectedDate, setSelectedDate] = useState([firstDayOfMonth, currentDate]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
@@ -125,8 +128,6 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
   // };
 
   useEffect(() => {
-    const currentDate = new Date();
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     setSelectedDate([firstDayOfMonth, currentDate]);
     onSubmit({
       unit: decoded?.sub?.businessid ?? selectedUnit?.id,
