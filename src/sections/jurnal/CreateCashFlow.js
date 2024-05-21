@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // components
-import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
+import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetCashFlow } from 'src/query/hooks/options/useGetCashFlow';
 
 // ----------------------------------------------------------------------

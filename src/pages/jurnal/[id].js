@@ -38,6 +38,7 @@ import { LoadingButton } from '@mui/lab';
 import { useGetJurnal } from 'src/query/hooks/jurnals/useGetJurnal';
 import moment from 'moment';
 import { useUpdateJurnal } from 'src/query/hooks/jurnals/useUpdateJurnal';
+import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -122,14 +123,18 @@ export default function JurnalCreate() {
   const generateTotalDebt = () => {
     setValue(
       'debit',
-      accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.debit), 0)
+      fCurrency(
+        accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.debit), 0)
+      )
     );
   };
 
   const generateTotalCred = () => {
     setValue(
       'credit',
-      accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.credit), 0)
+      fCurrency(
+        accounts.reduce((accumulator, currentValue) => accumulator + Number(currentValue.credit), 0)
+      )
     );
   };
 
@@ -287,8 +292,20 @@ export default function JurnalCreate() {
 
                   <Stack direction="row" alignItems="center" spacing={3}>
                     <Typography variant="h6">Total</Typography>
-                    <RHFTextField require name="debit" variant="standard" sx={{ width: 240 }} />
-                    <RHFTextField require name="credit" variant="standard" sx={{ width: 240 }} />
+                    <RHFTextField
+                      require
+                      name="debit"
+                      variant="standard"
+                      sx={{ width: 240 }}
+                      disabled
+                    />
+                    <RHFTextField
+                      require
+                      name="credit"
+                      variant="standard"
+                      sx={{ width: 240 }}
+                      disabled
+                    />
                   </Stack>
                 </Stack>
               </Box>

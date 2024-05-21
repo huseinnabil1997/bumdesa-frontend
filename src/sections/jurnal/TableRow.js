@@ -76,7 +76,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
         <TableCell>{number_of_evidence}</TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>{transaction_information}</TableCell>
-        <TableCell>{business_unit_name}</TableCell>
+        <TableCell>{business_unit_name === '' ? '-' : business_unit_name}</TableCell>
         <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
 
