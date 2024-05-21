@@ -22,7 +22,7 @@ function formatDate(inputDate) {
 }
 
 const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 LabaRugiHeader.propTypes = {
   onSubmit: PropTypes.func,

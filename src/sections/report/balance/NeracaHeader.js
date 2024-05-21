@@ -22,7 +22,7 @@ function formatDate(inputDate) {
 }
 
 const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
