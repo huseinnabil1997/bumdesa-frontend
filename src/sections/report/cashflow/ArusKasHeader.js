@@ -21,6 +21,9 @@ function formatDate(inputDate) {
   return `${year}/${month}/${day}`;
 }
 
+const currentDate = new Date();
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+
 ArusKasHeader.propTypes = {
   onSubmit: PropTypes.func,
 };
@@ -44,7 +47,7 @@ export default function ArusKasHeader({ onSubmit }) {
   const anchorRef = useRef(null);
   const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState([null, null]);
+  const [selectedDate, setSelectedDate] = useState([firstDayOfMonth, currentDate]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
@@ -108,8 +111,6 @@ export default function ArusKasHeader({ onSubmit }) {
   };
 
   useEffect(() => {
-    const currentDate = new Date();
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     setSelectedDate([firstDayOfMonth, currentDate]);
     onSubmit({
       unit: decoded?.sub?.businessid ?? selectedUnit?.id,
