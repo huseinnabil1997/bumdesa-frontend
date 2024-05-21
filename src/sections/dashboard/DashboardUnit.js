@@ -35,14 +35,16 @@ export default function DashboardUnit() {
         </StyledButton>
       </Stack>
       <Scrollbar>
-        {isLoading && (
+        {!isLoading && (
           <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
             <CreateItem />
-            {isFetched && data.map((row) => <ProductItem key={row.id} data={row} />)}
+            {isFetched &&
+              data.data &&
+              data.data.map((row) => <ProductItem key={row.id} data={row} />)}
           </Stack>
         )}
 
-        {!isLoading && (
+        {isLoading && (
           <Stack direction="row" spacing={3}>
             <Skeleton height={250} width={250} />
             <Skeleton height={250} width={250} />
