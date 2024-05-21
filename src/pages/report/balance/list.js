@@ -37,7 +37,7 @@ export default function LaporanNeraca() {
   const { data, isLoading, refetch } = useGetBalance(submitValue);
 
   const methods = useForm({
-    defaultValues: { unit: null, date: null },
+    defaultValues: { unit: null, start_date: null, end_date: null },
   });
 
   const { handleSubmit } = methods;
@@ -47,20 +47,30 @@ export default function LaporanNeraca() {
     await refetch()
   };
 
-  function convertToMonthYear(dateString) {
-    if (dateString) {
-      const [year, month] = dateString.split('-');
-      const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'
-      ];
-
+  function convertToMonthYear(start_date, end_date) {
+    let startDateText = '...';
+    let endDateText = '...';
+    const monthNames = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
+      'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    if (start_date) {
+      const [year, month, day] = start_date.split('/');
       const monthIndex = parseInt(month, 10) - 1;
       const monthName = monthNames[monthIndex];
+      const dayNumber = parseInt(day, 10);
 
-      return `${monthName} ${year}`;
+      startDateText = `${dayNumber} ${monthName} ${year}`;
     }
-    return 'Saldo';
+    if (end_date) {
+      const [year, month, day] = end_date.split('/');
+      const monthIndex = parseInt(month, 10) - 1;
+      const monthName = monthNames[monthIndex];
+      const dayNumber = parseInt(day, 10);
+
+      endDateText = `${dayNumber} ${monthName} ${year}`;
+    }
+    return `${startDateText} - ${endDateText}`;
   }
 
   const getIndicatorBalance = () => {
@@ -88,7 +98,7 @@ export default function LaporanNeraca() {
                 <TableHeadCustom
                   headLabel={[
                     { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
-                    { id: 'saldo', label: convertToMonthYear(submitValue?.date), align: 'left', width: 480 },
+                    { id: 'saldo', label: convertToMonthYear(submitValue?.start_date, submitValue?.end_date), align: 'left', width: 480 },
                   ]}
                   rowCount={data?.length}
                   sx={{ background: theme.palette.grey[200], height: '56px' }}

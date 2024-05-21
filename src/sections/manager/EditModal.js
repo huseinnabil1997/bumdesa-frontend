@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box } from '@mui/material';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import PropTypes from 'prop-types';
@@ -10,19 +10,8 @@ import * as Yup from 'yup';
 import { Info } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
-
-const positions = [
-  { value: 'Kepala Desa', label: 'Kepala Desa' },
-  { value: 'Sekretaris', label: 'Sekretaris' },
-  { value: 'Bendahara', label: 'Bendahara' },
-  { value: 'Kepala Sekretariat', label: 'Kepala Sekretariat' },
-  { value: 'Kepala BUM Desa', label: 'Kepala BUM Desa' },
-  { value: 'Kepala BUM Kecamatan', label: 'Kepala BUM Kecamatan' },
-  { value: 'Kepala BUM Kabupaten', label: 'Kepala BUM Kabupaten' },
-  { value: 'Kepala BUM Provinsi', label: 'Kepala BUM Provinsi' },
-  { value: 'Kepala BUM Nasional', label: 'Kepala BUM Nasional' },
-  { value: 'Kepala BUM Internasional', label: 'Kepala BUM Internasional' },
-];
+import { useGetManagerById } from 'src/query/hooks/manager/useGetManagerById';
+import { useUpdateManager } from 'src/query/hooks/manager/useUpdateManager';
 
 const NewModalSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Anggota BUM Desa wajib diisi'),
@@ -106,17 +95,18 @@ const styles = {
   }
 };
 
-function NewModal({ open, onClose, id }) {
+function EditModal({ open, onClose, id, positions }) {
 
-  console.log('cek id', id);
+  const { data: manager } = useGetManagerById(id);
+  const { mutate: updateManager, isLoading: isUpdating } = useUpdateManager();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
-    image: '1029928034_contoh_gambar_unit_usaha.png',
-    name: 'Budi Jailani',
-    position: positions?.[0],
-    phone: '081234567890',
+    image: manager?.photo ?? null,
+    name: manager?.name ?? '',
+    position: manager?.position ? { value: manager?.position, label: manager?.position_name } : null,
+    phone: manager?.phone ?? '',
   };
 
   const methods = useForm({
@@ -132,29 +122,62 @@ function NewModal({ open, onClose, id }) {
     watch,
   } = methods;
 
+  useEffect(() => {
+    resetForm();
+  }, [manager]);
+
+  const resetForm = () => {
+    setValue('name', manager?.name);
+    setValue('position', manager?.position ? { value: manager?.position, label: manager?.position_name } : null);
+    setValue('phone', manager?.phone);
+    setValue('image', manager?.photo);
+  };
+
   const onSubmit = (data) => {
-    console.log('onSubmit', data);
-    onClose();
-    enqueueSnackbar('', {
-      variant: 'success',
-      content: () => (
-        <Box
-          display="flex"
-          alignItems="center"
-          sx={styles.snackbar}
-        >
-          <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
-          <Typography fontSize="12px">Data Pengurus Telah Ditambahkan!</Typography>
-        </Box>
-      )
-    });
+    const formData = new FormData();
+    formData.append('name', data?.name);
+    formData.append('position', data?.position?.value);
+    formData.append('phone', data?.phone);
+    formData.append('image', data?.image);
+    updateManager(
+      {
+        id: manager?.id,
+        payload: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
+      {
+        onSuccess: () => {
+          onClose();
+          resetForm();
+          enqueueSnackbar('', {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={styles.snackbar}
+              >
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
+                <Typography fontSize="12px">Data Pengurus Telah Diperbarui!</Typography>
+              </Box>
+            )
+          });
+        },
+        onError: (err) => {
+          enqueueSnackbar(err.message, { variant: 'error' });
+        },
+      }
+    );
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={() => {
+          onClose();
+          resetForm();
+        }}
         PaperProps={{
           sx: styles.dialogStyle,
         }}
@@ -167,7 +190,7 @@ function NewModal({ open, onClose, id }) {
             label="Foto Anggota BUM Desa"
             accept="image/*"
             maxSize={10000000}
-            imageFrom={'unit'}
+            imageFrom={'organization'}
             onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
             errorTextAlign="left"
             errorPosition="bottom"
@@ -196,8 +219,8 @@ function NewModal({ open, onClose, id }) {
             require
             name="position"
             label="Jabatan Anggota"
-            placeholder="Pilih Sektor Usaha"
-            loading={false}
+            placeholder="Pilih Jabatan"
+            loading={true}
             sx={styles.textfield.id}
             options={positions?.map((option) => option) ?? []}
             getOptionLabel={(option) => option.label}
@@ -225,7 +248,7 @@ function NewModal({ open, onClose, id }) {
           }}>
             <Info sx={styles.infoIcon} />
             <Typography sx={styles.infoText}>
-              Data profil Anda akan digunakan untuk berbagai keperluan BUM Desa, seperti penyaluran 
+              Data profil Anda akan digunakan untuk berbagai keperluan BUM Desa, seperti penyaluran
               informasi, undangan kegiatan, dan lainnya.
             </Typography>
           </Box>
@@ -235,7 +258,10 @@ function NewModal({ open, onClose, id }) {
           <StyledLoadingButton
             variant='outlined'
             sx={styles.buttonStyle}
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              resetForm();
+            }}
           >
             Batal
           </StyledLoadingButton>
@@ -245,6 +271,7 @@ function NewModal({ open, onClose, id }) {
             onClick={handleSubmit(onSubmit)}
             disabled={
               isSubmitting
+              || isUpdating
               || !watch('image')
               || !watch('name')
               || !watch('position')
@@ -259,11 +286,12 @@ function NewModal({ open, onClose, id }) {
   );
 }
 
-NewModal.propTypes = {
+EditModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
+  positions: PropTypes.array,
 };
 
-export default NewModal;
+export default EditModal;
 

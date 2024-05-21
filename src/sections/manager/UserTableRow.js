@@ -41,7 +41,7 @@ export default function UserTableRowUnit({
   disableDelete = false,
 }) {
   const theme = useTheme();
-  const { name, email, year_founded } = row;
+  const { name, position_name, phone } = row;
 
   return (
     <TableRow
@@ -55,8 +55,8 @@ export default function UserTableRowUnit({
       }}>
 
       <TableCell>{name}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{email}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell sx={{ color: '#777777', height: 56 }}>{position_name}</TableCell>
+      <TableCell sx={{ color: '#777777', height: 56 }}>{phone}</TableCell>
 
       <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
         <IconButton onClick={onEditRow}>

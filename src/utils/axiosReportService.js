@@ -10,8 +10,8 @@ const axiosInstance = axios.create({
 });
 
 const checkAuth = (error) => {
-  // if ([401, 403].includes(error.response?.status ?? 0)) {
-  if ([444].includes(error.response?.status ?? 0)) {
+  if ([401, 403].includes(error.response?.status ?? 0)) {
+  // if ([444].includes(error.response?.status ?? 0)) {
     localStorage.removeItem('token');
     window.location.href = '/auth/login';
   }

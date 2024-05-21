@@ -15,7 +15,7 @@ import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 import { UserTableRow } from '../../../sections/report/profit';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { PROFIT_HEAD } from 'src/utils/constant';
+// import { PROFIT_HEAD } from 'src/utils/constant';
 import { useTheme } from '@mui/material/styles';
 import { LabaRugiHeader } from 'src/sections/report/profit';
 import { useGetProfit } from 'src/query/hooks/report/profit/useGetProfit';
@@ -47,6 +47,32 @@ export default function LaporanLabaRugi() {
     await refetch()
   };
 
+  function convertToMonthYear(start_date, end_date) {
+    let startDateText = '...';
+    let endDateText = '...';
+    const monthNames = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
+      'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    if (start_date) {
+      const [year, month, day] = start_date.split('/');
+      const monthIndex = parseInt(month, 10) - 1;
+      const monthName = monthNames[monthIndex];
+      const dayNumber = parseInt(day, 10);
+
+      startDateText = `${dayNumber} ${monthName} ${year}`;
+    }
+    if (end_date) {
+      const [year, month, day] = end_date.split('/');
+      const monthIndex = parseInt(month, 10) - 1;
+      const monthName = monthNames[monthIndex];
+      const dayNumber = parseInt(day, 10);
+
+      endDateText = `${dayNumber} ${monthName} ${year}`;
+    }
+    return `${startDateText} - ${endDateText}`;
+  }
+
   return (
     <Page title="Laporan: Laba Rugi">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -58,7 +84,10 @@ export default function LaporanLabaRugi() {
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={PROFIT_HEAD}
+                  headLabel={[
+                    { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
+                    { id: 'saldo', label: convertToMonthYear(submitValue?.start_date, submitValue?.end_date), align: 'left', width: 480 },
+                  ]}
                   rowCount={data?.length}
                   sx={{ background: theme.palette.grey[200], height: '56px' }}
                 />

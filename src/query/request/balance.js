@@ -1,7 +1,7 @@
 import axiosInstance from 'src/utils/axiosReportService';
 
 export function getBalances(params) {
-  return axiosInstance.get(`report/neraca?unit=${params.unit}&date=${params.date}`);
+  return axiosInstance.get(`report/neraca`, { params });
 }
 
 export function getBusinessUnits() {
@@ -9,5 +9,5 @@ export function getBusinessUnits() {
 }
 
 export function getDownloadBalances(params) {
-  return axiosInstance.get(`/report/generate/neraca?unit=${params.unit}&date=${params.date}&type=${params.type}`, { responseType: 'blob' });
+  return axiosInstance.get(`/report/generate/neraca`, { params, responseType: 'blob' });
 }
