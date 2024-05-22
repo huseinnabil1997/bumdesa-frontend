@@ -12,7 +12,9 @@ const fetchData = async (param) => {
 };
 
 export const useGetJurnals = (param) => {
-  const getQuery = useQuery(['GET_JURNALS', param.page, param.date], () => fetchData(param));
+  const getQuery = useQuery(['GET_JURNALS', param.page, param.end_date], () => fetchData(param), {
+    enabled: !!(param?.page && param?.start_date && param?.end_date),
+  });
 
   return getQuery;
 };

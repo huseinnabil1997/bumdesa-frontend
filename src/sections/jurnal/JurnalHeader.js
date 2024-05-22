@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Add, ArrowDropDown, Download } from '@mui/icons-material';
 import {
   MenuItem,
@@ -12,14 +13,18 @@ import {
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-import { RHFTextField } from 'src/components/hook-form';
+import { RHFDateRangePicker } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { useDownloadJurnal } from 'src/query/hooks/jurnals/useDownloadJurnal';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
-export default function JurnalHeader() {
+JurnalHeader.propTypes = {
+  filter: PropTypes.object,
+};
+
+export default function JurnalHeader({ filter }) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -35,7 +40,13 @@ export default function JurnalHeader() {
   };
 
   const handleMenuItemClick = (event, index) => {
-    download(index, {
+    const payload = {
+      ...filter,
+      limit: 10,
+      type: index === 99 ? 1 : index,
+    };
+
+    download(payload, {
       onSuccess: (res) => {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({ file: res, title: 'Jurnal', type: index });
@@ -63,7 +74,7 @@ export default function JurnalHeader() {
   return (
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
-        <RHFTextField size="small" sx={{ width: 180 }} name="date" type="month" />
+        <RHFDateRangePicker name="date" />
       </Stack>
       <Stack direction="row" spacing={1}>
         <StyledButton
