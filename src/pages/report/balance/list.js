@@ -55,7 +55,7 @@ export default function LaporanNeraca() {
       'Agustus', 'September', 'Oktober', 'November', 'Desember'
     ];
     if (start_date) {
-      const [year, month, day] = start_date.split('/');
+      const [year, month, day] = start_date.split('-');
       const monthIndex = parseInt(month, 10) - 1;
       const monthName = monthNames[monthIndex];
       const dayNumber = parseInt(day, 10);
@@ -63,7 +63,7 @@ export default function LaporanNeraca() {
       startDateText = `${dayNumber} ${monthName} ${year}`;
     }
     if (end_date) {
-      const [year, month, day] = end_date.split('/');
+      const [year, month, day] = end_date.split('-');
       const monthIndex = parseInt(month, 10) - 1;
       const monthName = monthNames[monthIndex];
       const dayNumber = parseInt(day, 10);
