@@ -51,6 +51,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                 value={value}
                 onChange={onChange}
                 calendars={1}
+                autoOk={true}
                 renderInput={(startProps, endProps) => (
                   <Stack display="flex" direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <TextField
@@ -59,6 +60,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                       error={!!error}
                       helperText={error?.message}
                       {...other}
+                      inputProps={{ ...startProps.inputProps, readOnly: true }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
@@ -90,6 +92,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                       error={!!error}
                       helperText={error?.message}
                       {...other}
+                      inputProps={{ ...endProps.inputProps, readOnly: true }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
