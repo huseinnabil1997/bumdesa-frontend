@@ -46,7 +46,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
               <DateRangePicker
                 startText="Tanggal awal"
                 endText="Tanggal akhir"
-                inputFormat='yyyy/MM/dd'
+                inputFormat='yyyy-MM-dd'
                 disableFuture
                 value={value}
                 onChange={onChange}
