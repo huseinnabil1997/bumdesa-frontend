@@ -119,6 +119,15 @@ export default function FaqsList({ data }) {
                         ))}
                       </List>
                     );
+                  } else if (ans.type === "image") {
+                    return (
+                      <img
+                        src={ans.value}
+                        alt="Gambar terkait"
+                        key={ans.value}
+                        style={{ width: '100%', height: 'auto' }}
+                      />
+                    );
                   }
                 })}
               </Typography>
