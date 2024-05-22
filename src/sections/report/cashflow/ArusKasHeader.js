@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import jwtDecode from 'jwt-decode';
 import { Description } from '@mui/icons-material';
-import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography } from '@mui/material';
+import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete, RHFDateRangePicker } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
-import { StyledButton } from 'src/theme/custom/Button';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
 
@@ -157,16 +157,16 @@ export default function ArusKasHeader({ onSubmit }) {
         />
       </Stack>
       <Stack direction="row" spacing={1}>
-        <StyledButton
+        <StyledLoadingButton
           sx={{ width: 186 }}
-          startIcon={<Description />}
+          startIcon={downloading ? <CircularProgress size="1rem" /> : <Description />}
           variant="outlined"
           onClick={() => handleMenuItemClick('preview')}
           disabled={downloading}
         >
           Pratinjau Dokumen
-        </StyledButton>
-        <StyledButton
+        </StyledLoadingButton>
+        <StyledLoadingButton
           ref={anchorRef}
           sx={{ width: 210, justifyContent: 'space-around' }}
           aria-controls={open ? 'split-button-menu' : undefined}
@@ -174,13 +174,13 @@ export default function ArusKasHeader({ onSubmit }) {
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
-          startIcon={<Iconify width={14} height={14} icon={'bi:download'} />}
+          startIcon={downloading ? <CircularProgress size="1rem" /> : <Iconify width={14} height={14} icon={'bi:download'} />}
           endIcon={<Iconify icon={'oui:arrow-down'} />}
           variant="contained"
           disabled={downloading}
         >
           Unduh Dokumen
-        </StyledButton>
+        </StyledLoadingButton>
 
         <Popper
           sx={{ zIndex: 99 }}
