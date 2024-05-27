@@ -3,9 +3,8 @@ import { useFormContext, Controller } from 'react-hook-form';
 import { TextField, Typography, Stack, CircularProgress, ThemeProvider, createTheme } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { MobileDateRangePicker } from '@mui/lab';
-import { useState } from 'react';
 import idLocale from 'date-fns/locale/id';
+import { MobileDateRangePicker } from '@mui/lab';
 
 RHFMobileDateRangePicker.propTypes = {
   name: PropTypes.string.isRequired,
@@ -31,8 +30,6 @@ const theme = createTheme({
 });
 
 export default function RHFMobileDateRangePicker({ name, require, isLoading, value, onChange, ...other }) {
-  const [selectedDate, setSelectedDate] = useState(value);
-  const [isOpen, setIsOpen] = useState(false);
   const { control } = useFormContext();
 
   return (
@@ -56,15 +53,13 @@ export default function RHFMobileDateRangePicker({ name, require, isLoading, val
                 toolbarFormat='d MMMM yyyy'
                 disableFuture
                 toolbarTitle="Pilih Rentang Tanggal"
-                value={selectedDate}
+                value={value}
                 onChange={(newValue) => {
-                  setSelectedDate(newValue);
-                  onChange(selectedDate);
+                  onChange(newValue);
                 }}
+                mask='____-__-__'
                 calendars={1}
                 autoOk={true}
-                onOpen={() => setIsOpen(true)}
-                onClose={() => setIsOpen(false)}
                 renderInput={(startProps, endProps) => (
                   <Stack display="flex" direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <TextField
@@ -73,7 +68,7 @@ export default function RHFMobileDateRangePicker({ name, require, isLoading, val
                       error={!!error}
                       helperText={error?.message}
                       {...other}
-                      inputProps={{ ...startProps.inputProps, readOnly: isOpen ? false : true }}
+                      inputProps={{ ...startProps.inputProps, readOnly: false }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
@@ -105,7 +100,7 @@ export default function RHFMobileDateRangePicker({ name, require, isLoading, val
                       error={!!error}
                       helperText={error?.message}
                       {...other}
-                      inputProps={{ ...endProps.inputProps, readOnly: isOpen ? false : true }}
+                      inputProps={{ ...endProps.inputProps, readOnly: false }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
