@@ -5,6 +5,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { MobileDateRangePicker } from '@mui/lab';
 import { useState } from 'react';
+import idLocale from 'date-fns/locale/id';
 
 RHFDateRangePicker.propTypes = {
   name: PropTypes.string.isRequired,
@@ -34,7 +35,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, value, on
   const { control } = useFormContext();
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={idLocale}>
       <Stack>
         {other?.label && (
           <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
@@ -48,10 +49,11 @@ export default function RHFDateRangePicker({ name, require, isLoading, value, on
           render={({ fieldState: { error } }) => (
             <ThemeProvider theme={theme}>
               <MobileDateRangePicker
-                startText="Tanggal awal"
-                endText="Tanggal akhir"
+                startText="Tanggal Mulai"
+                endText="Tanggal Akhir"
                 inputFormat='yyyy-MM-dd'
                 disableFuture
+                toolbarTitle="Pilih Rentang Tanggal"
                 value={selectedDate}
                 onChange={(newValue) => {
                   setSelectedDate(newValue);
