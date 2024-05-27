@@ -5,11 +5,12 @@ import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box,
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
-import { RHFAutocomplete, RHFDateRangePicker } from 'src/components/hook-form';
+import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
+import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 
 const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
@@ -147,7 +148,7 @@ export default function ArusKasHeader({ onSubmit }) {
             value={selectedUnit}
           />
         )}
-        <RHFDateRangePicker
+        <RHFMobileDateRangePicker
           name="date"
           onChange={(newValue) => {
             setSelectedDate(newValue);

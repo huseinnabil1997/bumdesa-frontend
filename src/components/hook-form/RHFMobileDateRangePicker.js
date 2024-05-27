@@ -4,10 +4,10 @@ import { TextField, Typography, Stack, CircularProgress, ThemeProvider, createTh
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { MobileDateRangePicker } from '@mui/lab';
-import idLocale from 'date-fns/locale/id';
 import { useState } from 'react';
+import idLocale from 'date-fns/locale/id';
 
-RHFDateRangePicker.propTypes = {
+RHFMobileDateRangePicker.propTypes = {
   name: PropTypes.string.isRequired,
   require: PropTypes.bool,
   isLoading: PropTypes.bool,
@@ -30,7 +30,8 @@ const theme = createTheme({
   },
 });
 
-export default function RHFDateRangePicker({ name, require, isLoading, ...other }) {
+export default function RHFMobileDateRangePicker({ name, require, isLoading, value, onChange, ...other }) {
+  const [selectedDate, setSelectedDate] = useState(value);
   const [isOpen, setIsOpen] = useState(false);
   const { control } = useFormContext();
 
@@ -46,7 +47,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
         <Controller
           name={name}
           control={control}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ fieldState: { error } }) => (
             <ThemeProvider theme={theme}>
               <MobileDateRangePicker
                 startText="Tanggal Mulai"
@@ -54,8 +55,11 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                 inputFormat='yyyy-MM-dd'
                 disableFuture
                 toolbarTitle="Pilih Rentang Tanggal"
-                value={value}
-                onChange={onChange}
+                value={selectedDate}
+                onChange={(newValue) => {
+                  setSelectedDate(newValue);
+                  onChange(selectedDate);
+                }}
                 calendars={1}
                 autoOk={true}
                 onOpen={() => setIsOpen(true)}
