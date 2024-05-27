@@ -52,6 +52,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                 startText="Tanggal Mulai"
                 endText="Tanggal Akhir"
                 inputFormat='yyyy-MM-dd'
+                toolbarFormat='d MMMM yyyy'
                 disableFuture
                 toolbarTitle="Pilih Rentang Tanggal"
                 value={value}
