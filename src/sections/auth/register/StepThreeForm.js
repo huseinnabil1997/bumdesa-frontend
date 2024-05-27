@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, Alert, Divider, AlertTitle, Typography } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import {
   FormProvider,
@@ -24,6 +23,7 @@ import { useGetRegisSequence } from 'src/query/hooks/auth/useGetRegisSequence';
 import { useEffect } from 'react';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
 
 export default function StepThreeForm() {
@@ -32,7 +32,7 @@ export default function StepThreeForm() {
   const { data: sectors, loading: sectorsLoading } = useGetSector();
   const { data } = useGetRegisSequence(3);
 
-  const isMountedRef = useIsMountedRef();
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
@@ -42,7 +42,6 @@ export default function StepThreeForm() {
   });
 
   const {
-    reset,
     setValue,
     setError,
     handleSubmit,
@@ -67,10 +66,7 @@ export default function StepThreeForm() {
       if (res.code === 200) router.push('/auth/register/step-four');
       else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
-      }
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 

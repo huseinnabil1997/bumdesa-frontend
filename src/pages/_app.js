@@ -98,9 +98,9 @@ export default function MyApp(props) {
 
   const isLogin = !!getSessionToken();
 
-  useEffect(() => {
-    if (router.asPath.includes('/login') && isLogin) router.push('/auth/register/step-one');
-  }, [router.asPath]);
+  // useEffect(() => {
+  //   if (router.asPath.includes('/login') && isLogin) router.push('/auth/register/step-one');
+  // }, [router.asPath]);
 
   return (
     <>

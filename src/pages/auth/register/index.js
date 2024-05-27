@@ -17,6 +17,7 @@ import { RegisterForm } from '../../../sections/auth/register';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -179,7 +180,7 @@ export default function Register() {
                     />
                   </Box>
 
-                  <Button
+                  <StyledLoadingButton
                     size="large"
                     fullWidth
                     sx={{ mt: 3 }}
@@ -189,7 +190,7 @@ export default function Register() {
                     onClick={onSubmit}
                   >
                     Lanjutkan
-                  </Button>
+                  </StyledLoadingButton>
 
                   <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                     Tidak mendapat OTP?

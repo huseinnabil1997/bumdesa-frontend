@@ -14,7 +14,7 @@ export const StepOneSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto BUM Desa wajib diisi'),
   image_logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
   employees: Yup.string()
-    .matches(positiveRegex, 'Hanya dapat diisi angka')
+    .matches(positiveRegex, 'Hanya dapat diisi angka positif')
     .required('Jumlah pegawai tetap wajib diisi'),
 });
 

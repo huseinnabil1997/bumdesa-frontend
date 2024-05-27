@@ -24,7 +24,7 @@ import AlertDeleteVendor from '../../components/modal/DeleteVendor';
 // sections
 import { FormProvider, RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { BtnLightPrimary, StyledButton } from 'src/theme/custom/Button';
+import { BtnLightPrimary, StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 import { Add, ArrowBackOutlined, Cancel, Close, Info } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
@@ -35,7 +35,6 @@ import { useCreateJurnal } from 'src/query/hooks/jurnals/useCreatejurnal';
 import { jurnalDefaultValues, jurnalSchema } from 'src/sections/jurnal/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { LoadingButton } from '@mui/lab';
 import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
@@ -365,7 +364,7 @@ export default function JurnalCreate() {
                   </Typography>
                 </Alert>
               )}
-              <LoadingButton
+              <StyledLoadingButton
                 loading={creating}
                 variant="contained"
                 sx={{ width: 200, height: 42 }}
@@ -373,7 +372,7 @@ export default function JurnalCreate() {
                 type="submit"
               >
                 Simpan
-              </LoadingButton>
+              </StyledLoadingButton>
             </Stack>
           </Card>
           <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} />

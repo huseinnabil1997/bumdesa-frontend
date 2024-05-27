@@ -73,10 +73,20 @@ UploadPhoto.propTypes = {
   sx: PropTypes.object,
   label: PropTypes.string,
   imageFrom: PropTypes.string,
-  errorPosition: PropTypes.string
+  errorPosition: PropTypes.string,
 };
 
-export default function UploadPhoto({ name, label, error, file, helperText, sx, imageFrom, errorPosition, ...other }) {
+export default function UploadPhoto({
+  name,
+  label,
+  error,
+  file,
+  helperText,
+  sx,
+  imageFrom,
+  errorPosition,
+  ...other
+}) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     ...other,
@@ -133,7 +143,11 @@ export default function UploadPhoto({ name, label, error, file, helperText, sx, 
             }}
             onClick={() => {
               if (file) {
-                handleOpenModal(isString(file) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}` : file.preview);
+                handleOpenModal(
+                  isString(file)
+                    ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                    : file.preview
+                );
               } else {
                 handleClickUpload();
               }
@@ -142,10 +156,16 @@ export default function UploadPhoto({ name, label, error, file, helperText, sx, 
             <input {...getInputProps()} ref={fileInputRef} />
 
             {file && (
-              <Image alt="image" src={isString(file) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}` : file.preview} sx={{ zIndex: 8 }} />
+              <Image
+                alt="image"
+                src={
+                  isString(file)
+                    ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                    : file.preview
+                }
+                sx={{ zIndex: 8 }}
+              />
             )}
-
-            {console.log('file', file)}
 
             <PlaceholderStyle
               className="placeholder"
@@ -166,7 +186,14 @@ export default function UploadPhoto({ name, label, error, file, helperText, sx, 
           </DropZoneStyle>
         </RootStyle>
 
-        <Stack sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+        <Stack
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
           <Box mr={2}>
             <StyledLoadingButton
               variant="contained"
@@ -186,18 +213,34 @@ export default function UploadPhoto({ name, label, error, file, helperText, sx, 
             </StyledLoadingButton>
             {helperText && helperText}
           </Box>
-          {fileRejections.length > 0 && errorPosition === 'right' && <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />}
+          {fileRejections.length > 0 && errorPosition === 'right' && (
+            <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />
+          )}
         </Stack>
       </Container>
-      {fileRejections.length > 0 && errorPosition === 'bottom' && <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />}
+      {fileRejections.length > 0 && errorPosition === 'bottom' && (
+        <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />
+      )}
       <Modal
         open={isModalOpen}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24 }}>
-          {modalImage && <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'auto',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+          }}
+        >
+          {modalImage && (
+            <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+          )}
         </Box>
       </Modal>
     </>
