@@ -16,3 +16,11 @@ export function getSectors() {
     }
   });
 }
+
+export function deactivateUnit(id) {
+  return axiosInstance.patch(`/business-units/${id}/deactivate`);
+}
+
+export function activateUnit(id) {
+  return axiosInstance.patch(`/business-units/${id}/activate`);
+}

@@ -59,6 +59,13 @@ export default function Login() {
   const router = useRouter();
 
   const mdUp = useResponsive('up', 'md');
+  
+  console.log('url env:', {
+    base_url: process.env.NEXT_PUBLIC_BASE_URL,
+    core_service: process.env.NEXT_PUBLIC_CORE_SERVICE,
+    report_service: process.env.NEXT_PUBLIC_REPORT_SERVICE,
+    bumdesa_asset: process.env.NEXT_PUBLIC_BUMDESA_ASSET,
+  })
 
   return (
     <GuestGuard>

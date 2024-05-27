@@ -4,7 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Chip, Tooltip, tooltipClasses, IconButton } from '@mui/material';
 // components
 import Iconify from '../../../components/Iconify';
-import { Info } from '@mui/icons-material';
+import { CheckCircle, DoNotDisturb, Info } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +30,8 @@ UserTableRowUnit.propTypes = {
   onResendRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onDeactivateRow: PropTypes.func,
+  onActivateRow: PropTypes.func,
   disableDelete: PropTypes.bool,
   onViewRow: PropTypes.func,
 };
@@ -43,6 +45,8 @@ export default function UserTableRowUnit({
   onViewRow,
   onResendRow,
   onDeleteRow,
+  onDeactivateRow,
+  onActivateRow,
   disableDelete = false,
 }) {
   const theme = useTheme();
@@ -63,10 +67,14 @@ export default function UserTableRowUnit({
       <TableCell sx={{ color: '#777777', height: 56 }}>{email}</TableCell>
       <TableCell sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
       <TableCell>
-        {status === 1 ? (
+        {status === 1 && (
           <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-        ) : (
+        )}
+        {status === 0 && (
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
+        )}
+        {status === 3 && (
+          <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
         )}
       </TableCell>
 
@@ -107,6 +115,20 @@ export default function UserTableRowUnit({
             />
           </IconButton>
         )}
+        {status !== 3 &&
+          <DeleteTooltip title="Nonaktifkan Unit">
+            <IconButton onClick={onDeactivateRow}>
+              <DoNotDisturb sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
+            </IconButton>
+          </DeleteTooltip>
+        }
+        {status === 3 &&
+          <DeleteTooltip title="Aktifkan Unit">
+            <IconButton onClick={onActivateRow}>
+              <CheckCircle sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
+            </IconButton>
+          </DeleteTooltip>
+        }
       </TableCell>
     </TableRow>
   );

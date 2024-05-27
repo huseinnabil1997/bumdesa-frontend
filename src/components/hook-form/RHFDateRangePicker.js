@@ -1,14 +1,18 @@
 import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
 import { TextField, Typography, Stack, CircularProgress, ThemeProvider, createTheme } from '@mui/material';
-import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { MobileDateRangePicker } from '@mui/lab';
+import { useState } from 'react';
+import idLocale from 'date-fns/locale/id';
 
 RHFDateRangePicker.propTypes = {
   name: PropTypes.string.isRequired,
   require: PropTypes.bool,
   isLoading: PropTypes.bool,
+  value: PropTypes.array,
+  onChange: PropTypes.func,
 };
 
 const theme = createTheme({
@@ -26,11 +30,12 @@ const theme = createTheme({
   },
 });
 
-export default function RHFDateRangePicker({ name, require, isLoading, ...other }) {
+export default function RHFDateRangePicker({ name, require, isLoading, value, onChange, ...other }) {
+  const [selectedDate, setSelectedDate] = useState(value);
   const { control } = useFormContext();
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={idLocale}>
       <Stack>
         {other?.label && (
           <Typography variant="caption" sx={{ mb: 0.5 }} fontWeight={600}>
@@ -41,16 +46,21 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
         <Controller
           name={name}
           control={control}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ fieldState: { error } }) => (
             <ThemeProvider theme={theme}>
-              <DateRangePicker
-                startText="Tanggal awal"
-                endText="Tanggal akhir"
-                inputFormat='yyyy/MM/dd'
+              <MobileDateRangePicker
+                startText="Tanggal Mulai"
+                endText="Tanggal Akhir"
+                inputFormat='yyyy-MM-dd'
                 disableFuture
-                value={value}
-                onChange={onChange}
+                toolbarTitle="Pilih Rentang Tanggal"
+                value={selectedDate}
+                onChange={(newValue) => {
+                  setSelectedDate(newValue);
+                  onChange(selectedDate);
+                }}
                 calendars={1}
+                autoOk={true}
                 renderInput={(startProps, endProps) => (
                   <Stack display="flex" direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <TextField
@@ -59,6 +69,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                       error={!!error}
                       helperText={error?.message}
                       {...other}
+                      inputProps={{ ...startProps.inputProps, readOnly: false }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
@@ -90,6 +101,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                       error={!!error}
                       helperText={error?.message}
                       {...other}
+                      inputProps={{ ...endProps.inputProps, readOnly: false }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {

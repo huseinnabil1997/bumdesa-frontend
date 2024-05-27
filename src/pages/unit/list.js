@@ -35,6 +35,9 @@ import { useSnackbar } from 'notistack';
 import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
 import usePost from 'src/query/hooks/mutation/usePost';
 import useDelete from 'src/query/hooks/mutation/useDelete';
+import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
+import { useActivate } from 'src/query/hooks/units/useActivate';
+import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 
 
 // ----------------------------------------------------------------------
@@ -78,6 +81,11 @@ export default function UserList() {
   // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
+  const [alertChangeStatus, setAlertChangeStatus] = useState(null);
+
+  const { mutate: onDeactivate } = useDeactivate();
+
+  const { mutate: onActivate } = useActivate();
 
   const { data, isLoading, refetch } = useGetUnits({
     page: page,
@@ -136,6 +144,38 @@ export default function UserList() {
     }
   };
 
+  const handleChangeStatus = async (id, status) => {
+    setAlertChangeStatus({ id: id, status: status });
+  }
+
+  const onChangeStatus = async () => {
+    if (alertChangeStatus?.status !== 3) {
+      onDeactivate(alertChangeStatus?.id, {
+        onSuccess: (res) => {
+          enqueueSnackbar(res.message ?? "Sukses menonaktifkan unit usaha", { variant: 'success' });
+          refetch();
+          setAlertChangeStatus(null);
+        },
+        onError: (err) => {
+          enqueueSnackbar(err.message ?? "Gagal menonaktifkan unit usaha", { variant: 'error' });
+          console.log('error handleDeactivateRow', err);
+        },
+      });
+    } else {
+      onActivate(alertChangeStatus?.id, {
+        onSuccess: (res) => {
+          enqueueSnackbar(res.message ?? "Sukses mengaktifkan unit usaha", { variant: 'success' });
+          refetch();
+          setAlertChangeStatus(null);
+        },
+        onError: (err) => {
+          enqueueSnackbar(err.message ?? "Gagal mengaktifkan unit usaha", { variant: 'error' });
+          console.log('error handleActivateRow', err);
+        },
+      });
+    }
+  }
+
   return (
     <Page title="Unit Usaha: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -188,6 +228,8 @@ export default function UserList() {
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
                       onViewRow={() => router.push(`detail?id=${row.id}`)}
+                      onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
+                      onActivateRow={() => handleChangeStatus(row.id, row.status)}
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
@@ -253,6 +295,7 @@ export default function UserList() {
             }}
           />
         </Box>
+        <ChangeStatusModal open={!!alertChangeStatus} onClose={() => setAlertChangeStatus(null)} action={onChangeStatus} status={alertChangeStatus?.status} />
         <AlertDeleteUnit open={!!alertDelete} onClose={() => setAlertDelete(null)} action={onDelete} status={alertDelete?.status} />
       </Container>
     </Page>
