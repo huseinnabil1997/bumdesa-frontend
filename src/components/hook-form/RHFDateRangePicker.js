@@ -32,6 +32,7 @@ const theme = createTheme({
 
 export default function RHFDateRangePicker({ name, require, isLoading, value, onChange, ...other }) {
   const [selectedDate, setSelectedDate] = useState(value);
+  const [isOpen, setIsOpen] = useState(false);
   const { control } = useFormContext();
 
   return (
@@ -61,6 +62,8 @@ export default function RHFDateRangePicker({ name, require, isLoading, value, on
                 }}
                 calendars={1}
                 autoOk={true}
+                onOpen={() => setIsOpen(true)}
+                onClose={() => setIsOpen(false)}
                 renderInput={(startProps, endProps) => (
                   <Stack display="flex" direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <TextField
@@ -69,7 +72,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, value, on
                       error={!!error}
                       helperText={error?.message}
                       {...other}
-                      inputProps={{ ...startProps.inputProps, readOnly: false }}
+                      inputProps={{ ...startProps.inputProps, readOnly: isOpen ? false : true }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
@@ -101,7 +104,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, value, on
                       error={!!error}
                       helperText={error?.message}
                       {...other}
-                      inputProps={{ ...endProps.inputProps, readOnly: false }}
+                      inputProps={{ ...endProps.inputProps, readOnly: isOpen ? false : true }}
                       sx={{
                         '.MuiFormLabel-asterisk': { color: 'red' },
                         'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
