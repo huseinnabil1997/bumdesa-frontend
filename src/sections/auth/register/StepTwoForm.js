@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, Alert, Divider, Typography } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import { FormProvider, RHFTextField, RHFUploadPhoto } from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
@@ -16,13 +15,14 @@ import { ArrowBack } from '@mui/icons-material';
 import { handleDrop } from 'src/utils/helperFunction';
 import { StepTwoSchema, twoDefaultValues } from './validation/stepTwo';
 import { useGetRegisSequence } from 'src/query/hooks/auth/useGetRegisSequence';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 export default function StepTwoForm() {
   const { registerForm } = useAuth();
 
-  const isMountedRef = useIsMountedRef();
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
@@ -35,7 +35,6 @@ export default function StepTwoForm() {
   });
 
   const {
-    reset,
     setValue,
     setError,
     handleSubmit,
@@ -68,11 +67,7 @@ export default function StepTwoForm() {
       if (res.code === 200) router.push('/auth/register/step-three');
       else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
-      }
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
@@ -156,12 +151,7 @@ export default function StepTwoForm() {
 
             <RHFTextField name={`organizations.${i}.name`} label="Nama Pengurus BUM Desa" require />
             <RHFTextField name={`organizations.${i}.position`} label="Jabatan" require disabled />
-            <RHFTextField
-              name={`organizations.${i}.phone`}
-              label="Nomor HP"
-              require
-              type="tel"
-            />
+            <RHFTextField name={`organizations.${i}.phone`} label="Nomor HP" require type="tel" />
 
             <Divider />
           </Fragment>

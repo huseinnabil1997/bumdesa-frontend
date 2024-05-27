@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Stack, IconButton, InputAdornment, Alert, Grid, Typography } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import { RegisterSchema, registerDefaultValues } from './validation/register';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
+import { useSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
 
 RegisterForm.propTypes = {
@@ -24,9 +24,9 @@ RegisterForm.propTypes = {
 export default function RegisterForm({ setSuccess, setEmail, setId }) {
   const { register } = useAuth();
 
-  const isMountedRef = useIsMountedRef();
-
   const [showPassword, setShowPassword] = useState(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
@@ -35,9 +35,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
   });
 
   const {
-    reset,
     watch,
-    setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
@@ -53,11 +51,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
         setId(res.data.id_regis);
       }
     } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
-      }
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
@@ -156,7 +150,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
           }}
         />
 
-        <LoadingButton
+        <StyledLoadingButton
           fullWidth
           size="large"
           type="submit"
@@ -164,7 +158,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
           loading={isSubmitting}
         >
           Register
-        </LoadingButton>
+        </StyledLoadingButton>
       </Stack>
     </FormProvider>
   );

@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, Alert, Divider, Typography, Button } from '@mui/material';
 // hooks
 import useAuth from '../../../hooks/useAuth';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import { FormProvider, RHFTextField, RHFUploadPhoto } from '../../../components/hook-form';
 import { fData } from '../../../utils/formatNumber';
@@ -16,6 +15,7 @@ import { handleDrop } from 'src/utils/helperFunction';
 import Image from '../../../components/Image';
 import PropTypes from 'prop-types';
 import { DialogAnimate } from 'src/components/animate';
+import { useSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
 
 StepFourForm.propTypes = {
@@ -26,7 +26,7 @@ StepFourForm.propTypes = {
 export default function StepFourForm({ setSuccess, isSuccess }) {
   const { registerForm } = useAuth();
 
-  const isMountedRef = useIsMountedRef();
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
@@ -37,7 +37,6 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
   });
 
   const {
-    reset,
     setValue,
     setError,
     handleSubmit,
@@ -58,10 +57,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
       if (res.code === 200) setSuccess(true);
       else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
-      }
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 

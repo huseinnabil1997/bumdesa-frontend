@@ -7,7 +7,6 @@ import { Stack, Alert, Divider, Typography } from '@mui/material';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 // hooks
 import useAuth from '../../../hooks/useAuth';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import {
   FormProvider,
@@ -29,13 +28,14 @@ import { useGetSubdistricts } from 'src/query/hooks/options/useGetSubdistricts';
 import { useGetPostalCode } from 'src/query/hooks/options/useGetPostalCode';
 import { useGetRegisSequence } from 'src/query/hooks/auth/useGetRegisSequence';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 export default function StepOneForm() {
   const { registerForm } = useAuth();
 
-  const isMountedRef = useIsMountedRef();
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
@@ -46,7 +46,6 @@ export default function StepOneForm() {
   });
 
   const {
-    reset,
     setValue,
     setError,
     handleSubmit,
@@ -89,10 +88,7 @@ export default function StepOneForm() {
       if (res.code === 200) router.push('/auth/register/step-two');
       else setError('afterSubmit', { ...res, message: res.message });
     } catch (error) {
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
-      }
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
