@@ -47,7 +47,7 @@ export default function JurnalList() {
 
   const { watch } = methods;
 
-  const { data, isLoading, isError } = useGetLedgers({
+  const { data, isLoading, isError, refetch } = useGetLedgers({
     ...filter,
     account_code: watch('account')?.value ?? null,
     start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
@@ -68,6 +68,7 @@ export default function JurnalList() {
 
   useEffect(() => {
     handleChangeFilter();
+    refetch();
   }, [watch('year'), watch('account_code')]);
 
   return (
