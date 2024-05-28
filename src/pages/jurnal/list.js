@@ -89,6 +89,7 @@ export default function JurnalList() {
 
   useEffect(() => {
     setPage(1);
+    refetch();
   }, [watch('date')]);
 
   return (

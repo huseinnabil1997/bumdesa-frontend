@@ -3,7 +3,7 @@ import { useFormContext, Controller } from 'react-hook-form';
 import { TextField, Typography, Stack, CircularProgress, ThemeProvider, createTheme } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { DateRangePicker } from '@mui/lab';
+import { MobileDateRangePicker } from '@mui/lab';
 import idLocale from 'date-fns/locale/id';
 
 RHFDateRangePicker.propTypes = {
@@ -46,7 +46,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
           control={control}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <ThemeProvider theme={theme}>
-              <DateRangePicker
+              <MobileDateRangePicker
                 startText="Tanggal Mulai"
                 endText="Tanggal Akhir"
                 inputFormat='yyyy-MM-dd'
