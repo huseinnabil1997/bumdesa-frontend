@@ -23,7 +23,9 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 const SectionStyle = styled('div')(() => ({
-  position: 'relative',
+  position: 'sticky',
+  top: 0,
+  left: 0,
   width: '100%',
   maxWidth: '50%',
   display: 'flex',
