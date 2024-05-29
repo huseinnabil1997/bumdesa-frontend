@@ -4,6 +4,7 @@ import { getMenus } from 'src/query/request/auth';
 const fetchData = async () => {
   try {
     const { data } = await getMenus();
+    localStorage.setItem('logo', data.metadata.logo);
     return data?.data ?? [];
   } catch (err) {
     throw new Error();
