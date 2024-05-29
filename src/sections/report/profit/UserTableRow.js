@@ -6,6 +6,7 @@ import { Stack, TableRow, TableCell, IconButton } from '@mui/material';
 // components
 import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
 import Iconify from 'src/components/Iconify';
+import { isTotalName } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -20,26 +21,26 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
         hover
         onClick={() => setOpen(!open)}
         sx={{
-          backgroundColor: 'white',
+          backgroundColor: isTotalName(nama) ? '#E1F8EB' : 'white',
           height: '56px',
           "&:hover": {
             backgroundColor: `${generateColor(index, index)} !important`,
           },
         }}
       >
-        <TableCell sx={{ color: '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {row?.child2 && (
             <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
               {open ?
-                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-down-box'} />
+                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-up-box'} />
                 :
-                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-right-box'} />
+                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-down-box'} />
               }
             </IconButton>
           )}
           {nama}
         </TableCell>
-        <TableCell sx={{ color: '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {saldo === 0 ? 'Rp. -' : formatCurrency(saldo)}
         </TableCell>
       </TableRow>

@@ -6,17 +6,9 @@ import { Stack, TableRow, TableCell, IconButton } from '@mui/material';
 // components
 import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
 import Iconify from 'src/components/Iconify';
+import { isTotalName } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
-
-const isTotalName = (nama) => {
-  if (nama.toLowerCase() === 'total aset' 
-  || nama.toLowerCase() === 'total kewajiban' 
-  || nama.toLowerCase() === 'total ekuitas') {
-    return true;
-  }
-  return false;
-}
 
 function NestedTableRow({ row, index, generateColor, formatCurrency }) {
   const [open, setOpen] = useState(false);
