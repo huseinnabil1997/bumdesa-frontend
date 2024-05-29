@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Drawer, Typography } from '@mui/material';
+import { Box, Stack, Drawer } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
@@ -44,7 +44,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
+  const { isCollapse, collapseClick, collapseHover, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
   useEffect(() => {
@@ -66,9 +66,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
       <Stack
         spacing={3}
         sx={{
-          pt: 3,
-          pb: 2,
-          px: 2.5,
+          // pt: 1,
+          // pb: 1,
+          // px: 1,
           flexShrink: 0,
           ...(isCollapse && { alignItems: 'center' }),
         }}
@@ -76,11 +76,11 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <Image
           visibleByDefault
           disabledEffect
-          src={
-            'https://cdn0-production-images-kly.akamaized.net/SeFeTIvWxr_MP3CqHvBQcdin6XA=/800x800/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/3037623/original/004931500_1580455530-1024px-Logo_Bank_Rakyat_Indonesia.svg.jpg'
+          src={ 
+            logo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}` : 'https://cdn0-production-images-kly.akamaized.net/SeFeTIvWxr_MP3CqHvBQcdin6XA=/800x800/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/3037623/original/004931500_1580455530-1024px-Logo_Bank_Rakyat_Indonesia.svg.jpg'
           }
           alt="bri"
-          sx={{ width: 60, mx: 'auto', mb: 1, mt: 5 }}
+          sx={{ width: 84, mx: 'auto', mb: 1, mt: 5 }}
         />
       </Stack>
 
