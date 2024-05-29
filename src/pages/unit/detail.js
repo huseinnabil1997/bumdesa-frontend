@@ -18,6 +18,7 @@ import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 import Image from "src/components/Image";
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import useDelete from 'src/query/hooks/mutation/useDelete';
+import { useTheme } from '@mui/material/styles';
 
 const styles = {
   textfield: {
@@ -57,6 +58,8 @@ export default function DetailUnitUsaha() {
   const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
+
+  const theme = useTheme();
 
   const { data } = useGetUnitById(router.query.id);
 
@@ -275,10 +278,14 @@ export default function DetailUnitUsaha() {
                 <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
                   Informasi Unit Usaha
                 </Typography>
-                {data?.status === 1 ? (
-                  <Chip size="small" label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-                ) : (
-                  <Chip size="small" label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
+                {data?.status === 1 && (
+                  <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
+                )}
+                {data?.status === 0 && (
+                  <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
+                )}
+                {data?.status === 3 && (
+                  <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
                 )}
               </Stack>
 
