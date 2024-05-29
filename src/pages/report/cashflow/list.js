@@ -70,7 +70,7 @@ export default function LaporanArusKas() {
 
       endDateText = `${dayNumber} ${monthName} ${year}`;
     }
-    return `${startDateText} - ${endDateText}`;
+    return `${startDateText == 'NaN undefined NaN' ? '...' : startDateText} - ${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
   }
 
   return (
