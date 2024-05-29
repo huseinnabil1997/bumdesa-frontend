@@ -17,3 +17,24 @@ export const fDate = (inputDate) => {
   const day = String(date?.getDate()).padStart(2, '0');
   return `${year}/${month}/${day}`;
 };
+
+export const isTotalName = (nama) => {
+  const lowerNama = nama.toLowerCase().trim();
+  return lowerNama === 'total aset' 
+      || lowerNama === 'total kewajiban' 
+      || lowerNama === 'total ekuitas'
+      || lowerNama === 'total pendapatan usaha'
+      || lowerNama === 'total harga pokok penjualan'
+      || lowerNama === 'total beban-beban usaha'
+      || lowerNama === 'total pendapatan dan beban lain-lain'
+      || lowerNama === 'penyertaan modal akhir'
+      || lowerNama === 'total penyertaan modal akhir'
+      || lowerNama === 'total saldo laba akhir'
+      || lowerNama === 'arus kas bersih dari aktivitas operasi'
+      || lowerNama === 'total arus kas bersih dari aktivitas operasi'
+      || lowerNama === 'arus kas bersih dari aktivitas investasi'
+      || lowerNama === 'total arus kas bersih dari aktivitas investasi'
+      || lowerNama === 'arus kas bersih dari aktivitas pembiayaan'
+      || lowerNama === 'total arus kas bersih dari aktivitas pembiayaan';
+}
+
