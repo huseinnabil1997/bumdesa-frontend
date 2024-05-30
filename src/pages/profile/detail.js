@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
+import { GetDataBumdesa, GetDataUnit } from 'src/layouts/dashboard/header/AccountPopover';
 
 // ----------------------------------------------------------------------
 
@@ -122,6 +123,7 @@ export default function DetailProfil() {
                   setIsEdit={() => {
                     setIsEdit(!isEdit);
                     refetch();
+                    GetDataBumdesa(userData);
                   }}
                 />
               ) : (
@@ -148,6 +150,7 @@ export default function DetailProfil() {
                     setIsEdit(!isEdit);
                     refetch();
                     refetchUnit();
+                    GetDataUnit(userData);
                   }}
                 />
               ) : (

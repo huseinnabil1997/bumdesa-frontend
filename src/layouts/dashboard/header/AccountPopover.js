@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // next
 // import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -53,6 +53,22 @@ const styles = {
 
 // ----------------------------------------------------------------------
 
+export const GetDataBumdesa = (userData) => {
+  const { data, refetch } = useGetProfile(userData?.bumdesa_id);
+  useEffect(() => {
+    refetch();
+  }, [userData?.bumdesa_id]);
+  return data;
+}
+
+export const GetDataUnit = (userData) => {
+  const { data, refetch } = useGetUnitById(userData?.unit_id);
+  useEffect(() => {
+    refetch();
+  }, [userData?.unit_id]);
+  return data;
+}
+
 export default function AccountPopover() {
   const router = useRouter();
 
@@ -66,11 +82,7 @@ export default function AccountPopover() {
 
   const userData = JSON.parse(localStorage.getItem('userData'));
 
-  const { data: bumdesaData } = useGetProfile(userData?.bumdesa_id);
-
-  const { data: unitData } = useGetUnitById(userData?.unit_id);
-
-  const data = userData?.unit_id === 0 ? bumdesaData : unitData;
+  const data = userData?.unit_id === 0 ? GetDataBumdesa(userData) : GetDataUnit(userData);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -133,7 +145,7 @@ export default function AccountPopover() {
         {/* <MyAvatar /> */}
         <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
           <Typography color='#292929' fontSize='18px' fontWeight={600}>
-            {data?.name}, {bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+            {data?.name}, {GetDataBumdesa(userData)?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </Typography>
           <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
         </Stack>
