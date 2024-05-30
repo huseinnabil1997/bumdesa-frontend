@@ -1,32 +1,32 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
-import { Box, Grid, Modal, Stack, Typography } from "@mui/material";
+import { Box, Chip, Grid, Modal, Stack, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
-import { useEffect, useRef, useState } from "react";
-import { formatISO } from "date-fns";
+import { useEffect, useState } from "react";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
-import { fBumdesId } from "src/utils/formatNumber";
+import { useTheme } from '@mui/material/styles';
 
 const ProfileInfoFormSchema = Yup.object().shape({
-  foto_kantor: Yup.mixed().required('Foto Kantor Unit Usaha wajib diisi'),
-  logo: Yup.mixed().required('Logo Unit Usaha wajib diisi'),
-  nama: Yup.string().required('Nama Unit Usaha wajib diisi'),
-  id: Yup.string().required('ID Unit Usaha wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan Unit Usaha wajib diisi'),
-  alamat: Yup.string().required('Alamat wajib diisi'),
-  provinsi: Yup.mixed().required('Provinsi wajib diisi'),
-  kota: Yup.mixed().required('Kabupaten wajib diisi'),
-  desa: Yup.mixed().required('Desa wajib diisi'),
-  kecamatan: Yup.mixed().required('Kecamatan wajib diisi'),
-  kode_pos: Yup.mixed().required('Kode Pos wajib diisi'),
+  image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
+  name: Yup.string().required('Nama BUM Desa wajib diisi'),
+  email: Yup.string()
+    .email('Format email tidak valid')
+    .required('Alamat Email Aktif Unit Usaha wajib diisi'),
+  year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
+  sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
+  manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
+  position: Yup.string().required('Jabatan wajib diisi'),
+  manager_phone: Yup.string()
+    .required('Nomor telepon wajib diisi')
+    .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
+    .min(10, 'Nomor telepon minimal diisi 10 digit')
+    .max(13, 'Nomor telepon maksimal diisi 13 digit'),
 });
-
-const currentDate = formatISO(new Date(), { representation: "date" });
 
 const styles = {
   content: {
@@ -68,24 +68,22 @@ const styles = {
   }
 }
 
-export default function ProfileInfoUnit({ data, isEdit, setIsEdit }) {
+export default function ProfileInfoUnit({ data, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
-  const datePickerRef = useRef(null);
+  const theme = useTheme();
 
   const defaultValues = {
-    foto_kantor: data?.photo ?? null,
-    logo: data?.photo_logo ?? null,
-    nama: data?.name ?? '',
-    id: data?.bumdesa_id ?? '',
-    tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
-    alamat: data?.address ?? '',
-    provinsi: data?.province ?? null,
-    kota: data?.city ?? null,
-    desa: data?.subdistrict ?? null,
-    kecamatan: data?.district ?? null,
-    kode_pos: data?.postal_code ?? '',
+    id: data?.id ?? '',
+    image: data?.photo ?? null,
+    name: data?.name ?? '',
+    position: 'Manager',
+    email: data?.email ?? '',
+    year_founded: data?.year_founded?.toString() ?? '',
+    sector: { value: data?.id_sector, label: data?.sector } ?? null,
+    manager_name: data?.organization?.name ?? '',
+    manager_phone: data?.organization?.phone ?? '',
   };
 
   const methods = useForm({
@@ -124,142 +122,105 @@ export default function ProfileInfoUnit({ data, isEdit, setIsEdit }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
-        <Grid item xs={3}>
-          <Typography variant="caption" fontWeight={600}>
-            Foto Kantor Unit Usaha
-          </Typography>
+        <Grid item xs={11}>
           <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)}
+            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`}
+            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`)}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
-        <Grid item xs={3}>
-          <Typography variant="caption" fontWeight={600}>
-            Logo Unit Usaha
-          </Typography>
-          <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`)}
-            sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
-          />
+        <Grid item xs={1}>
+          {data?.status === 1 && (
+            <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
+          )}
+          {data?.status === 0 && (
+            <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
+          )}
+          {data?.status === 3 && (
+            <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
+          )}
         </Grid>
-        <Grid item xs={3} />
-        <Grid item xs={3} />
         <Grid item xs={4}>
           <RHFTextField
-            name="nama"
+            name="name"
             label="Nama Unit Usaha"
+            placeholder="Contoh: Toko Ikan Mas Pak Budi"
             inputProps={{
               readOnly: true
             }}
             sx={styles.textfield}
             variant="standard"
-            value={defaultValues?.nama}
+            value={defaultValues?.name}
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="id"
-            label="ID Unit Usaha"
+            name="year_founded"
+            label="Tahun Berdiri"
+            placeholder="Pilih Tahun"
             inputProps={{
-              style: { color: '#00549B' },
               readOnly: true
             }}
-            sx={styles.textfield.id}
-            value={fBumdesId(defaultValues?.id)}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            inputRef={datePickerRef}
-            variant="standard"
-            size="small"
-            label="Tanggal Didirikan Unit Usaha"
-            name="tanggal_berdiri"
-            type="date"
             sx={styles.textfield}
-            onClick={() => {
-              if (isEdit) datePickerRef.current.showPicker()
-            }}
-            inputProps={{
-              max: currentDate,
-              readOnly: true
-            }}
-            value={defaultValues?.tanggal_berdiri}
+            variant="standard"
+            value={defaultValues?.year_founded}
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="alamat"
-            label="Alamat"
-            variant="standard"
-            sx={styles.textfield}
+            name="sector"
+            label="Sektor Usaha"
+            placeholder="Pilih Sektor Usaha"
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues?.alamat}
+            sx={styles.textfield}
+            value={defaultValues?.sector?.label}
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
+            Data Pengurus Unit Usaha
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
+            name="manager_name"
+            label="Nama Manager BUM Desa"
+            placeholder="Contoh: Budi Jailani"
+            inputProps={{
+              readOnly: true
+            }}
+            sx={styles.textfield}
+            variant="standard"
+            value={defaultValues?.manager_name}
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="provinsi"
-            label="Provinsi"
-            variant="standard"
-            sx={styles.textfield}
+            name="position"
+            label="Jabatan"
+            placeholder="Manager"
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues?.provinsi?.label}
+            sx={styles.textfield}
+            variant="standard"
+            value={defaultValues?.position}
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="kota"
-            label="Kabupaten"
-            variant="standard"
-            sx={styles.textfield}
+            name="manager_phone"
+            label="Nomor Telepon"
+            placeholder="Contoh: 081xxx"
             inputProps={{
               readOnly: true
             }}
-            value={defaultValues?.kota?.label}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            name="kecamatan"
-            label="Kecamatan"
-            variant="standard"
             sx={styles.textfield}
-            inputProps={{
-              readOnly: true
-            }}
-            value={defaultValues?.kecamatan?.label}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            name="desa"
-            label="Desa"
             variant="standard"
-            sx={styles.textfield}
-            inputProps={{
-              readOnly: true
-            }}
-            value={defaultValues?.desa?.label}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            variant="standard"
-            name="kode_pos"
-            label="Kode Pos"
-            sx={styles.textfield}
-            inputProps={{
-              readOnly: true
-            }}
-            placeholder="Masukan Kode Pos"
-            value={defaultValues?.kode_pos.label}
+            value={defaultValues?.manager_phone}
           />
         </Grid>
       </Grid>
