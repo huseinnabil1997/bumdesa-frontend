@@ -57,6 +57,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                 onChange={onChange}
                 calendars={1}
                 autoOk={true}
+                showToolbar={false}
                 renderInput={(startProps, endProps) => (
                   <Stack display="flex" direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <TextField
