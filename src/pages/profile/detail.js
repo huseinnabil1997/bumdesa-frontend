@@ -3,9 +3,10 @@ import useSettings from '../../hooks/useSettings';
 import Layout from '../../layouts';
 import Page from '../../components/Page';
 import { ProfileInfo, ProfileInfoForm, ProfileInfoFormUnit, ProfileInfoUnit } from 'src/sections/profile';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
+import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +58,14 @@ export default function DetailProfil() {
   const userData = JSON.parse(localStorage.getItem('userData'));
 
   const { data, refetch } = useGetProfile(userData?.bumdesa_id)
+
+  const { data: unitData, refetch: refetchUnit } = useGetUnitById(userData?.unit_id);
+
+  useEffect(() => {
+    if (userData?.unit_id !== 0) {
+      refetchUnit();
+    }
+  }, [userData?.unit_id])
 
   return (
     <Page title="Profil: Detail">
@@ -134,15 +143,16 @@ export default function DetailProfil() {
             <Stack minHeight={461}>
               {isEdit ? (
                 <ProfileInfoFormUnit
-                  data={data}
+                  data={unitData}
                   setIsEdit={() => {
                     setIsEdit(!isEdit);
                     refetch();
+                    refetchUnit();
                   }}
                 />
               ) : (
                 <ProfileInfoUnit
-                  data={data}
+                  data={unitData}
                   isEdit={isEdit}
                   setIsEdit={() => setIsEdit(!isEdit)}
                 />
