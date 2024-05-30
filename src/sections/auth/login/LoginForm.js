@@ -42,7 +42,7 @@ export default function LoginForm() {
 
   const defaultValues = {
     email: localStorage.getItem('email'),
-    password: localStorage.getItem('password'),
+    password: '',
     remember: localStorage.getItem('remember') === 'true',
   };
 
