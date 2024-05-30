@@ -41,9 +41,9 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: '',
+    email: localStorage.getItem('email'),
     password: '',
-    remember: true,
+    remember: localStorage.getItem('remember') === 'true',
   };
 
   const methods = useForm({
@@ -64,7 +64,10 @@ export default function LoginForm() {
       if (res?.data) {
         // Menyimpan data ke localStorage
         localStorage.setItem('userData', JSON.stringify(res.data));
-        
+        if (data.remember) {
+          localStorage.setItem('email', data.email);
+        }
+        localStorage.setItem('remember', data.remember);
         if (res?.data?.full_register === 0) {
           await localStorage.setItem('@token', res?.metadata?.token ?? '');
           window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
