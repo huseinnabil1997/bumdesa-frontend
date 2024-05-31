@@ -56,9 +56,9 @@ export default function StepTwoForm() {
     formData.append('organization.0.position', '1');
 
     data.organizations.forEach((row, i) => {
-      formData.append(`organization.${i + 1}.name`, data.name);
-      formData.append(`organization.${i + 1}.phone`, data.phone);
-      formData.append(`organization.${i + 1}.image`, data.image);
+      formData.append(`organization.${i + 1}.name`, row.name);
+      formData.append(`organization.${i + 1}.phone`, row.phone);
+      formData.append(`organization.${i + 1}.image`, row.image);
       formData.append(`organization.${i + 1}.position`, i + 2);
     });
 
