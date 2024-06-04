@@ -216,6 +216,9 @@ export default function StepOneForm() {
           type="date"
           require
           placeholder="Masukan Tanggal Didirikan BUM Desa"
+          inputProps={{
+            max: moment().format('yyyy-MM-DD'),
+          }}
         />
         <RHFTextField name="address" label="Alamat" require placeholder="Masukan Alamat BUM Desa" />
 
