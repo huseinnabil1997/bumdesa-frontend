@@ -40,8 +40,8 @@ export const isTotalName = (nama) => {
       || lowerNama === 'total arus kas bersih dari aktivitas pembiayaan';
 }
 
-export const checkUrlImage = (url) => {
-  axios.get(url)
+export const checkUrlImage = async (url) => {
+  await axios.get(url)
     .then((response) => {
       console.log('Get Image Success', response);
       return true;
