@@ -11,6 +11,7 @@ import { formatISO } from "date-fns";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
 import { fBumdesId } from "src/utils/formatNumber";
+import { checkUrlImage } from "src/utils/helperFunction";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -131,8 +132,18 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
             Foto Kantor BUM Desa
           </Typography>
           <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)}
+            alt="image"
+            src={
+              checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)
+                ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
+                : '/image/default_image.png'
+            }
+            onClick={() => {
+              handleModalImage(checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)
+                ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
+                : '/image/default_image.png'
+              )
+            }}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
@@ -141,8 +152,11 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
             Logo BUM Desa
           </Typography>
           <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`)}
+            alt="image"
+            src={checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
+            onClick={() => {
+              handleModalImage(checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
+            }}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>

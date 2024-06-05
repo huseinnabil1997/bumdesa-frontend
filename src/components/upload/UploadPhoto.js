@@ -11,6 +11,7 @@ import RejectionFiles from './RejectionFiles';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { checkUrlImage } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 const Container = styled(Box)(() => ({
@@ -145,7 +146,9 @@ export default function UploadPhoto({
               if (file) {
                 handleOpenModal(
                   isString(file)
+                    ? checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`)
                     ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                    : '/image/default_image.png'
                     : file.preview
                 );
               } else {
@@ -160,7 +163,9 @@ export default function UploadPhoto({
                 alt="image"
                 src={
                   isString(file)
+                    ? checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`)
                     ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                    : '/image/default_image.png'
                     : file.preview
                 }
                 sx={{ zIndex: 8 }}

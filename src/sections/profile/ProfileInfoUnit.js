@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
 import { useTheme } from '@mui/material/styles';
+import { checkUrlImage } from "src/utils/helperFunction";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -124,8 +125,9 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
       <Grid container spacing={2} sx={styles.content}>
         <Grid item xs={11}>
           <Image
-            alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`}
-            onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`)}
+            alt="image"
+            src={checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
+            onClick={() => handleModalImage(checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
