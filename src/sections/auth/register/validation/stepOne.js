@@ -26,6 +26,7 @@ export const oneDefaultValues = {
   city: null,
   district: null,
   subdistrict: null,
+  postal_code: '',
   founded_at: '',
   employees: '',
   image: null,
