@@ -8,9 +8,9 @@ import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
 import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
+import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 
 const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
 
@@ -42,7 +42,7 @@ export default function ArusKasHeader({ onSubmit }) {
   }
 
   const { data, isLoading } = useGetBusinessUnits();
-  const { mutate: onDownload, isLoading: downloading } = useDownloadProfit();
+  const { mutate: onDownload, isLoading: downloading } = useDownloadCashflow();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
