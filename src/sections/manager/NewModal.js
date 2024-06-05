@@ -94,7 +94,7 @@ const styles = {
   }
 };
 
-function EditModal({ open, onClose, positions }) {
+function NewModal({ open, onClose, positions, from }) {
 
   const { mutate: addManager } = useAddManager();
 
@@ -167,12 +167,14 @@ function EditModal({ open, onClose, positions }) {
           sx: styles.dialogStyle,
         }}
       >
-        <DialogTitle sx={styles.titleStyle}>Tambah Pengurus BUM Desa</DialogTitle>
+        <DialogTitle sx={styles.titleStyle}>
+          Tambah Pengurus {from === 'employee' ? "Unit Usaha" : "BUM Desa"}
+        </DialogTitle>
         <DialogContent sx={styles.contentStyle}>
 
           <RHFUploadPhoto
             name="image"
-            label="Foto Anggota BUM Desa"
+            label={from === 'employee' ? "Foto Anggota Unit Usaha" : "Foto Anggota BUM Desa"}
             accept="image/*"
             maxSize={10000000}
             imageFrom={'organization'}
@@ -195,7 +197,7 @@ function EditModal({ open, onClose, positions }) {
           />
           <RHFTextField
             name="name"
-            label="Nama Anggota BUM Desa"
+            label={from === 'employee' ? "Nama Anggota Unit Usaha" : "Nama Anggota BUM Desa"}
             placeholder="Contoh: Budi Jailani"
             sx={styles.textfield}
             require
@@ -267,12 +269,13 @@ function EditModal({ open, onClose, positions }) {
   );
 }
 
-EditModal.propTypes = {
+NewModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   positions: PropTypes.array,
+  from: PropTypes.string,
 };
 
-export default EditModal;
+export default NewModal;
 
 
