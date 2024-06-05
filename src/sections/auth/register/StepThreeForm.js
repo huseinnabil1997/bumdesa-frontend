@@ -86,7 +86,7 @@ export default function StepThreeForm() {
 
         <RHFUploadPhoto
           name="image"
-          label="Foto Kantor BUM Desa"
+          label="Foto Kantor Unit Usaha"
           accept="image/*"
           imageFrom={'bumdesa'}
           maxSize={10000000}
