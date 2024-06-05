@@ -18,6 +18,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 import { KeyboardArrowDownRounded, Logout, Person, Settings } from '@mui/icons-material';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
+import { eventBus } from 'src/pages/profile/detail';
 
 // ----------------------------------------------------------------------
 
@@ -53,21 +54,21 @@ const styles = {
 
 // ----------------------------------------------------------------------
 
-export const GetDataBumdesa = (userData) => {
-  const { data, refetch } = useGetProfile(userData?.bumdesa_id);
-  useEffect(() => {
-    refetch();
-  }, [userData?.bumdesa_id]);
-  return data;
-}
+// export const GetDataBumdesa = (userData) => {
+  
+//   // useEffect(() => {
+//   //   refetch();
+//   // }, [userData?.bumdesa_id]);
+//   return data;
+// }
 
-export const GetDataUnit = (userData) => {
-  const { data, refetch } = useGetUnitById(userData?.unit_id);
-  useEffect(() => {
-    refetch();
-  }, [userData?.unit_id]);
-  return data;
-}
+// export const GetDataUnit = (userData) => {
+  
+//   // useEffect(() => {
+//   //   refetch();
+//   // }, [userData?.unit_id]);
+//   return data;
+// }
 
 export default function AccountPopover() {
   const router = useRouter();
@@ -82,7 +83,26 @@ export default function AccountPopover() {
 
   const userData = JSON.parse(localStorage.getItem('userData'));
 
-  const data = userData?.unit_id === 0 ? GetDataBumdesa(userData) : GetDataUnit(userData);
+  const { data: unitData, refetch: unitRefetch } = useGetUnitById(userData?.unit_id);
+
+  const { data: bumdesaData, refetch: bumdesaRefetch } = useGetProfile(userData?.bumdesa_id);
+
+  useEffect(() => {
+    const refetchHandler = () => {
+      unitRefetch();
+      bumdesaRefetch();
+    };
+
+    eventBus.on('refetchUnit', refetchHandler);
+    eventBus.on('refetchBumdesa', refetchHandler);
+
+    return () => {
+      eventBus.off('refetchUnit', refetchHandler);
+      eventBus.off('refetchBumdesa', refetchHandler);
+    };
+  }, [unitRefetch, bumdesaRefetch]);
+
+  const data = userData?.unit_id === 0 ? bumdesaData : unitData;
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -145,7 +165,7 @@ export default function AccountPopover() {
         {/* <MyAvatar /> */}
         <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
           <Typography color='#292929' fontSize='18px' fontWeight={600}>
-            {data?.name ? data?.name : '...'}, {GetDataBumdesa(userData)?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+            {data?.name ? data?.name : '...'}, {bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </Typography>
           <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
         </Stack>

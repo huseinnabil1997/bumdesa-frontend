@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
-import { GetDataBumdesa, GetDataUnit } from 'src/layouts/dashboard/header/AccountPopover';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +50,10 @@ DetailProfil.getLayout = function getLayout(page) {
 
 // ----------------------------------------------------------------------
 
+import EventEmitter from 'events';
+const eventBus = new EventEmitter();
+export { eventBus };
+
 export default function DetailProfil() {
   const [isEdit, setIsEdit] = useState(false)
 
@@ -61,6 +64,11 @@ export default function DetailProfil() {
   const { data, refetch } = useGetProfile(userData?.bumdesa_id)
 
   const { data: unitData, refetch: refetchUnit } = useGetUnitById(userData?.unit_id);
+
+  const handleRefetch = () => {
+    eventBus.emit('refetchUnit');
+    eventBus.emit('refetchBumdesa');
+  };
 
   useEffect(() => {
     if (userData?.unit_id !== 0) {
@@ -123,7 +131,7 @@ export default function DetailProfil() {
                   setIsEdit={() => {
                     setIsEdit(!isEdit);
                     refetch();
-                    GetDataBumdesa(userData);
+                    handleRefetch();
                   }}
                 />
               ) : (
@@ -150,7 +158,7 @@ export default function DetailProfil() {
                     setIsEdit(!isEdit);
                     refetch();
                     refetchUnit();
-                    GetDataUnit(userData);
+                    handleRefetch();
                   }}
                 />
               ) : (
