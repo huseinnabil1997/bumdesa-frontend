@@ -18,6 +18,7 @@ import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import Image from 'src/components/Image';
+import { checkUrlImage } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,8 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   const logo = localStorage.getItem('logo');
 
+  console.log('check image:', checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`))
+
   const renderContent = (
     <Scrollbar
       sx={{
@@ -77,7 +80,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           visibleByDefault
           disabledEffect
           src={ 
-            logo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}` : 'https://cdn0-production-images-kly.akamaized.net/SeFeTIvWxr_MP3CqHvBQcdin6XA=/800x800/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/3037623/original/004931500_1580455530-1024px-Logo_Bank_Rakyat_Indonesia.svg.jpg'
+            checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`) 
+            ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}` 
+            : '/image/default_image.png'
           }
           alt="bri"
           sx={{ width: 84, mx: 'auto', mb: 1, mt: 5 }}

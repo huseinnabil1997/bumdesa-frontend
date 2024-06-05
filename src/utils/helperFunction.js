@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const handleDrop = (acceptedFiles, callback) => {
   const file = acceptedFiles[0];
 
@@ -36,5 +38,17 @@ export const isTotalName = (nama) => {
       || lowerNama === 'total arus kas bersih dari aktivitas investasi'
       || lowerNama === 'arus kas bersih dari aktivitas pembiayaan'
       || lowerNama === 'total arus kas bersih dari aktivitas pembiayaan';
+}
+
+export const checkUrlImage = (url) => {
+  axios.get(url)
+    .then((response) => {
+      console.log('Get Image Success', response);
+      return true;
+    })
+    .catch((error) => {
+      console.log('Get Image Error', error);
+      return false;
+    });
 }
 
