@@ -1,44 +1,29 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useForm } from "react-hook-form";
-import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from "src/components/hook-form";
-import { StyledLoadingButton } from "src/theme/custom/Button";
+import { useForm } from 'react-hook-form';
+import {
+  FormProvider,
+  RHFAutocomplete,
+  RHFTextField,
+  RHFUploadPhoto,
+} from 'src/components/hook-form';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 import * as Yup from 'yup';
-import { useEffect, useRef } from "react";
-import { handleDrop } from "src/utils/helperFunction";
-import { formatISO } from "date-fns";
-import { useGetProvincies } from "src/query/hooks/options/useGetProvincies";
-import { useGetCities } from "src/query/hooks/options/useGetCities";
-import { useGetDistricts } from "src/query/hooks/options/useGetDistricts";
-import { useGetSubdistricts } from "src/query/hooks/options/useGetSubdistricts";
-import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
-import { isEqual } from "lodash";
-import { useUpdateProfile } from "src/query/hooks/profile/useUpdateProfile";
-import { useSnackbar } from "notistack";
-import Iconify from "src/components/Iconify";
-import { fBumdesId } from "src/utils/formatNumber";
-
-const ProfileInfoFormSchema = Yup.object().shape({
-  foto_kantor: Yup.mixed().required('Foto Kantor Unit Usaha wajib diisi'),
-  logo: Yup.mixed().required('Logo Unit Usaha wajib diisi'),
-  nama: Yup.string().required('Nama Unit Usaha wajib diisi'),
-  id: Yup.string().required('ID Unit Usaha wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan Unit Usaha wajib diisi'),
-  alamat: Yup.string().required('Alamat wajib diisi'),
-  provinsi: Yup.mixed().required('Provinsi wajib diisi'),
-  kota: Yup.mixed().required('Kabupaten wajib diisi'),
-  desa: Yup.mixed().required('Desa wajib diisi'),
-  kecamatan: Yup.mixed().required('Kecamatan wajib diisi'),
-  kode_pos: Yup.mixed().required('Kode Pos wajib diisi'),
-});
-
-const currentDate = formatISO(new Date(), { representation: "date" });
+import { useEffect } from 'react';
+import { handleDrop } from 'src/utils/helperFunction';
+import { isEqual } from 'lodash';
+import { useSnackbar } from 'notistack';
+import Iconify from 'src/components/Iconify';
+import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
+import usePatch from 'src/query/hooks/mutation/usePatch';
+import { useTheme } from '@mui/material/styles';
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 const styles = {
   content: {
     minHeight: 483,
-    p: '24px'
+    p: '24px',
   },
   textfield: {
     // width: '293px',
@@ -54,10 +39,10 @@ const styles = {
       '& .MuiInputBase-root': {
         height: '44px',
       },
-      "& fieldset": {
+      '& fieldset': {
         border: 'none',
       },
-    }
+    },
   },
   action: {
     minHeight: 80,
@@ -69,8 +54,8 @@ const styles = {
       width: 160,
       height: 48,
       borderRadius: '8px',
-      borderColor: '#1078CA'
-    }
+      borderColor: '#1078CA',
+    },
   },
   snackbar: {
     width: '344px',
@@ -78,41 +63,55 @@ const styles = {
     backgroundColor: '#E1F8EB',
     gap: '8px',
     padding: '12px',
-    borderRadius: '4px'
+    borderRadius: '4px',
   },
   snackbarIcon: {
     width: '16px',
     height: '16px',
-    color: '#27AE60'
-  }
-}
+    color: '#27AE60',
+  },
+};
 
 export default function ProfileInfoFormUnit({ data, setIsEdit }) {
-
-  const datePickerRef = useRef(null);
+  const theme = useTheme();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
 
-  const { mutate: onUpdate, isLoading: updating } = useUpdateProfile();
+  const mutation = usePatch();
+
+  const NewUnitFormSchema = Yup.object().shape({
+    image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
+    name: Yup.string().required('Nama BUM Desa wajib diisi'),
+    email: Yup.string()
+      .email('Format email tidak valid')
+      .required('Alamat Email Aktif Unit Usaha wajib diisi'),
+    year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
+    sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
+    manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
+    position: Yup.string().required('Jabatan wajib diisi'),
+    manager_phone: Yup.string()
+      .required('Nomor telepon wajib diisi')
+      .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
+      .min(10, 'Nomor telepon minimal diisi 10 digit')
+      .max(13, 'Nomor telepon maksimal diisi 13 digit'),
+  });
 
   const defaultValues = {
-    foto_kantor: data?.photo ?? null,
-    logo: data?.photo_logo ?? null,
-    nama: data?.name ?? '',
-    id: fBumdesId(data?.bumdesa_id) ?? '',
-    tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
-    alamat: data?.address ?? '',
-    provinsi: data?.province ?? null,
-    kota: data?.city ?? null,
-    desa: data?.subdistrict ?? null,
-    kecamatan: data?.district ?? null,
-    kode_pos: data?.postal_code?.label ?? '',
+    id: data?.id ?? '',
+    image: data?.photo ?? null,
+    name: data?.name ?? '',
+    position: 'Manager',
+    email: data?.email ?? '',
+    year_founded: data?.year_founded?.toString() ?? '',
+    sector: { value: data?.id_sector, label: data?.sector } ?? null,
+    manager_name: data?.organization?.name ?? '',
+    manager_phone: data?.organization?.phone ?? '',
   };
 
   const methods = useForm({
-    resolver: yupResolver(ProfileInfoFormSchema),
+    resolver: yupResolver(NewUnitFormSchema),
     defaultValues,
     mode: 'onChange',
   });
@@ -122,12 +121,8 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
     handleSubmit,
     isSubmitting,
     watch,
+    // reset,
   } = methods;
-
-  const provinsi = watch('provinsi');
-  const kota = watch('kota');
-  const kecamatan = watch('kecamatan');
-  const desa = watch('desa');
 
   const currentValues = {
     foto_kantor: watch('foto_kantor'),
@@ -140,103 +135,66 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
     kota: watch('kota'),
     kecamatan: watch('kecamatan'),
     desa: watch('desa'),
-    kode_pos: watch('kode_pos')
+    kode_pos: watch('kode_pos'),
   };
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
-  const { data: provincies } = useGetProvincies();
-  const { data: cities } = useGetCities({ prov_id: provinsi?.value });
-  const { data: districts } = useGetDistricts({ city_id: kota?.value });
-  const { data: subdistricts } = useGetSubdistricts({ dis_id: kecamatan?.value });
-  const { data: postalCode } = useGetPostalCode({ subdis_id: desa?.value });
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append('image', data?.image);
+    formData.append('name', data?.name);
+    formData.append('email', data?.email);
+    formData.append('year_founded', new Date(data.year_founded).getFullYear());
+    formData.append('sector', data?.sector?.label);
+    formData.append('id_sector', parseInt(data?.sector?.value));
+    formData.append('manager_name', data?.manager_name);
+    formData.append('manager_phone', data?.manager_phone);
+
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+
+    try {
+      await mutation.mutateAsync({
+        endpoint: `/business-units/${data.id}`,
+        payload: formData,
+        headers: headers,
+      });
+      if (data?.email === defaultValues.email) {
+        await enqueueSnackbar('', {
+          variant: 'success',
+          content: () => (
+            <Box display="flex" alignItems="center" sx={styles.snackbar}>
+              <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
+              <Typography fontSize="12px">Informasi Baru Unit Usaha sudah diperbarui!</Typography>
+            </Box>
+          ),
+        });
+        setIsEdit();
+      }
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+      console.log('error Edit Units', error);
+    }
+  };
 
   useEffect(() => {
-    if (postalCode) setValue('kode_pos', postalCode?.label);
-    else setValue('kode_pos', '');
-  }, [postalCode]);
-
-  const handleProvinsi = (value) => {
-    setValue('provinsi', value)
-    setValue('kota', null);
-    setValue('kecamatan', null);
-    setValue('desa', null);
-  }
-
-  const handleKota = (value) => {
-    setValue('kota', value)
-    setValue('kecamatan', null);
-    setValue('desa', null);
-  }
-
-  const handleKecamatan = (value) => {
-    setValue('kecamatan', value)
-    setValue('desa', null);
-    setValue('kode_pos', null);
-  }
-
-  const onSubmit = (data) => {
-    const formData = new FormData();
-    formData.append('name', data?.nama);
-    formData.append('address', data?.alamat);
-    formData.append('province', data?.provinsi);
-    formData.append('city', data?.kota);
-    formData.append('district', data?.kecamatan);
-    formData.append('subdistrict', data?.desa);
-    formData.append('postal_code', data?.kode_pos);
-    formData.append('founded_at', data?.tanggal_berdiri);
-    formData.append('logo', data?.logo);
-    formData.append('photo', data?.foto_kantor);
-    formData.append('area_code', data?.desa?.value);
-    onUpdate(
-      {
-        id: userData?.bumdesa_id,
-        payload: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      },
-      {
-        onSuccess: () => {
-          enqueueSnackbar('', {
-            variant: 'success',
-            content: () => (
-              <Box
-                display="flex"
-                alignItems="center"
-                sx={styles.snackbar}
-              >
-                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
-                <Typography fontSize="12px">Informasi Baru Unit Usaha sudah diperbarui!</Typography>
-              </Box>
-            )
-          });
-          setIsEdit();
-        },
-        onError: (err) => {
-          enqueueSnackbar(err.message, { variant: 'error' });
-        },
-      }
-    );
-  };
-
-  const handleChangeID = (e) => {
-    setValue('id', fBumdesId(e.target.value));
-  };
+    methods.reset(defaultValues);
+  }, [data]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
-        <Grid item xs={6}>
+        <Grid item xs={11}>
           <RHFUploadPhoto
-            name="foto_kantor"
-            label="Foto Kantor Unit Usaha"
+            name="image"
+            label="Foto Unit Usaha"
             accept="image/*"
             maxSize={10000000}
-            imageFrom={'bumdesa'}
-            onDrop={(file) => handleDrop(file, (val) => {
-              setValue(`foto_kantor`, val);
-            })}
+            imageFrom={'unit'}
+            onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
             errorTextAlign="left"
-            errorPosition="bottom"
             helperText={
               <Typography
                 variant="caption"
@@ -252,181 +210,168 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
             }
           />
         </Grid>
-        <Grid item xs={6}>
-          <RHFUploadPhoto
-            name="logo"
-            label="Logo Unit Usaha"
-            accept="image/*"
-            maxSize={10000000}
-            imageFrom={'bumdesa'}
-            onDrop={(file) => handleDrop(file, (val) => setValue(`logo`, val))}
-            errorTextAlign="left"
-            errorPosition="bottom"
-            helperText={
-              <Typography
-                variant="caption"
-                sx={{
-                  mt: 1,
-                  display: 'block',
-                  textAlign: 'start',
-                  color: 'text.secondary',
-                }}
-              >
-                Format yang diperbolehkan: png, jpg, jpeg.
-              </Typography>
-            }
-          />
+        <Grid item xs={1}>
+          {data?.status === 1 && (
+            <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
+          )}
+          {data?.status === 0 && (
+            <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
+          )}
+          {data?.status === 3 && (
+            <Chip
+              label="Nonaktif"
+              sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }}
+            />
+          )}
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="nama"
+            name="name"
             label="Nama Unit Usaha"
-            sx={styles.textfield}
+            placeholder="Contoh: Toko Ikan Mas Pak Budi"
+            sx={{
+              width: '293px',
+              '& .MuiInputBase-root': {
+                height: '44px',
+              },
+              '& .MuiInputBase-input': {
+                height: '11px',
+              },
+            }}
+            require
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFDatePicker
+            name="year_founded"
+            label="Tahun Berdiri"
+            placeholder="Pilih Tahun"
+            format="yyyy"
+            views={['year']}
+            openTo="year"
+            sx={{
+              width: '293px',
+              '& .MuiInputBase-root': {
+                height: '44px',
+                borderRadius: '8px',
+              },
+              '& .MuiInputBase-input': {
+                height: '11px',
+              },
+            }}
+            require
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFAutocomplete
+            name="sector"
+            label="Sektor Usaha"
+            placeholder="Pilih Sektor Usaha"
+            size="small"
+            loading={isLoadingSectors}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            options={sectorData?.map((option) => option) ?? []}
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <li {...props} key={option.value}>
+                {option.label}
+              </li>
+            )}
+            sx={{
+              width: '293px',
+              '& .MuiInputBase-root': {
+                height: '44px',
+              },
+              '& .MuiInputBase-input': {
+                height: '11px',
+              },
+            }}
+            require
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
+            Data Pengurus Unit Usaha
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
+            name="manager_name"
+            label="Nama Manager BUM Desa"
+            placeholder="Contoh: Budi Jailani"
+            sx={{
+              width: '293px',
+              '& .MuiInputBase-root': {
+                height: '44px',
+              },
+              '& .MuiInputBase-input': {
+                height: '11px',
+              },
+            }}
             require
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="id"
-            label="ID Unit Usaha"
+            name="position"
+            label="Jabatan"
             inputProps={{
               style: { color: '#00549B' },
-              readOnly: true
+              readOnly: true,
             }}
-            sx={styles.textfield.id}
-            onKeyUp={handleChangeID}
-            require
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            inputRef={datePickerRef}
-            size="small"
-            label="Tanggal Didirikan Unit Usaha"
-            name="tanggal_berdiri"
-            type="date"
-            sx={styles.textfield}
-            onClick={() => {
-              datePickerRef.current.showPicker()
-            }}
-            inputProps={{
-              max: currentDate,
+            sx={{
+              backgroundColor: '#CCE8FF',
+              borderRadius: '8px',
+              width: '293px',
+              '& .MuiInputBase-root': {
+                height: '44px',
+              },
+              '& fieldset': {
+                border: 'none',
+              },
             }}
             require
           />
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
-            name="alamat"
-            label="Alamat"
-            sx={styles.textfield}
-            require
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            require
-            name="provinsi"
-            label="Provinsi"
-            loading={false}
-            sx={styles.textfield}
-            onChange={(e, value) => handleProvinsi(value)}
-            options={provincies?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            require
-            name="kota"
-            label="Kabupaten"
-            loading={false}
-            sx={styles.textfield}
-            onChange={(e, value) => handleKota(value)}
-            options={cities?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            require
-            name="kecamatan"
-            label="Kecamatan"
-            loading={false}
-            sx={styles.textfield}
-            onChange={(e, value) => handleKecamatan(value)}
-            options={districts?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFAutocomplete
-            require
-            name="desa"
-            label="Desa"
-            loading={false}
-            sx={styles.textfield}
-            options={subdistricts?.map((option) => option) ?? []}
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <li {...props} key={option.value}>
-                {option.label}
-              </li>
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            name="kode_pos"
-            label="Kode Pos"
-            sx={styles.textfield}
-            disabled={!!postalCode?.label}
-            placeholder="Masukan Kode Pos"
+            name="manager_phone"
+            label="Nomor Telepon"
+            placeholder="Contoh: 081xxx"
+            sx={{
+              width: '293px',
+              '& .MuiInputBase-root': {
+                height: '44px',
+              },
+              '& .MuiInputBase-input': {
+                height: '11px',
+              },
+            }}
             require
           />
         </Grid>
       </Grid>
       <Stack sx={styles.action}>
         <Stack direction="row" spacing={2}>
-          <StyledLoadingButton
-            onClick={setIsEdit}
-            loading={isSubmitting}
-            variant='outlined'
-          >
+          <StyledLoadingButton onClick={setIsEdit} loading={isSubmitting} variant="outlined">
             Batalkan
           </StyledLoadingButton>
           <StyledLoadingButton
             loading={isSubmitting}
-            disabled={areValuesEqual() || updating}
+            disabled={areValuesEqual()}
             onClick={handleSubmit(onSubmit)}
             sx={styles.action.button}
-            variant='contained'
+            variant="contained"
           >
             Simpan
           </StyledLoadingButton>
         </Stack>
       </Stack>
     </FormProvider>
-  )
+  );
 }
 
 ProfileInfoFormUnit.propTypes = {
   data: PropTypes.object,
   setIsEdit: PropTypes.func,
 };
-

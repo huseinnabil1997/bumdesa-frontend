@@ -1,4 +1,4 @@
-import { positiveRegex } from 'src/utils/regex';
+// import { positiveRegex } from 'src/utils/regex';
 import * as Yup from 'yup';
 
 export const StepOneSchema = Yup.object().shape({
@@ -13,8 +13,11 @@ export const StepOneSchema = Yup.object().shape({
   founded_at: Yup.string().required('Tahun berdiri BUM Desa wajib diisi').nullable(),
   image: Yup.mixed().required('Foto BUM Desa wajib diisi'),
   image_logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
-  employees: Yup.string()
-    .matches(positiveRegex, 'Hanya dapat diisi angka positif')
+  employees: Yup.number()
+    .transform(value => (isNaN(value) ? 0 : value))
+    .positive('Hanya dapat diisi angka positif')
+    .integer('Hanya dapat diisi angka bulat')
+    .min(3, 'Jumlah pegawai tetap minimal adalah 3')
     .required('Jumlah pegawai tetap wajib diisi'),
 });
 
@@ -26,8 +29,9 @@ export const oneDefaultValues = {
   city: null,
   district: null,
   subdistrict: null,
+  postal_code: '',
   founded_at: '',
-  employees: '',
+  employees: 0,
   image: null,
   image_logo: null,
 };

@@ -60,6 +60,7 @@ export default function RHFMobileDateRangePicker({ name, require, isLoading, val
                 mask='____-__-__'
                 calendars={1}
                 autoOk={true}
+                showToolbar={false}
                 renderInput={(startProps, endProps) => (
                   <Stack display="flex" direction="row" spacing={1} justifyContent="center" alignItems="center">
                     <TextField

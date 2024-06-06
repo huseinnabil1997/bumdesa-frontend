@@ -10,6 +10,7 @@ DeleteModal.propTypes = {
   onClose: PropTypes.func,
   action: PropTypes.func,
   status: PropTypes.number,
+  from: PropTypes.string,
 };
 
 const titleStyle = {
@@ -30,7 +31,7 @@ const buttonStyle = {
   height: '48px'
 }
 
-export default function DeleteModal({ open, onClose, action }) {
+export default function DeleteModal({ open, onClose, action, from }) {
   return (
     <Dialog
       open={open}
@@ -62,7 +63,9 @@ export default function DeleteModal({ open, onClose, action }) {
         </Stack>
         <Stack alignItems="center">
           <Typography sx={subtitleStyle}>Tindakan ini tidak dapat diubah. Data dan semua</Typography>
-          <Typography sx={subtitleStyle}>informasi terkait pengurus BUM Desa ini akan dihapus permanen.</Typography>
+          <Typography sx={subtitleStyle}>
+            informasi terkait pengurus {from === 'employee' ? "Unit Usaha" : "BUM Desa"} ini akan dihapus permanen.
+          </Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
           <StyledLoadingButton sx={buttonStyle} onClick={onClose} variant="outlined">

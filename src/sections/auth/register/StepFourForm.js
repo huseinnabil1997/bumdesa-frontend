@@ -73,7 +73,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
 
         <RHFUploadPhoto
           name="image"
-          label="Foto Manager BUM Desa"
+          label="Foto Manager Unit Usaha"
           accept="image/*"
           maxSize={10000000}
           imageFrom={'organization'}
@@ -95,7 +95,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
           }
         />
 
-        <RHFTextField name="name" label="Nama Manager BUM Desa" require />
+        <RHFTextField name="name" label="Nama Manager Unit Usaha" require />
         <RHFTextField name="position" label="Jabatan" require disabled />
         <RHFTextField name="phone" label="Nomor HP" require type="number" />
 

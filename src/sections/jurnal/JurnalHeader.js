@@ -49,7 +49,7 @@ export default function JurnalHeader({ filter }) {
     download(payload, {
       onSuccess: (res) => {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
-        onDownload({ file: res, title: 'Jurnal', type: index });
+        onDownload({ file: res, title: 'Jurnal_' + filter?.start_date + '_' + filter?.end_date, type: index });
         setSelectedIndex(index);
         setOpen(false);
       },

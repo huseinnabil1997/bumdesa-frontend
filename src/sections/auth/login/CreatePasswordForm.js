@@ -31,8 +31,6 @@ export default function CreatePasswordForm() {
 
   const { token } = router.query;
 
-  console.log(token);
-
   const methods = useForm({
     resolver: yupResolver(ChangePassSchema),
     defaultValues: passwordDefaultValues,

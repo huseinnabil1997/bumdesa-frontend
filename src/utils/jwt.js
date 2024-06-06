@@ -41,6 +41,11 @@ const setSession = (accessToken) => {
   } else {
     localStorage.removeItem('token');
     localStorage.removeItem('@menu');
+    localStorage.removeItem('userData');
+    if (localStorage.getItem('remember') === 'false') {
+      localStorage.removeItem('email');
+      localStorage.removeItem('remember');
+    }
     delete axios.defaults.headers.common.Authorization;
     delete axiosCoreService.defaults.headers.common.Authorization;
     delete axiosReportService.defaults.headers.common.Authorization;

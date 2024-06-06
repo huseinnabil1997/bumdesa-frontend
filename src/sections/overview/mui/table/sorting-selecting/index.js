@@ -19,7 +19,11 @@ import useTable, { getComparator, emptyRows } from '../../../../../hooks/useTabl
 // components
 import Iconify from '../../../../../components/Iconify';
 import Scrollbar from '../../../../../components/Scrollbar';
-import { TableEmptyRows, TableHeadCustom, TableSelectedActions } from '../../../../../components/table';
+import {
+  TableEmptyRows,
+  TableHeadCustom,
+  TableSelectedActions,
+} from '../../../../../components/table';
 //
 import SortingSelectingToolbar from './SortingSelectingToolbar';
 
@@ -76,8 +80,6 @@ export default function SortingSelecting() {
 
   const [tableData, setTableData] = useState(TABLE_DATA);
 
-  console.log('setTableData', setTableData);
-
   const dataFiltered = applySortFilter({
     tableData,
     comparator: getComparator(order, orderBy),
@@ -129,25 +131,30 @@ export default function SortingSelecting() {
             />
 
             <TableBody>
-              {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                <TableRow
-                  hover
-                  key={row.name}
-                  onClick={() => onSelectRow(row.name)}
-                  selected={selected.includes(row.name)}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox checked={selected.includes(row.name)} />
-                  </TableCell>
-                  <TableCell> {row.name} </TableCell>
-                  <TableCell align="center">{row.calories}</TableCell>
-                  <TableCell align="center">{row.fat}</TableCell>
-                  <TableCell align="center">{row.carbs}</TableCell>
-                  <TableCell align="center">{row.protein}</TableCell>
-                </TableRow>
-              ))}
+              {dataFiltered
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow
+                    hover
+                    key={row.name}
+                    onClick={() => onSelectRow(row.name)}
+                    selected={selected.includes(row.name)}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox checked={selected.includes(row.name)} />
+                    </TableCell>
+                    <TableCell> {row.name} </TableCell>
+                    <TableCell align="center">{row.calories}</TableCell>
+                    <TableCell align="center">{row.fat}</TableCell>
+                    <TableCell align="center">{row.carbs}</TableCell>
+                    <TableCell align="center">{row.protein}</TableCell>
+                  </TableRow>
+                ))}
 
-              <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+              <TableEmptyRows
+                height={denseHeight}
+                emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+              />
             </TableBody>
           </Table>
         </TableContainer>

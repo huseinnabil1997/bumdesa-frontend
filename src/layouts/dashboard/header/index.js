@@ -93,6 +93,7 @@ export default function DashboardHeader({
     }
     if (value === 'faqs') return setTitle('Frequently Asked Questions');
     if (value === 'manager') return setTitle('Pengurus BUM Desa');
+    if (value === 'employee') return setTitle('Pengurus Unit Usaha');
     if (value === 'profile') return setTitle('Profil');
     if (value === 'setting') return setTitle('Pengaturan Akun');
     if (value2 === 'profit') return setTitle('Laporan Laba Rugi');

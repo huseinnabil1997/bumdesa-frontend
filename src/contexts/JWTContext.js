@@ -166,14 +166,9 @@ function AuthProvider({ children }) {
   const createPassword = async (payload, token) => {
     const isRegis = !!getSessionToken();
     const service = isRegis ? axios : axiosInstance;
-    let response;
-    if (isRegis) {
-      response = await service.post('/change-password', payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } else {
-      response = await service.post('/change-password', payload);
-    }
+    const response = await service.post('/change-password', payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     return response.data;
   };

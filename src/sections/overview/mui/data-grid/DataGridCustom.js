@@ -92,7 +92,9 @@ const columns = [
     headerName: 'Rating',
     width: 160,
     disableColumnMenu: true,
-    renderCell: (params) => <Rating size="small" value={params.row.rating} precision={0.5} readOnly />,
+    renderCell: (params) => (
+      <Rating size="small" value={params.row.rating} precision={0.5} readOnly />
+    ),
   },
   {
     field: 'status',
@@ -117,7 +119,10 @@ const columns = [
       return (
         <>
           {getAdmin ? (
-            <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ width: 20, height: 20, color: 'primary.main' }} />
+            <Iconify
+              icon={'eva:checkmark-circle-2-fill'}
+              sx={{ width: 20, height: 20, color: 'primary.main' }}
+            />
           ) : (
             '-'
           )}

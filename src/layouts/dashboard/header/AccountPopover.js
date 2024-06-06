@@ -1,21 +1,24 @@
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // next
 // import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 // @mui
-import { alpha } from '@mui/material/styles';
-import { MenuItem, Typography } from '@mui/material';
+// import { alpha } from '@mui/material/styles';
+import { MenuItem, Stack, Typography } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
-import MyAvatar from '../../../components/MyAvatar';
+// import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
-import { Logout, Person, Settings } from '@mui/icons-material';
+import { KeyboardArrowDownRounded, Logout, Person, Settings } from '@mui/icons-material';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
+import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
+import { eventBus } from 'src/pages/profile/detail';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +54,22 @@ const styles = {
 
 // ----------------------------------------------------------------------
 
+// export const GetDataBumdesa = (userData) => {
+  
+//   // useEffect(() => {
+//   //   refetch();
+//   // }, [userData?.bumdesa_id]);
+//   return data;
+// }
+
+// export const GetDataUnit = (userData) => {
+  
+//   // useEffect(() => {
+//   //   refetch();
+//   // }, [userData?.unit_id]);
+//   return data;
+// }
+
 export default function AccountPopover() {
   const router = useRouter();
 
@@ -61,6 +80,29 @@ export default function AccountPopover() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(null);
+
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
+  const { data: unitData, refetch: unitRefetch } = useGetUnitById(userData?.unit_id);
+
+  const { data: bumdesaData, refetch: bumdesaRefetch } = useGetProfile(userData?.bumdesa_id);
+
+  useEffect(() => {
+    const refetchHandler = () => {
+      unitRefetch();
+      bumdesaRefetch();
+    };
+
+    eventBus.on('refetchUnit', refetchHandler);
+    eventBus.on('refetchBumdesa', refetchHandler);
+
+    return () => {
+      eventBus.off('refetchUnit', refetchHandler);
+      eventBus.off('refetchBumdesa', refetchHandler);
+    };
+  }, [unitRefetch, bumdesaRefetch]);
+
+  const data = userData?.unit_id === 0 ? bumdesaData : unitData;
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -101,20 +143,32 @@ export default function AccountPopover() {
         onClick={handleOpen}
         sx={{
           p: 0,
-          ...(open && {
-            '&:before': {
-              zIndex: 1,
-              content: "''",
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
-            },
-          }),
+          '&:hover': {
+            bgcolor: 'rgba(255, 255, 255, 0)', // Contoh warna background saat hover
+          }
         }}
+      // sx={{
+      //   p: 0,
+      //   ...(open && {
+      //     '&:before': {
+      //       zIndex: 1,
+      //       content: "''",
+      //       width: '100%',
+      //       height: '100%',
+      //       borderRadius: '50%',
+      //       position: 'absolute',
+      //       bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
+      //     },
+      //   }),
+      // }}
       >
-        <MyAvatar />
+        {/* <MyAvatar /> */}
+        <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
+          <Typography color='#292929' fontSize='18px' fontWeight={600}>
+            {data?.name ? data?.name : '...'}, {bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+          </Typography>
+          <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
+        </Stack>
       </IconButtonAnimate>
 
       <MenuPopover
