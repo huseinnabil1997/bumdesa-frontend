@@ -43,11 +43,11 @@ export const isTotalName = (nama) => {
 };
 
 export const checkUrlImage = async (url) => {
-  axios
-    .get(url)
-    .then(() => true)
-    .catch((error) => {
-      console.log('Get Image Error', error);
-      return false;
-    });
+  try {
+    await axios.get(url);
+    return true;
+  } catch (error) {
+    console.log('Get Image Error', error);
+    return false;
+  }
 };

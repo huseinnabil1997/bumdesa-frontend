@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // @mui
@@ -39,6 +39,8 @@ NavbarVertical.propTypes = {
 };
 
 export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
+  const [isValidImage, setIsValidImage] = useState(false);
+
   const theme = useTheme();
 
   const { pathname } = useRouter();
@@ -56,6 +58,16 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   }, [pathname]);
 
   const logo = localStorage.getItem('logo');
+
+  useEffect(() => {
+    const checkImage = async () => {
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`);
+      setIsValidImage(isValid);
+      return isValid;
+    };
+
+    checkImage();
+  }, []);
 
   const renderContent = (
     <Scrollbar
@@ -78,7 +90,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           visibleByDefault
           disabledEffect
           src={
-            checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`)
+            isValidImage
               ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`
               : '/image/default_image.png'
           }
