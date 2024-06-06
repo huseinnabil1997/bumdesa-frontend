@@ -1,6 +1,8 @@
 export { default as DashboardWelcome } from './DashboardWelcome';
 export { default as DashboardNewProducts } from './DashboardNewProducts';
-export { default as DashboardYearlySales } from './DashboardYearlySales';
+export { default as DashboardProfitLoss } from './DashboardProfitLoss';
+export { default as DashboardSales } from './DashboardSales';
+export { default as DashboardFinances } from './DashboardFinances';
 export { default as DashboardBestSalesman } from './DashboardBestSalesman';
 export { default as DashboardSaleByGender } from './DashboardSaleByGender';
 export { default as DashboardSalesOverview } from './DashboardSalesOverview';

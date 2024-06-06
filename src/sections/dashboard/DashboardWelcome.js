@@ -1,8 +1,9 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Typography, Card, CardContent } from '@mui/material';
+import { Typography, Card, CardContent, CircularProgress } from '@mui/material';
 //
 import Image from 'src/components/Image';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 
 // ----------------------------------------------------------------------
 
@@ -26,15 +27,23 @@ const RootStyle = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DashboardWelcome() {
+  const { data, isLoading } = useGetProfile();
+
   return (
     <RootStyle>
       <CardContent>
-        <Typography gutterBottom variant="h4" sx={{ m: 0 }}>
-          BUM Desa Gunungsari Berkah Gunungsari
-        </Typography>
-        <Typography variant="body2" sx={{ maxWidth: 480, mx: 'auto' }}>
-          Bumiaji, Kota Batu, Malang, Jawa Timur
-        </Typography>
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <>
+            <Typography gutterBottom variant="h4" sx={{ m: 0 }}>
+              {data?.name}
+            </Typography>
+            <Typography variant="body2" sx={{ maxWidth: 480, mx: 'auto' }}>
+              {data?.address}
+            </Typography>
+          </>
+        )}
       </CardContent>
       <Image
         visibleByDefault

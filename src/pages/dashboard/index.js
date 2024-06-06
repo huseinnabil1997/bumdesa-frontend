@@ -3,15 +3,19 @@ import { Container, Grid } from '@mui/material';
 // hooks
 import {
   DashboardBestSalesman,
-  DashboardYearlySales,
   DashboardWelcome,
   DashboardNewProducts,
   DashboardUnit,
   DashboardEducation,
+  DashboardSales,
+  DashboardFinances,
+  DashboardProfitLoss,
 } from 'src/sections/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
+import { getSessionToken } from 'src/utils/axiosReportService';
+import jwtDecode from 'jwt-decode';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +27,16 @@ Dashboard.getLayout = function getLayout(page) {
 export default function Dashboard() {
   const { themeStretch } = useSettings();
 
+  const token = getSessionToken();
+  let decoded = {};
+  if (token) {
+    decoded = jwtDecode(token);
+  } else {
+    console.error('Token not available');
+  }
+
+  console.log(decoded.sub.businessid);
+
   return (
     <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
@@ -32,15 +46,15 @@ export default function Dashboard() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardYearlySales />
+            <DashboardFinances unit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <DashboardBestSalesman />
+          <Grid item xs={12}>
+            <DashboardSales unit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <DashboardNewProducts />
+          <Grid item xs={12}>
+            <DashboardProfitLoss unit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
