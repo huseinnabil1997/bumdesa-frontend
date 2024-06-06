@@ -8,5 +8,7 @@ export function isExternalLink(path) {
 }
 
 export function getActive(path, pathname, asPath) {
-  return pathname.includes(path) || asPath.includes(path);
+  const firstPath = path.split('/')[1];
+  
+  return pathname.includes(firstPath === 'unit' ? firstPath : path) || asPath.includes(path);
 }
