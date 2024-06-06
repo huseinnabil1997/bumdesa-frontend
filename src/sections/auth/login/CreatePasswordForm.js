@@ -31,8 +31,6 @@ export default function CreatePasswordForm() {
 
   const { token } = router.query;
 
-  console.log(token);
-
   const methods = useForm({
     resolver: yupResolver(ChangePassSchema),
     defaultValues: passwordDefaultValues,
@@ -125,7 +123,7 @@ export default function CreatePasswordForm() {
                 <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
               )}
               <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
-                Simbol ~!@#$%%^&*
+                Simbol ~!@#$%^&*
               </Typography>
             </Grid>
             <Grid item xs={6} display="flex">

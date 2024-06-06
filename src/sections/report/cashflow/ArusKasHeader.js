@@ -1,7 +1,18 @@
 import PropTypes from 'prop-types';
 import jwtDecode from 'jwt-decode';
 import { Description } from '@mui/icons-material';
-import { MenuItem, Stack, Grow, Paper, Popper, ClickAwayListener, MenuList, Box, Typography, CircularProgress } from '@mui/material';
+import {
+  MenuItem,
+  Stack,
+  Grow,
+  Paper,
+  Popper,
+  ClickAwayListener,
+  MenuList,
+  Box,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
@@ -12,7 +23,10 @@ import { getSessionToken } from 'src/utils/axios';
 import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 
-const options = [{ type: 1, name: 'Unduh .PDF' }, { type: 2, name: 'Unduh .xlsx' }];
+const options = [
+  { type: 1, name: 'Unduh .PDF' },
+  { type: 2, name: 'Unduh .xlsx' },
+];
 
 function formatDate(inputDate) {
   const date = inputDate;
@@ -36,7 +50,6 @@ export default function ArusKasHeader({ onSubmit }) {
   let decoded = {};
   if (token) {
     decoded = jwtDecode(token);
-    console.log('decoded token:', decoded);
   } else {
     console.error('Token not available');
   }
@@ -57,8 +70,8 @@ export default function ArusKasHeader({ onSubmit }) {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
       start_date: formatDate(selectedDate[0]),
-      end_date: formatDate(selectedDate[1])
-    }
+      end_date: formatDate(selectedDate[1]),
+    };
     onDownload(payload, {
       onSuccess: (res) => {
         const blob = new Blob([res], { type: 'application/pdf' });
@@ -69,27 +82,37 @@ export default function ArusKasHeader({ onSubmit }) {
         } else {
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', `Laporan_Arus_Kas_${selectedUnit?.id}_${formatDate(selectedDate[0])}_${formatDate(selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`);
+          link.setAttribute(
+            'download',
+            `Laporan_Arus_Kas_${selectedUnit?.id}_${formatDate(selectedDate[0])}_${formatDate(
+              selectedDate[1]
+            )}.${type === 1 ? 'pdf' : 'xlsx'}`
+          );
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
-          enqueueSnackbar(
-            '',
-            {
-              variant: 'success',
-              content: () => (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  sx={{ width: '344px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-                >
-                  <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
-                  <Typography ml="10px" fontWeight={500} fontSize="12px">Dokumen Berhasil di Download</Typography>
-                </Box>
-              )
-            },
-          )
+          enqueueSnackbar('', {
+            variant: 'success',
+            content: () => (
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={{
+                  width: '344px',
+                  height: '48px',
+                  backgroundColor: '#E1F8EB',
+                  padding: '8px',
+                  borderRadius: '4px',
+                }}
+              >
+                <Iconify height={24} width={24} icon={'lets-icons:check-fill'} color="#27AE60" />
+                <Typography ml="10px" fontWeight={500} fontSize="12px">
+                  Dokumen Berhasil di Download
+                </Typography>
+              </Box>
+            ),
+          });
         }
       },
       onError: (err) => {
@@ -116,13 +139,13 @@ export default function ArusKasHeader({ onSubmit }) {
     onSubmit({
       unit: decoded?.sub?.businessid ?? selectedUnit?.id,
       start_date: formatDate(firstDayOfMonth),
-      end_date: formatDate(currentDate)
+      end_date: formatDate(currentDate),
     });
-  }, [])
+  }, []);
 
   useEffect(async () => {
-    await setSelectedUnit(data?.[0])
-  }, [data])
+    await setSelectedUnit(data?.[0]);
+  }, [data]);
 
   return (
     <Stack direction="row" spacing={1}>
@@ -143,7 +166,11 @@ export default function ArusKasHeader({ onSubmit }) {
             )}
             onChange={(event, newValue) => {
               setSelectedUnit(newValue);
-              onSubmit({ unit: newValue?.id, start_date: formatDate(selectedDate[0]), end_date: formatDate(selectedDate[1]) })
+              onSubmit({
+                unit: newValue?.id,
+                start_date: formatDate(selectedDate[0]),
+                end_date: formatDate(selectedDate[1]),
+              });
             }}
             value={selectedUnit}
           />
@@ -152,7 +179,11 @@ export default function ArusKasHeader({ onSubmit }) {
           name="date"
           onChange={(newValue) => {
             setSelectedDate(newValue);
-            onSubmit({ unit: selectedUnit?.id, start_date: formatDate(newValue[0]), end_date: formatDate(newValue[1]) })
+            onSubmit({
+              unit: selectedUnit?.id,
+              start_date: formatDate(newValue[0]),
+              end_date: formatDate(newValue[1]),
+            });
           }}
           value={selectedDate}
         />
@@ -175,7 +206,13 @@ export default function ArusKasHeader({ onSubmit }) {
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
-          startIcon={downloading ? <CircularProgress size="1rem" /> : <Iconify width={14} height={14} icon={'bi:download'} />}
+          startIcon={
+            downloading ? (
+              <CircularProgress size="1rem" />
+            ) : (
+              <Iconify width={14} height={14} icon={'bi:download'} />
+            )
+          }
           endIcon={<Iconify icon={'oui:arrow-down'} />}
           variant="contained"
           disabled={downloading}

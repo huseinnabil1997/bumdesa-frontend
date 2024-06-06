@@ -52,14 +52,14 @@ export default function StepTwoForm() {
 
     formData.append('organization.0.name', data.name);
     formData.append('organization.0.phone', data.phone);
-    formData.append('organization.0.image', data.image);
     formData.append('organization.0.position', '1');
+    if (typeof data.image === 'object') formData.append('organization.0.image', data.image);
 
     data.organizations.forEach((row, i) => {
       formData.append(`organization.${i + 1}.name`, row.name);
       formData.append(`organization.${i + 1}.phone`, row.phone);
-      formData.append(`organization.${i + 1}.image`, row.image);
       formData.append(`organization.${i + 1}.position`, i + 2);
+      if (typeof row.image === 'object') formData.append(`organization.${i + 1}.image`, row.image);
     });
 
     try {
@@ -75,6 +75,7 @@ export default function StepTwoForm() {
     if (data?.length) {
       setValue('name', data[0].name);
       setValue('phone', data[0].phone);
+      setValue('image', data[0].image);
 
       const temp = data;
       temp.shift();
@@ -82,6 +83,7 @@ export default function StepTwoForm() {
       temp.forEach((row, i) => {
         setValue(`organizations.${i}.name`, row.name);
         setValue(`organizations.${i}.phone`, row.phone);
+        setValue(`organizations.${i}.image`, row.image);
       });
     }
   }, [data]);

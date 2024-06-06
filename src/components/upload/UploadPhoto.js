@@ -147,8 +147,8 @@ export default function UploadPhoto({
                 handleOpenModal(
                   isString(file)
                     ? checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`)
-                    ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
-                    : '/image/default_image.png'
+                      ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                      : '/image/default_image.png'
                     : file.preview
                 );
               } else {
@@ -164,8 +164,8 @@ export default function UploadPhoto({
                 src={
                   isString(file)
                     ? checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`)
-                    ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
-                    : '/image/default_image.png'
+                      ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                      : '/image/default_image.png'
                     : file.preview
                 }
                 sx={{ zIndex: 8 }}

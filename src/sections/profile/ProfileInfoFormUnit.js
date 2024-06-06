@@ -1,24 +1,29 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Chip, Grid, Stack, Typography } from "@mui/material";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useForm } from "react-hook-form";
-import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from "src/components/hook-form";
-import { StyledLoadingButton } from "src/theme/custom/Button";
+import { useForm } from 'react-hook-form';
+import {
+  FormProvider,
+  RHFAutocomplete,
+  RHFTextField,
+  RHFUploadPhoto,
+} from 'src/components/hook-form';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 import * as Yup from 'yup';
-import { useEffect } from "react";
-import { handleDrop } from "src/utils/helperFunction";
-import { isEqual } from "lodash";
-import { useSnackbar } from "notistack";
-import Iconify from "src/components/Iconify";
-import { useGetSectors } from "src/query/hooks/units/useGetSectors";
-import usePatch from "src/query/hooks/mutation/usePatch";
+import { useEffect } from 'react';
+import { handleDrop } from 'src/utils/helperFunction';
+import { isEqual } from 'lodash';
+import { useSnackbar } from 'notistack';
+import Iconify from 'src/components/Iconify';
+import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
+import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useTheme } from '@mui/material/styles';
-import RHFDatePicker from "src/components/hook-form/RHFDatePicker";
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 const styles = {
   content: {
     minHeight: 483,
-    p: '24px'
+    p: '24px',
   },
   textfield: {
     // width: '293px',
@@ -34,10 +39,10 @@ const styles = {
       '& .MuiInputBase-root': {
         height: '44px',
       },
-      "& fieldset": {
+      '& fieldset': {
         border: 'none',
       },
-    }
+    },
   },
   action: {
     minHeight: 80,
@@ -49,8 +54,8 @@ const styles = {
       width: 160,
       height: 48,
       borderRadius: '8px',
-      borderColor: '#1078CA'
-    }
+      borderColor: '#1078CA',
+    },
   },
   snackbar: {
     width: '344px',
@@ -58,19 +63,16 @@ const styles = {
     backgroundColor: '#E1F8EB',
     gap: '8px',
     padding: '12px',
-    borderRadius: '4px'
+    borderRadius: '4px',
   },
   snackbarIcon: {
     width: '16px',
     height: '16px',
-    color: '#27AE60'
-  }
-}
+    color: '#27AE60',
+  },
+};
 
 export default function ProfileInfoFormUnit({ data, setIsEdit }) {
-
-  console.log('dataUnit:', data)
-
   const theme = useTheme();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -133,7 +135,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
     kota: watch('kota'),
     kecamatan: watch('kecamatan'),
     desa: watch('desa'),
-    kode_pos: watch('kode_pos')
+    kode_pos: watch('kode_pos'),
   };
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
@@ -163,15 +165,11 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
         await enqueueSnackbar('', {
           variant: 'success',
           content: () => (
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={styles.snackbar}
-            >
+            <Box display="flex" alignItems="center" sx={styles.snackbar}>
               <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
               <Typography fontSize="12px">Informasi Baru Unit Usaha sudah diperbarui!</Typography>
             </Box>
-          )
+          ),
         });
         setIsEdit();
       }
@@ -220,7 +218,10 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
             <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
           )}
           {data?.status === 3 && (
-            <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
+            <Chip
+              label="Nonaktif"
+              sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }}
+            />
           )}
         </Grid>
         <Grid item xs={4}>
@@ -235,7 +236,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
               },
               '& .MuiInputBase-input': {
                 height: '11px',
-              }
+              },
             }}
             require
           />
@@ -256,7 +257,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
               },
               '& .MuiInputBase-input': {
                 height: '11px',
-              }
+              },
             }}
             require
           />
@@ -283,7 +284,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
               },
               '& .MuiInputBase-input': {
                 height: '11px',
-              }
+              },
             }}
             require
           />
@@ -305,7 +306,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
               },
               '& .MuiInputBase-input': {
                 height: '11px',
-              }
+              },
             }}
             require
           />
@@ -316,7 +317,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
             label="Jabatan"
             inputProps={{
               style: { color: '#00549B' },
-              readOnly: true
+              readOnly: true,
             }}
             sx={{
               backgroundColor: '#CCE8FF',
@@ -325,7 +326,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
               '& .MuiInputBase-root': {
                 height: '44px',
               },
-              "& fieldset": {
+              '& fieldset': {
                 border: 'none',
               },
             }}
@@ -344,7 +345,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
               },
               '& .MuiInputBase-input': {
                 height: '11px',
-              }
+              },
             }}
             require
           />
@@ -352,11 +353,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
       </Grid>
       <Stack sx={styles.action}>
         <Stack direction="row" spacing={2}>
-          <StyledLoadingButton
-            onClick={setIsEdit}
-            loading={isSubmitting}
-            variant='outlined'
-          >
+          <StyledLoadingButton onClick={setIsEdit} loading={isSubmitting} variant="outlined">
             Batalkan
           </StyledLoadingButton>
           <StyledLoadingButton
@@ -364,18 +361,17 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
             disabled={areValuesEqual()}
             onClick={handleSubmit(onSubmit)}
             sx={styles.action.button}
-            variant='contained'
+            variant="contained"
           >
             Simpan
           </StyledLoadingButton>
         </Stack>
       </Stack>
     </FormProvider>
-  )
+  );
 }
 
 ProfileInfoFormUnit.propTypes = {
   data: PropTypes.object,
   setIsEdit: PropTypes.func,
 };
-

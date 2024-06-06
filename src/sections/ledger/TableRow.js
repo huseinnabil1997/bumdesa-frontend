@@ -25,8 +25,15 @@ export default function UserTableRow({ row, selected, onDeleteRow, index }) {
 
   const [showDelete, setDelete] = useState(false);
 
-  const { number_of_evidence, date, transaction_information, debit, credit, business_unit_name } =
-    row;
+  const {
+    number_of_evidence,
+    date,
+    transaction_information,
+    debit,
+    credit,
+    business_unit_name,
+    balance,
+  } = row;
 
   return (
     <>
@@ -43,7 +50,7 @@ export default function UserTableRow({ row, selected, onDeleteRow, index }) {
         <TableCell>{business_unit_name}</TableCell>
         <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
-        <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
+        <TableCell>{balance ? fCurrency(balance) : '-'}</TableCell>
       </TableRow>
 
       <DeleteConfirmation
