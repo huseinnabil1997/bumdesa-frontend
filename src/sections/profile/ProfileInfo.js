@@ -12,6 +12,7 @@ import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
 import { fBumdesId } from "src/utils/formatNumber";
 import { checkUrlImage } from "src/utils/helperFunction";
+import { IconButtonAnimate } from "src/components/animate";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -148,34 +149,38 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
           <Typography variant="caption" fontWeight={600}>
             Foto Kantor BUM Desa
           </Typography>
-          <Image
-            alt="image"
-            src={
-              isValidImageKantor
-                ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
-                : '/image/default_image.png'
-            }
-            onClick={() => {
-              handleModalImage(isValidImageKantor
-                ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
-                : '/image/default_image.png'
-              )
-            }}
-            sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
-          />
+          <IconButtonAnimate>
+            <Image
+              alt="image"
+              src={
+                isValidImageKantor
+                  ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
+                  : '/image/default_image.png'
+              }
+              onClick={() => {
+                handleModalImage(isValidImageKantor
+                  ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
+                  : '/image/default_image.png'
+                )
+              }}
+              sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
+            />
+          </IconButtonAnimate>
         </Grid>
         <Grid item xs={3}>
           <Typography variant="caption" fontWeight={600}>
             Logo BUM Desa
           </Typography>
-          <Image
-            alt="image"
-            src={isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
-            onClick={() => {
-              handleModalImage(isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
-            }}
-            sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
-          />
+          <IconButtonAnimate>
+            <Image
+              alt="image"
+              src={isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
+              onClick={() => {
+                handleModalImage(isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
+              }}
+              sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
+            />
+          </IconButtonAnimate>
         </Grid>
         <Grid item xs={3} />
         <Grid item xs={3} />

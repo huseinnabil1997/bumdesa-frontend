@@ -197,7 +197,7 @@ export default function UploadPhoto({
                 }),
               }}
             >
-              <Iconify icon={'ic:round-add-a-photo'} sx={{ width: 24, height: 24 }} />
+              {file ? <Iconify icon={'f7:photo-fill'} sx={{ width: 24, height: 24 }} /> : <Iconify icon={'ic:round-add-a-photo'} sx={{ width: 24, height: 24 }} />}
             </PlaceholderStyle>
           </DropZoneStyle>
         </RootStyle>
