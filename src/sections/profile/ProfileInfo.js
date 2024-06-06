@@ -139,7 +139,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
     };
     checkImageKantor();
     checkImageLogo();
-  }, []);
+  }, [defaultValues?.foto_kantor, defaultValues?.logo]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

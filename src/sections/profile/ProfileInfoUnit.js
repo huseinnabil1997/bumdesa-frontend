@@ -129,7 +129,7 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
     };
 
     checkImage();
-  }, []);
+  }, [defaultValues?.image]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
