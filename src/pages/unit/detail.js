@@ -19,6 +19,7 @@ import Image from "src/components/Image";
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useTheme } from '@mui/material/styles';
+import { checkUrlImage } from 'src/utils/helperFunction';
 
 const styles = {
   textfield: {
@@ -52,6 +53,7 @@ export default function DetailUnitUsaha() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [alertDelete, setAlertDelete] = useState(null);
+  const [isValidImage, setIsValidImage] = useState(false);
 
   const { themeStretch } = useSettings();
 
@@ -217,6 +219,16 @@ export default function DetailUnitUsaha() {
     methods.reset(defaultValues);
   }, [data]);
 
+  useEffect(() => {
+    const checkImage = async () => {
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`);
+      setIsValidImage(isValid);
+      return isValid;
+    };
+
+    checkImage();
+  }, [defaultValues?.image]);
+
   return (
     <Page title="Unit Usaha: Detail">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -290,8 +302,9 @@ export default function DetailUnitUsaha() {
               </Stack>
 
               <Image
-                alt="image" src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`}
-                onClick={() => handleModalImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`)}
+                alt="image"
+                src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
+                onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
                 sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
               />
 
