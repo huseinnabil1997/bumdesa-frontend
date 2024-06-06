@@ -54,7 +54,7 @@ export default function LoginForm() {
   const {
     setError,
     handleSubmit,
-    watch,
+    // watch,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -78,7 +78,6 @@ export default function LoginForm() {
         }
       }
     } catch (error) {
-      reset();
       if (error.code === 412) {
         router.push(`/auth/create-password?token=${error?.metadata?.token}`);
         return;
