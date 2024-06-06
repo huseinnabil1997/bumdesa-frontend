@@ -41,7 +41,7 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: localStorage.getItem('email'),
+    email: localStorage.getItem('email') ?? '',
     password: '',
     remember: localStorage.getItem('remember') === 'true',
   };
@@ -55,6 +55,7 @@ export default function LoginForm() {
     reset,
     setError,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -78,11 +79,11 @@ export default function LoginForm() {
         }
       }
     } catch (error) {
+      reset();
       if (error.code === 412) {
         router.push(`/auth/create-password?token=${error?.metadata?.token}`);
         return;
       }
-      reset();
       if (isMountedRef.current) {
         setError('afterSubmit', { ...error, message: error.message });
       }

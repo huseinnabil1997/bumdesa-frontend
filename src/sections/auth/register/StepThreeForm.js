@@ -24,6 +24,7 @@ import { useEffect } from 'react';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
+import { isString } from 'lodash';
 // ----------------------------------------------------------------------
 
 export default function StepThreeForm() {
@@ -55,6 +56,8 @@ export default function StepThreeForm() {
       year_founded: moment(data?.year_founded).format('yyyy'),
     };
 
+    if (isString(payload.image)) delete payload.image;
+
     const formData = new FormData();
 
     for (const key in payload) {
@@ -76,6 +79,7 @@ export default function StepThreeForm() {
       setValue('email', data.email);
       setValue('year_founded', new Date(data.year_founded, 0, 1));
       setValue('sector', data.sector);
+      setValue('image', data.image);
     }
   }, [data]);
 
@@ -88,7 +92,7 @@ export default function StepThreeForm() {
           name="image"
           label="Foto Kantor Unit Usaha"
           accept="image/*"
-          imageFrom={'bumdesa'}
+          imageFrom={'unit'}
           maxSize={10000000}
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={

@@ -77,6 +77,9 @@ export default function StepOneForm() {
       postal_code: data?.postal_code,
     };
 
+    if (typeof payload.image === 'string') delete payload.image;
+    if (typeof payload.image_logo === 'string') delete payload.image_logo;
+
     const formData = new FormData();
 
     for (const key in payload) {
@@ -124,6 +127,8 @@ export default function StepOneForm() {
       setValue('founded_at', moment(data.founded_at).format('yyyy-MM-DD'));
       setValue('employees', data.employees);
       setValue('province', data.province);
+      setValue('image', data.photo);
+      setValue('image_logo', data.photo_logo);
     }
   }, [data]);
 

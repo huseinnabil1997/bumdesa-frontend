@@ -57,8 +57,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   const logo = localStorage.getItem('logo');
 
-  console.log('check image:', checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`))
-
   const renderContent = (
     <Scrollbar
       sx={{
@@ -79,10 +77,10 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <Image
           visibleByDefault
           disabledEffect
-          src={ 
-            checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`) 
-            ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}` 
-            : '/image/default_image.png'
+          src={
+            checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`)
+              ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`
+              : '/image/default_image.png'
           }
           alt="bri"
           sx={{ width: 84, mx: 'auto', mb: 1, mt: 5 }}
