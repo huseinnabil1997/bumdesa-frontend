@@ -72,6 +72,8 @@ const styles = {
 export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
+  const [isValidImageKantor, setIsValidImageKantor] = useState(false);
+  const [isValidImageLogo, setIsValidImageLogo] = useState(false);
 
   const datePickerRef = useRef(null);
 
@@ -124,6 +126,21 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
     console.log('onSubmit', data);
   };
 
+  useEffect(() => {
+    const checkImageKantor = async () => {
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`);
+      setIsValidImageKantor(isValid);
+      return isValid;
+    };
+    const checkImageLogo = async () => {
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`);
+      setIsValidImageLogo(isValid);
+      return isValid;
+    };
+    checkImageKantor();
+    checkImageLogo();
+  }, []);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
@@ -134,12 +151,12 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
           <Image
             alt="image"
             src={
-              checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)
+              isValidImageKantor
                 ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
                 : '/image/default_image.png'
             }
             onClick={() => {
-              handleModalImage(checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`)
+              handleModalImage(isValidImageKantor
                 ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
                 : '/image/default_image.png'
               )
@@ -153,9 +170,9 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
           </Typography>
           <Image
             alt="image"
-            src={checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
+            src={isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
             onClick={() => {
-              handleModalImage(checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
+              handleModalImage(isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
             }}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />

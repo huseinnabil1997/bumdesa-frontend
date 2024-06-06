@@ -9,7 +9,7 @@ import Image from '../Image';
 import Iconify from '../Iconify';
 import RejectionFiles from './RejectionFiles';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { checkUrlImage } from 'src/utils/helperFunction';
 
@@ -95,6 +95,7 @@ export default function UploadPhoto({
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
+  const [isValidImage, setIsValidImage] = useState(false);
 
   const handleOpenModal = (image) => {
     setModalImage(image);
@@ -122,6 +123,16 @@ export default function UploadPhoto({
     }
   };
 
+  useEffect(() => {
+    const checkImage = async () => {
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`);
+      setIsValidImage(isValid);
+      return isValid;
+    };
+
+    checkImage();
+  }, []);
+
   return (
     <>
       <Typography variant="caption" fontWeight={600}>
@@ -146,7 +157,7 @@ export default function UploadPhoto({
               if (file) {
                 handleOpenModal(
                   isString(file)
-                    ? checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`)
+                    ? isValidImage
                       ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
                       : '/image/default_image.png'
                     : file.preview
@@ -163,7 +174,7 @@ export default function UploadPhoto({
                 alt="image"
                 src={
                   isString(file)
-                    ? checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`)
+                    ? isValidImage
                       ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
                       : '/image/default_image.png'
                     : file.preview

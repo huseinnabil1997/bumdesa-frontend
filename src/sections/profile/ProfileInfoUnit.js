@@ -72,6 +72,7 @@ const styles = {
 export default function ProfileInfoUnit({ data, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
+  const [isValidImage, setIsValidImage] = useState(false);
 
   const theme = useTheme();
 
@@ -120,14 +121,24 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
     console.log('onSubmit', data);
   };
 
+  useEffect(() => {
+    const checkImage = async () => {
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`);
+      setIsValidImage(isValid);
+      return isValid;
+    };
+
+    checkImage();
+  }, []);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
         <Grid item xs={11}>
           <Image
             alt="image"
-            src={checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
-            onClick={() => handleModalImage(checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`) ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
+            src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
+            onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
             sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
           />
         </Grid>
