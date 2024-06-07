@@ -22,22 +22,15 @@ import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
 import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
+import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
   { type: 2, name: 'Unduh .xlsx' },
 ];
 
-function formatDate(inputDate) {
-  const date = inputDate;
-  const year = date?.getFullYear();
-  const month = String(date?.getMonth() + 1).padStart(2, '0');
-  const day = String(date?.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+const currentDate = end_date ?? new Date();
+const firstDayOfMonth = start_date ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 LabaRugiHeader.propTypes = {
   onSubmit: PropTypes.func,
@@ -171,6 +164,7 @@ export default function LabaRugiHeader({ onSubmit }) {
                 start_date: formatDate(selectedDate[0]),
                 end_date: formatDate(selectedDate[1]),
               });
+              defaultRangeDate(formatDate(selectedDate[0]), formatDate(selectedDate[1]));
             }}
             value={selectedUnit}
           />
@@ -184,6 +178,7 @@ export default function LabaRugiHeader({ onSubmit }) {
               start_date: formatDate(newValue[0]),
               end_date: formatDate(newValue[1]),
             });
+            defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
           }}
           value={selectedDate}
         />

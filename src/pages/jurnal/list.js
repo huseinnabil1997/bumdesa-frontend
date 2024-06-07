@@ -35,6 +35,7 @@ import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import TableError from 'src/components/table/TableError';
 import moment from 'moment';
+import { defaultRangeDate, end_date, start_date } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -43,8 +44,8 @@ JurnalList.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
-const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+const currentDate = end_date ?? new Date();
+const firstDayOfMonth = start_date ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 export default function JurnalList() {
   const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
@@ -90,6 +91,7 @@ export default function JurnalList() {
   useEffect(() => {
     setPage(1);
     refetch();
+    defaultRangeDate(moment(watch('date')[0]).format('yyyy-MM-DD'), moment(watch('date')[1]).format('yyyy-MM-DD'));
   }, [watch('date')]);
 
   return (

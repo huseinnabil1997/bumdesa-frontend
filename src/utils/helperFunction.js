@@ -51,3 +51,21 @@ export const checkUrlImage = async (url) => {
     return false;
   }
 };
+
+const currentDate = new Date();
+
+export let start_date = new Date(currentDate.getFullYear(), 0, 1);
+export let end_date = new Date();
+
+export const defaultRangeDate = (start, end) => {
+  start_date = start ?? start_date;
+  end_date = end ?? end_date;
+}
+
+export const formatDate = (inputDate) => {
+  const date = new Date(inputDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0'); 
+  return `${year}-${month}-${day}`; 
+}
