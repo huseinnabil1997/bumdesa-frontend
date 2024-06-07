@@ -53,14 +53,13 @@ export const checkUrlImage = async (url) => {
 };
 
 const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
-export let start_date = localStorage.getItem('start') ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-export let end_date = localStorage.getItem('end') ?? new Date();
+export let start_date = new Date(currentDate.getFullYear(), 0, 1);
+export let end_date = new Date();
 
 export const defaultRangeDate = (start, end) => {
-  start_date = start ?? firstDayOfMonth;
-  end_date = end ?? currentDate;
+  start_date = start ?? start_date;
+  end_date = end ?? end_date;
 }
 
 export const formatDate = (inputDate) => {

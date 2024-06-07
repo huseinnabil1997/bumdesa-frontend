@@ -22,15 +22,15 @@ import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBalance';
 import { getSessionToken } from 'src/utils/axios';
 import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
-import { defaultRangeDate, formatDate } from 'src/utils/helperFunction';
+import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
   { type: 2, name: 'Unduh .xlsx' },
 ];
 
-const currentDate = localStorage.getItem('end') ?? new Date();
-const firstDayOfMonth = localStorage.getItem('start') ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+const currentDate = end_date ?? new Date();
+const firstDayOfMonth = start_date ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 NeracaHeader.propTypes = {
   onSubmit: PropTypes.func,
