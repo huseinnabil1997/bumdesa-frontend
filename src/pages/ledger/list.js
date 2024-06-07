@@ -28,9 +28,6 @@ JurnalList.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
-const currentDate = end_date ?? new Date();
-const firstDayOfMonth = start_date ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-
 export default function JurnalList() {
   const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
 
@@ -42,7 +39,7 @@ export default function JurnalList() {
   const methods = useForm({
     defaultValues: {
       account: { value: '1.1.01.01', label: 'Kas Tunai' },
-      year: [firstDayOfMonth, currentDate],
+      year: [start_date, end_date],
     },
   });
 
