@@ -137,8 +137,6 @@ export default function LabaRugiHeader({ onSubmit }) {
     await setSelectedUnit(data?.[0]);
   }, [data]);
 
-  console.log('selectedDate', selectedDate, start_date, end_date)
-
   return (
     <Stack direction="row" spacing={1}>
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
