@@ -51,3 +51,22 @@ export const checkUrlImage = async (url) => {
     return false;
   }
 };
+
+const currentDate = new Date();
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+export let start_date = localStorage.getItem('start') ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+export let end_date = localStorage.getItem('end') ?? new Date();
+
+export const defaultRangeDate = (start, end) => {
+  start_date = start ?? firstDayOfMonth;
+  end_date = end ?? currentDate;
+}
+
+export const formatDate = (inputDate) => {
+  const date = new Date(inputDate);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const day = String(date.getDate()).padStart(2, '0'); 
+  return `${year}-${month}-${day}`; 
+}
