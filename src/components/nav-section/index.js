@@ -10,5 +10,5 @@ export function isExternalLink(path) {
 export function getActive(path, pathname, asPath) {
   const firstPath = path.split('/')[1];
   
-  return pathname.includes(firstPath === 'unit' ? firstPath : path) || asPath.includes(path);
+  return pathname.includes(firstPath === 'unit' || firstPath === 'jurnal' ? firstPath : path) || asPath.includes(path);
 }
