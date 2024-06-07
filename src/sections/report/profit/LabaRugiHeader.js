@@ -29,9 +29,6 @@ const options = [
   { type: 2, name: 'Unduh .xlsx' },
 ];
 
-const currentDate = end_date ?? new Date();
-const firstDayOfMonth = start_date ?? new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-
 LabaRugiHeader.propTypes = {
   onSubmit: PropTypes.func,
 };
@@ -54,7 +51,7 @@ export default function LabaRugiHeader({ onSubmit }) {
   const anchorRef = useRef(null);
   const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState([firstDayOfMonth, currentDate]);
+  const [selectedDate, setSelectedDate] = useState([start_date, end_date]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
@@ -128,11 +125,11 @@ export default function LabaRugiHeader({ onSubmit }) {
   };
 
   useEffect(() => {
-    setSelectedDate([firstDayOfMonth, currentDate]);
+    setSelectedDate([start_date, end_date]);
     onSubmit({
       unit: decoded?.sub?.businessid ?? selectedUnit?.id,
-      start_date: formatDate(firstDayOfMonth),
-      end_date: formatDate(currentDate),
+      start_date: formatDate(start_date),
+      end_date: formatDate(end_date),
     });
   }, []);
 
