@@ -267,7 +267,7 @@ export default function JurnalCreate() {
                       <CreateCashFlow
                         formChecking={formChecking}
                         i={i}
-                        type={watch(`accounts.${i}.debit`) > 0 ? 'C' : 'D'}
+                        type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
                         account={watch(`accounts.${i}.account_code`)?.value ?? ''}
                       />
                     </Grid>
