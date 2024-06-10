@@ -12,7 +12,7 @@ import Scrollbar from '../../../components/Scrollbar';
 import { TableHeadCustom, TableSkeleton } from '../../../components/table';
 import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 // sections
-import { UserTableRow } from '../../../sections/report/balance';
+import { UserTableRow } from '../../../sections/report/cashflow';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { useTheme } from '@mui/material/styles';
