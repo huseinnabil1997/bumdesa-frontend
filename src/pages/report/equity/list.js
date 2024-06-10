@@ -12,12 +12,11 @@ import Scrollbar from '../../../components/Scrollbar';
 import { TableHeadCustom, TableSkeleton } from '../../../components/table';
 import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 // sections
-import { UserTableRow } from '../../../sections/report/balance';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { useTheme } from '@mui/material/styles';
 import { useGetEquity } from 'src/query/hooks/report/equity/useGetEquity';
-import EkuitasHeader from 'src/sections/report/equity/EkuitasHeader';
+import { EkuitasHeader, UserTableRow } from 'src/sections/report/equity';
 
 // ----------------------------------------------------------------------
 

@@ -126,7 +126,8 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       await logout();
-      router.replace(PATH_AUTH.login);
+      // router.replace(PATH_AUTH.login);
+      window.location.href = PATH_AUTH.login;
 
       if (isMountedRef.current) {
         handleClose();

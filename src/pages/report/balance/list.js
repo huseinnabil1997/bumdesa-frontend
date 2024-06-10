@@ -12,12 +12,13 @@ import Scrollbar from '../../../components/Scrollbar';
 import { TableHeadCustom, TableSkeleton } from '../../../components/table';
 import AlertDeleteVendor from '../../../components/modal/DeleteVendor';
 // sections
-import { UserTableRow } from '../../../sections/report/balance';
+import { UserTableRows } from '../../../sections/report/balance';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { useTheme } from '@mui/material/styles';
 import NeracaHeader from 'src/sections/report/balance/NeracaHeader';
 import { useGetBalance } from 'src/query/hooks/report/balance/useGetBalance';
+import { start_date } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -99,6 +100,7 @@ export default function LaporanNeraca() {
                   headLabel={[
                     { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
                     { id: 'saldo', label: convertToMonthYear(submitValue?.start_date, submitValue?.end_date), align: 'left', width: 480 },
+                    { id: 'saldo_tahun_lalu', label: new Date(start_date).getFullYear() - 1, align: 'left', width: 480 },
                   ]}
                   rowCount={data?.length}
                   sx={{ background: theme.palette.grey[200], height: '56px' }}
@@ -107,7 +109,7 @@ export default function LaporanNeraca() {
                 <TableBody>
                   {!isLoading &&
                     data?.map((row, i) => (
-                      <UserTableRow
+                      <UserTableRows
                         key={row.id}
                         index={i}
                         row={row}

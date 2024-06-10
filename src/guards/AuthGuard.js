@@ -17,7 +17,7 @@ AuthGuard.propTypes = {
 export default function AuthGuard({ children }) {
   const { isInitialized } = useAuth();
 
-  const isLogin = localStorage.getItem('token');
+  const isLogin = localStorage.getItem('token') ?? sessionStorage.getItem('token');
 
   const { router, pathname, push } = useRouter();
 
