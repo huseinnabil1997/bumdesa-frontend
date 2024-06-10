@@ -81,7 +81,7 @@ export default function LoginForm() {
         return;
       }
       if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
+        setError('afterSubmit', { ...error, message: error.message ?? 'Tidak dapat terhubung ke server' });
       }
     }
   };
