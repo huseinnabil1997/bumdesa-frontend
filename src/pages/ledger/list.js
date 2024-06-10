@@ -19,6 +19,7 @@ import { useGetLedgers } from 'src/query/hooks/ledger/useGetLedgers';
 import moment from 'moment';
 import TableError from 'src/components/table/TableError';
 import { useEffect, useState } from 'react';
+import { defaultRangeDate, end_date, start_date } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -26,9 +27,6 @@ JurnalList.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
-
-const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 export default function JurnalList() {
   const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
@@ -41,7 +39,7 @@ export default function JurnalList() {
   const methods = useForm({
     defaultValues: {
       account: { value: '1.1.01.01', label: 'Kas Tunai' },
-      year: [firstDayOfMonth, currentDate],
+      year: [start_date, end_date],
     },
   });
 
@@ -64,6 +62,7 @@ export default function JurnalList() {
       end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
       page: 1,
     }));
+    defaultRangeDate(moment(watch('year')[0]).format('yyyy-MM-DD'), moment(watch('year')[1]).format('yyyy-MM-DD'));
   };
 
   useEffect(() => {

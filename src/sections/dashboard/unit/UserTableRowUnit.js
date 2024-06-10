@@ -78,7 +78,7 @@ export default function UserTableRowUnit({
         )}
       </TableCell>
 
-      <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
+      <TableCell align="left" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <IconButton onClick={onViewRow}>
           <Info sx={{ color: theme.palette.primary.main, fontSize: 18 }} />
         </IconButton>

@@ -22,22 +22,12 @@ import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
 import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
+import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
   { type: 2, name: 'Unduh .xlsx' },
 ];
-
-function formatDate(inputDate) {
-  const date = inputDate;
-  const year = date?.getFullYear();
-  const month = String(date?.getMonth() + 1).padStart(2, '0');
-  const day = String(date?.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-const currentDate = new Date();
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
 EkuitasHeader.propTypes = {
   onSubmit: PropTypes.func,
@@ -61,7 +51,7 @@ export default function EkuitasHeader({ onSubmit }) {
   const anchorRef = useRef(null);
   const [selectedType, setSelectedType] = useState(1);
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState([firstDayOfMonth, currentDate]);
+  const [selectedDate, setSelectedDate] = useState([start_date, end_date]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
@@ -135,17 +125,19 @@ export default function EkuitasHeader({ onSubmit }) {
   };
 
   useEffect(() => {
-    setSelectedDate([firstDayOfMonth, currentDate]);
+    setSelectedDate([start_date, end_date]);
     onSubmit({
       unit: decoded?.sub?.businessid ?? selectedUnit?.id,
-      start_date: formatDate(firstDayOfMonth),
-      end_date: formatDate(currentDate),
+      start_date: formatDate(start_date),
+      end_date: formatDate(end_date),
     });
   }, []);
 
   useEffect(async () => {
     await setSelectedUnit(data?.[0]);
   }, [data]);
+
+  console.log('selectedDate ekuitas', selectedDate, start_date, end_date)
 
   return (
     <Stack direction="row" spacing={1}>
@@ -171,6 +163,7 @@ export default function EkuitasHeader({ onSubmit }) {
                 start_date: formatDate(selectedDate[0]),
                 end_date: formatDate(selectedDate[1]),
               });
+              defaultRangeDate(formatDate(selectedDate[0]), formatDate(selectedDate[1]));
             }}
             value={selectedUnit}
           />
@@ -184,6 +177,7 @@ export default function EkuitasHeader({ onSubmit }) {
               start_date: formatDate(newValue[0]),
               end_date: formatDate(newValue[1]),
             });
+            defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
           }}
           value={selectedDate}
         />
