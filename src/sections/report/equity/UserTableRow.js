@@ -55,7 +55,7 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
           <TableCell
             sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
           >
-            {formatCurrency(historyRow?.saldo)}
+            {historyRow?.saldo === 0 ? 'Rp. -' : formatCurrency(historyRow?.saldo)}
           </TableCell>
         </TableRow>
       ))}
@@ -84,9 +84,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected }) {
   const theme = useTheme();
 
-  const { level, title, saldo } = row;
-
-  // const [open, setOpen] = useState(false);
+  const { level, title, saldo, child } = row;
 
   const generateColor = (i, j) => {
     const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
@@ -96,7 +94,7 @@ export default function UserTableRow({ row, selected }) {
   };
 
   const formatCurrency = (amount) => {
-    if (amount === 0) {
+    if (amount === 0 || amount === '0') {
       return 'Rp. -';
     }
 
@@ -116,19 +114,19 @@ export default function UserTableRow({ row, selected }) {
 
 
   const bgColor = () => {
-    if (saldo) {
+    if (level === '1' && !child) {
       return '#DDEFFC'
     }
-    if (level === '1') {
+    if (level === '1' && child) {
       return 'white'
     }
   }
 
   const bgColorHover = () => {
-    if (saldo) {
+    if (level === '1' && !child) {
       return '#A6D6FF'
     }
-    if (level === '1') {
+    if (level === '1' && child) {
       return '#EAEBEB'
     }
   }
@@ -144,15 +142,15 @@ export default function UserTableRow({ row, selected }) {
           "&:hover": {
             backgroundColor: `${bgColorHover()} !important`
           },
-          borderLeft: level === '1' ? '6px solid #F87304' : null
+          borderLeft: level === '1' && child ? '6px solid #F87304' : null
         }}
       >
-        <TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>
+        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {title}
         </TableCell>
-        <TableCell sx={{ fontSize: '14px', color: saldo ? '#1078CA' : '#292929', fontWeight: 600 }}>
-          {saldo && formatCurrency(saldo)}
-        </TableCell>
+        {<TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
+          {level === '1' && !child ? saldo === 0 ? 'Rp. -' : formatCurrency(saldo) : null}
+        </TableCell>}
       </TableRow>
       {row?.child && row?.child.map((nestedRow, i) => (
         <NestedTableRow

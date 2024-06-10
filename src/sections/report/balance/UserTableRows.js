@@ -12,7 +12,7 @@ import { isTotalName } from 'src/utils/helperFunction';
 
 function NestedTableRow({ row, index, generateColor, formatCurrency }) {
   const [open, setOpen] = useState(false);
-  const { nama, saldo } = row;
+  const { nama, saldo, saldo_lalu } = row;
 
   return (
     <>
@@ -24,7 +24,7 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
           backgroundColor: isTotalName(nama) ? '#E1F8EB' : 'white',
           height: '56px',
           "&:hover": {
-            backgroundColor: `${generateColor(index, index)} !important`,
+            backgroundColor: isTotalName(nama) ? '#A4EBC2 !important' : `${generateColor(index, index)} !important`,
           },
         }}
       >
@@ -43,6 +43,9 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
         <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {saldo === 0 ? 'Rp. -' : formatCurrency(saldo)}
         </TableCell>
+        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+          {saldo_lalu === 0 || isNaN(saldo_lalu) ? 'Rp. -' : formatCurrency(saldo_lalu)}
+        </TableCell>
       </TableRow>
       {open && row?.child2?.map((historyRow, idx) => (
         <TableRow key={historyRow.nama} sx={{ backgroundColor: generateColor(index, idx), height: '56px' }}>
@@ -56,6 +59,11 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
             sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
           >
             {historyRow?.saldo === 0 ? 'Rp. -' : formatCurrency(historyRow?.saldo)}
+          </TableCell>
+          <TableCell
+            sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
+          >
+            {historyRow?.saldo_lalu === 0 || isNaN(historyRow?.saldo_lalu) ? 'Rp. -' : formatCurrency(historyRow?.saldo_lalu)}
           </TableCell>
         </TableRow>
       ))}
@@ -84,7 +92,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected }) {
   const theme = useTheme();
 
-  const { level, title, saldo, child } = row;
+  const { level, title, saldo, saldo_lalu, child } = row;
 
   const generateColor = (i, j) => {
     const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
@@ -148,9 +156,12 @@ export default function UserTableRow({ row, selected }) {
         <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {title}
         </TableCell>
-        {<TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
+        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
           {level === '1' && !child ? saldo === 0 ? 'Rp. -' : formatCurrency(saldo) : null}
-        </TableCell>}
+        </TableCell>
+        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
+          {level === '1' && !child ? (saldo_lalu === 0 || isNaN(saldo_lalu) ? 'Rp. -' : formatCurrency(saldo_lalu)) : null}
+        </TableCell>
       </TableRow>
       {row?.child && row?.child.map((nestedRow, i) => (
         <NestedTableRow
