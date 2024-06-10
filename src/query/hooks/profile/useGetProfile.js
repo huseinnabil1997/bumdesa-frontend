@@ -5,7 +5,7 @@ const fetchData = async (param) => {
   try {
     const { data } = await getProfiles(param);
 
-    return data.data ?? [];
+    return data.data ?? null;
   } catch (err) {
     throw new Error();
   }

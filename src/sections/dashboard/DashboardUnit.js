@@ -36,7 +36,7 @@ export default function DashboardUnit() {
       </Stack>
       <Scrollbar>
         {!isLoading && (
-          <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
+          <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1, minWidth: 900 }}>
             <CreateItem />
             {isFetched &&
               data?.data &&
