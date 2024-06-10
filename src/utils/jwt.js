@@ -29,9 +29,13 @@ const isValidToken = (accessToken) => {
 //   }, timeLeft);
 // };
 
-const setSession = (accessToken) => {
+const setSession = (accessToken, remember) => {
   if (accessToken) {
-    localStorage.setItem('token', accessToken);
+    if (remember) {
+      localStorage.setItem('token', accessToken);
+    } else {
+      sessionStorage.setItem('token', accessToken);
+    }
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     axiosCoreService.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     axiosReportService.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
@@ -40,12 +44,9 @@ const setSession = (accessToken) => {
     // handleTokenExpired(exp);
   } else {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     localStorage.removeItem('@menu');
     localStorage.removeItem('userData');
-    if (localStorage.getItem('remember') === 'false') {
-      localStorage.removeItem('email');
-      localStorage.removeItem('remember');
-    }
     delete axios.defaults.headers.common.Authorization;
     delete axiosCoreService.defaults.headers.common.Authorization;
     delete axiosReportService.defaults.headers.common.Authorization;

@@ -39,8 +39,8 @@ export default function DashboardUnit() {
           <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
             <CreateItem />
             {isFetched &&
-              data.data &&
-              data.data.map((row) => <ProductItem key={row.id} data={row} />)}
+              data?.data &&
+              data?.data?.map((row) => <ProductItem key={row.id} data={row} />)}
           </Stack>
         )}
 

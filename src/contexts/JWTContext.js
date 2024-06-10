@@ -80,7 +80,7 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessToken = window.localStorage.getItem('token');
+        const accessToken = window.localStorage.getItem('token') ?? sessionStorage.getItem('token');
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
