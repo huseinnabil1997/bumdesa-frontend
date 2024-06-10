@@ -34,6 +34,8 @@ export const _ecommerceBestSalesman = [...Array(5)].map((_, index) => ({
 export const _ecommerceLatestProducts = [...Array(5)].map((_, index) => ({
   id: _mock.id(index),
   name: PRODUCT_NAME[index],
+  description:
+    'lorem ipsum dolor site amet lorem ipsum dolor site amet lorem ipsum dolor site amet lorem ipsum dolor site amet',
   image: _mock.image.product(index),
   price: _mock.number.price(index),
   priceSale: index === 0 || index === 3 ? 0 : _mock.number.price(index),

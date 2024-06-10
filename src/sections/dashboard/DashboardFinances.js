@@ -1,6 +1,16 @@
 import { useState } from 'react';
 // @mui
-import { Card, CardHeader, TextField, Stack, Typography, Grid, CardContent } from '@mui/material';
+import {
+  Card,
+  CardHeader,
+  TextField,
+  Stack,
+  Typography,
+  Grid,
+  CardContent,
+  Skeleton,
+  Box,
+} from '@mui/material';
 // components
 import { useTheme } from '@emotion/react';
 import { DatePicker } from '@mui/lab';
@@ -40,49 +50,59 @@ export default function DashboardFinances({ unit }) {
       />
 
       <CardContent>
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5 }}>
-              <Typography variant="caption" sx={{ color: '#999' }}>
-                Profitabilitas
-              </Typography>
-              <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                Return On Asset
-              </Typography>
-              <Typography variant="h5" fontWeight="bold">
-                64,33%
-              </Typography>
-            </Stack>
-          </Grid>
+        {!isLoading && data && (
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5 }}>
+                <Typography variant="caption" sx={{ color: '#999' }}>
+                  Profitabilitas
+                </Typography>
+                <Typography variant="subtitle2" sx={{ my: 0.5 }}>
+                  Return On Asset
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {data.profitabilitas}%
+                </Typography>
+              </Stack>
+            </Grid>
 
-          <Grid item xs={4}>
-            <Stack sx={{ p: 3, backgroundColor: '#FEEDDF', borderRadius: 1.5 }}>
-              <Typography variant="caption" sx={{ color: '#999' }}>
-                Liquiditas
-              </Typography>
-              <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                Current Ratio
-              </Typography>
-              <Typography variant="h5" fontWeight="bold">
-                64,33%
-              </Typography>
-            </Stack>
-          </Grid>
+            <Grid item xs={4}>
+              <Stack sx={{ p: 3, backgroundColor: '#FEEDDF', borderRadius: 1.5 }}>
+                <Typography variant="caption" sx={{ color: '#999' }}>
+                  Liquiditas
+                </Typography>
+                <Typography variant="subtitle2" sx={{ my: 0.5 }}>
+                  Current Ratio
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {data.luquiditas}%
+                </Typography>
+              </Stack>
+            </Grid>
 
-          <Grid item xs={4}>
-            <Stack sx={{ p: 3, backgroundColor: '#E1F8EB', borderRadius: 1.5 }}>
-              <Typography variant="caption" sx={{ color: '#999' }}>
-                Solvabilitas
-              </Typography>
-              <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                Debt To Asset
-              </Typography>
-              <Typography variant="h5" fontWeight="bold">
-                64,33%
-              </Typography>
-            </Stack>
+            <Grid item xs={4}>
+              <Stack sx={{ p: 3, backgroundColor: '#E1F8EB', borderRadius: 1.5 }}>
+                <Typography variant="caption" sx={{ color: '#999' }}>
+                  Solvabilitas
+                </Typography>
+                <Typography variant="subtitle2" sx={{ my: 0.5 }}>
+                  Debt To Asset
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {data.solvabilitas}%
+                </Typography>
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
+
+        {isLoading && (
+          <Box display="flex">
+            <Skeleton height={200} width="100%" sx={{ mr: 1 }} />
+            <Skeleton height={200} width="100%" sx={{ mx: 1 }} />
+            <Skeleton height={200} width="100%" sx={{ ml: 1 }} />
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

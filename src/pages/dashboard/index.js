@@ -2,9 +2,7 @@
 import { Container, Grid } from '@mui/material';
 // hooks
 import {
-  DashboardBestSalesman,
   DashboardWelcome,
-  DashboardNewProducts,
   DashboardUnit,
   DashboardEducation,
   DashboardSales,
@@ -16,6 +14,7 @@ import Page from 'src/components/Page';
 import Layout from 'src/layouts';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -26,23 +25,20 @@ Dashboard.getLayout = function getLayout(page) {
 
 export default function Dashboard() {
   const { themeStretch } = useSettings();
-
   const token = getSessionToken();
-  let decoded = {};
-  if (token) {
-    decoded = jwtDecode(token);
-  } else {
-    console.error('Token not available');
-  }
+  const [decoded, setDecoded] = useState(jwtDecode(token));
 
-  console.log(decoded.sub.businessid);
+  useEffect(() => {
+    if (token) setDecoded(jwtDecode(token));
+    else setDecoded(null);
+  }, [token]);
 
   return (
     <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <DashboardWelcome />
+            <DashboardWelcome isUnit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
