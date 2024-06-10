@@ -194,7 +194,12 @@ export default function Register() {
 
                   <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                     Tidak mendapat OTP?
-                    <Button onClick={() => router.push(PATH_AUTH.register)}>
+                    <Button
+                      onClick={() => {
+                        router.push(PATH_AUTH.register);
+                        setSuccess(false);
+                      }}
+                    >
                       <Typography variant="subtitle2">Kirim Ulang</Typography>
                     </Button>
                   </Typography>
