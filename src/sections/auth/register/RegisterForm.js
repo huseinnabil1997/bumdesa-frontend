@@ -61,8 +61,6 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     }
   };
 
-  console.log('watch:', watch('termsAndConditions'));
-
   useEffect(() => {
     const termsChecked = router.query.termsAndConditions === 'true';
     setValue('termsAndConditions', termsChecked);
@@ -166,18 +164,20 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
         <Stack
           onClick={() => {
             if (watch('termsAndConditions')) {
-              setValue('termsAndConditions', false)
+              setValue('termsAndConditions', false);
             } else {
-              router.push('/auth/terms-and-conditions')
-              setValue('termsAndConditions', false)
+              router.push('/auth/terms-and-conditions');
+              setValue('termsAndConditions', false);
             }
           }}
         >
           <RHFCheckbox
             name="termsAndConditions"
             label={
-              <Typography fontSize='12px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
-                Saya telah membaca <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span> BUM Desa
+              <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                Saya telah membaca{' '}
+                <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span>{' '}
+                BUM Desa
               </Typography>
             }
           />
