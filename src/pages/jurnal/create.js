@@ -36,6 +36,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { fCurrency } from 'src/utils/formatNumber';
 import FirstBalance from 'src/components/modal/FirstBalance';
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 // ----------------------------------------------------------------------
 
@@ -166,6 +167,8 @@ export default function JurnalCreate() {
     return type === 'color' ? color : label;
   };
 
+  console.log(watch('date'));
+
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -190,12 +193,22 @@ export default function JurnalCreate() {
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <RHFTextField
+                  <RHFDatePicker
                     size="small"
-                    type="date"
                     label="Pilih Tanggal"
                     require
+                    format="yyyy-MM-dd"
                     name="date"
+                    sx={{
+                      width: '293px',
+                      '& .MuiInputBase-root': {
+                        height: '40px',
+                        borderRadius: '8px',
+                      },
+                      '& .MuiInputBase-input': {
+                        height: '11px',
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={4}>
