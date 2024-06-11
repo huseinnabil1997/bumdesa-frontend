@@ -47,7 +47,6 @@ export const checkUrlImage = async (url) => {
     await axios.get(url);
     return true;
   } catch (error) {
-    console.log('Get Image Error', error);
     return false;
   }
 };
