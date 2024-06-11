@@ -19,7 +19,7 @@ import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hoo
 import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
-import { defaultRangeDate } from 'src/utils/helperFunction';
+import { defaultRangeDate, setLogo } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -72,6 +72,7 @@ export default function LoginForm() {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
+          setLogo(res?.data?.logo);
           router.push(PATH_DASHBOARD.root);
         }
       }

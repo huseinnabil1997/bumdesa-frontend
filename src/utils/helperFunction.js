@@ -52,7 +52,7 @@ export const checkUrlImage = async (url) => {
 };
 
 const currentDate = new Date();
-
+export let logo = null;
 export let start_date = new Date(currentDate.getFullYear(), 0, 1);
 export let end_date = new Date();
 
@@ -74,4 +74,8 @@ export let registerForm = {
   email: '',
   password: '',
   're-password': '',
+}
+
+export const setLogo = (newLogo) => {
+  logo = newLogo;
 }
