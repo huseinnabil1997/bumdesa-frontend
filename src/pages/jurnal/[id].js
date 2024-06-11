@@ -38,6 +38,7 @@ import { useGetJurnal } from 'src/query/hooks/jurnals/useGetJurnal';
 import moment from 'moment';
 import { useUpdateJurnal } from 'src/query/hooks/jurnals/useUpdateJurnal';
 import { fCurrency } from 'src/utils/formatNumber';
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 // ----------------------------------------------------------------------
 
@@ -183,12 +184,22 @@ export default function JurnalCreate() {
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <RHFTextField
+                    <RHFDatePicker
                       size="small"
-                      type="date"
                       label="Pilih Tanggal"
                       require
+                      format="yyyy-MM-dd"
                       name="date"
+                      sx={{
+                        width: '293px',
+                        '& .MuiInputBase-root': {
+                          height: '40px',
+                          borderRadius: '8px',
+                        },
+                        '& .MuiInputBase-input': {
+                          height: '11px',
+                        },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={4}>

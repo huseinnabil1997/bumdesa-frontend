@@ -12,11 +12,15 @@ import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
+const currentDate = new Date();
+
 export default function DashboardProfitLoss({ unit }) {
   const theme = useTheme();
 
   const [chartData, setChartData] = useState([]);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(
+    new Date(currentDate.setFullYear(currentDate.getFullYear() - 2))
+  );
   const [endDate, setEndDate] = useState(new Date());
 
   const { data, isLoading } = useGetProfileLoss({
@@ -45,7 +49,7 @@ export default function DashboardProfitLoss({ unit }) {
         {
           name: 'Amount',
           data: data.amount,
-          color: theme.palette.primary.main,
+          color: theme.palette.warning.main,
         },
       ]);
   }, [data]);
@@ -54,7 +58,7 @@ export default function DashboardProfitLoss({ unit }) {
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
       <CardHeader
         sx={{ p: 3, pb: 0 }}
-        title="Laba Rugi"
+        title="Laba (Rugi) Bersih"
         action={
           <Box display="flex" alignItems="center">
             <DatePicker
