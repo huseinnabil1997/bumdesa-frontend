@@ -91,7 +91,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           disabledEffect
           src={
             isValidImage
-              ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`
+              ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${logo}`
               : '/image/default_image.png'
           }
           alt="bri"
