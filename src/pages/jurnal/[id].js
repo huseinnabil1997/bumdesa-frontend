@@ -259,7 +259,7 @@ export default function JurnalCreate() {
                             formChecking={formChecking}
                             i={i}
                             isFirstBalance={details?.is_first_balance}
-                            type={watch(`accounts.${i}.debit`) > 0 ? 'C' : 'D'}
+                            type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
                             account={watch(`accounts.${i}.account_code`)?.value ?? ''}
                           />
                         </Grid>
