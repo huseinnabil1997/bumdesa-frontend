@@ -19,9 +19,10 @@ RegisterForm.propTypes = {
   setSuccess: PropTypes.func,
   setEmail: PropTypes.func,
   setId: PropTypes.func,
+  startCountdown: PropTypes.func,
 };
 
-export default function RegisterForm({ setSuccess, setEmail, setId }) {
+export default function RegisterForm({ setSuccess, setEmail, setId, startCountdown }) {
   const { register } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -49,6 +50,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
       if (res?.data?.id_regis) {
         setSuccess(true);
         setId(res.data.id_regis);
+        startCountdown();
       }
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
