@@ -12,6 +12,7 @@ import Page from '../../components/Page';
 import { useRouter } from 'next/router';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useState } from 'react';
+import { privacyPolicy, termsAndConditions } from 'src/sections/auth/terms-and-conditions/data';
 
 // ----------------------------------------------------------------------
 
@@ -29,32 +30,74 @@ export default function TermsAndConditions() {
   const [mode, setMode] = useState('Syarat & Ketentuan');
   const router = useRouter();
 
+  const resetScroll = () => {
+    window.scrollTo(0, 0);
+  }
+
   return (
     <GuestGuard>
       {mode === 'Syarat & Ketentuan' &&
         <Page title="Syarat & Ketentuan">
           <RootStyle>
-            <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>Syarat dan Ketentuan BUM Desa</Typography>
-            <Stack my={2}>
-              <Typography fontSize='18px' fontWeight={600} color='#1078CA'>Pasal 1 - Ketentuan Umum</Typography>
-              <Divider sx={{ bgcolor: '#DDEFFC', height: '2px', my: 1 }} />
-              <Stack my={1}>
-                <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>1.1</Typography>
-                <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>Website Bumdesa (selanjutnya disebut "Website") dioperasikan oleh Bum Desa. </Typography>
+            <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>
+              Syarat dan Ketentuan BUM Desa
+            </Typography>
+            {termsAndConditions.map((item, index) => (
+              <Stack my={2} key={index}>
+                <Typography fontSize='18px' fontWeight={600} color='#1078CA'>
+                  {item.title}
+                </Typography>
+                <Divider sx={{ bgcolor: '#DDEFFC', height: '2px', my: 1 }} />
+                {item.list.map((item, index) => (
+                  <Stack my={1} key={index}>
+                    {item.point && <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>
+                      {item.point}
+                    </Typography>}
+                    <Typography color='#3D3D3D' fontSize='16px' fontWeight={500}>
+                      {item.description}
+                    </Typography>
+                  </Stack>
+                ))}
               </Stack>
-            </Stack>
-            <Stack display='flex' direction='row' alignItems='center' my={2} onClick={() => setTnc(!tnc)}>
+            ))}
+            <Stack
+              display='flex'
+              direction='row'
+              alignItems='center'
+              my={2}
+              onClick={() => setTnc(!tnc)}
+              sx={{ cursor: 'pointer' }}
+            >
               <Checkbox
                 checked={tnc}
                 sx={{ ml: -1 }}
               />
               <Typography fontSize='14px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
-                Saya telah membaca <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span> BUM Desa
+                Saya telah membaca
+                <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span>
+                BUM Desa
               </Typography>
             </Stack>
             <Stack display='flex' flexDirection='row' justifyContent='space-between'>
-              <StyledLoadingButton fullWidth variant='outlined' sx={{ mr: 2, height: '48px' }} onClick={() => router.push(PATH_AUTH.login)}>Tolak</StyledLoadingButton>
-              <StyledLoadingButton disabled={!tnc} fullWidth variant='contained' sx={{ ml: 2, height: '48px' }} onClick={() => setMode('Kebijakan Privasi')}>Selanjutnya</StyledLoadingButton>
+              <StyledLoadingButton
+                fullWidth variant='outlined'
+                sx={{ mr: 2, height: '48px' }}
+                onClick={() => router.push(PATH_AUTH.login)}
+              >
+                Tolak
+              </StyledLoadingButton>
+              <StyledLoadingButton
+                disabled={!tnc}
+                fullWidth
+                variant='contained'
+                sx={{ ml: 2, height: '48px' }}
+                onClick={() => {
+                  setMode('Kebijakan Privasi');
+                  resetScroll();
+                }}
+              >
+                Selanjutnya
+              </StyledLoadingButton>
             </Stack>
           </RootStyle>
         </Page>
@@ -62,26 +105,54 @@ export default function TermsAndConditions() {
       {mode === 'Kebijakan Privasi' &&
         <Page title="Kebijakan Privasi">
           <RootStyle>
-            <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>Kebijakan Privasi BUM Desa</Typography>
-            <Stack my={2}>
-              <Typography fontSize='18px' fontWeight={600} color='#1078CA'>Pasal 1 - Ketentuan Umum</Typography>
-              <Divider sx={{ bgcolor: '#DDEFFC', height: '2px', my: 1 }} />
-              <Stack my={1}>
-                <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>1.1</Typography>
-                <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>Website Bumdesa (selanjutnya disebut "Website") dioperasikan oleh Bum Desa. </Typography>
+            <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>
+              Kebijakan Privasi BUM Desa
+            </Typography>
+            {privacyPolicy.map((item, index) => (
+              <Stack my={2} key={index}>
+                <Typography fontSize='18px' fontWeight={600} color='#1078CA'>
+                  {item.title}
+                </Typography>
+                <Divider sx={{ bgcolor: '#DDEFFC', height: '2px', my: 1 }} />
+                {item.list.map((item, index) => (
+                  <Stack my={1} key={index}>
+                    {item.point && <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>
+                      {item.point}
+                    </Typography>}
+                    <Typography color='#3D3D3D' fontSize='16px' fontWeight={500}>
+                      {item.description}
+                    </Typography>
+                  </Stack>
+                ))}
               </Stack>
-            </Stack>
-            <Stack display='flex' direction='row' alignItems='center' my={2} onClick={() => setPnp(!pnp)}>
+            ))}
+            <Stack
+              display='flex'
+              direction='row'
+              alignItems='center'
+              my={2}
+              onClick={() => setPnp(!pnp)}
+              sx={{ cursor: 'pointer' }}
+            >
               <Checkbox
                 checked={pnp}
                 sx={{ ml: -1 }}
               />
               <Typography fontSize='14px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
-                Saya telah membaca <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span> BUM Desa
+                Saya telah membaca
+                <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>
+                BUM Desa
               </Typography>
             </Stack>
             <Stack display='flex' flexDirection='row' justifyContent='space-between'>
-              <StyledLoadingButton fullWidth variant='outlined' sx={{ mr: 2, height: '48px' }} onClick={() => router.push(PATH_AUTH.login)}>Tolak</StyledLoadingButton>
+              <StyledLoadingButton 
+              fullWidth 
+              variant='outlined' 
+                sx={{ mr: 2, height: '48px' }}
+                onClick={() => router.push(PATH_AUTH.login)}
+              >
+                Tolak
+              </StyledLoadingButton>
               <StyledLoadingButton
                 disabled={!pnp}
                 fullWidth
