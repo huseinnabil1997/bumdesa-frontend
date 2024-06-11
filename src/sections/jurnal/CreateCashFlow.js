@@ -10,9 +10,10 @@ CreateCashFlow.propTypes = {
   type: PropTypes.string,
   account: PropTypes.string,
   formChecking: PropTypes.func,
+  isFirstBalance: PropTypes.bool,
 };
 
-export default function CreateCashFlow({ formChecking, i, account, type }) {
+export default function CreateCashFlow({ formChecking, i, account, type, isFirstBalance }) {
   const {
     data: accOpt,
     isLoading: loadingAcc,
@@ -20,6 +21,7 @@ export default function CreateCashFlow({ formChecking, i, account, type }) {
   } = useGetCashFlow({
     account_code: account,
     balance_type: type,
+    isFirstBalance,
   });
 
   return (
