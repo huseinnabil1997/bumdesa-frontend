@@ -14,6 +14,7 @@ import { RegisterSchema, registerDefaultValues } from './validation/register';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
+import { registerForm } from 'src/utils/helperFunction';
 // ----------------------------------------------------------------------
 
 RegisterForm.propTypes = {
@@ -55,6 +56,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
         setSuccess(true);
         setId(res.data.id_regis);
         startCountdown();
+        resetRegisterForm();
       }
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
@@ -66,10 +68,32 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     setValue('termsAndConditions', termsChecked);
   }, [router.query.termsAndConditions, setValue]);
 
+  useEffect(() => {
+    setValue('name', registerForm.name);
+    setValue('email', registerForm.email);
+    setValue('password', registerForm.password);
+    setValue('re-password', registerForm['re-password']);
+  }, [registerForm, setValue]);
+
+  const saveRegisterForm = () => {
+    registerForm.name = watch('name');
+    registerForm.email = watch('email');
+    registerForm.password = watch('password');
+    registerForm['re-password'] = watch('re-password');
+  }
+
+  const resetRegisterForm = () => {
+    registerForm.name = '';
+    registerForm.email = '';
+    registerForm.password = '';
+    registerForm['re-password'] = '';
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        {!!errors.termsAndConditions && <Alert severity="error">{errors.termsAndConditions.message}</Alert>}
 
         <RHFTextField name="name" label="Nama BUM Desa" required />
         <RHFTextField name="email" label="Email Aktif" required />
@@ -168,6 +192,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
             } else {
               router.push('/auth/terms-and-conditions');
               setValue('termsAndConditions', false);
+              saveRegisterForm();
             }
           }}
         >
@@ -180,6 +205,9 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
                 BUM Desa
               </Typography>
             }
+            onChange={() => {
+              setValue('termsAndConditions', false);
+            }}
           />
         </Stack>
 

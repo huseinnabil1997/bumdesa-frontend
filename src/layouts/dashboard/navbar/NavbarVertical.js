@@ -61,7 +61,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${logo}`);
       setIsValidImage(isValid);
       return isValid;
     };

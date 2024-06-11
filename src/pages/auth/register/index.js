@@ -129,6 +129,20 @@ export default function Register() {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  useEffect(() => {
+    const handleBackButton = (event) => {
+      event.preventDefault();
+      router.push('/auth/login');
+    };
+
+    window.history.pushState(null, document.title, window.location.href);
+    window.addEventListener('popstate', handleBackButton);
+
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
+  }, [router]);
+
   return (
     <GuestGuard>
       <Page title="Login">

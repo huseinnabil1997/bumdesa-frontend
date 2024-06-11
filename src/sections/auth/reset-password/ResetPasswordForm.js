@@ -31,7 +31,7 @@ export default function ResetPasswordForm({ onSent, sentStatus }) {
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { email: 'bumdespengandaran@gmail.com' },
+    defaultValues: { email: '' },
   });
 
   const {
@@ -53,7 +53,7 @@ export default function ResetPasswordForm({ onSent, sentStatus }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email" />
+        <RHFTextField name="email" label="Email" placeholder='Masukkan email' />
 
         {!sentStatus ? (
           <StyledLoadingButton
