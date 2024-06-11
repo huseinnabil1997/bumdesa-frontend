@@ -124,7 +124,7 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
 
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
       setIsValidImage(isValid);
       return isValid;
     };
@@ -139,8 +139,8 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
           <IconButtonAnimate>
             <Image
               alt="image"
-              src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
-              onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
+              src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png'}
+              onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png')}
               sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
             />
           </IconButtonAnimate>

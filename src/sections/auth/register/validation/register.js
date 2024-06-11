@@ -7,6 +7,7 @@ export const RegisterSchema = Yup.object().shape({
   're-password': Yup.string()
     .oneOf([Yup.ref('password'), null], 'Kata sandi tidak sama')
     .required('Konfirmasi kata sandi wajib diisi'),
+  termsAndConditions: Yup.boolean().required('Syarat dan Ketentuan wajib diisi'),
 });
 
 export const registerDefaultValues = {
@@ -14,4 +15,5 @@ export const registerDefaultValues = {
   email: '',
   password: '',
   're-password': '',
+  termsAndConditions: false,
 };

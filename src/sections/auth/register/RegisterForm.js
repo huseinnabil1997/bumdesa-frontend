@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // form
 import { useForm } from 'react-hook-form';
@@ -9,10 +9,11 @@ import { Stack, IconButton, InputAdornment, Alert, Grid, Typography } from '@mui
 import useAuth from '../../../hooks/useAuth';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFTextField } from '../../../components/hook-form';
+import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
 import { RegisterSchema, registerDefaultValues } from './validation/register';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 // ----------------------------------------------------------------------
 
 RegisterForm.propTypes = {
@@ -24,19 +25,22 @@ RegisterForm.propTypes = {
 export default function RegisterForm({ setSuccess, setEmail, setId }) {
   const { register } = useAuth();
 
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
-    registerDefaultValues,
+    defaultValues: registerDefaultValues,
     mode: 'onChange',
   });
 
   const {
     watch,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -54,6 +58,13 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
+
+  console.log('watch:', watch('termsAndConditions'));
+
+  useEffect(() => {
+    const termsChecked = router.query.termsAndConditions === 'true';
+    setValue('termsAndConditions', termsChecked);
+  }, [router.query.termsAndConditions, setValue]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -149,6 +160,26 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
             ),
           }}
         />
+
+        <Stack
+          onClick={() => {
+            if (watch('termsAndConditions')) {
+              setValue('termsAndConditions', false)
+            } else {
+              router.push('/auth/terms-and-conditions')
+              setValue('termsAndConditions', false)
+            }
+          }}
+        >
+          <RHFCheckbox
+            name="termsAndConditions"
+            label={
+              <Typography fontSize='12px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                Saya telah membaca <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span> BUM Desa
+              </Typography>
+            }
+          />
+        </Stack>
 
         <StyledLoadingButton
           fullWidth
