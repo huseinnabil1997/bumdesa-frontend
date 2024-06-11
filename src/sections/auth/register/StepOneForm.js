@@ -127,7 +127,7 @@ export default function StepOneForm() {
       setValue('founded_at', moment(data.founded_at).format('yyyy-MM-DD'));
       setValue('employees', data.employees);
       setValue('province', data.province);
-      setValue('image', data.phot === '' ? null : data.phot);
+      setValue('image', data.photo === '' ? null : data.photo);
       setValue('image_logo', data.photo_logo === '' ? null : data.photo_logo);
     }
   }, [data]);
