@@ -19,5 +19,6 @@ export const jurnalDefaultValues = {
   transaction_information: '',
   date: moment().format('yyyy-MM-DD'),
   number_of_evidence: '',
+  is_first_balance: false,
   accounts: [{ name: null, debit: 0, credit: 0, cash_flow_code: null }],
 };

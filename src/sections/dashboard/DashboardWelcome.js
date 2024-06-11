@@ -27,7 +27,9 @@ const RootStyle = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DashboardWelcome({ isUnit }) {
-  const { data, isLoading } = useGetProfile();
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
+  const { data, isLoading } = useGetProfile(userData?.bumdesa_id);
 
   return (
     <RootStyle>

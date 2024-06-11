@@ -20,7 +20,6 @@ import useSettings from '../../hooks/useSettings';
 import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
-import AlertDeleteVendor from '../../components/modal/DeleteVendor';
 // sections
 import { FormProvider, RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -36,6 +35,7 @@ import { jurnalDefaultValues, jurnalSchema } from 'src/sections/jurnal/validatio
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { fCurrency } from 'src/utils/formatNumber';
+import FirstBalance from 'src/components/modal/FirstBalance';
 
 // ----------------------------------------------------------------------
 
@@ -53,11 +53,11 @@ export default function JurnalCreate() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: accOpt, isLoading: loadingAcc } = useGetAccount();
-  const { data: evidenceNumber, isLoading: loadingEvidence } = useGenerateEvidence();
-  const { mutate: onCreate, isLoading: creating } = useCreateJurnal();
+  const [open, setOpen] = useState();
 
-  const [alertDelete, setAlertDelete] = useState(null);
+  const { data: accOpt, isLoading: loadingAcc } = useGetAccount();
+  const { data: evidenceNumber, isLoading: loadingEvidence, isFetched } = useGenerateEvidence();
+  const { mutate: onCreate, isLoading: creating } = useCreateJurnal();
 
   const methods = useForm({
     resolver: yupResolver(jurnalSchema),
@@ -66,7 +66,10 @@ export default function JurnalCreate() {
   });
 
   useEffect(() => {
-    if (evidenceNumber) setValue('number_of_evidence', evidenceNumber?.number_of_evidence);
+    if (evidenceNumber) {
+      setValue('number_of_evidence', evidenceNumber?.number_of_evidence);
+      if (!evidenceNumber.first_balance && isFetched) setOpen(true);
+    }
   }, [evidenceNumber]);
 
   const {
@@ -237,7 +240,7 @@ export default function JurnalCreate() {
                         )}
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={watch('is_first_balance') ? 3 : 2}>
                       <RHFTextField
                         size="small"
                         label={i === 0 ? 'Debit' : ''}
@@ -250,7 +253,7 @@ export default function JurnalCreate() {
                         }
                       />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={watch('is_first_balance') ? 3 : 2}>
                       <RHFTextField
                         size="small"
                         label={i === 0 ? 'Kredit' : ''}
@@ -263,16 +266,24 @@ export default function JurnalCreate() {
                         }
                       />
                     </Grid>
-                    <Grid item xs={fields.length > 2 ? 3 : 4}>
-                      <CreateCashFlow
-                        formChecking={formChecking}
-                        i={i}
-                        type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
-                        account={watch(`accounts.${i}.account_code`)?.value ?? ''}
-                      />
-                    </Grid>
+                    {!watch('is_first_balance') && (
+                      <Grid item xs={fields.length > 2 ? 3 : 4}>
+                        <CreateCashFlow
+                          formChecking={formChecking}
+                          i={i}
+                          isFirstBalance={watch('is_first_balance')}
+                          type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
+                          account={watch(`accounts.${i}.account_code`)?.value ?? ''}
+                        />
+                      </Grid>
+                    )}
                     {fields.length > 2 && (
-                      <Grid item xs={1} alignItems="flex-end" display="flex">
+                      <Grid
+                        item
+                        xs={1}
+                        alignItems={i === 0 ? 'flex-end' : 'flex-start'}
+                        display="flex"
+                      >
                         <Button
                           fullWidth
                           variant="contained"
@@ -375,7 +386,14 @@ export default function JurnalCreate() {
               </StyledLoadingButton>
             </Stack>
           </Card>
-          <AlertDeleteVendor open={!!alertDelete} onClose={() => setAlertDelete(null)} />
+          <FirstBalance
+            open={open}
+            onClose={() => setOpen(false)}
+            onAccept={() => {
+              setValue('is_first_balance', true);
+              setOpen(false);
+            }}
+          />
         </FormProvider>
       </Container>
     </Page>

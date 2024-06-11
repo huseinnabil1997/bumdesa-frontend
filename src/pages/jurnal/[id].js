@@ -74,6 +74,7 @@ export default function JurnalCreate() {
       setValue('number_of_evidence', details?.number_of_evidence);
       setValue('date', moment(details?.date).format('yyyy-MM-DD'));
       setValue('transaction_information', details?.transaction_information);
+      setValue('is_first_balance', details?.is_first_balance);
       setValue('accounts', details?.accounts ?? []);
     }
   }, [details]);
@@ -161,6 +162,14 @@ export default function JurnalCreate() {
           >
             Kembali
           </BtnLightPrimary>
+          {details?.is_first_balance && (
+            <Chip
+              variant="contained"
+              color="success"
+              label="Saldo Awal"
+              sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
+            />
+          )}
           <Card elevation={0} sx={{ mt: 3, border: `1px solid ${theme.palette.grey[300]}` }}>
             {isFetched && !isLoading && (
               <Box sx={{ p: 3 }}>
@@ -224,7 +233,7 @@ export default function JurnalCreate() {
                           )}
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={watch('is_first_balance') ? 3 : 2}>
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Debit' : ''}
@@ -234,7 +243,7 @@ export default function JurnalCreate() {
                           type="number"
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={watch('is_first_balance') ? 3 : 2}>
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Kredit' : ''}
@@ -244,16 +253,24 @@ export default function JurnalCreate() {
                           type="number"
                         />
                       </Grid>
-                      <Grid item xs={fields.length > 2 ? 3 : 4}>
-                        <CreateCashFlow
-                          formChecking={formChecking}
-                          i={i}
-                          type={watch(`accounts.${i}.debit`) > 0 ? 'C' : 'D'}
-                          account={watch(`accounts.${i}.account_code`)?.value ?? ''}
-                        />
-                      </Grid>
+                      {!details?.is_first_balance && (
+                        <Grid item xs={fields.length > 2 ? 3 : 4}>
+                          <CreateCashFlow
+                            formChecking={formChecking}
+                            i={i}
+                            isFirstBalance={details?.is_first_balance}
+                            type={watch(`accounts.${i}.debit`) > 0 ? 'C' : 'D'}
+                            account={watch(`accounts.${i}.account_code`)?.value ?? ''}
+                          />
+                        </Grid>
+                      )}
                       {fields.length > 2 && (
-                        <Grid item xs={1} alignItems="flex-end" display="flex">
+                        <Grid
+                          item
+                          xs={1}
+                          alignItems={i === 0 ? 'flex-end' : 'flex-start'}
+                          display="flex"
+                        >
                           <Button
                             fullWidth
                             variant="contained"

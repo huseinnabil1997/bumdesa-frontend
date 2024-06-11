@@ -46,6 +46,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
     debit,
     credit,
     business_unit_name,
+    is_first_balance,
   } = row;
 
   const [open, setOpen] = useState(false);
@@ -88,12 +89,14 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
                 sx={{ color: theme.palette.primary.main, fontSize: 16 }}
               />
             </IconButton>
-            <IconButton onClick={() => setDelete(true)}>
-              <Iconify
-                icon={'lucide:trash'}
-                sx={{ color: theme.palette.error.main, fontSize: 16 }}
-              />
-            </IconButton>
+            {!is_first_balance && (
+              <IconButton onClick={() => setDelete(true)}>
+                <Iconify
+                  icon={'lucide:trash'}
+                  sx={{ color: theme.palette.error.main, fontSize: 16 }}
+                />
+              </IconButton>
+            )}
           </Stack>
         </TableCell>
       </TableRow>
