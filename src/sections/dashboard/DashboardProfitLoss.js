@@ -5,7 +5,7 @@ import { Card, CardHeader, Box, TextField, Typography, Skeleton } from '@mui/mat
 // components
 import ReactApexChart, { BaseOptionChart } from '../../components/chart';
 import { useTheme } from '@emotion/react';
-import { DatePicker, DateRangePicker } from '@mui/lab';
+import { DatePicker } from '@mui/lab';
 import moment from 'moment';
 import { useGetProfileLoss } from 'src/query/hooks/dashboard/useGetProfitLoss';
 import { fCurrency } from 'src/utils/formatNumber';
