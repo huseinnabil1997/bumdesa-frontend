@@ -15,9 +15,10 @@ import OtpInput from 'react-otp-input';
 // sections
 import { RegisterForm } from '../../../sections/auth/register';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +68,7 @@ export default function Register() {
 
   const router = useRouter();
 
-  const { verify } = useAuth();
+  const { verify, resendOtp } = useAuth();
 
   const mdUp = useResponsive('up', 'md');
 
@@ -75,6 +76,9 @@ export default function Register() {
   const [otp, setOtp] = useState('');
   const [id, setId] = useState('');
   const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
+  const [countdown, setCountdown] = useState(300);
+  const [isLoading, setLoading] = useState(false);
 
   const onSubmit = async () => {
     try {
@@ -87,6 +91,42 @@ export default function Register() {
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
     }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      resetCountdown();
+      setLoading(true);
+      const res = await resendOtp({ id });
+      if (res.code === 200) startCountdown();
+      else enqueueSnackbar(res.message, { variant: 'error' });
+      setLoading(false);
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+      setLoading(false);
+    }
+  };
+
+  const startCountdown = () => {
+    setSent(true);
+    let timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(timer);
+      setCountdown(0);
+    }, 60000);
+  };
+
+  const resetCountdown = () => {
+    setSent(false);
+    setCountdown(300);
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -127,7 +167,12 @@ export default function Register() {
                     </Box>
                   </Stack>
 
-                  <RegisterForm setEmail={setEmail} setSuccess={setSuccess} setId={setId} />
+                  <RegisterForm
+                    setEmail={setEmail}
+                    setSuccess={setSuccess}
+                    setId={setId}
+                    startCountdown={startCountdown}
+                  />
 
                   <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                     Apakah Anda sudah memiliki Akun?{' '}
@@ -194,14 +239,18 @@ export default function Register() {
 
                   <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                     Tidak mendapat OTP?
-                    <Button
-                      onClick={() => {
-                        router.push(PATH_AUTH.register);
-                        setSuccess(false);
-                      }}
-                    >
-                      <Typography variant="subtitle2">Kirim Ulang</Typography>
-                    </Button>
+                    {(!sent || countdown === 0) && (
+                      <LoadingButton onClick={handleResendOtp} loading={isLoading} type="button">
+                        <Typography variant="subtitle2">
+                          {isLoading ? 'Mengirim' : 'Kirim Ulang'}
+                        </Typography>
+                      </LoadingButton>
+                    )}
+                    {sent && countdown > 0 && (
+                      <Typography sx={{ textDecoration: 'underline' }} variant="subtitle2">
+                        Kirim Ulang ({formatTime(countdown)})
+                      </Typography>
+                    )}
                   </Typography>
                 </Card>
               )}
