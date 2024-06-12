@@ -92,6 +92,7 @@ export default function AccountChangePassword() {
           name="password"
           label="Buat Kata Sandi"
           type={showPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -108,6 +109,7 @@ export default function AccountChangePassword() {
           name="confirm_password"
           label="Konfirmasi Password"
           type={showConfirmPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
