@@ -175,7 +175,7 @@ export default function CreatePasswordForm() {
         loading={isSubmitting}
         sx={{ mt: 3 }}
       >
-        Simpan Password baru
+        Simpan Kata Sandi baru
       </StyledLoadingButton>
     </FormProvider>
   );

@@ -108,7 +108,7 @@ export default function ReactHookForm() {
 
             <RHFTextField
               name="password"
-              label="Password"
+              label="Kata Sandi"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
@@ -123,7 +123,7 @@ export default function ReactHookForm() {
 
             <RHFTextField
               name="confirmPassword"
-              label="Confirm Password"
+              label="Konfirmasi Kata Sandi"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (

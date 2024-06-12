@@ -62,7 +62,7 @@ export default function Filled() {
       <Block title="General" sx={style}>
         <TextField fullWidth label="Inactive" variant="filled" />
         <TextField required fullWidth label="Activated" variant="filled" defaultValue="Hello Minimal" />
-        <TextField fullWidth type="password" label="Password" variant="filled" autoComplete="current-password" />
+        <TextField fullWidth type="password" label="Kata Sandi" variant="filled" autoComplete="current-password" />
         <TextField disabled fullWidth label="Disabled" variant="filled" defaultValue="Hello Minimal" />
       </Block>
 
@@ -159,7 +159,7 @@ export default function Filled() {
       </Block>
 
       <Block title="Type" sx={style}>
-        <TextField fullWidth type="password" label="Password" variant="filled" autoComplete="current-password" />
+        <TextField fullWidth type="password" label="Kata Sandi" variant="filled" autoComplete="current-password" />
         <TextField
           fullWidth
           type="number"

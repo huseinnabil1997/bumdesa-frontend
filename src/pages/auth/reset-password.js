@@ -106,7 +106,7 @@ export default function ResetPassword() {
 
   return (
     <GuestGuard>
-      <Page title="Reset Password" sx={{ height: 1 }}>
+      <Page title="Atur ulang Kata Sandi" sx={{ height: 1 }}>
         <RootStyle>
           {mdUp && (
             <SectionStyle>
@@ -133,7 +133,7 @@ export default function ResetPassword() {
                 {!sent ? (
                   <>
                     <Typography variant="h3" paragraph align="center">
-                      Lupa Password?
+                      Lupa Kata Sandi?
                     </Typography>
                     <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
                       Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
@@ -153,7 +153,7 @@ export default function ResetPassword() {
                 ) : (
                   <>
                     <Typography variant="h3" paragraph align="center">
-                      Lupa Password?
+                      Lupa Kata Sandi?
                     </Typography>
                     <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
                       Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
