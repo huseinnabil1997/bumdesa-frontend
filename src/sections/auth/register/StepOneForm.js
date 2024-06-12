@@ -110,6 +110,11 @@ export default function StepOneForm() {
   }, [city]);
 
   useEffect(() => {
+    if (isNaN(watch('employees'))) setValue('employees', 0);
+    else setValue('employees', parseInt(watch('employees')));
+  }, [watch('employees')]);
+
+  useEffect(() => {
     if (data?.district.value !== district?.value) {
       setValue('subdistrict', null);
       setValue('postal_code', null);
@@ -297,7 +302,7 @@ export default function StepOneForm() {
           name="employees"
           label="Jumlah Pegawai Tetap"
           require
-          type="number"
+          type="text"
           placeholder="Masukan Jumlah Pegawai Tetap"
         />
 

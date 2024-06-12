@@ -24,6 +24,7 @@ export default function CreatePasswordForm() {
   const isMountedRef = useIsMountedRef();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -67,12 +68,13 @@ export default function CreatePasswordForm() {
         <RHFTextField
           name="old_password"
           label="Kata Sandi Lama"
-          type={showPassword ? 'text' : 'password'}
+          type={showOldPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                <IconButton onClick={() => setShowOldPassword(!showOldPassword)} edge="end">
+                  <Iconify icon={showOldPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -83,6 +85,7 @@ export default function CreatePasswordForm() {
           name="password"
           label="Kata Sandi Baru"
           type={showPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -153,6 +156,7 @@ export default function CreatePasswordForm() {
           name="confirm_password"
           label="Konfirmasi Kata Sandi"
           type={showPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
