@@ -16,13 +16,25 @@ import { useTheme } from '@emotion/react';
 import { DatePicker } from '@mui/lab';
 import moment from 'moment';
 import { useGetFinances } from 'src/query/hooks/dashboard/useGetFinances';
+import { InfoOutlined } from '@mui/icons-material';
+import ModalProfitInfo from 'src/components/modal/DProf';
+import ModalSolvabilitasInfo from 'src/components/modal/DProf';
+import ModalLikuiditasInfo from 'src/components/modal/DLiq';
 
 // ----------------------------------------------------------------------
+
+const DEFAULT_SHOW = {
+  p: false,
+  s: false,
+  l: false,
+};
 
 export default function DashboardFinances({ unit }) {
   const theme = useTheme();
 
   const [seriesData, setSeriesData] = useState(new Date());
+
+  const [show, setShow] = useState(DEFAULT_SHOW);
 
   const { data, isLoading } = useGetFinances({
     date: moment(seriesData).format('yyyy'),
@@ -54,11 +66,20 @@ export default function DashboardFinances({ unit }) {
           <Grid container spacing={3}>
             <Grid item xs={4}>
               <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5 }}>
-                <Typography variant="caption" sx={{ color: '#999' }}>
-                  Profitabilitas
-                </Typography>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="caption" sx={{ color: '#999' }}>
+                    Profitabilitas
+                  </Typography>
+                  <InfoOutlined
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    color="primary"
+                    onClick={() => setShow({ ...DEFAULT_SHOW, p: true })}
+                  />
+                </Box>
+
                 <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                  Return On Asset
+                  Tingkat Pengembalian Aset
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
                   {data.profitabilitas}%
@@ -68,11 +89,20 @@ export default function DashboardFinances({ unit }) {
 
             <Grid item xs={4}>
               <Stack sx={{ p: 3, backgroundColor: '#FEEDDF', borderRadius: 1.5 }}>
-                <Typography variant="caption" sx={{ color: '#999' }}>
-                  Liquiditas
-                </Typography>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="caption" sx={{ color: '#999' }}>
+                    Liquiditas
+                  </Typography>
+                  <InfoOutlined
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    color="primary"
+                    onClick={() => setShow({ ...DEFAULT_SHOW, l: true })}
+                  />
+                </Box>
+
                 <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                  Current Ratio
+                  Rasio Lancar
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
                   {data.luquiditas}%
@@ -82,11 +112,20 @@ export default function DashboardFinances({ unit }) {
 
             <Grid item xs={4}>
               <Stack sx={{ p: 3, backgroundColor: '#E1F8EB', borderRadius: 1.5 }}>
-                <Typography variant="caption" sx={{ color: '#999' }}>
-                  Solvabilitas
-                </Typography>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="caption" sx={{ color: '#999' }}>
+                    Solvabilitas
+                  </Typography>
+                  <InfoOutlined
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    color="primary"
+                    onClick={() => setShow({ ...DEFAULT_SHOW, s: true })}
+                  />
+                </Box>
+
                 <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                  Debt To Asset
+                  Ratio Hutang Terhadap Aset
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
                   {data.solvabilitas}%
@@ -103,6 +142,10 @@ export default function DashboardFinances({ unit }) {
             <Skeleton height={200} width="100%" sx={{ ml: 1 }} />
           </Box>
         )}
+
+        <ModalProfitInfo open={show.p} onClose={() => setShow(DEFAULT_SHOW)} />
+        <ModalSolvabilitasInfo open={show.s} onClose={() => setShow(DEFAULT_SHOW)} />
+        <ModalLikuiditasInfo open={show.l} onClose={() => setShow(DEFAULT_SHOW)} />
       </CardContent>
     </Card>
   );

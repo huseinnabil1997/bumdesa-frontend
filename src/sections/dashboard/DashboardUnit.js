@@ -75,7 +75,7 @@ function ProductItem({ data }) {
   const { name, status, photo, address, sector, id } = data;
 
   const handleClick = () => {
-    router.push(`/unit/edit?id=${id}`);
+    router.push(`/unit/detail?id=${id}`);
   };
 
   const img = `${CDN_URL}unit/${photo}`;
