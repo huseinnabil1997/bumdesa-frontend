@@ -1,12 +1,6 @@
-import { useEffect, useState } from 'react';
-// next
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Button, Card, Container, Stack, Typography } from '@mui/material';
-// routes
-import { PATH_AUTH } from '../../routes/paths';
+import { Card, Container, Stack, Typography } from '@mui/material';
 // layouts
 import Layout from '../../layouts';
 // guards
@@ -14,10 +8,6 @@ import GuestGuard from '../../guards/GuestGuard';
 // components
 import Page from '../../components/Page';
 import Image from '../../components/Image';
-// sections
-import { ResetPasswordForm } from '../../sections/auth/reset-password';
-// assets
-import { SentIcon } from '../../assets';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
 import { AccountChangePassword } from 'src/sections/@dashboard/user/account';
@@ -77,7 +67,7 @@ export default function ResetPassword() {
 
   return (
     <GuestGuard>
-      <Page title="Reset Password" sx={{ height: 1 }}>
+      <Page title="Mengatur Ulang Kata Sandi" sx={{ height: 1 }}>
         <RootStyle>
           {mdUp && (
             <SectionStyle>
@@ -103,10 +93,10 @@ export default function ResetPassword() {
               <Card sx={{ p: 5 }}>
                 <>
                   <Typography variant="h3" paragraph align='center'>
-                    Buat Password Baru
+                    Buat Kata Sandi Baru
                   </Typography>
                   <Typography sx={{ color: 'text.secondary', mb: 5 }} align='center'>
-                    Silahkan buat password demi keamanan akun anda.
+                    Silahkan buat kata sandi demi keamanan akun anda.
                   </Typography>
 
                   <AccountChangePassword />

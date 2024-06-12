@@ -94,7 +94,7 @@ export default function Login() {
                       Masuk ke BUM Desa
                     </Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
-                      Silahkan masukkan email dan password.
+                      Silahkan masukkan email dan Kata Sandi.
                     </Typography>
                   </Box>
                 </Stack>

@@ -47,13 +47,12 @@ export const checkUrlImage = async (url) => {
     await axios.get(url);
     return true;
   } catch (error) {
-    console.log('Get Image Error', error);
     return false;
   }
 };
 
 const currentDate = new Date();
-
+export let logo = null;
 export let start_date = new Date(currentDate.getFullYear(), 0, 1);
 export let end_date = new Date();
 
@@ -75,4 +74,8 @@ export let registerForm = {
   email: '',
   password: '',
   're-password': '',
+}
+
+export const setLogo = (newLogo) => {
+  logo = newLogo;
 }

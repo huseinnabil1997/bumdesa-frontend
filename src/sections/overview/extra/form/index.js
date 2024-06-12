@@ -37,10 +37,10 @@ export const FormSchema = Yup.object().shape({
     .required('End date is required')
     .nullable()
     .min(Yup.ref('startDate'), 'End date must be later than start date'),
-  password: Yup.string().required('Password is required').min(6, 'Password should be of minimum 6 characters length'),
+  password: Yup.string().required('Kata sandi wajib diisi').min(6, 'Kata sandi harus terdiri dari minimal 6 karakter'),
   confirmPassword: Yup.string()
-    .required('Confirm password is required')
-    .oneOf([Yup.ref('password')], "Password's not match"),
+    .required('Konfirmasi kata sandi wajib diisi')
+    .oneOf([Yup.ref('password')], "Kata sandi tidak cocok"),
   editor: Yup.string().required('Editor is required').min(200),
   terms: Yup.boolean().oneOf([true], 'Must Accept Terms and Conditions'),
   photo: Yup.mixed()

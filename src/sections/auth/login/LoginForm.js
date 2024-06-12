@@ -19,7 +19,7 @@ import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hoo
 import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
-import { defaultRangeDate } from 'src/utils/helperFunction';
+import { defaultRangeDate, setLogo } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ export default function LoginForm() {
   const router = useRouter();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string().email('Email harus berisi alamat email yang valid').required('Email wajib diisi'),
+    password: Yup.string().required('Kata sandi wajib diisi'),
   });
 
   const defaultValues = {
@@ -72,6 +72,7 @@ export default function LoginForm() {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
+          setLogo(res?.data?.logo);
           router.push(PATH_DASHBOARD.root);
         }
       }
@@ -95,7 +96,7 @@ export default function LoginForm() {
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Kata Sandi"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
