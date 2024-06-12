@@ -252,6 +252,9 @@ export default function JurnalCreate() {
                           name={`accounts.${i}.debit`}
                           onKeyUp={generateTotalDebt}
                           type="number"
+                          disabled={
+                            +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
+                          }
                         />
                       </Grid>
                       <Grid item xs={watch('is_first_balance') ? 3 : 2}>
@@ -262,6 +265,9 @@ export default function JurnalCreate() {
                           name={`accounts.${i}.credit`}
                           onKeyUp={generateTotalCred}
                           type="number"
+                          disabled={
+                            +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
+                          }
                         />
                       </Grid>
                       {!details?.is_first_balance && (
