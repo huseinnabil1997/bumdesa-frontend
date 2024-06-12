@@ -115,6 +115,11 @@ export default function StepOneForm() {
   }, [watch('employees')]);
 
   useEffect(() => {
+    if (watch('founded_at') === 'Invalid date') setValue('founded_at', '');
+    else setValue('founded_at', watch('founded_at'));
+  }, [watch('founded_at')]);
+
+  useEffect(() => {
     if (data?.district.value !== district?.value) {
       setValue('subdistrict', null);
       setValue('postal_code', null);
