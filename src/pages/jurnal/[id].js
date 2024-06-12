@@ -90,7 +90,7 @@ export default function JurnalCreate() {
   const onSubmit = async (data) => {
     const payload = {
       transaction_information: data.transaction_information,
-      date: data.date,
+      date: moment(data.date).format('yyyy-MM-DD'),
       accounts: data.accounts.map((row) => ({
         ...row,
         account_code: row.account_code.value,
@@ -188,7 +188,7 @@ export default function JurnalCreate() {
                       size="small"
                       label="Pilih Tanggal"
                       require
-                      format="yyyy-MM-dd"
+                      format="dd MMM yyyy"
                       name="date"
                       sx={{
                         width: '293px',

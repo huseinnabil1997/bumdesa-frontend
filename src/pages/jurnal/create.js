@@ -37,6 +37,7 @@ import { useSnackbar } from 'notistack';
 import { fCurrency } from 'src/utils/formatNumber';
 import FirstBalance from 'src/components/modal/FirstBalance';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -90,6 +91,7 @@ export default function JurnalCreate() {
   const onSubmit = async (data) => {
     const payload = {
       ...data,
+      date: moment(data.date).format('yyyy-MM-DD'),
       accounts: data.accounts.map((row) => ({
         account_code: row.account_code.value,
         cash_flow_code: +row?.cash_flow_code?.value ?? null,
@@ -167,8 +169,6 @@ export default function JurnalCreate() {
     return type === 'color' ? color : label;
   };
 
-  console.log(watch('date'));
-
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -180,6 +180,14 @@ export default function JurnalCreate() {
           >
             Kembali
           </BtnLightPrimary>
+          {watch('is_first_balance') && (
+            <Chip
+              variant="contained"
+              color="success"
+              label="Saldo Awal"
+              sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
+            />
+          )}
           <Card elevation={0} sx={{ mt: 3, border: `1px solid ${theme.palette.grey[300]}` }}>
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>
@@ -197,7 +205,7 @@ export default function JurnalCreate() {
                     size="small"
                     label="Pilih Tanggal"
                     require
-                    format="yyyy-MM-dd"
+                    format="dd MMM yyyy"
                     name="date"
                     sx={{
                       width: '293px',
