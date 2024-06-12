@@ -66,7 +66,7 @@ export default function AccountChangePassword() {
     }
   };
 
-  const checkVerify = async (data) => {
+  const checkVerify = async () => {
     try {
       const res = await verifyReset({ data: dataParam });
       reset();
@@ -90,7 +90,7 @@ export default function AccountChangePassword() {
         <RHFTextField
           disabled={!verified}
           name="password"
-          label="Buat Password"
+          label="Buat Kata Sandi"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -120,7 +120,7 @@ export default function AccountChangePassword() {
         />
 
         <LoadingButton disabled={!verified} type="submit" variant="contained" loading={isSubmitting}>
-          Simpan Password baru
+          Simpan Kata Sandi baru
         </LoadingButton>
       </Stack>
     </FormProvider>

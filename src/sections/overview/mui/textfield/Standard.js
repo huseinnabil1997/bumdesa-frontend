@@ -61,7 +61,7 @@ export default function Standard() {
       <Block title="General" sx={style}>
         <TextField variant="standard" fullWidth label="Inactive" />
         <TextField fullWidth label="Activated" variant="standard" defaultValue="Hello Minimal" />
-        <TextField fullWidth type="password" label="Password" variant="standard" />
+        <TextField fullWidth type="password" label="Kata Sandi" variant="standard" />
 
         <TextField disabled fullWidth label="Disabled" variant="standard" defaultValue="Hello Minimal" />
       </Block>
@@ -154,7 +154,7 @@ export default function Standard() {
       </Block>
 
       <Block title="Type" sx={style}>
-        <TextField fullWidth variant="standard" type="password" label="Password" autoComplete="current-password" />
+        <TextField fullWidth variant="standard" type="password" label="Kata Sandi" autoComplete="current-password" />
         <TextField
           fullWidth
           variant="standard"

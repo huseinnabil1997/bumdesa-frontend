@@ -62,7 +62,7 @@ export default function Outlined() {
       <Block title="General" sx={style}>
         <TextField fullWidth label="Inactive" />
         <TextField required fullWidth label="Activated" defaultValue="Hello Minimal" />
-        <TextField fullWidth type="password" label="Password" autoComplete="current-password" />
+        <TextField fullWidth type="password" label="Kata Sandi" autoComplete="current-password" />
         <TextField disabled fullWidth label="Disabled" defaultValue="Hello Minimal" />
       </Block>
 
@@ -143,9 +143,9 @@ export default function Outlined() {
       </Block>
 
       <Block title="Type" sx={style}>
-        <TextField fullWidth type="password" label="Password" autoComplete="current-password" />
-        <TextField fullWidth type="number" label="Number" defaultValue={0} InputLabelProps={{ shrink: true }} />
-        <TextField fullWidth label="Search" type="search" />
+        <TextField fullWidth type="password" label="Kata Sandi" autoComplete="current-password" />
+        <TextField fullWidth type="number" label="Angka" defaultValue={0} InputLabelProps={{ shrink: true }} />
+        <TextField fullWidth label="Cari" type="search" />
       </Block>
 
       <Block title="Size" sx={style}>
