@@ -12,7 +12,7 @@ import Page from '../../components/Page';
 import { useRouter } from 'next/router';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useState } from 'react';
-import { termsAndConditions } from 'src/sections/auth/terms-and-conditions/data';
+import { privacyPolicy } from 'src/sections/auth/terms-and-conditions/data';
 import { registerForm } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
@@ -26,17 +26,17 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function TermsAndConditions() {
-  const [tnc, setTnc] = useState(false);
+  const [pnp, setPnp] = useState(false);
   const router = useRouter();
 
   return (
     <GuestGuard>
-      <Page title="Syarat & Ketentuan">
+      <Page title="Kebijakan Privasi">
         <RootStyle>
           <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>
-            Syarat dan Ketentuan BUM Desa
+            Kebijakan Privasi BUM Desa
           </Typography>
-          {termsAndConditions.map((item, index) => (
+          {privacyPolicy.map((item, index) => (
             <Stack my={2} key={index}>
               <Typography fontSize='18px' fontWeight={600} color='#1078CA'>
                 {item.title}
@@ -59,35 +59,36 @@ export default function TermsAndConditions() {
             direction='row'
             alignItems='center'
             my={2}
-            onClick={() => setTnc(!tnc)}
+            onClick={() => setPnp(!pnp)}
             sx={{ cursor: 'pointer' }}
           >
             <Checkbox
-              checked={tnc}
+              checked={pnp}
               sx={{ ml: -1 }}
             />
             <Typography fontSize='14px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
               Saya telah membaca
-              <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span>
+              <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>
               BUM Desa
             </Typography>
           </Stack>
           <Stack display='flex' flexDirection='row' justifyContent='space-between'>
             <StyledLoadingButton
-              fullWidth variant='outlined'
+              fullWidth
+              variant='outlined'
               sx={{ mr: 2, height: '48px' }}
               onClick={() => router.push(PATH_AUTH.login)}
             >
               Tolak
             </StyledLoadingButton>
             <StyledLoadingButton
-              disabled={!tnc}
+              disabled={!pnp}
               fullWidth
               variant='contained'
               sx={{ ml: 2, height: '48px' }}
               onClick={() => {
                 router.push(PATH_AUTH.register)
-                registerForm.termsAndConditions = true;
+                registerForm.privacyPolicy = true;
               }}
             >
               Setuju
@@ -95,7 +96,6 @@ export default function TermsAndConditions() {
           </Stack>
         </RootStyle>
       </Page>
-
     </GuestGuard>
   );
 }
