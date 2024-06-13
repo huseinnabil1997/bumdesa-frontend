@@ -16,7 +16,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
-import { setSession } from 'src/utils/jwt';
+import { setRegisSession, setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { defaultRangeDate } from 'src/utils/helperFunction';
@@ -68,7 +68,7 @@ export default function LoginForm() {
       if (res?.data) {
         dispatch(setUser(res.data));
         if (res?.data?.full_register === 0) {
-          await sessionStorage.setItem('@token', res?.metadata?.token ?? '');
+          await setRegisSession(res?.metadata?.token ?? '');
           router.push(`/auth/register/step-${steps[res?.data?.sequence]}`);
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
