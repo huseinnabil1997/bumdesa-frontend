@@ -64,15 +64,20 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
   };
 
   useEffect(() => {
-    const termsChecked = router.query.termsAndConditions === 'true';
-    setValue('termsAndConditions', termsChecked);
-  }, [router.query.termsAndConditions, setValue]);
+    setValue('termsAndConditions', registerForm.termsAndConditions);
+  }, [registerForm.termsAndConditions, setValue, watch('termsAndConditions')]);
+
+  useEffect(() => {
+    setValue('privacyPolicy', registerForm.privacyPolicy);
+  }, [registerForm.privacyPolicy, setValue, watch('privacyPolicy')]);
 
   useEffect(() => {
     setValue('name', registerForm.name);
     setValue('email', registerForm.email);
     setValue('password', registerForm.password);
     setValue('re-password', registerForm['re-password']);
+    setValue('termsAndConditions', registerForm.termsAndConditions);
+    setValue('privacyPolicy', registerForm.privacyPolicy);
   }, [registerForm, setValue]);
 
   const saveRegisterForm = () => {
@@ -80,6 +85,8 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     registerForm.email = watch('email');
     registerForm.password = watch('password');
     registerForm['re-password'] = watch('re-password');
+    registerForm.termsAndConditions = watch('termsAndConditions');
+    registerForm.privacyPolicy = watch('privacyPolicy');
   }
 
   const resetRegisterForm = () => {
@@ -87,13 +94,20 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     registerForm.email = '';
     registerForm.password = '';
     registerForm['re-password'] = '';
+    registerForm.termsAndConditions = false;
+    registerForm.privacyPolicy = false;
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [errors]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
         {!!errors.termsAndConditions && <Alert severity="error">{errors.termsAndConditions.message}</Alert>}
+        {!!errors.privacyPolicy && <Alert severity="error">{errors.privacyPolicy.message}</Alert>}
 
         <RHFTextField name="name" label="Nama BUM Desa" required />
         <RHFTextField name="email" label="Email Aktif" required />
@@ -185,30 +199,49 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
           }}
         />
 
-        <Stack
-          onClick={() => {
-            if (watch('termsAndConditions')) {
-              setValue('termsAndConditions', false);
-            } else {
+        <Stack>
+          <Stack
+            onClick={() => {
               router.push('/auth/terms-and-conditions');
               setValue('termsAndConditions', false);
               saveRegisterForm();
-            }
-          }}
-        >
-          <RHFCheckbox
-            name="termsAndConditions"
-            label={
-              <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
-                Saya telah membaca{' '}
-                <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span>{' '}
-                BUM Desa
-              </Typography>
-            }
-            onChange={() => {
-              setValue('termsAndConditions', false);
             }}
-          />
+          >
+            <RHFCheckbox
+              name="termsAndConditions"
+              label={
+                <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                  Saya telah membaca{' '}
+                  <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span>{' '}
+                  BUM Desa
+                </Typography>
+              }
+              onChange={() => {
+                setValue('termsAndConditions', false);
+              }}
+            />
+          </Stack>
+          <Stack
+            onClick={() => {
+              router.push('/auth/privacy-policy');
+              setValue('privacyPolicy', false);
+              saveRegisterForm();
+            }}
+          >
+            <RHFCheckbox
+              name="privacyPolicy"
+              label={
+                <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                  Saya telah membaca{' '}
+                  <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>{' '}
+                  BUM Desa
+                </Typography>
+              }
+              onChange={() => {
+                setValue('privacyPolicy', false);
+              }}
+            />
+          </Stack>
         </Stack>
 
         <StyledLoadingButton

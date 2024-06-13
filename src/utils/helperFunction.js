@@ -74,6 +74,8 @@ export let registerForm = {
   email: '',
   password: '',
   're-password': '',
+  termsAndConditions: false,
+  privacyPolicy: false,
 }
 
 export const setLogo = (newLogo) => {
