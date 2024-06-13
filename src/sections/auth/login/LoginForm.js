@@ -113,7 +113,7 @@ export default function LoginForm() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <RHFCheckbox name="remember" label="Ingat Saya" />
-        <NextLink href={PATH_AUTH.resetPassword} passHref>
+        <NextLink href={PATH_AUTH.resetPassword} passHref rel="noopener noreferrer">
           <Link variant="subtitle2">Lupa Kata Sandi?</Link>
         </NextLink>
       </Stack>
