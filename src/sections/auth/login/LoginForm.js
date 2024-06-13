@@ -74,7 +74,6 @@ export default function LoginForm() {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
-          setLogo(res?.data?.logo);
           router.push(PATH_DASHBOARD.root);
         }
       }
