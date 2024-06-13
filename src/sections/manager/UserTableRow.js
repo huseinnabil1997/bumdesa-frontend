@@ -20,7 +20,7 @@ const DeleteTooltip = styled(({ className, ...props }) => (
 
 // ----------------------------------------------------------------------
 
-UserTableRowUnit.propTypes = {
+UserTableRow.propTypes = {
   id: PropTypes.string,
   row: PropTypes.object,
   index: PropTypes.number,
@@ -29,9 +29,10 @@ UserTableRowUnit.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   disableDelete: PropTypes.bool,
+  role: PropTypes.string,
 };
 
-export default function UserTableRowUnit({
+export default function UserTableRow({
   // id,
   row,
   index,
@@ -39,6 +40,7 @@ export default function UserTableRowUnit({
   onEditRow,
   onDeleteRow,
   disableDelete = false,
+  role,
 }) {
   const theme = useTheme();
   const { name, position_name, phone } = row;
@@ -66,7 +68,7 @@ export default function UserTableRowUnit({
           />
         </IconButton>
         {disableDelete ? (
-          <DeleteTooltip title="Setidaknya harus ada 3 Pengurus aktif di BUM Desa.">
+          <DeleteTooltip title={`Setidaknya harus ada ${role === 'unit' ? '1' : '3'} Pengurus aktif di ${role === 'unit' ? 'Unit Usaha' : 'BUM Desa'}.`}>
             <IconButton onClick={disableDelete ? null : onDeleteRow}>
               <Iconify
                 icon={'lucide:trash'}

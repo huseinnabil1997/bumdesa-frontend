@@ -1,7 +1,5 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-// next
-import NextLink from 'next/link';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,7 +14,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
-import { setSession } from 'src/utils/jwt';
+import { setRegisSession, setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { defaultRangeDate } from 'src/utils/helperFunction';
@@ -68,7 +66,7 @@ export default function LoginForm() {
       if (res?.data) {
         dispatch(setUser(res.data));
         if (res?.data?.full_register === 0) {
-          await sessionStorage.setItem('@token', res?.metadata?.token ?? '');
+          await setRegisSession(res?.metadata?.token ?? '');
           router.push(`/auth/register/step-${steps[res?.data?.sequence]}`);
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
@@ -113,9 +111,9 @@ export default function LoginForm() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <RHFCheckbox name="remember" label="Ingat Saya" />
-        <NextLink href={PATH_AUTH.resetPassword} passHref rel="noopener noreferrer">
+        <Stack onClick={() => router.push(PATH_AUTH.resetPassword)} sx={{ cursor: 'pointer' }}>
           <Link variant="subtitle2">Lupa Kata Sandi?</Link>
-        </NextLink>
+        </Stack>
       </Stack>
 
       <StyledLoadingButton

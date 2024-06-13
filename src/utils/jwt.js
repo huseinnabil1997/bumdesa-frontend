@@ -46,11 +46,18 @@ const setSession = (accessToken, remember) => {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
     localStorage.removeItem('@menu');
-    localStorage.removeItem('userData');
     delete axios.defaults.headers.common.Authorization;
     delete axiosCoreService.defaults.headers.common.Authorization;
     delete axiosReportService.defaults.headers.common.Authorization;
   }
 };
 
-export { isValidToken, setSession };
+const setRegisSession = (accessToken) => {
+  if (accessToken) {
+    localStorage.setItem('@token', accessToken);
+  } else {
+    localStorage.removeItem('@token');
+  }
+};
+
+export { isValidToken, setSession, setRegisSession };
