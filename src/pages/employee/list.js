@@ -191,8 +191,9 @@ export default function ManagerList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={managers?.data.length <= 3 && page === 1}
+                      disableDelete={managers?.data.length <= 1 && page === 1}
                       onEditRow={() => setOpenEditModal(row.id)}
+                      role="unit"
                       sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                     />
                   ))}
