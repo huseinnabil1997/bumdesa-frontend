@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
 import { List, Box, ListSubheader, Skeleton } from '@mui/material';
+import DOMPurify from 'dompurify';
 //
 import { NavListRoot } from './NavList';
 import { useGetMenus } from 'src/query/hooks/auth/useGetMenus';
@@ -31,15 +32,33 @@ NavSectionVertical.propTypes = {
 };
 
 export default function NavSectionVertical({ isCollapse = false, ...other }) {
-  const defaultValue = JSON.parse(localStorage.getItem('@menu')) ?? [];
+  
+  const safeParseJSON = (json) => {
+    try {
+      return JSON.parse(json);
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const defaultValue = safeParseJSON(localStorage.getItem('@menu')) ?? [];
+
   const [navConfig, setNavConfig] = useState(defaultValue);
 
   const { data, isLoading } = useGetMenus();
 
   useEffect(() => {
     if (data) {
-      localStorage.setItem('@menu', JSON.stringify(data));
-      setNavConfig(data);
+      const cleanedData = data.map(group => ({
+        ...group,
+        subheader: DOMPurify.sanitize(group.subheader),
+        items: group.items.map(item => ({
+          ...item,
+          title: DOMPurify.sanitize(item.title)
+        }))
+      }));
+      localStorage.setItem('@menu', JSON.stringify(cleanedData));
+      setNavConfig(cleanedData);
     }
   }, [data]);
 

@@ -27,8 +27,17 @@ NavItemRoot.propTypes = {
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
+export function cleanPath(path) {
+  // Hapus karakter yang tidak diinginkan atau berpotensi berbahaya
+  const sanitizedPath = path.replace(/[^a-zA-Z0-9/-_]/g, '');
+  // Pastikan path diawali dengan '/'
+  return sanitizedPath.startsWith('/') ? sanitizedPath : `/${sanitizedPath}`;
+}
+
 export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) {
   const { title, path, icon, info, children } = item;
+
+  const cleanedPath = cleanPath(path); // Membersihkan path menggunakan fungsi cleanPath
 
   const renderContent = (
     <>
@@ -51,12 +60,8 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
     );
   }
 
-  return isExternalLink(path) ? (
-    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener">
-      {renderContent}
-    </ListItemStyle>
-  ) : (
-    <NextLink href={path} passHref>
+  return (
+    <NextLink href={cleanedPath} passHref>
       <ListItemStyle activeRoot={active}>{renderContent}</ListItemStyle>
     </NextLink>
   );
@@ -79,6 +84,8 @@ NavItemSub.propTypes = {
 export function NavItemSub({ item, open = false, active = false, onOpen }) {
   const { title, path, info, children } = item;
 
+  const cleanedPath = cleanPath(path); // Membersihkan path menggunakan fungsi cleanPath
+
   const renderContent = (
     <>
       <DotIcon active={active} />
@@ -96,12 +103,12 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
     );
   }
 
-  return isExternalLink(path) ? (
-    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener" subItem>
+  return isExternalLink(cleanedPath) ? (
+    <ListItemStyle component={Link} href={cleanedPath} target="_blank" rel="noopener" subItem>
       {renderContent}
     </ListItemStyle>
   ) : (
-    <NextLink href={path} passHref>
+    <NextLink href={cleanedPath} passHref>
       <ListItemStyle activeSub={active} subItem>
         {renderContent}
       </ListItemStyle>
