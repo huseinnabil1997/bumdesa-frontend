@@ -18,6 +18,7 @@ import { useUpdateProfile } from "src/query/hooks/profile/useUpdateProfile";
 import { useSnackbar } from "notistack";
 import Iconify from "src/components/Iconify";
 import { fBumdesId } from "src/utils/formatNumber";
+import { useSelector } from "react-redux";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -93,7 +94,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const { mutate: onUpdate, isLoading: updating } = useUpdateProfile();
 

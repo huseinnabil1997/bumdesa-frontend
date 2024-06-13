@@ -51,6 +51,7 @@ DetailProfil.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 import EventEmitter from 'events';
+import { useSelector } from 'react-redux';
 const eventBus = new EventEmitter();
 export { eventBus };
 
@@ -59,7 +60,7 @@ export default function DetailProfil() {
 
   const { themeStretch } = useSettings();
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const { data, refetch } = useGetProfile(userData?.bumdesa_id)
 

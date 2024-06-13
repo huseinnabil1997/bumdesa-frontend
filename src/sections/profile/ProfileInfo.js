@@ -13,6 +13,7 @@ import Image from "src/components/Image";
 import { fBumdesId } from "src/utils/formatNumber";
 import { checkUrlImage } from "src/utils/helperFunction";
 import { IconButtonAnimate } from "src/components/animate";
+import { useSelector } from "react-redux";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -78,7 +79,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
 
   const datePickerRef = useRef(null);
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const defaultValues = {
     foto_kantor: data?.photo ?? null,

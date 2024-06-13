@@ -20,6 +20,8 @@ import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { defaultRangeDate, setLogo } from 'src/utils/helperFunction';
+import { useDispatch } from 'react-redux';
+import { setUser } from 'src/redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -36,13 +38,15 @@ export default function LoginForm() {
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email harus berisi alamat email yang valid').required('Email wajib diisi'),
     password: Yup.string().required('Kata sandi wajib diisi'),
   });
 
   const defaultValues = {
-    email: localStorage.getItem('email') ?? '',
+    email: '',
     password: '',
     remember: true,
   };
@@ -55,7 +59,6 @@ export default function LoginForm() {
   const {
     setError,
     handleSubmit,
-    // watch,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -63,11 +66,10 @@ export default function LoginForm() {
     try {
       const res = await login(data.email, data.password);
       if (res?.data) {
-        // Menyimpan data ke localStorage
-        localStorage.setItem('userData', JSON.stringify(res.data));
+        dispatch(setUser(res.data));
         if (res?.data?.full_register === 0) {
-          await localStorage.setItem('@token', res?.metadata?.token ?? '');
-          window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
+          await sessionStorage.setItem('@token', res?.metadata?.token ?? '');
+          router.push(`/auth/register/step-${steps[res?.data?.sequence]}`);
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
