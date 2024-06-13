@@ -113,9 +113,9 @@ export default function LoginForm() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <RHFCheckbox name="remember" label="Ingat Saya" />
-        <NextLink href={PATH_AUTH.resetPassword} passHref rel="noopener noreferrer">
+        <Stack onClick={() => router.push(PATH_AUTH.resetPassword)} sx={{ cursor: 'pointer' }}>
           <Link variant="subtitle2">Lupa Kata Sandi?</Link>
-        </NextLink>
+        </Stack>
       </Stack>
 
       <StyledLoadingButton
