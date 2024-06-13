@@ -19,7 +19,7 @@ import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hoo
 import { setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
-import { defaultRangeDate, setLogo } from 'src/utils/helperFunction';
+import { defaultRangeDate } from 'src/utils/helperFunction';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'src/redux/slices/user';
 
