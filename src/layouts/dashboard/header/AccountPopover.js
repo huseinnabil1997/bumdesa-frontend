@@ -19,6 +19,7 @@ import { KeyboardArrowDownRounded, Logout, Person, Settings } from '@mui/icons-m
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 import { eventBus } from 'src/pages/profile/detail';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +82,7 @@ export default function AccountPopover() {
 
   const [open, setOpen] = useState(null);
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const { data: unitData, refetch: unitRefetch } = useGetUnitById(userData?.unit_id);
 
@@ -207,3 +208,4 @@ export default function AccountPopover() {
     </>
   );
 }
+

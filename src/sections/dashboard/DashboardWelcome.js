@@ -4,6 +4,7 @@ import { Typography, Card, CardContent, CircularProgress, Chip } from '@mui/mate
 //
 import Image from 'src/components/Image';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DashboardWelcome({ isUnit }) {
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const { data, isLoading } = useGetProfile(userData?.bumdesa_id);
 
