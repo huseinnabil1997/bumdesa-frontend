@@ -16,13 +16,14 @@ import {
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/Iconify';
-import { RHFAutocomplete } from 'src/components/hook-form';
+import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBalance';
 import { getSessionToken } from 'src/utils/axios';
-import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
+// import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
+// import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -35,7 +36,7 @@ NeracaHeader.propTypes = {
 };
 
 export default function NeracaHeader({ onSubmit, indicatorBalance }) {
-  // const datePickerRef = useRef(null);
+  const datePickerRef = useRef(null);
   const anchorRef = useRef(null);
 
   const token = getSessionToken();
@@ -126,20 +127,13 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
     setOpen(false);
   };
 
-  // const getMaxDateForMonthInput = () => {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear();
-  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  //   return `${year}-${month}`;
-  // };
-
-  // const getPreviousMonth = () => {
-  //   const currentDate = new Date();
-  //   currentDate.setMonth(currentDate.getMonth() - 1);
-  //   const year = currentDate.getFullYear();
-  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  //   return `${year}-${month}`;
-  // };
+  const getMaxDateForMonthInput = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     setSelectedDate([start_date, end_date]);
@@ -228,25 +222,41 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
               value={selectedUnit}
             />
           )}
-          {/* <RHFTextField
+          {/* <RHFDatePicker
+            size="small"
+            label="Pilih Tanggal"
+            require
+            format="yyyy-MM-dd"
+            name="date"
+            onChange={(event) => {
+              setSelectedDate([selectedDate[0], event.target.value]);
+              onSubmit({ unit: selectedUnit?.id, start_date: formatDate(selectedDate[0]), end_date: event.target.value })
+              defaultRangeDate(formatDate(selectedDate[0]), formatDate(event.target.value));
+            }}
+            value={formatDate(selectedDate[1])}
+          /> */}
+          <RHFTextField
             inputRef={datePickerRef}
             size="small"
             sx={{ width: 165 }}
             name="date"
-            type="month"
+            type="date"
             onClick={() => {
               datePickerRef.current.showPicker()
             }}
-            inputProps={{
-              max: getMaxDateForMonthInput(),
+            InputProps={{
+              inputProps: {
+                max: getMaxDateForMonthInput(),
+              }
             }}
             onChange={(event) => {
-              setSelectedDate(event.target.value);
-              onSubmit({ unit: selectedUnit?.id, date: event.target.value })
+              setSelectedDate([selectedDate[0], event.target.value]);
+              onSubmit({ unit: selectedUnit?.id, start_date: formatDate(selectedDate[0]), end_date: event.target.value })
+              defaultRangeDate(formatDate(selectedDate[0]), formatDate(event.target.value));
             }}
-            value={selectedDate}
-          /> */}
-          <RHFMobileDateRangePicker
+            value={formatDate(selectedDate[1])}
+          />
+          {/* <RHFMobileDateRangePicker
             name="date"
             onChange={(newValue) => {
               setSelectedDate(newValue);
@@ -258,7 +268,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
               defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
             }}
             value={selectedDate}
-          />
+          /> */}
         </Stack>
         <Stack direction="row" spacing={1}>
           <StyledLoadingButton
