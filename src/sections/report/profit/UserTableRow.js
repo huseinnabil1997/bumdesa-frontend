@@ -103,7 +103,11 @@ export default function UserTableRow({ row, selected }) {
       currency: 'IDR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(Math.abs(amount));
+
+    if (amount < 0) {
+      return `(${formattedAmount.replace('Rp', 'Rp.')})`;
+    }
 
     if (!formattedAmount.includes(',')) {
       return formattedAmount.replace('Rp', 'Rp.');
