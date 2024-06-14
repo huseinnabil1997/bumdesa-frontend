@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import axios from './axios';
 import axiosCoreService from './axiosCoreService';
 import axiosReportService from './axiosReportService';
+import axiosUnregistered from './axiosUnregistered';
 
 // ----------------------------------------------------------------------
 
@@ -55,8 +56,10 @@ const setSession = (accessToken, remember) => {
 const setRegisSession = (accessToken) => {
   if (accessToken) {
     localStorage.setItem('@token', accessToken);
+    axiosUnregistered.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   } else {
     localStorage.removeItem('@token');
+    delete axiosUnregistered.defaults.headers.common.Authorization;
   }
 };
 

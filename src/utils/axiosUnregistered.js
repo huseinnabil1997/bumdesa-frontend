@@ -4,9 +4,9 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL || '',
-  headers: {
-    Authorization: getSessionToken(),
-  },
+  // headers: {
+  //   Authorization: getSessionToken(),
+  // },
 });
 
 const checkAuth = (error) => {
@@ -28,6 +28,7 @@ export function getSessionToken() {
   // Check if window is defined before accessing localStorage
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('@token') ?? sessionStorage.getItem('@token');
+    console.log('getSessionToken', token)
     return token ? `Bearer ${token}` : undefined;
   }
   return undefined;
