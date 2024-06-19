@@ -12,6 +12,9 @@ RHFDatePicker.propTypes = {
   openTo: PropTypes.string,
   views: PropTypes.array,
   require: PropTypes.bool,
+  onChange: PropTypes.func, // Added propType for onChange
+  value: PropTypes.any, // Added propType for value
+  disableFuture: PropTypes.bool,
 };
 
 const theme = createTheme({
@@ -35,6 +38,9 @@ export default function RHFDatePicker({
   views = ['year', 'month', 'day'],
   openTo,
   require,
+  onChange,
+  value,
+  disableFuture = false,
   ...other
 }) {
   const { control } = useFormContext();
@@ -69,10 +75,13 @@ export default function RHFDatePicker({
               {...field}
               open={openPicker}
               label=""
-              value={field.value}
+              value={value || field.value} // Use value from props if provided
               onChange={(date) => {
-                field.onChange(date ?? field.value);
-                // setDateValue(date ?? field.value)
+                if (onChange) {
+                  onChange(date); // Call onChange from props if provided
+                } else {
+                  field.onChange(date ?? field.value);
+                }
                 handlePickerClose();
               }}
               renderInput={(params) => (
@@ -110,6 +119,7 @@ export default function RHFDatePicker({
               openTo={openTo}
               orientation="portrait"
               maxDate={new Date(currentYear, 11, 31)}
+              disableFuture={disableFuture}
             />
           </ThemeProvider>
         )}
