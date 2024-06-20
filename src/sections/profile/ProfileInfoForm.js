@@ -200,7 +200,6 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
       },
       {
         onSuccess: (res) => {
-          console.log('res:', res);
           enqueueSnackbar('', {
             variant: 'success',
             content: () => (
