@@ -18,7 +18,8 @@ import { useUpdateProfile } from "src/query/hooks/profile/useUpdateProfile";
 import { useSnackbar } from "notistack";
 import Iconify from "src/components/Iconify";
 import { fBumdesId } from "src/utils/formatNumber";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "src/redux/slices/user";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -89,6 +90,8 @@ const styles = {
 }
 
 export default function ProfileInfoForm({ data, setIsEdit }) {
+
+  const dispatch = useDispatch();
 
   const datePickerRef = useRef(null);
 
@@ -196,7 +199,8 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
         headers: { 'Content-Type': 'multipart/form-data' }
       },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          console.log('res:', res);
           enqueueSnackbar('', {
             variant: 'success',
             content: () => (
@@ -211,6 +215,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
             )
           });
           setIsEdit();
+          dispatch(setUser({ ...userData, logo: res?.data?.photo_logo }));
         },
         onError: (err) => {
           enqueueSnackbar(err.message, { variant: 'error' });
