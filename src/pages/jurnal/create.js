@@ -169,6 +169,8 @@ export default function JurnalCreate() {
     return type === 'color' ? color : label;
   };
 
+  const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
+
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -295,6 +297,7 @@ export default function JurnalCreate() {
                           isFirstBalance={watch('is_first_balance')}
                           type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
                           account={watch(`accounts.${i}.account_code`)?.value ?? ''}
+                          disabled={!isHasKas}
                         />
                       </Grid>
                     )}
