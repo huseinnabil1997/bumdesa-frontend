@@ -13,6 +13,7 @@ import Image from '../../components/Image';
 // sections
 import { LoginForm } from '../../sections/auth/login';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +62,12 @@ export default function Login() {
   const router = useRouter();
 
   const mdUp = useResponsive('up', 'md');
+
+  const token = localStorage.getItem('@token');
+
+  useEffect(() => {
+    if (token) router.back();
+  }, []);
 
   return (
     <GuestGuard>

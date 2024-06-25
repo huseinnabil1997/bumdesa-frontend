@@ -38,8 +38,12 @@ export default function LoginForm() {
 
   const dispatch = useDispatch();
 
+  const [loading, setLoading] = useState(false);
+
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email harus berisi alamat email yang valid').required('Email wajib diisi'),
+    email: Yup.string()
+      .email('Email harus berisi alamat email yang valid')
+      .required('Email wajib diisi'),
     password: Yup.string().required('Kata sandi wajib diisi'),
   });
 
@@ -62,12 +66,14 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await login(data.email, data.password);
       if (res?.data) {
         dispatch(setUser(res.data));
         if (res?.data?.full_register === 0) {
           await setRegisSession(res?.metadata?.token ?? '');
-          router.push(`/auth/register/step-${steps[res?.data?.sequence]}`);
+          enqueueSnackbar(res.message, { variant: 'success' });
+          window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
@@ -81,8 +87,12 @@ export default function LoginForm() {
         return;
       }
       if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message ?? 'Tidak dapat terhubung ke server' });
+        setError('afterSubmit', {
+          ...error,
+          message: error.message ?? 'Tidak dapat terhubung ke server',
+        });
       }
+      setLoading(false);
     }
   };
 
@@ -122,7 +132,7 @@ export default function LoginForm() {
         type="submit"
         variant="contained"
         color="primary"
-        loading={isSubmitting}
+        loading={isSubmitting || loading}
       >
         Masuk
       </StyledLoadingButton>
