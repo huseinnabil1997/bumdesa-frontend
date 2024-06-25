@@ -12,4 +12,5 @@ export const threeDefaultValues = {
   email: '',
   image: null,
   sector: null,
+  year_founded: new Date(),
 };

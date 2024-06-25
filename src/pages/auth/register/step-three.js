@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Container, Typography } from '@mui/material';
+import { Box, Card, Stack, Container, Typography, Button } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 // guards
@@ -12,6 +12,9 @@ import Image from '../../../components/Image';
 import { useState } from 'react';
 import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
 import StepThreeForm from 'src/sections/auth/register/StepThreeForm';
+import { useRouter } from 'next/router';
+import { PATH_AUTH } from 'src/routes/paths';
+import { setRegisSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +71,13 @@ export default function Register() {
 
   const [isSuccess, setSuccess] = useState(false);
 
+  const router = useRouter();
+
+  const handleLogin = () => {
+    setRegisSession();
+    router.push(PATH_AUTH.login);
+  };
+
   return (
     <GuestGuard>
       <Page title="Login">
@@ -111,6 +121,12 @@ export default function Register() {
                   <StepThreeForm setSuccess={setSuccess} />
                 </Card>
               )}
+              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                Anda sudah punya akun?{' '}
+                <Button onClick={handleLogin}>
+                  <Typography variant="subtitle2">Masuk Sekarang</Typography>
+                </Button>
+              </Typography>
             </ContentStyle>
           </Container>
         </RootStyle>

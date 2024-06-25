@@ -77,7 +77,7 @@ export default function StepThreeForm() {
     if (data) {
       setValue('name', data.name);
       setValue('email', data.email);
-      setValue('year_founded', new Date(data.year_founded, 0, 1));
+      setValue('year_founded', data?.year_founded ? new Date(data.year_founded, 0, 1) : new Date());
       setValue('sector', data.sector);
       setValue('image', data.image);
     }
