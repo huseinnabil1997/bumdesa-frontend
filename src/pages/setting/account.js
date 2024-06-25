@@ -4,6 +4,7 @@ import Layout from '../../layouts';
 import Page from '../../components/Page';
 import InfoIcon from '@mui/icons-material/Info';
 import { AccountInfo } from 'src/sections/setting';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,8 @@ AccountSetting.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function AccountSetting() {
+
+  const userData = useSelector(state => state.user.userData);
 
   const { themeStretch } = useSettings();
 
@@ -98,7 +101,7 @@ export default function AccountSetting() {
         <Card sx={styles.card}>
           <Stack direction="column">
             <Stack sx={styles.segment.title}>
-              <Typography sx={styles.segment.title.text}>Akun BUM Desa</Typography>
+              <Typography sx={styles.segment.title.text}>Akun {userData?.unit_id !== 0 ? 'Unit Usaha' : 'BUM Desa'}</Typography>
             </Stack>
             <Stack sx={styles.segment.content}>
               <AccountInfo />

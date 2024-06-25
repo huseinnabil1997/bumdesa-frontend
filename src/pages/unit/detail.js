@@ -77,7 +77,7 @@ export default function DetailUnitUsaha() {
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
     year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
-    manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
+    manager_name: Yup.string().required('Nama Manager Unit Usaha wajib diisi'),
     position: Yup.string().required('Jabatan wajib diisi'),
     manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')
@@ -360,7 +360,7 @@ export default function DetailUnitUsaha() {
               <Stack spacing={2} direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}>
                 <RHFTextField
                   name="manager_name"
-                  label="Nama Manager BUM Desa"
+                  label="Nama Manager Unit Usaha"
                   placeholder="Contoh: Budi Jailani"
                   inputProps={{
                     readOnly: true

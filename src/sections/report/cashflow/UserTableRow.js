@@ -38,6 +38,11 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
               }
             </IconButton>
           )}
+          {/* {!row?.child2 && (
+            <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
+              <Iconify icon={'material-symbols-light:square'} color="#292929" width={15} height={15} />
+            </IconButton>
+          )} */}
           {nama}
         </TableCell>
         <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
