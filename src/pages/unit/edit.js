@@ -208,7 +208,7 @@ export default function EditUnitUsaha() {
             <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
               <Box width={20} direction="row" display="flex" alignItems="center" />
               <Typography variant="caption" fontSize="12px" fontWeight={500} color="#525252">
-                Pastikan semua data
+                Pastikan
                 <span style={{ fontSize: '12px', fontWeight: 700 }}>
                   {' '}
                   semua data
