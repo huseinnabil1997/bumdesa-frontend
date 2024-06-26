@@ -30,7 +30,7 @@ const isValidToken = (accessToken) => {
 //   }, timeLeft);
 // };
 
-const setSession = (accessToken, remember) => {
+const setSession = async (accessToken, remember) => {
   if (accessToken) {
     if (remember) {
       localStorage.setItem('token', accessToken);

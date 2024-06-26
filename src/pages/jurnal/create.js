@@ -74,14 +74,7 @@ export default function JurnalCreate() {
     }
   }, [evidenceNumber]);
 
-  const {
-    handleSubmit,
-    control,
-    watch,
-    setValue,
-    trigger,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, control, watch, setValue, trigger } = methods;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -170,6 +163,7 @@ export default function JurnalCreate() {
   };
 
   const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
+  const hasEmptyAccount = !watch('accounts').every((row) => !!row.account_code);
 
   return (
     <Page>
@@ -209,6 +203,8 @@ export default function JurnalCreate() {
                     require
                     format="dd MMM yyyy"
                     name="date"
+                    disableFuture
+                    disabled={!watch('transaction_information')}
                     sx={{
                       width: '293px',
                       '& .MuiInputBase-root': {
@@ -270,7 +266,7 @@ export default function JurnalCreate() {
                         require
                         name={`accounts.${i}.debit`}
                         onKeyUp={generateTotalDebt}
-                        type="number"
+                        type="currency"
                         disabled={
                           +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
                         }
@@ -283,7 +279,7 @@ export default function JurnalCreate() {
                         require
                         name={`accounts.${i}.credit`}
                         onKeyUp={generateTotalCred}
-                        type="number"
+                        type="currency"
                         disabled={
                           +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
                         }
@@ -325,7 +321,7 @@ export default function JurnalCreate() {
                     variant="outlined"
                     startIcon={<Add fontSize="small" />}
                     onClick={handleAppend}
-                    disabled={errors?.accounts?.length > 0}
+                    disabled={hasEmptyAccount || !watch('transaction_information')}
                   >
                     Tambah Akun
                   </StyledButton>

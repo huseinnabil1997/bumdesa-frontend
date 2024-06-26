@@ -1,7 +1,14 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Typography, Stack, TextField, ThemeProvider, createTheme, IconButton } from '@mui/material';
+import {
+  Typography,
+  Stack,
+  TextField,
+  ThemeProvider,
+  createTheme,
+  IconButton,
+} from '@mui/material';
 import DatePicker from '@mui/lab/DatePicker';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 
@@ -15,6 +22,7 @@ RHFDatePicker.propTypes = {
   onChange: PropTypes.func, // Added propType for onChange
   value: PropTypes.any, // Added propType for value
   disableFuture: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 const theme = createTheme({
@@ -40,6 +48,7 @@ export default function RHFDatePicker({
   require,
   onChange,
   value,
+  disabled,
   disableFuture = false,
   ...other
 }) {
@@ -62,7 +71,8 @@ export default function RHFDatePicker({
     <Stack>
       {label && (
         <Typography variant="caption" sx={{ mb: 0.5 }}>
-          {label}{require && <span style={{ color: 'red' }}>*</span>}
+          {label}
+          {require && <span style={{ color: 'red' }}>*</span>}
         </Typography>
       )}
       <Controller
@@ -74,6 +84,7 @@ export default function RHFDatePicker({
             <DatePicker
               {...field}
               open={openPicker}
+              disabled={disabled}
               label=""
               value={value || field.value} // Use value from props if provided
               onChange={(date) => {
