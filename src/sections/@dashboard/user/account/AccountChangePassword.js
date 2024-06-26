@@ -107,7 +107,7 @@ export default function AccountChangePassword() {
         <RHFTextField
           disabled={!verified}
           name="confirm_password"
-          label="Konfirmasi Password"
+          label="Konfirmasi Kata Sandi"
           type={showConfirmPassword ? 'text' : 'password'}
           require
           InputProps={{
