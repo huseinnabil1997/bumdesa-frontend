@@ -14,7 +14,7 @@ import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
 import StepTwoForm from 'src/sections/auth/register/StepTwoForm';
 import { useRouter } from 'next/router';
 import { PATH_AUTH } from 'src/routes/paths';
-import { setSession } from 'src/utils/jwt';
+import { setRegisSession, setSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ export default function Register() {
   const router = useRouter();
 
   const handleLogin = () => {
-    setSession();
+    setRegisSession();
     router.push(PATH_AUTH.login);
   };
 

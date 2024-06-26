@@ -4,10 +4,14 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL || '',
+  headers: {
+    Authorization: getSessionToken(),
+  },
 });
 
 const checkAuth = (error) => {
-  if ([401, 403].includes(error.response?.status ?? 0)) {
+  if ([4111].includes(error.response?.status ?? 0)) {
+    // if ([401, 403].includes(error.response?.status ?? 0)) {
     localStorage.removeItem('@token');
     sessionStorage.removeItem('@token');
 

@@ -152,6 +152,9 @@ export default function JurnalCreate() {
     return true;
   };
 
+  const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
+  const hasEmptyAccount = !watch('accounts').every((row) => !!row.account_code);
+
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -189,6 +192,7 @@ export default function JurnalCreate() {
                       label="Pilih Tanggal"
                       require
                       format="dd MMM yyyy"
+                      disabled={!watch('transaction_information')}
                       name="date"
                       sx={{
                         width: '293px',
@@ -251,7 +255,7 @@ export default function JurnalCreate() {
                           require
                           name={`accounts.${i}.debit`}
                           onKeyUp={generateTotalDebt}
-                          type="number"
+                          type="currency"
                           disabled={
                             +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
                           }
@@ -264,7 +268,7 @@ export default function JurnalCreate() {
                           require
                           name={`accounts.${i}.credit`}
                           onKeyUp={generateTotalCred}
-                          type="number"
+                          type="currency"
                           disabled={
                             +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
                           }
@@ -278,6 +282,7 @@ export default function JurnalCreate() {
                             isFirstBalance={details?.is_first_balance}
                             type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
                             account={watch(`accounts.${i}.account_code`)?.value ?? ''}
+                            disabled={!isHasKas}
                           />
                         </Grid>
                       )}
@@ -305,6 +310,7 @@ export default function JurnalCreate() {
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
                       onClick={handleAppend}
+                      disabled={hasEmptyAccount || !watch('transaction_information')}
                     >
                       Tambah Akun
                     </StyledButton>

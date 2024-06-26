@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
 // @mui
 import { TextField, Typography, Stack, CircularProgress } from '@mui/material';
+import { NumericFormat } from 'react-number-format';
 
 // ----------------------------------------------------------------------
 
@@ -11,6 +12,26 @@ RHFTextField.propTypes = {
   require: PropTypes.bool,
   isLoading: PropTypes.bool,
 };
+
+const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
+  <NumericFormat
+    {...other}
+    getInputRef={inputRef}
+    onValueChange={(values) => {
+      onChange({
+        target: {
+          name: other.name,
+          value: values.value,
+        },
+      });
+    }}
+    thousandSeparator="."
+    decimalSeparator=","
+    decimalScale={0}
+    isNumericString
+    prefix="Rp "
+  />
+);
 
 export default function RHFTextField({ name, require, isLoading, ...other }) {
   const { control } = useFormContext();
@@ -51,6 +72,7 @@ export default function RHFTextField({ name, require, isLoading, ...other }) {
             label=""
             InputProps={{
               ...other.InputProps,
+              inputComponent: other.type === 'currency' ? CurrencyFormatCustom : null,
               startAdornment: (
                 <>{isLoading && <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />}</>
               ),
