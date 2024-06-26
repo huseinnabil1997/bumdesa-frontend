@@ -36,7 +36,8 @@ export default function RejectionFiles({ errorPosition, fileRejections }) {
 
             {errors.map((error) => (
               <Typography key={error.code} variant="caption" component="p">
-                - {error.message}
+                - {error.code === 'file-too-large' && 'Ukuran file terlalu besar.'}
+                {error.code === 'file-invalid-type' && 'Tipe file tidak valid.'}
               </Typography>
             ))}
           </Box>
