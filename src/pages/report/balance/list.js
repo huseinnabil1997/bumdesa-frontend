@@ -91,7 +91,7 @@ export default function LaporanNeraca() {
     <Page title="Laporan: Posisi Keuangan">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance()} />
+          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance()} loading={isLoading} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
