@@ -14,8 +14,11 @@ import { useGetManagerById } from 'src/query/hooks/manager/useGetManagerById';
 import { useUpdateManager } from 'src/query/hooks/manager/useUpdateManager';
 
 const NewModalSchema = Yup.object().shape({
-  image: Yup.mixed().required('Foto Anggota BUM Desa wajib diisi'),
-  name: Yup.string().required('Nama Anggota BUM Desa wajib diisi'),
+  image: Yup.mixed().required('Foto Anggota wajib diisi'),
+  name: Yup.string()
+    .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama Anggota harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Nama Anggota tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+    .required('Nama Anggota wajib diisi'),
   position: Yup.mixed().required('Jabatan Anggota wajib diisi'),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')
