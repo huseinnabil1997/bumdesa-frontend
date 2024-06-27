@@ -104,6 +104,7 @@ export default function JurnalList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <JurnalHeader
+            isEmpty={data?.length === 0}
             filter={{
               page,
               start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
