@@ -39,7 +39,7 @@ export default function EditUnitUsaha() {
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
-    nama: Yup.string()
+    name: Yup.string()
       .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
       .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
       .required('Nama Unit Usaha wajib diisi'),
