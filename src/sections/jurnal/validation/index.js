@@ -1,10 +1,18 @@
 import moment from 'moment';
 import * as Yup from 'yup';
 
+const negativeCase = /^(?!.*-).*$/;
+
 const accountsSchema = Yup.object().shape({
   account_code: Yup.mixed().required('Nama akun wajib diisi'),
-  debit: Yup.string().max(10, 'Maks nominal 1 milyar').nullable(),
-  credit: Yup.string().max(10, 'Maks nominal 1 milyar').nullable(),
+  debit: Yup.string()
+    .matches(negativeCase, 'Hanya nominal postif')
+    .max(10, 'Maks nominal 1 milyar')
+    .nullable(),
+  credit: Yup.string()
+    .matches(negativeCase, 'Hanya nominal postif')
+    .max(10, 'Maks nominal 1 milyar')
+    .nullable(),
   cash_flow_code: Yup.mixed().nullable(),
 });
 
