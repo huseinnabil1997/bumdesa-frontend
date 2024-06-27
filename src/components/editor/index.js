@@ -109,7 +109,7 @@ export default function Editor({
         />
       </RootStyle>
 
-      {helperText && helperText}
+      {helperText}
     </div>
   );
 }
