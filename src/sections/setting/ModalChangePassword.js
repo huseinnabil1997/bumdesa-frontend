@@ -234,6 +234,7 @@ export default function ModalChangePassword({ open, onClose }) {
                 label="Konfirmasi Kata Sandi"
                 type={showPassword ? 'text' : 'password'}
                 sx={styles.textfield}
+                require
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
