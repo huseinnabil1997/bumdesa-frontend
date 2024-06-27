@@ -90,9 +90,13 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
+    year_founded: Yup.string()
+      .required('Tahun Berdiri wajib diisi')
+      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
-    manager_name: Yup.string().required('Nama Manager Unit Usaha wajib diisi'),
+    manager_name: Yup.string()
+      .required('Nama Manager Unit Usaha wajib diisi')
+      .test('no-html', 'Nama Manager Unit Usaha tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
     position: Yup.string().required('Jabatan wajib diisi'),
     manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')

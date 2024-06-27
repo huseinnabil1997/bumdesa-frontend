@@ -29,8 +29,12 @@ const ProfileInfoFormSchema = Yup.object().shape({
     .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
     .required('Nama BUM Desa wajib diisi'),
   id: Yup.string().required('ID BUM Desa wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan BUM Desa wajib diisi'),
-  alamat: Yup.string().required('Alamat wajib diisi'),
+  tanggal_berdiri: Yup.string()
+    .required('Tanggal Didirikan BUM Desa wajib diisi')
+    .test('no-html', 'Tanggal Didirikan BUM Desa tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
+  alamat: Yup.string()
+    .required('Alamat wajib diisi')
+    .test('no-html', 'Alamat tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),
   desa: Yup.mixed().required('Desa wajib diisi'),
