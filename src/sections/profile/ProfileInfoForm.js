@@ -133,6 +133,8 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     handleSubmit,
     isSubmitting,
     watch,
+    clearErrors,
+    setError,
   } = methods;
 
   const provinsi = watch('provinsi');
@@ -153,6 +155,38 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     desa: watch('desa'),
     kode_pos: watch('kode_pos')
   };
+
+  useEffect(() => {
+    if (provinsi) {
+      clearErrors('provinsi');
+    } else {
+      setError('provinsi', { type: 'manual', message: 'Provinsi wajib diisi' });
+    }
+  }, [provinsi, clearErrors, setError]);
+
+  useEffect(() => {
+    if (kota) {
+      clearErrors('kota');
+    } else {
+      setError('kota', { type: 'manual', message: 'Kabupaten wajib diisi' });
+    }
+  }, [kota, clearErrors, setError]);
+
+  useEffect(() => {
+    if (kecamatan) {
+      clearErrors('kecamatan');
+    } else {
+      setError('kecamatan', { type: 'manual', message: 'Kecamatan wajib diisi' });
+    }
+  }, [kecamatan, clearErrors, setError]);
+
+  useEffect(() => {
+    if (desa) {
+      clearErrors('desa');
+    } else {
+      setError('desa', { type: 'manual', message: 'Desa wajib diisi' });
+    }
+  }, [desa, clearErrors, setError]);
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
