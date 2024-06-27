@@ -39,7 +39,10 @@ export default function EditUnitUsaha() {
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
-    name: Yup.string().required('Nama BUM Desa wajib diisi'),
+    nama: Yup.string()
+      .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+      .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+      .required('Nama Unit Usaha wajib diisi'),
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
@@ -161,7 +164,7 @@ export default function EditUnitUsaha() {
   return (
     <Page title="Unit Usaha: Edit">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" justifyContent="space-between">
           <Button
             variant="contained"
             startIcon={<ArrowBackIcon />}

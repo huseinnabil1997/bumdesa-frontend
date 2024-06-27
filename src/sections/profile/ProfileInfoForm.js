@@ -24,7 +24,10 @@ import { setUser } from "src/redux/slices/user";
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
   logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
-  nama: Yup.string().required('Nama BUM Desa wajib diisi'),
+  nama: Yup.string()
+    .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+    .required('Nama BUM Desa wajib diisi'),
   id: Yup.string().required('ID BUM Desa wajib diisi'),
   tanggal_berdiri: Yup.string().required('Tanggal Didirikan BUM Desa wajib diisi'),
   alamat: Yup.string().required('Alamat wajib diisi'),

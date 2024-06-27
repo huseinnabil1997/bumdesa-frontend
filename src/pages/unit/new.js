@@ -50,7 +50,10 @@ export default function AddUnitUsaha() {
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
-    name: Yup.string().required('Nama BUM Desa wajib diisi'),
+    name: Yup.string()
+      .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+      .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+      .required('Nama Unit Usaha wajib diisi'),
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
