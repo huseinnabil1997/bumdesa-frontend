@@ -22,9 +22,10 @@ const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
 JurnalHeader.propTypes = {
   filter: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };
 
-export default function JurnalHeader({ filter }) {
+export default function JurnalHeader({ filter, isEmpty }) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -93,6 +94,7 @@ export default function JurnalHeader({ filter }) {
             startIcon={isLoading ? <CircularProgress size="1rem" /> : <Download />}
             endIcon={<ArrowDropDown />}
             variant="outlined"
+            disabled={isEmpty}
           >
             Unduh Dokumen
           </StyledButton>
