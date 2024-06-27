@@ -7,7 +7,7 @@ const token = getSessionToken();
 export function getRegistrationSequence(sequence) {
   return axiosUnregistered.get('/signup-form', {
     params: { sequence },
-    headers: { Authorization: token },
+    // headers: { Authorization: token },
   });
 }
 
