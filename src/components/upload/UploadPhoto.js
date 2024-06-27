@@ -233,7 +233,7 @@ export default function UploadPhoto({
             >
               Hapus Foto
             </StyledLoadingButton>
-            {helperText && helperText}
+            {helperText && <>{helperText}</>}
           </Box>
           {fileRejections.length > 0 && errorPosition === 'right' && (
             <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />
