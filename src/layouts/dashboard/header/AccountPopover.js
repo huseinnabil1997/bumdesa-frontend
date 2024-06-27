@@ -133,9 +133,10 @@ export default function AccountPopover() {
       if (isMountedRef.current) {
         handleClose();
       }
+      enqueueSnackbar('Logout sukses!', { variant: 'success' });
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+      enqueueSnackbar('Gagal logout!', { variant: 'error' });
     }
   };
 
