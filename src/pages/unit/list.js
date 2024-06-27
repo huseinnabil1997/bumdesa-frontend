@@ -223,7 +223,7 @@ export default function UserList() {
                       index={index}
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id, row.status)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
                       disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}

@@ -14,7 +14,7 @@ import { Block } from '../../Block';
 // ----------------------------------------------------------------------
 
 export default function PickerTime() {
-  const [value, setValue] = useState<Date | null>(null);
+  const [value, setValue] = useState(null);
 
   return (
     <Masonry columns={{ xs: 1, md: 2 }} spacing={3}>

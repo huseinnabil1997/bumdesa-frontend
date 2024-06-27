@@ -76,7 +76,7 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
 
       {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
 
-      {helperText && helperText}
+      {helperText && <>{helperText}</>}
     </Box>
   );
 }

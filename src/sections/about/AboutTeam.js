@@ -44,11 +44,15 @@ export default function AboutTeam() {
   };
 
   const handlePrevious = () => {
-    carouselRef.current?.slickPrev();
+    if (carouselRef.current) {
+      carouselRef.current.slickPrev();
+    }
   };
 
   const handleNext = () => {
-    carouselRef.current?.slickNext();
+    if (carouselRef.current) {
+      carouselRef.current.slickNext();
+    }
   };
 
   return (
