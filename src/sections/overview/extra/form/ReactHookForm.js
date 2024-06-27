@@ -45,7 +45,9 @@ export default function ReactHookForm() {
   };
 
   const handleClickAttachPhoto = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const onSubmit = async (data) => {

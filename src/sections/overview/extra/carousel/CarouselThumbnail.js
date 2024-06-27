@@ -65,11 +65,15 @@ export default function CarouselThumbnail() {
   }, []);
 
   const handlePrevious = () => {
-    slider2.current?.slickPrev();
+    if (slider2.current) {
+      slider2.current.slickPrev();
+    }
   };
 
   const handleNext = () => {
-    slider2.current?.slickNext();
+    if (slider2.current) {
+      slider2.current.slickNext();
+    }
   };
 
   return (

@@ -64,11 +64,15 @@ export default function ProfilePostCard({ post }) {
   };
 
   const handleClickAttach = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleClickComment = () => {
-    commentInputRef.current?.focus();
+    if (commentInputRef.current) {
+      commentInputRef.current.focus();
+    }
   };
 
   return (
