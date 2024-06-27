@@ -130,78 +130,38 @@ export default function ResetPassword() {
           <Container maxWidth="sm">
             <ContentStyle>
               <Card sx={{ p: 5 }}>
-                {!sent ? (
-                  <>
-                    <Typography variant="h3" paragraph align="center">
-                      Lupa Kata Sandi?
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
-                      Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
-                    </Typography>
+                <Typography variant="h3" paragraph align="center">
+                  Lupa Kata Sandi?
+                </Typography>
+                <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
+                  Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
+                </Typography>
 
-                    <ResetPasswordForm onSent={() => setSent(true)} />
+                <ResetPasswordForm onSent={() => setSent(true)} sentStatus={sent} />
 
-                    <Typography variant="body2" sx={{ mt: 3 }} align="center">
+                <Typography variant="body2" sx={{ mt: 3 }} align="center">
+                  {!sent ? (
+                    <>
                       Anda belum punya akun?{' '}
                       <Button onClick={() => router.push(PATH_AUTH.register)}>
                         <Typography sx={{ textDecoration: 'underline' }} variant="subtitle2">
                           Daftar Sekarang
                         </Typography>
                       </Button>
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <Typography variant="h3" paragraph align="center">
-                      Lupa Kata Sandi?
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
-                      Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
-                    </Typography>
-
-                    <ResetPasswordForm onSent={() => setSent(true)} />
-
-                    <Typography variant="body2" sx={{ mt: 3 }} align="center">
+                    </>
+                  ) : (
+                    <>
                       Belum menerima email?{' '}
-                      {!sent && (
-                        <Button
-                          onClick={() => {
-                            setSent(true);
-                          }}
-                        >
-                          Kirim Ulang
-                        </Button>
-                      )}
-                      {sent && countdown > 0 && (
+                      {countdown > 0 ? (
                         <Typography sx={{ textDecoration: 'underline' }} variant="subtitle2">
                           Kirim Ulang ({formatTime(countdown)})
                         </Typography>
-                      )}
-                      {sent && countdown === 0 && (
+                      ) : (
                         <Button onClick={resetCountdown}>Kirim Ulang</Button>
                       )}
-                    </Typography>
-                  </>
-                  // <Box sx={{ textAlign: 'center' }}>
-                  //   <SentIcon sx={{ mb: 5, mx: 'auto', height: 160 }} />
-
-                  //   <Typography variant="h3" gutterBottom>
-                  //     Lupa Password?
-                  //   </Typography>
-                  //   <Typography>
-                  //     We have sent a confirmation email to &nbsp;
-                  //     <strong>{email}</strong>
-                  //     <br />
-                  //     Please check your email.
-                  //   </Typography>
-
-                  //   <NextLink href={PATH_AUTH.login} passHref>
-                  //     <Button size="large" variant="contained" sx={{ mt: 5 }}>
-                  //       Back
-                  //     </Button>
-                  //   </NextLink>
-                  // </Box>
-                )}
+                    </>
+                  )}
+                </Typography>
               </Card>
             </ContentStyle>
           </Container>
