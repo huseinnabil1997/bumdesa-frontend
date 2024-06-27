@@ -62,7 +62,10 @@ export default function JurnalList() {
       end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
       page: 1,
     }));
-    defaultRangeDate(moment(watch('year')[0]).format('yyyy-MM-DD'), moment(watch('year')[1]).format('yyyy-MM-DD'));
+    defaultRangeDate(
+      moment(watch('year')[0]).format('yyyy-MM-DD'),
+      moment(watch('year')[1]).format('yyyy-MM-DD')
+    );
   };
 
   useEffect(() => {
@@ -75,6 +78,7 @@ export default function JurnalList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <LedgerHeader
+            isEmpty={data?.length === 0}
             filter={{
               page,
               account_code: watch('account')?.value ?? null,

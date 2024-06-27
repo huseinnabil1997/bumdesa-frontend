@@ -23,9 +23,10 @@ const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
 LedgerHeader.propTypes = {
   filter: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };
 
-export default function LedgerHeader({ filter }) {
+export default function LedgerHeader({ filter, isEmpty }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
@@ -89,7 +90,7 @@ export default function LedgerHeader({ filter }) {
       </Stack>
       <Stack direction="row" spacing={1} sx={{ ml: 1 }}>
         <StyledButton
-          disabled={isLoading}
+          disabled={isLoading || isEmpty}
           sx={{ width: 186 }}
           startIcon={isLoading ? <CircularProgress size="1rem" /> : <Description />}
           variant="outlined"
@@ -108,6 +109,7 @@ export default function LedgerHeader({ filter }) {
           startIcon={isLoading ? <CircularProgress size="1rem" color="info" /> : <Download />}
           endIcon={<ArrowDropDown />}
           variant="contained"
+          disabled={isEmpty}
         >
           Unduh Dokumen
         </StyledButton>
