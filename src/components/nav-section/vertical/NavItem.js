@@ -45,7 +45,7 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
       <ListItemTextStyle disableTypography primary={title} isCollapse={isCollapse} />
       {!isCollapse && (
         <>
-          {info && info}
+          {info && <>{info}</>}
           {children && <ArrowIcon open={open} />}
         </>
       )}
@@ -90,7 +90,7 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
     <>
       <DotIcon active={active} />
       <ListItemText disableTypography primary={title} />
-      {info && info}
+      {info && <>{info}</>}
       {children && <ArrowIcon open={open} />}
     </>
   );

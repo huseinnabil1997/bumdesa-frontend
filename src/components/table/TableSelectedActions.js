@@ -53,7 +53,7 @@ export default function TableSelectedActions({ dense, actions, rowCount, numSele
         {numSelected} selected
       </Typography>
 
-      {actions && actions}
+      {actions && <>{actions}</>}
     </Stack>
   );
 }

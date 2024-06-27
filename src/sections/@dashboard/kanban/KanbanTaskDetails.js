@@ -75,7 +75,9 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
   });
 
   const handleAttach = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleToggleCompleted = () => {

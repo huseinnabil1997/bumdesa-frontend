@@ -33,7 +33,9 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
   const [message, setMessage] = useState('');
 
   const handleAttach = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleKeyUp = (event) => {

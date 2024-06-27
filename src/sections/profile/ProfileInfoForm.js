@@ -24,10 +24,17 @@ import { setUser } from "src/redux/slices/user";
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
   logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
-  nama: Yup.string().required('Nama BUM Desa wajib diisi'),
+  nama: Yup.string()
+    .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+    .required('Nama BUM Desa wajib diisi'),
   id: Yup.string().required('ID BUM Desa wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan BUM Desa wajib diisi'),
-  alamat: Yup.string().required('Alamat wajib diisi'),
+  tanggal_berdiri: Yup.string()
+    .required('Tanggal Didirikan BUM Desa wajib diisi')
+    .test('no-html', 'Tanggal Didirikan BUM Desa tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
+  alamat: Yup.string()
+    .required('Alamat wajib diisi')
+    .test('no-html', 'Alamat tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),
   desa: Yup.mixed().required('Desa wajib diisi'),
@@ -126,6 +133,8 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     handleSubmit,
     isSubmitting,
     watch,
+    clearErrors,
+    setError,
   } = methods;
 
   const provinsi = watch('provinsi');
@@ -146,6 +155,38 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     desa: watch('desa'),
     kode_pos: watch('kode_pos')
   };
+
+  useEffect(() => {
+    if (provinsi) {
+      clearErrors('provinsi');
+    } else {
+      setError('provinsi', { type: 'manual', message: 'Provinsi wajib diisi' });
+    }
+  }, [provinsi, clearErrors, setError]);
+
+  useEffect(() => {
+    if (kota) {
+      clearErrors('kota');
+    } else {
+      setError('kota', { type: 'manual', message: 'Kabupaten wajib diisi' });
+    }
+  }, [kota, clearErrors, setError]);
+
+  useEffect(() => {
+    if (kecamatan) {
+      clearErrors('kecamatan');
+    } else {
+      setError('kecamatan', { type: 'manual', message: 'Kecamatan wajib diisi' });
+    }
+  }, [kecamatan, clearErrors, setError]);
+
+  useEffect(() => {
+    if (desa) {
+      clearErrors('desa');
+    } else {
+      setError('desa', { type: 'manual', message: 'Desa wajib diisi' });
+    }
+  }, [desa, clearErrors, setError]);
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
