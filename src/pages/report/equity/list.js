@@ -76,7 +76,7 @@ export default function LaporanEkuitas() {
     <Page title="Laporan: Perubahan Ekuitas">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <EkuitasHeader onSubmit={onSubmit} />
+          <EkuitasHeader onSubmit={onSubmit} loading={isLoading} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>

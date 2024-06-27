@@ -31,9 +31,10 @@ const options = [
 
 EkuitasHeader.propTypes = {
   onSubmit: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
-export default function EkuitasHeader({ onSubmit }) {
+export default function EkuitasHeader({ onSubmit, loading }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
@@ -166,6 +167,7 @@ export default function EkuitasHeader({ onSubmit }) {
               defaultRangeDate(formatDate(selectedDate[0]), formatDate(selectedDate[1]));
             }}
             value={selectedUnit}
+            disabled={loading || downloading}
           />
         )}
         <RHFMobileDateRangePicker
@@ -180,6 +182,7 @@ export default function EkuitasHeader({ onSubmit }) {
             defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
           }}
           value={selectedDate}
+          disabled={loading || downloading}
         />
       </Stack>
       <Stack direction="row" spacing={1}>
@@ -188,7 +191,7 @@ export default function EkuitasHeader({ onSubmit }) {
           startIcon={downloading ? <CircularProgress size="1rem" /> : <Description />}
           variant="outlined"
           onClick={() => handleMenuItemClick('preview')}
-          disabled={downloading}
+          disabled={downloading || loading}
         >
           Pratinjau Dokumen
         </StyledLoadingButton>
@@ -209,7 +212,7 @@ export default function EkuitasHeader({ onSubmit }) {
           }
           endIcon={<Iconify icon={'oui:arrow-down'} />}
           variant="contained"
-          disabled={downloading}
+          disabled={downloading || loading}
         >
           Unduh Dokumen
         </StyledLoadingButton>
