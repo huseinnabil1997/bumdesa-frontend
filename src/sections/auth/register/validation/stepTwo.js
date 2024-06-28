@@ -1,10 +1,10 @@
-import { numberRegex } from 'src/utils/regex';
+import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
 import * as Yup from 'yup';
 
 const organizationSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama pengurus harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-    .test('no-html', 'Nama pengurus tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+    .matches(alphabetRegex, 'Nama pengurus harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Nama pengurus tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
     .required('Nama pengurus wajib diisi'),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')
@@ -16,8 +16,8 @@ const organizationSchema = Yup.object().shape({
 
 export const StepTwoSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama direktur harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-    .test('no-html', 'Nama direktur tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+    .matches(alphabetRegex, 'Nama direktur harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Nama direktur tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
     .required('Nama direktur wajib diisi'),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')

@@ -1,19 +1,23 @@
 // import { positiveRegex } from 'src/utils/regex';
+import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 import * as Yup from 'yup';
 
 export const StepOneSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
+    .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
     .required('Nama BUM Desa wajib diisi'),
   bumdesa_id: Yup.string().required('ID BUM Desa wajib diisi'),
-  address: Yup.string().required('Alamat BUM Desa wajib diisi'),
+  address: Yup.string()
+    .matches(alphabetRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Alamat BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
+    .required('Alamat BUM Desa wajib diisi'),
   province: Yup.mixed().required('Provinsi wajib diisi'),
   city: Yup.mixed().required('Kabupaten wajib diisi'),
   district: Yup.mixed().required('Kecamatan wajib diisi'),
   subdistrict: Yup.mixed().required('Desa wajib diisi'),
   postal_code: Yup.string().min(5, 'Harus diisi 5 digit').max(5, 'Harus diisi 5 digit'),
-  founded_at: Yup.string().required('Tahun berdiri BUM Desa wajib diisi').nullable(),
+  founded_at: Yup.string().required('Tanggal berdiri BUM Desa wajib diisi').nullable(),
   image: Yup.mixed().required('Foto BUM Desa wajib diisi'),
   image_logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
   employees: Yup.number()
