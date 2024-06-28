@@ -180,7 +180,7 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
             defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
           }}
           value={selectedDate}
-          disabled={loading || downloading}
+          disabled={downloading}
         />
       </Stack>
       <Stack direction="row" spacing={1}>

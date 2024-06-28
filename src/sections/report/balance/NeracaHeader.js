@@ -236,7 +236,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
             }}
             value={formatDate(selectedDate[1])}
             disableFuture
-            disabled={loading || downloading}
+            disabled={downloading}
           />
           {/* <RHFTextField
             inputRef={datePickerRef}
