@@ -10,8 +10,8 @@ const axiosInstance = axios.create({
 });
 
 const checkAuth = (error) => {
-  if ([4111].includes(error.response?.status ?? 0)) {
-    // if ([401, 403].includes(error.response?.status ?? 0)) {
+  // if ([4111].includes(error.response?.status ?? 0)) {
+  if ([401, 403].includes(error.response?.status ?? 0)) {
     localStorage.removeItem('@token');
     sessionStorage.removeItem('@token');
 
