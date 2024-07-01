@@ -115,7 +115,7 @@ export default function Register() {
     setTimeout(() => {
       clearInterval(timer);
       setCountdown(0);
-    }, 60000);
+    }, 300000); // 300000 ms (5 menit)
   };
 
   const resetCountdown = () => {
