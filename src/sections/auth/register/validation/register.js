@@ -1,15 +1,16 @@
+import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 import * as Yup from 'yup';
 
 const passRegex = /^(?=.*[~!@#$%^&*])(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/;
 
 export const RegisterSchema = Yup.object().shape({
   name: Yup.string()
+    .required('Nama wajib diisi')
     .matches(
-      /^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/,
-      'Nama harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan'
+      alphabetRegex,
+      'Nama harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik'
     )
-    .test('no-html', 'Nama tidak boleh mengandung tag HTML', (value) => !/<[^>]*>/g.test(value))
-    .required('Nama wajib diisi'),
+    .test('no-html', 'Nama tidak boleh mengandung tag HTML', (value) => !htmlTagRegex.test(value)),
   email: Yup.string().email('Format email tidak sesuai').required('Email wajib diisi'),
   password: Yup.string()
     .min(12, 'Minimal 12 Karakter')

@@ -19,6 +19,7 @@ import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useTheme } from '@mui/material/styles';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
+import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 
 const styles = {
   content: {
@@ -84,19 +85,19 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
     name: Yup.string()
-      .matches(/^(?=.*[a-zA-Z])[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>-]*$/, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-      .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value))
-      .required('Nama Unit Usaha wajib diisi'),
+      .required('Nama Unit Usaha wajib diisi')
+      .matches(alphabetRegex, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
+      .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
     year_founded: Yup.string()
       .required('Tahun Berdiri wajib diisi')
-      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
+      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string()
       .required('Nama Manager Unit Usaha wajib diisi')
-      .test('no-html', 'Nama Manager Unit Usaha tidak boleh mengandung tag HTML', value => !/<[^>]*>/g.test(value)),
+      .test('no-html', 'Nama Manager Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     position: Yup.string().required('Jabatan wajib diisi'),
     manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')

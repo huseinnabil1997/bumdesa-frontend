@@ -73,6 +73,12 @@ export default function ModalChangePassword({ open, onClose }) {
     watch,
   } = methods;
 
+  const isPasswordValid = (password) => password.length > 11
+    && /[0-9]/.test(password)
+    && /[~!@#$%^&*]/.test(password)
+    && /[a-z]/.test(password)
+    && /[A-Z]/.test(password)
+
   const onSubmit = async (data) => {
     try {
       await createPassword(data, token);
@@ -254,6 +260,7 @@ export default function ModalChangePassword({ open, onClose }) {
               variant="contained"
               color="primary"
               sx={{ mt: 3 }}
+              disabled={!isPasswordValid(watch('password'))}
             >
               Simpan Password baru
             </StyledLoadingButton>

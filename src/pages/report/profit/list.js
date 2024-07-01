@@ -77,7 +77,7 @@ export default function LaporanLabaRugi() {
     <Page title="Laporan: Laba Rugi">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <LabaRugiHeader onSubmit={onSubmit} />
+          <LabaRugiHeader onSubmit={onSubmit} loading={isLoading} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>

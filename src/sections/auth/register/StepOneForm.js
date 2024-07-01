@@ -241,7 +241,7 @@ export default function StepOneForm() {
           require
           placeholder="Masukan Provinsi"
           name="province"
-          label="Province"
+          label="Provinsi"
           loading={false}
           options={provincies?.map((option) => option) ?? []}
           getOptionLabel={(option) => option.label}

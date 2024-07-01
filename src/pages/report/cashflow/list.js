@@ -77,7 +77,7 @@ export default function LaporanArusKas() {
     <Page title="Laporan: Arus Kas">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <ArusKasHeader onSubmit={onSubmit} />
+          <ArusKasHeader onSubmit={onSubmit} loading={isLoading} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>

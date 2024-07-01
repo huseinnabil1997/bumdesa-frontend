@@ -36,7 +36,7 @@ NeracaHeader.propTypes = {
   indicatorBalance: PropTypes.string,
 };
 
-export default function NeracaHeader({ onSubmit, indicatorBalance }) {
+export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
   // const datePickerRef = useRef(null);
   const anchorRef = useRef(null);
 
@@ -221,6 +221,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
                 defaultRangeDate(formatDate(selectedDate[0]), formatDate(selectedDate[1]));
               }}
               value={selectedUnit}
+              disabled={loading || downloading}
             />
           )}
           <RHFDatePicker
@@ -235,6 +236,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             }}
             value={formatDate(selectedDate[1])}
             disableFuture
+            disabled={downloading}
           />
           {/* <RHFTextField
             inputRef={datePickerRef}
@@ -277,7 +279,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             startIcon={downloading ? <CircularProgress size="1rem" /> : <Description />}
             variant="outlined"
             onClick={() => handleMenuItemClick('preview')}
-            disabled={downloading}
+            disabled={downloading || loading}
           >
             Pratinjau Dokumen
           </StyledLoadingButton>
@@ -298,7 +300,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance }) {
             }
             endIcon={<Iconify icon={'oui:arrow-down'} />}
             variant="contained"
-            disabled={downloading}
+            disabled={downloading || loading}
           >
             Unduh Dokumen
           </StyledLoadingButton>
