@@ -17,7 +17,7 @@ const NewModalSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Anggota wajib diisi'),
   name: Yup.string()
     .required('Nama Anggota wajib diisi')
-    .matches(alphabetRegex, 'Nama Anggota harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetRegex, 'Nama Anggota harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
     .test('no-html', 'Nama Anggota tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   position: Yup.mixed().required('Jabatan Anggota wajib diisi'),
   phone: Yup.string()

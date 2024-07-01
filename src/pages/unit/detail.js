@@ -74,7 +74,7 @@ export default function DetailUnitUsaha() {
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
     name: Yup.string()
       .required('Nama Unit Usaha wajib diisi')
-      .matches(alphabetRegex, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+      .matches(alphabetRegex, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
       .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     email: Yup.string()
       .email('Format email tidak valid')
