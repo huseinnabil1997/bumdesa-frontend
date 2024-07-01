@@ -36,7 +36,7 @@ export default function ModalLikuiditasInfo({ open, onClose }) {
       <Stack spacing={2} alignItems="center" sx={{ p: 3 }}>
         <Stack>
           <Typography sx={titleStyle}>Likuiditas</Typography>
-          <Typography variant="caption" align="center">
+          <Typography variant="caption" align="justify">
             Ukuran kemampuan suatu perusahaan untuk memenuhi kewajiban jangka pendeknya dengan aset
             lancarnya. Ini mencerminkan seberapa cepat dan mudah aset perusahaan dapat diubah
             menjadi kas untuk membayar utang dan kewajiban lainnya yang jatuh tempo dalam waktu
