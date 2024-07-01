@@ -1,5 +1,5 @@
 // import { positiveRegex } from 'src/utils/regex';
-import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
+import { alphabetAddressRegex, alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 import * as Yup from 'yup';
 
 export const StepOneSchema = Yup.object().shape({
@@ -10,7 +10,7 @@ export const StepOneSchema = Yup.object().shape({
   bumdesa_id: Yup.string().required('ID BUM Desa wajib diisi'),
   address: Yup.string()
     .required('Alamat BUM Desa wajib diisi')
-    .matches(alphabetRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetAddressRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
     .test('no-html', 'Alamat BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   province: Yup.mixed().required('Provinsi wajib diisi'),
   city: Yup.mixed().required('Kabupaten wajib diisi'),

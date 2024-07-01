@@ -9,7 +9,7 @@ import GuestGuard from '../../../guards/GuestGuard';
 import Page from '../../../components/Page';
 import Image from '../../../components/Image';
 // sections
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
 import StepOneForm from '../../../sections/auth/register/StepOneForm';
 import { PATH_AUTH } from 'src/routes/paths';
@@ -77,6 +77,10 @@ export default function Register() {
     setRegisSession();
     router.push(PATH_AUTH.login);
   };
+
+  useEffect(() => {
+    localStorage.setItem('previousUrl', '/auth/register/step-one');
+  }, []);
 
   return (
     <GuestGuard>
