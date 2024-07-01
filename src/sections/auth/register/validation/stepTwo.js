@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 const organizationSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama pengurus wajib diisi')
-    .matches(alphabetRegex, 'Nama pengurus harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetRegex, 'Nama pengurus harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
     .test('no-html', 'Nama pengurus tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')
@@ -17,7 +17,7 @@ const organizationSchema = Yup.object().shape({
 export const StepTwoSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama direktur wajib diisi')
-    .matches(alphabetRegex, 'Nama direktur harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetRegex, 'Nama direktur harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
     .test('no-html', 'Nama direktur tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')

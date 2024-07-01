@@ -173,7 +173,7 @@ export default function Register() {
                   <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
                     <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
                       <Typography variant="h4" gutterBottom>
-                        Masuk ke BUM Desa
+                        Buat Akun BUM Desa
                       </Typography>
                       <Typography sx={{ color: 'text.secondary' }}>
                         Silahkan isi form berikut untuk membuat akun

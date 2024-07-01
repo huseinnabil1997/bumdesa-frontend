@@ -6,7 +6,7 @@ const passRegex = /^(?=.*[~!@#$%^&*])(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/;
 export const RegisterSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama wajib diisi')
-    .matches(alphabetRegex, 'Nama Nama harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetRegex, 'Nama Nama harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
     .test('no-html', 'Nama tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   email: Yup.string().email('Format email tidak sesuai').required('Email wajib diisi'),
   password: Yup.string()

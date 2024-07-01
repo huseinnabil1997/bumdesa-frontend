@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 export const StepOneSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama BUM Desa wajib diisi')
-    .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
     .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   bumdesa_id: Yup.string().required('ID BUM Desa wajib diisi'),
   address: Yup.string()
