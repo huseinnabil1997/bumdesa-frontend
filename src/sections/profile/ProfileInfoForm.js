@@ -26,9 +26,9 @@ const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
   logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
   nama: Yup.string()
+    .required('Nama BUM Desa wajib diisi')
     .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
-    .required('Nama BUM Desa wajib diisi'),
+    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   id: Yup.string().required('ID BUM Desa wajib diisi'),
   tanggal_berdiri: Yup.string()
     .required('Tanggal Didirikan BUM Desa wajib diisi')

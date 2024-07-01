@@ -4,14 +4,14 @@ import * as Yup from 'yup';
 
 export const StepOneSchema = Yup.object().shape({
   name: Yup.string()
+    .required('Nama BUM Desa wajib diisi')
     .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
-    .required('Nama BUM Desa wajib diisi'),
+    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   bumdesa_id: Yup.string().required('ID BUM Desa wajib diisi'),
   address: Yup.string()
+    .required('Alamat BUM Desa wajib diisi')
     .matches(alphabetRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
-    .test('no-html', 'Alamat BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
-    .required('Alamat BUM Desa wajib diisi'),
+    .test('no-html', 'Alamat BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   province: Yup.mixed().required('Provinsi wajib diisi'),
   city: Yup.mixed().required('Kabupaten wajib diisi'),
   district: Yup.mixed().required('Kecamatan wajib diisi'),
