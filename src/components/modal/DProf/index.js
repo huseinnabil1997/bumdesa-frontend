@@ -36,7 +36,7 @@ export default function ModalSolvabilitasInfo({ open, onClose }) {
       <Stack spacing={2} alignItems="center" sx={{ p: 3 }}>
         <Stack>
           <Typography sx={titleStyle}>Profitabilitas</Typography>
-          <Typography variant="caption" align="center">
+          <Typography variant="caption" align="justify">
             Ukuran atau indikator yang digunakan untuk menilai kemampuan suatu perusahaan dalam
             menghasilkan keuntungan (profit) dari aktivitas bisnisnya. Ini mencerminkan seberapa
             efisien dan efektif perusahaan dalam mengelola sumber daya dan mengoptimalkan pendapatan
