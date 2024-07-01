@@ -178,7 +178,7 @@ export default function UserList() {
                   }
                   actions={
                     <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
+                      <IconButton color="primary" onClick={() => handleDeleteRows()}>
                         <Iconify icon={'eva:trash-2-outline'} />
                       </IconButton>
                     </Tooltip>

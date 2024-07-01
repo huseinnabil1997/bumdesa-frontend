@@ -13,6 +13,7 @@ import Image from "src/components/Image";
 import { fBumdesId } from "src/utils/formatNumber";
 import { checkUrlImage } from "src/utils/helperFunction";
 import { IconButtonAnimate } from "src/components/animate";
+import { useSelector } from "react-redux";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -78,7 +79,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
 
   const datePickerRef = useRef(null);
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const defaultValues = {
     foto_kantor: data?.photo ?? null,
@@ -129,12 +130,12 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
 
   useEffect(() => {
     const checkImageKantor = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`);
       setIsValidImageKantor(isValid);
       return isValid;
     };
     const checkImageLogo = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}`);
       setIsValidImageLogo(isValid);
       return isValid;
     };
@@ -154,12 +155,12 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
               alt="image"
               src={
                 isValidImageKantor
-                  ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
+                  ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`
                   : '/image/default_image.png'
               }
               onClick={() => {
                 handleModalImage(isValidImageKantor
-                  ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.foto_kantor}`
+                  ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`
                   : '/image/default_image.png'
                 )
               }}
@@ -174,9 +175,9 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
           <IconButtonAnimate>
             <Image
               alt="image"
-              src={isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
+              src={isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}` : '/image/default_image.png'}
               onClick={() => {
-                handleModalImage(isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
+                handleModalImage(isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
               }}
               sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
             />

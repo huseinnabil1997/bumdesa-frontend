@@ -21,7 +21,7 @@ const ProfileInfoFormSchema = Yup.object().shape({
     .required('Alamat Email Aktif Unit Usaha wajib diisi'),
   year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
   sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
-  manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
+  manager_name: Yup.string().required('Nama Manager Unit Usaha wajib diisi'),
   position: Yup.string().required('Jabatan wajib diisi'),
   manager_phone: Yup.string()
     .required('Nomor telepon wajib diisi')
@@ -124,7 +124,7 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
 
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
       setIsValidImage(isValid);
       return isValid;
     };
@@ -139,8 +139,8 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
           <IconButtonAnimate>
             <Image
               alt="image"
-              src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
-              onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
+              src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png'}
+              onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png')}
               sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
             />
           </IconButtonAnimate>
@@ -203,7 +203,7 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
         <Grid item xs={4}>
           <RHFTextField
             name="manager_name"
-            label="Nama Manager BUM Desa"
+            label="Nama Manager Unit Usaha"
             placeholder="Contoh: Budi Jailani"
             inputProps={{
               readOnly: true

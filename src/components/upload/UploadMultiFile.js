@@ -67,7 +67,7 @@ export default function UploadMultiFile({
 
       <MultiFilePreview files={files} showPreview={showPreview} onRemove={onRemove} onRemoveAll={onRemoveAll} />
 
-      {helperText && helperText}
+      {helperText && <>{helperText}</>}
     </Box>
   );
 }

@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import axios from './axios';
 import axiosCoreService from './axiosCoreService';
 import axiosReportService from './axiosReportService';
+import axiosUnregistered from './axiosUnregistered';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ const isValidToken = (accessToken) => {
 //   }, timeLeft);
 // };
 
-const setSession = (accessToken, remember) => {
+const setSession = async (accessToken, remember) => {
   if (accessToken) {
     if (remember) {
       localStorage.setItem('token', accessToken);
@@ -46,11 +47,20 @@ const setSession = (accessToken, remember) => {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
     localStorage.removeItem('@menu');
-    localStorage.removeItem('userData');
     delete axios.defaults.headers.common.Authorization;
     delete axiosCoreService.defaults.headers.common.Authorization;
     delete axiosReportService.defaults.headers.common.Authorization;
   }
 };
 
-export { isValidToken, setSession };
+const setRegisSession = (accessToken) => {
+  if (accessToken) {
+    localStorage.setItem('@token', accessToken);
+    axiosUnregistered.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  } else {
+    localStorage.removeItem('@token');
+    delete axiosUnregistered.defaults.headers.common.Authorization;
+  }
+};
+
+export { isValidToken, setSession, setRegisSession };

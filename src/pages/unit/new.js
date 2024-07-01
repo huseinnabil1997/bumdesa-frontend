@@ -22,6 +22,7 @@ import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import usePost from 'src/query/hooks/mutation/usePost';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
+import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -50,14 +51,23 @@ export default function AddUnitUsaha() {
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
-    name: Yup.string().required('Nama BUM Desa wajib diisi'),
+    name: Yup.string()
+      .required('Nama Unit Usaha wajib diisi')
+      .matches(alphabetRegex, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
+      .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
+    year_founded: Yup.string()
+      .required('Tahun Berdiri wajib diisi')
+      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
-    manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
-    position: Yup.string().required('Jabatan wajib diisi'),
+    manager_name: Yup.string()
+      .required('Nama Manager Unit Usaha wajib diisi')
+      .test('no-html', 'Nama Manager Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    position: Yup.string()
+      .required('Jabatan wajib diisi')
+      .test('no-html', 'Jabatan tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')
       .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
@@ -178,7 +188,7 @@ export default function AddUnitUsaha() {
             <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
               <Box width={20} direction="row" display="flex" alignItems="center" />
               <Typography variant="caption" fontSize="12px" fontWeight={500} color="#525252">
-                Pastikan semua data
+                Pastikan
                 <span style={{ fontSize: '12px', fontWeight: 700 }}>
                   {' '}
                   semua data
@@ -315,7 +325,7 @@ export default function AddUnitUsaha() {
               <Stack spacing={2} direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}>
                 <RHFTextField
                   name="manager_name"
-                  label="Nama Manager BUM Desa"
+                  label="Nama Manager Unit Usaha"
                   placeholder="Contoh: Budi Jailani"
                   sx={{
                     width: '293px',

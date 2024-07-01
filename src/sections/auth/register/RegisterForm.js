@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // form
 import { useForm } from 'react-hook-form';
@@ -9,20 +9,25 @@ import { Stack, IconButton, InputAdornment, Alert, Grid, Typography } from '@mui
 import useAuth from '../../../hooks/useAuth';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFTextField } from '../../../components/hook-form';
+import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
 import { RegisterSchema, registerDefaultValues } from './validation/register';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import { registerForm } from 'src/utils/helperFunction';
 // ----------------------------------------------------------------------
 
 RegisterForm.propTypes = {
   setSuccess: PropTypes.func,
   setEmail: PropTypes.func,
   setId: PropTypes.func,
+  startCountdown: PropTypes.func,
 };
 
-export default function RegisterForm({ setSuccess, setEmail, setId }) {
+export default function RegisterForm({ setSuccess, setEmail, setId, startCountdown }) {
   const { register } = useAuth();
+
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,13 +35,14 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
-    registerDefaultValues,
+    defaultValues: registerDefaultValues,
     mode: 'onChange',
   });
 
   const {
     watch,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -49,16 +55,59 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
       if (res?.data?.id_regis) {
         setSuccess(true);
         setId(res.data.id_regis);
+        startCountdown();
+        resetRegisterForm();
       }
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
+  useEffect(() => {
+    setValue('termsAndConditions', registerForm.termsAndConditions);
+  }, [registerForm.termsAndConditions, setValue, watch('termsAndConditions')]);
+
+  useEffect(() => {
+    setValue('privacyPolicy', registerForm.privacyPolicy);
+  }, [registerForm.privacyPolicy, setValue, watch('privacyPolicy')]);
+
+  useEffect(() => {
+    setValue('name', registerForm.name);
+    setValue('email', registerForm.email);
+    setValue('password', registerForm.password);
+    setValue('re-password', registerForm['re-password']);
+    setValue('termsAndConditions', registerForm.termsAndConditions);
+    setValue('privacyPolicy', registerForm.privacyPolicy);
+  }, [registerForm, setValue]);
+
+  const saveRegisterForm = () => {
+    registerForm.name = watch('name');
+    registerForm.email = watch('email');
+    registerForm.password = watch('password');
+    registerForm['re-password'] = watch('re-password');
+    registerForm.termsAndConditions = watch('termsAndConditions');
+    registerForm.privacyPolicy = watch('privacyPolicy');
+  }
+
+  const resetRegisterForm = () => {
+    registerForm.name = '';
+    registerForm.email = '';
+    registerForm.password = '';
+    registerForm['re-password'] = '';
+    registerForm.termsAndConditions = false;
+    registerForm.privacyPolicy = false;
+  }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [errors]);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        {!!errors.termsAndConditions && <Alert severity="error">{errors.termsAndConditions.message}</Alert>}
+        {!!errors.privacyPolicy && <Alert severity="error">{errors.privacyPolicy.message}</Alert>}
 
         <RHFTextField name="name" label="Nama BUM Desa" required />
         <RHFTextField name="email" label="Email Aktif" required />
@@ -149,6 +198,51 @@ export default function RegisterForm({ setSuccess, setEmail, setId }) {
             ),
           }}
         />
+
+        <Stack>
+          <Stack
+            onClick={() => {
+              router.push('/auth/terms-and-conditions');
+              setValue('termsAndConditions', false);
+              saveRegisterForm();
+            }}
+          >
+            <RHFCheckbox
+              name="termsAndConditions"
+              label={
+                <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                  Saya telah membaca{' '}
+                  <span style={{ fontWeight: 600, color: '#1078CA' }}> Syarat dan Ketentuan </span>{' '}
+                  BUM Desa
+                </Typography>
+              }
+              onChange={() => {
+                setValue('termsAndConditions', false);
+              }}
+            />
+          </Stack>
+          <Stack
+            onClick={() => {
+              router.push('/auth/privacy-policy');
+              setValue('privacyPolicy', false);
+              saveRegisterForm();
+            }}
+          >
+            <RHFCheckbox
+              name="privacyPolicy"
+              label={
+                <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                  Saya telah membaca{' '}
+                  <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>{' '}
+                  BUM Desa
+                </Typography>
+              }
+              onChange={() => {
+                setValue('privacyPolicy', false);
+              }}
+            />
+          </Stack>
+        </Stack>
 
         <StyledLoadingButton
           fullWidth

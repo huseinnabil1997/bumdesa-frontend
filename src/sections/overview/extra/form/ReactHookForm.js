@@ -45,7 +45,9 @@ export default function ReactHookForm() {
   };
 
   const handleClickAttachPhoto = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const onSubmit = async (data) => {
@@ -108,7 +110,7 @@ export default function ReactHookForm() {
 
             <RHFTextField
               name="password"
-              label="Password"
+              label="Kata Sandi"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
@@ -123,7 +125,7 @@ export default function ReactHookForm() {
 
             <RHFTextField
               name="confirmPassword"
-              label="Confirm Password"
+              label="Konfirmasi Kata Sandi"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (

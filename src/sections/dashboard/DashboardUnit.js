@@ -36,7 +36,7 @@ export default function DashboardUnit() {
       </Stack>
       <Scrollbar>
         {!isLoading && (
-          <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1 }}>
+          <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1, minWidth: 900 }}>
             <CreateItem />
             {isFetched &&
               data?.data &&
@@ -70,13 +70,25 @@ ProductItem.propTypes = {
 };
 
 function ProductItem({ data }) {
-  const { name, status, photo, address, sector } = data;
+  const router = useRouter();
+
+  const { name, status, photo, address, sector, id } = data;
+
+  const handleClick = () => {
+    router.push(`/unit/detail?id=${id}`);
+  };
+
+  const img = `${CDN_URL}unit/${photo}`;
 
   return (
-    <Card elevation={3} sx={{ width: 360, borderRadius: 1.5 }}>
+    <Card
+      elevation={3}
+      sx={{ width: 360, borderRadius: 1.5, cursor: 'pointer' }}
+      onClick={handleClick}
+    >
       <Image
         alt={name}
-        src={`${CDN_URL}unit/${photo}`}
+        src={img}
         sx={{ width: '100%', height: 170, borderRadius: `12px 0px 0px`, flexShrink: 0 }}
       />
 

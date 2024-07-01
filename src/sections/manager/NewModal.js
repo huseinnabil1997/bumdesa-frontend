@@ -11,10 +11,14 @@ import { Info } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import { useAddManager } from 'src/query/hooks/manager/useAddManager';
+import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 
 const NewModalSchema = Yup.object().shape({
-  image: Yup.mixed().required('Foto Anggota BUM Desa wajib diisi'),
-  name: Yup.string().required('Nama Anggota BUM Desa wajib diisi'),
+  image: Yup.mixed().required('Foto Anggota wajib diisi'),
+  name: Yup.string()
+    .required('Nama Anggota wajib diisi')
+    .matches(alphabetRegex, 'Nama Anggota harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
+    .test('no-html', 'Nama Anggota tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   position: Yup.mixed().required('Jabatan Anggota wajib diisi'),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')

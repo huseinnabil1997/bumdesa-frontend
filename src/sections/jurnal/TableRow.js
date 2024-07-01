@@ -11,6 +11,9 @@ import {
   Table,
   TableBody,
   Skeleton,
+  Tooltip,
+  Typography,
+  Chip,
 } from '@mui/material';
 // components
 import moment from 'moment';
@@ -46,6 +49,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
     debit,
     credit,
     business_unit_name,
+    is_first_balance,
   } = row;
 
   const [open, setOpen] = useState(false);
@@ -75,8 +79,36 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
         </TableCell>
         <TableCell>{number_of_evidence}</TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
-        <TableCell>{transaction_information}</TableCell>
-        <TableCell>{business_unit_name === '' ? '-' : business_unit_name}</TableCell>
+        <TableCell>
+          <Tooltip title={business_unit_name}>
+            <Typography
+              fontSize={14}
+              sx={{
+                maxWidth: 125,
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              }}
+            >
+              {transaction_information === '' ? '-' : transaction_information}
+            </Typography>
+          </Tooltip>
+        </TableCell>
+        <TableCell>
+          <Tooltip title={business_unit_name}>
+            <Typography
+              fontSize={14}
+              sx={{
+                maxWidth: 100,
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              }}
+            >
+              {business_unit_name === '' ? '-' : business_unit_name}
+            </Typography>
+          </Tooltip>
+        </TableCell>
         <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
 
@@ -88,12 +120,24 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
                 sx={{ color: theme.palette.primary.main, fontSize: 16 }}
               />
             </IconButton>
-            <IconButton onClick={() => setDelete(true)}>
-              <Iconify
-                icon={'lucide:trash'}
-                sx={{ color: theme.palette.error.main, fontSize: 16 }}
-              />
-            </IconButton>
+            {!is_first_balance && (
+              <IconButton onClick={() => setDelete(true)}>
+                <Iconify
+                  icon={'lucide:trash'}
+                  sx={{ color: theme.palette.error.main, fontSize: 16 }}
+                />
+              </IconButton>
+            )}
+            {is_first_balance && (
+              <Tooltip title="Jurnal ini merupakan saldo awal">
+                <IconButton>
+                  <Iconify
+                    icon={'lucide:info'}
+                    sx={{ color: theme.palette.grey[500], fontSize: 16 }}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </Stack>
         </TableCell>
       </TableRow>

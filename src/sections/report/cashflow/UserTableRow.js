@@ -38,6 +38,11 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
               }
             </IconButton>
           )}
+          {/* {!row?.child2 && (
+            <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
+              <Iconify icon={'material-symbols-light:square'} color="#292929" width={15} height={15} />
+            </IconButton>
+          )} */}
           {nama}
         </TableCell>
         <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
@@ -47,13 +52,13 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
       {open && row?.child2?.map((historyRow, idx) => (
         <TableRow key={historyRow.nama} sx={{ backgroundColor: generateColor(index, idx), height: '56px' }}>
           <TableCell
-            sx={{ display: 'flex', flexDirection: 'row', fontSize: '12px', fontWeight: 500, color: '#777777' }}
+            sx={{ display: 'flex', flexDirection: 'row', fontSize: '12px', fontWeight: historyRow?.nama?.toLowerCase()?.includes('jumlah arus kas') ? 900 : 500, color: historyRow?.nama?.toLowerCase()?.includes('jumlah arus kas') ? '#292929' : '#777777' }}
           >
-            <Stack><DotIcon /></Stack>
+            <Stack><DotIcon color={historyRow?.nama?.toLowerCase()?.includes('jumlah arus kas') ? '#292929' : '#777777'} /></Stack>
             {historyRow.nama}
           </TableCell>
           <TableCell
-            sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
+            sx={{ fontSize: '12px', fontWeight: historyRow?.nama?.toLowerCase()?.includes('jumlah arus kas') ? 900 : 500, color: historyRow?.nama?.toLowerCase()?.includes('jumlah arus kas') ? '#292929' : '#777777' }}
           >
             {historyRow?.saldo === 0 ? 'Rp. -' : formatCurrency(historyRow?.saldo)}
           </TableCell>
@@ -103,7 +108,11 @@ export default function UserTableRow({ row, selected }) {
       currency: 'IDR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(Math.abs(amount));
+
+    if (amount < 0) {
+      return `(${formattedAmount.replace('Rp', 'Rp.')})`;
+    }
 
     if (!formattedAmount.includes(',')) {
       return formattedAmount.replace('Rp', 'Rp.');

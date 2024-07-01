@@ -125,13 +125,15 @@ export default function UploadPhoto({
 
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`);
+      const isValid = await checkUrlImage(
+        `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}${imageFrom}/${file}`
+      );
       setIsValidImage(isValid);
       return isValid;
     };
 
     checkImage();
-  }, []);
+  }, [file]);
 
   return (
     <>
@@ -158,7 +160,7 @@ export default function UploadPhoto({
                 handleOpenModal(
                   isString(file)
                     ? isValidImage
-                      ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                      ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}${imageFrom}/${file}`
                       : '/image/default_image.png'
                     : file.preview
                 );
@@ -175,7 +177,7 @@ export default function UploadPhoto({
                 src={
                   isString(file)
                     ? isValidImage
-                      ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/${imageFrom}/${file}`
+                      ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}${imageFrom}/${file}`
                       : '/image/default_image.png'
                     : file.preview
                 }
@@ -197,7 +199,11 @@ export default function UploadPhoto({
                 }),
               }}
             >
-              {file ? <Iconify icon={'f7:photo-fill'} sx={{ width: 24, height: 24 }} /> : <Iconify icon={'ic:round-add-a-photo'} sx={{ width: 24, height: 24 }} />}
+              {file ? (
+                <Iconify icon={'f7:photo-fill'} sx={{ width: 24, height: 24 }} />
+              ) : (
+                <Iconify icon={'ic:round-add-a-photo'} sx={{ width: 24, height: 24 }} />
+              )}
             </PlaceholderStyle>
           </DropZoneStyle>
         </RootStyle>
@@ -227,7 +233,7 @@ export default function UploadPhoto({
             >
               Hapus Foto
             </StyledLoadingButton>
-            {helperText && helperText}
+            {helperText && <>{helperText}</>}
           </Box>
           {fileRejections.length > 0 && errorPosition === 'right' && (
             <RejectionFiles errorPosition={errorPosition} fileRejections={fileRejections} />

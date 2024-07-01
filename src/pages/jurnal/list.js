@@ -52,16 +52,17 @@ export default function JurnalList() {
   const router = useRouter();
 
   const methods = useForm({
-    defaultValues: { date: [start_date, end_date] },
+    defaultValues: { date: [start_date, end_date], search: '' },
   });
 
-  const { watch } = methods;
+  const { watch, setValue } = methods;
 
   const { data, isLoading, isError, refetch } = useGetJurnals({
     limit: 10,
     page,
     start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
-    end_date: moment(watch('date')[1]).format('yyyy-MM-DD') ?? null,
+    end_date: moment(watch('date')[1] || watch('date')[0]).format('yyyy-MM-DD') ?? null,
+    search: watch('search'),
   });
 
   const { mutate: onDelete, isLoading: deleting } = useDeleteJurnal();
@@ -88,7 +89,14 @@ export default function JurnalList() {
   useEffect(() => {
     setPage(1);
     refetch();
-    defaultRangeDate(moment(watch('date')[0]).format('yyyy-MM-DD'), moment(watch('date')[1]).format('yyyy-MM-DD'));
+    defaultRangeDate(
+      moment(watch('date')[0]).format('yyyy-MM-DD'),
+      moment(watch('date')[1] || watch('date')[0]).format('yyyy-MM-DD')
+    );
+
+    if (!watch('date')[1]) {
+      setValue('date', [watch('date')[0], watch('date')[0]]);
+    }
   }, [watch('date')]);
 
   return (
@@ -96,6 +104,7 @@ export default function JurnalList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <JurnalHeader
+            isEmpty={data?.length === 0}
             filter={{
               page,
               start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,

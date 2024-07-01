@@ -18,7 +18,8 @@ import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import Image from 'src/components/Image';
-import { checkUrlImage } from 'src/utils/helperFunction';
+import { checkUrlImage, logo } from 'src/utils/helperFunction';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,8 @@ NavbarVertical.propTypes = {
 export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   const [isValidImage, setIsValidImage] = useState(false);
 
+  const userData = useSelector(state => state.user.userData);
+
   const theme = useTheme();
 
   const { pathname } = useRouter();
@@ -57,17 +60,15 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const logo = localStorage.getItem('logo');
-
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${userData?.logo}`);
       setIsValidImage(isValid);
       return isValid;
     };
 
     checkImage();
-  }, []);
+  }, [logo]);
 
   const renderContent = (
     <Scrollbar
@@ -91,7 +92,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           disabledEffect
           src={
             isValidImage
-              ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/bumdesa/${logo}`
+              ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${userData?.logo}`
               : '/image/default_image.png'
           }
           alt="bri"

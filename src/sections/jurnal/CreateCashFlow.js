@@ -10,9 +10,17 @@ CreateCashFlow.propTypes = {
   type: PropTypes.string,
   account: PropTypes.string,
   formChecking: PropTypes.func,
+  isFirstBalance: PropTypes.bool,
 };
 
-export default function CreateCashFlow({ formChecking, i, account, type }) {
+export default function CreateCashFlow({
+  formChecking,
+  i,
+  account,
+  type,
+  isFirstBalance,
+  disabled = false,
+}) {
   const {
     data: accOpt,
     isLoading: loadingAcc,
@@ -20,6 +28,7 @@ export default function CreateCashFlow({ formChecking, i, account, type }) {
   } = useGetCashFlow({
     account_code: account,
     balance_type: type,
+    isFirstBalance,
   });
 
   return (
@@ -30,7 +39,7 @@ export default function CreateCashFlow({ formChecking, i, account, type }) {
       label={i === 0 ? 'Komponen Laporan Arus Kas' : ''}
       loading={loadingAcc}
       options={accOpt?.map((option) => option) ?? []}
-      disabled={(isFetched && accOpt.length === 0) || formChecking(i)}
+      disabled={(isFetched && accOpt.length === 0) || formChecking(i) || disabled}
       renderOption={(props, option) => (
         <li {...props} key={option.value}>
           {option.label}
@@ -38,7 +47,8 @@ export default function CreateCashFlow({ formChecking, i, account, type }) {
       )}
       sx={{
         '.Mui-disabled': {
-          backgroundColor: ((isFetched && accOpt.length === 0) || formChecking(i)) && '#ddd',
+          backgroundColor:
+            ((isFetched && accOpt.length === 0) || formChecking(i) || disabled) && '#ddd',
         },
       }}
     />

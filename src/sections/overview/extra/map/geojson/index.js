@@ -46,7 +46,8 @@ export default function MapGeojson({ ...other }) {
 
   const [year, setYear] = useState(2010);
 
-  const [allData, setAllData] = useState(null);
+  // const [allData, setAllData] = useState(null);
+  const [allData] = useState(null);
 
   const [hoverInfo, setHoverInfo] = useState(null);
 
@@ -73,9 +74,9 @@ export default function MapGeojson({ ...other }) {
   };
 
   useEffect(() => {
-    fetch('https://raw.githubusercontent.com/uber/react-map-gl/master/examples/.data/us-income.geojson')
-      .then((resp) => resp.json())
-      .then((json) => setAllData(json));
+    // fetch('https://raw.githubusercontent.com/uber/react-map-gl/master/examples/.data/us-income.geojson')
+    //   .then((resp) => resp.json())
+    //   .then((json) => setAllData(json));
   }, []);
 
   const onHover = useCallback((event) => {
@@ -85,10 +86,10 @@ export default function MapGeojson({ ...other }) {
     setHoverInfo(
       hoveredFeature
         ? {
-            feature: hoveredFeature,
-            x: srcEvent.offsetX,
-            y: srcEvent.offsetY,
-          }
+          feature: hoveredFeature,
+          x: srcEvent.offsetX,
+          y: srcEvent.offsetY,
+        }
         : null
     );
   }, []);

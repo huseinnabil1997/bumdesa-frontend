@@ -38,6 +38,7 @@ import { useGetJurnal } from 'src/query/hooks/jurnals/useGetJurnal';
 import moment from 'moment';
 import { useUpdateJurnal } from 'src/query/hooks/jurnals/useUpdateJurnal';
 import { fCurrency } from 'src/utils/formatNumber';
+import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 // ----------------------------------------------------------------------
 
@@ -74,6 +75,7 @@ export default function JurnalCreate() {
       setValue('number_of_evidence', details?.number_of_evidence);
       setValue('date', moment(details?.date).format('yyyy-MM-DD'));
       setValue('transaction_information', details?.transaction_information);
+      setValue('is_first_balance', details?.is_first_balance);
       setValue('accounts', details?.accounts ?? []);
     }
   }, [details]);
@@ -88,7 +90,7 @@ export default function JurnalCreate() {
   const onSubmit = async (data) => {
     const payload = {
       transaction_information: data.transaction_information,
-      date: data.date,
+      date: moment(data.date).format('yyyy-MM-DD'),
       accounts: data.accounts.map((row) => ({
         ...row,
         account_code: row.account_code.value,
@@ -150,6 +152,9 @@ export default function JurnalCreate() {
     return true;
   };
 
+  const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
+  const hasEmptyAccount = !watch('accounts').every((row) => !!row.account_code);
+
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -161,6 +166,14 @@ export default function JurnalCreate() {
           >
             Kembali
           </BtnLightPrimary>
+          {details?.is_first_balance && (
+            <Chip
+              variant="contained"
+              color="success"
+              label="Saldo Awal"
+              sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
+            />
+          )}
           <Card elevation={0} sx={{ mt: 3, border: `1px solid ${theme.palette.grey[300]}` }}>
             {isFetched && !isLoading && (
               <Box sx={{ p: 3 }}>
@@ -174,12 +187,23 @@ export default function JurnalCreate() {
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <RHFTextField
+                    <RHFDatePicker
                       size="small"
-                      type="date"
                       label="Pilih Tanggal"
                       require
+                      format="dd MMM yyyy"
+                      disabled={!watch('transaction_information')}
                       name="date"
+                      sx={{
+                        width: '293px',
+                        '& .MuiInputBase-root': {
+                          height: '40px',
+                          borderRadius: '8px',
+                        },
+                        '& .MuiInputBase-input': {
+                          height: '11px',
+                        },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -224,36 +248,51 @@ export default function JurnalCreate() {
                           )}
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={watch('is_first_balance') ? 3 : 2}>
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Debit' : ''}
                           require
                           name={`accounts.${i}.debit`}
                           onKeyUp={generateTotalDebt}
-                          type="number"
+                          type="currency"
+                          disabled={
+                            +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
+                          }
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={watch('is_first_balance') ? 3 : 2}>
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Kredit' : ''}
                           require
                           name={`accounts.${i}.credit`}
                           onKeyUp={generateTotalCred}
-                          type="number"
+                          type="currency"
+                          disabled={
+                            +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
+                          }
                         />
                       </Grid>
-                      <Grid item xs={fields.length > 2 ? 3 : 4}>
-                        <CreateCashFlow
-                          formChecking={formChecking}
-                          i={i}
-                          type={watch(`accounts.${i}.debit`) > 0 ? 'C' : 'D'}
-                          account={watch(`accounts.${i}.account_code`)?.value ?? ''}
-                        />
-                      </Grid>
+                      {!details?.is_first_balance && (
+                        <Grid item xs={fields.length > 2 ? 3 : 4}>
+                          <CreateCashFlow
+                            formChecking={formChecking}
+                            i={i}
+                            isFirstBalance={details?.is_first_balance}
+                            type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
+                            account={watch(`accounts.${i}.account_code`)?.value ?? ''}
+                            disabled={!isHasKas}
+                          />
+                        </Grid>
+                      )}
                       {fields.length > 2 && (
-                        <Grid item xs={1} alignItems="flex-end" display="flex">
+                        <Grid
+                          item
+                          xs={1}
+                          alignItems={i === 0 ? 'flex-end' : 'flex-start'}
+                          display="flex"
+                        >
                           <Button
                             fullWidth
                             variant="contained"
@@ -271,6 +310,7 @@ export default function JurnalCreate() {
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
                       onClick={handleAppend}
+                      disabled={hasEmptyAccount || !watch('transaction_information')}
                     >
                       Tambah Akun
                     </StyledButton>

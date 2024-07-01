@@ -16,6 +16,7 @@ import { useChangeUserEmail } from 'src/query/hooks/setting/useChangeUserEmail';
 import { useRouter } from 'next/router';
 import useAuth from 'src/hooks/useAuth';
 import { PATH_AUTH } from 'src/routes/paths';
+import { useSelector } from 'react-redux';
 
 const AccountInfoSchema = Yup.object().shape({
   email: Yup.string()
@@ -105,7 +106,7 @@ export default function ModalUbahEmail({ open, onClose, email }) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const defaultValues = {
     email: userData.email ?? '',

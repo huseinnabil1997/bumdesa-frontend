@@ -31,9 +31,10 @@ const options = [
 
 LabaRugiHeader.propTypes = {
   onSubmit: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
-export default function LabaRugiHeader({ onSubmit }) {
+export default function LabaRugiHeader({ onSubmit, loading }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
@@ -164,6 +165,7 @@ export default function LabaRugiHeader({ onSubmit }) {
               defaultRangeDate(formatDate(selectedDate[0]), formatDate(selectedDate[1]));
             }}
             value={selectedUnit}
+            disabled={loading || downloading}
           />
         )}
         <RHFMobileDateRangePicker
@@ -178,6 +180,7 @@ export default function LabaRugiHeader({ onSubmit }) {
             defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
           }}
           value={selectedDate}
+          disabled={downloading}
         />
       </Stack>
       <Stack direction="row" spacing={1}>
@@ -186,7 +189,7 @@ export default function LabaRugiHeader({ onSubmit }) {
           startIcon={downloading ? <CircularProgress size="1rem" /> : <Description />}
           variant="outlined"
           onClick={() => handleMenuItemClick('preview')}
-          disabled={downloading}
+          disabled={downloading || loading}
         >
           Pratinjau Dokumen
         </StyledLoadingButton>
@@ -207,7 +210,7 @@ export default function LabaRugiHeader({ onSubmit }) {
           }
           endIcon={<Iconify icon={'oui:arrow-down'} />}
           variant="contained"
-          disabled={downloading}
+          disabled={downloading || loading}
         >
           Unduh Dokumen
         </StyledLoadingButton>

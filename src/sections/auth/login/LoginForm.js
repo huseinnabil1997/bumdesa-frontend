@@ -1,7 +1,5 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-// next
-import NextLink from 'next/link';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,10 +14,12 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
-import { setSession } from 'src/utils/jwt';
+import { setRegisSession, setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { defaultRangeDate } from 'src/utils/helperFunction';
+import { useDispatch } from 'react-redux';
+import { setUser } from 'src/redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -36,13 +36,19 @@ export default function LoginForm() {
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
+
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string()
+      .email('Email harus berisi alamat email yang valid')
+      .required('Email wajib diisi'),
+    password: Yup.string().required('Kata sandi wajib diisi'),
   });
 
   const defaultValues = {
-    email: localStorage.getItem('email') ?? '',
+    email: '',
     password: '',
     remember: true,
   };
@@ -55,18 +61,18 @@ export default function LoginForm() {
   const {
     setError,
     handleSubmit,
-    // watch,
     formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await login(data.email, data.password);
       if (res?.data) {
-        // Menyimpan data ke localStorage
-        localStorage.setItem('userData', JSON.stringify(res.data));
+        dispatch(setUser(res.data));
         if (res?.data?.full_register === 0) {
-          await localStorage.setItem('@token', res?.metadata?.token ?? '');
+          await setRegisSession(res?.metadata?.token ?? '');
+          enqueueSnackbar(res.message, { variant: 'success' });
           window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
@@ -81,8 +87,12 @@ export default function LoginForm() {
         return;
       }
       if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message ?? 'Tidak dapat terhubung ke server' });
+        setError('afterSubmit', {
+          ...error,
+          message: error.message ?? 'Tidak dapat terhubung ke server',
+        });
       }
+      setLoading(false);
     }
   };
 
@@ -95,7 +105,7 @@ export default function LoginForm() {
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Kata Sandi"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -111,9 +121,9 @@ export default function LoginForm() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <RHFCheckbox name="remember" label="Ingat Saya" />
-        <NextLink href={PATH_AUTH.resetPassword} passHref>
+        <Stack onClick={() => router.push(PATH_AUTH.resetPassword)} sx={{ cursor: 'pointer' }}>
           <Link variant="subtitle2">Lupa Kata Sandi?</Link>
-        </NextLink>
+        </Stack>
       </Stack>
 
       <StyledLoadingButton
@@ -122,7 +132,7 @@ export default function LoginForm() {
         type="submit"
         variant="contained"
         color="primary"
-        loading={isSubmitting}
+        loading={isSubmitting || loading}
       >
         Masuk
       </StyledLoadingButton>

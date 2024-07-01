@@ -4,12 +4,13 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 // components
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import { useSnackbar } from 'notistack';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import { useState, useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -18,10 +19,11 @@ ResetPasswordForm.propTypes = {
   sentStatus: PropTypes.bool,
 };
 
-export default function ResetPasswordForm({ onSent, sentStatus }) {
+export default function ResetPasswordForm({ onSent }) {
   const { enqueueSnackbar } = useSnackbar();
-
   const { resetPassword } = useAuth();
+  const [countdown, setCountdown] = useState(0);
+  const [emailSent, setEmailSent] = useState(false);
 
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
@@ -31,7 +33,7 @@ export default function ResetPasswordForm({ onSent, sentStatus }) {
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { email: 'bumdespengandaran@gmail.com' },
+    defaultValues: { email: '' },
   });
 
   const {
@@ -44,39 +46,42 @@ export default function ResetPasswordForm({ onSent, sentStatus }) {
       const res = await resetPassword(data);
       if (res?.data?.id_user) {
         onSent();
+        setEmailSent(true);
+        setCountdown(60); // Set countdown to 60 seconds
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
     }
   };
 
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
-        <RHFTextField name="email" label="Email" />
-
-        {!sentStatus ? (
-          <StyledLoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Atur ulang Kata Sandi
-          </StyledLoadingButton>
-        ) : (
-          <StyledLoadingButton
-            disabled
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Atur ulang Kata Sandi
-          </StyledLoadingButton>
+      <Stack spacing={2}>
+        <RHFTextField name="email" label="Email" placeholder='Masukkan email' />
+        
+        {emailSent && countdown > 0 && (
+          <Typography variant="body2">
+            Belum menerima email?
+          </Typography>
         )}
+
+        <StyledLoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          disabled={countdown > 0}
+        >
+          {countdown > 0 ? `Kirim Ulang ${countdown} detik` : (emailSent ? 'Kirim Ulang' : 'Atur ulang Kata Sandi')}
+        </StyledLoadingButton>
       </Stack>
     </FormProvider>
   );

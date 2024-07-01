@@ -20,6 +20,7 @@ import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useTheme } from '@mui/material/styles';
 import { checkUrlImage } from 'src/utils/helperFunction';
+import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 
 const styles = {
   textfield: {
@@ -71,14 +72,23 @@ export default function DetailUnitUsaha() {
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
-    name: Yup.string().required('Nama BUM Desa wajib diisi'),
+    name: Yup.string()
+      .required('Nama Unit Usaha wajib diisi')
+      .matches(alphabetRegex, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
+      .test('no-html', 'Nama Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year_founded: Yup.string().required('Tahun Berdiri wajib diisi'),
+    year_founded: Yup.string()
+      .required('Tahun Berdiri wajib diisi')
+      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
-    manager_name: Yup.string().required('Nama Manager BUM Desa wajib diisi'),
-    position: Yup.string().required('Jabatan wajib diisi'),
+    manager_name: Yup.string()
+      .required('Nama Manager Unit Usaha wajib diisi')
+      .test('no-html', 'Nama Manager Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    position: Yup.string()
+      .required('Jabatan wajib diisi')
+      .test('no-html', 'Jabatan tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')
       .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
@@ -221,7 +231,7 @@ export default function DetailUnitUsaha() {
 
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}`);
+      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
       setIsValidImage(isValid);
       return isValid;
     };
@@ -303,8 +313,8 @@ export default function DetailUnitUsaha() {
 
               <Image
                 alt="image"
-                src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png'}
-                onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/unit/${defaultValues?.image}` : '/image/default_image.png')}
+                src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png'}
+                onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png')}
                 sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
               />
 
@@ -360,7 +370,7 @@ export default function DetailUnitUsaha() {
               <Stack spacing={2} direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}>
                 <RHFTextField
                   name="manager_name"
-                  label="Nama Manager BUM Desa"
+                  label="Nama Manager Unit Usaha"
                   placeholder="Contoh: Budi Jailani"
                   inputProps={{
                     readOnly: true

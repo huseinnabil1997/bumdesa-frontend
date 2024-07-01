@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
-import { Stack, InputAdornment, IconButton } from '@mui/material';
+import { Stack, InputAdornment, IconButton, Grid, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
@@ -52,6 +52,7 @@ export default function AccountChangePassword() {
   const {
     reset,
     handleSubmit,
+    watch,
     formState: { isSubmitting },
   } = methods;
 
@@ -66,7 +67,7 @@ export default function AccountChangePassword() {
     }
   };
 
-  const checkVerify = async (data) => {
+  const checkVerify = async () => {
     try {
       const res = await verifyReset({ data: dataParam });
       reset();
@@ -77,6 +78,12 @@ export default function AccountChangePassword() {
       setVerified(false);
     }
   };
+
+  const isPasswordValid = (password) => password.length > 11
+    && /[0-9]/.test(password)
+    && /[~!@#$%^&*]/.test(password)
+    && /[a-z]/.test(password)
+    && /[A-Z]/.test(password)
 
   useEffect(() => {
     checkVerify();
@@ -90,8 +97,9 @@ export default function AccountChangePassword() {
         <RHFTextField
           disabled={!verified}
           name="password"
-          label="Buat Password"
+          label="Buat Kata Sandi"
           type={showPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -103,11 +111,67 @@ export default function AccountChangePassword() {
           }}
         />
 
+        {watch('password')?.length > 0 && (
+          <Grid container spacing={1}>
+            <Grid item xs={6} display="flex">
+              {watch('password')?.length > 11 ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 12 karakter
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[0-9]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 1 angka
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[~!@#$%^&*]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Simbol ~!@#$%^&*
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[a-z]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 1 huruf kecil
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex">
+              {/[A-Z]/.test(watch('password')) ? (
+                <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ color: '#27AE60' }} />
+              ) : (
+                <Iconify icon={'eva:close-circle-fill'} sx={{ color: '#E84040' }} />
+              )}
+              <Typography sx={{ ml: 1, color: '#B5B6B6' }} variant="caption">
+                Minimal 1 huruf besar
+              </Typography>
+            </Grid>
+          </Grid>
+        )}
+
         <RHFTextField
           disabled={!verified}
           name="confirm_password"
-          label="Konfirmasi Password"
+          label="Konfirmasi Kata Sandi"
           type={showConfirmPassword ? 'text' : 'password'}
+          require
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -119,8 +183,8 @@ export default function AccountChangePassword() {
           }}
         />
 
-        <LoadingButton disabled={!verified} type="submit" variant="contained" loading={isSubmitting}>
-          Simpan Password baru
+        <LoadingButton disabled={!verified || !isPasswordValid(watch('password'))} type="submit" variant="contained" loading={isSubmitting}>
+          Simpan Kata Sandi baru
         </LoadingButton>
       </Stack>
     </FormProvider>

@@ -49,7 +49,9 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
       discount: currentInvoice?.discount || '',
       invoiceFrom: currentInvoice?.invoiceFrom || _invoiceAddressFrom[0],
       invoiceTo: currentInvoice?.invoiceTo || null,
-      items: currentInvoice?.items || [{ title: '', description: '', service: '', quantity: 0, price: 0, total: 0 }],
+      items: currentInvoice?.items || [
+        { title: '', description: '', service: '', quantity: 0, price: 0, total: 0 },
+      ],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentInvoice]
@@ -95,7 +97,6 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
       reset();
       setLoadingSave(true);
       push(PATH_DASHBOARD.invoice.list);
-      console.log(JSON.stringify(newInvoice, null, 2));
     } catch (error) {
       console.error(error);
     }

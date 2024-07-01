@@ -49,6 +49,7 @@ ModalChangePassword.propTypes = {
 
 export default function ModalChangePassword({ open, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -71,6 +72,12 @@ export default function ModalChangePassword({ open, onClose }) {
     handleSubmit,
     watch,
   } = methods;
+
+  const isPasswordValid = (password) => password.length > 11
+    && /[0-9]/.test(password)
+    && /[~!@#$%^&*]/.test(password)
+    && /[a-z]/.test(password)
+    && /[A-Z]/.test(password)
 
   const onSubmit = async (data) => {
     try {
@@ -142,13 +149,14 @@ export default function ModalChangePassword({ open, onClose }) {
               <RHFTextField
                 name="old_password"
                 label="Kata Sandi Lama"
-                type={showPassword ? 'text' : 'password'}
+                type={showOldPassword ? 'text' : 'password'}
                 sx={styles.textfield}
+                require
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      <IconButton onClick={() => setShowOldPassword(!showOldPassword)} edge="end">
+                        <Iconify icon={showOldPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -160,6 +168,7 @@ export default function ModalChangePassword({ open, onClose }) {
                 label="Kata Sandi Baru"
                 type={showPassword ? 'text' : 'password'}
                 sx={styles.textfield}
+                require
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -231,6 +240,7 @@ export default function ModalChangePassword({ open, onClose }) {
                 label="Konfirmasi Kata Sandi"
                 type={showPassword ? 'text' : 'password'}
                 sx={styles.textfield}
+                require
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -250,6 +260,7 @@ export default function ModalChangePassword({ open, onClose }) {
               variant="contained"
               color="primary"
               sx={{ mt: 3 }}
+              disabled={!isPasswordValid(watch('password'))}
             >
               Simpan Password baru
             </StyledLoadingButton>

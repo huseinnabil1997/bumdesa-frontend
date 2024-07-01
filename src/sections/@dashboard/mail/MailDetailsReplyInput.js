@@ -16,7 +16,9 @@ export default function MailDetailsReplyInput() {
   };
 
   const handleAttach = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (

@@ -110,6 +110,16 @@ export default function StepOneForm() {
   }, [city]);
 
   useEffect(() => {
+    if (isNaN(watch('employees'))) setValue('employees', 0);
+    else setValue('employees', parseInt(watch('employees')));
+  }, [watch('employees')]);
+
+  useEffect(() => {
+    if (watch('founded_at') === 'Invalid date') setValue('founded_at', '');
+    else setValue('founded_at', watch('founded_at'));
+  }, [watch('founded_at')]);
+
+  useEffect(() => {
     if (data?.district.value !== district?.value) {
       setValue('subdistrict', null);
       setValue('postal_code', null);
@@ -127,7 +137,7 @@ export default function StepOneForm() {
       setValue('founded_at', moment(data.founded_at).format('yyyy-MM-DD'));
       setValue('employees', data.employees);
       setValue('province', data.province);
-      setValue('image', data.phot === '' ? null : data.phot);
+      setValue('image', data.photo === '' ? null : data.photo);
       setValue('image_logo', data.photo_logo === '' ? null : data.photo_logo);
     }
   }, [data]);
@@ -231,7 +241,7 @@ export default function StepOneForm() {
           require
           placeholder="Masukan Provinsi"
           name="province"
-          label="Province"
+          label="Provinsi"
           loading={false}
           options={provincies?.map((option) => option) ?? []}
           getOptionLabel={(option) => option.label}
@@ -297,7 +307,7 @@ export default function StepOneForm() {
           name="employees"
           label="Jumlah Pegawai Tetap"
           require
-          type="number"
+          type="text"
           placeholder="Masukan Jumlah Pegawai Tetap"
         />
 

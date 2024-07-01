@@ -18,14 +18,25 @@ import { useUpdateProfile } from "src/query/hooks/profile/useUpdateProfile";
 import { useSnackbar } from "notistack";
 import Iconify from "src/components/Iconify";
 import { fBumdesId } from "src/utils/formatNumber";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "src/redux/slices/user";
+import { alphabetAddressRegex, alphabetRegex, htmlTagRegex } from "src/utils/regex";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
   logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
-  nama: Yup.string().required('Nama BUM Desa wajib diisi'),
+  nama: Yup.string()
+    .required('Nama BUM Desa wajib diisi')
+    .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
+    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   id: Yup.string().required('ID BUM Desa wajib diisi'),
-  tanggal_berdiri: Yup.string().required('Tanggal Didirikan BUM Desa wajib diisi'),
-  alamat: Yup.string().required('Alamat wajib diisi'),
+  tanggal_berdiri: Yup.string()
+    .required('Tanggal Didirikan BUM Desa wajib diisi')
+    .test('no-html', 'Tanggal Didirikan BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+  alamat: Yup.string()
+    .required('Alamat wajib diisi')
+    .matches(alphabetAddressRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .test('no-html', 'Alamat tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),
   desa: Yup.mixed().required('Desa wajib diisi'),
@@ -89,11 +100,13 @@ const styles = {
 
 export default function ProfileInfoForm({ data, setIsEdit }) {
 
+  const dispatch = useDispatch();
+
   const datePickerRef = useRef(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = useSelector(state => state.user.userData);
 
   const { mutate: onUpdate, isLoading: updating } = useUpdateProfile();
 
@@ -122,6 +135,8 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     handleSubmit,
     isSubmitting,
     watch,
+    clearErrors,
+    setError,
   } = methods;
 
   const provinsi = watch('provinsi');
@@ -142,6 +157,38 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     desa: watch('desa'),
     kode_pos: watch('kode_pos')
   };
+
+  useEffect(() => {
+    if (provinsi) {
+      clearErrors('provinsi');
+    } else {
+      setError('provinsi', { type: 'manual', message: 'Provinsi wajib diisi' });
+    }
+  }, [provinsi, clearErrors, setError]);
+
+  useEffect(() => {
+    if (kota) {
+      clearErrors('kota');
+    } else {
+      setError('kota', { type: 'manual', message: 'Kabupaten wajib diisi' });
+    }
+  }, [kota, clearErrors, setError]);
+
+  useEffect(() => {
+    if (kecamatan) {
+      clearErrors('kecamatan');
+    } else {
+      setError('kecamatan', { type: 'manual', message: 'Kecamatan wajib diisi' });
+    }
+  }, [kecamatan, clearErrors, setError]);
+
+  useEffect(() => {
+    if (desa) {
+      clearErrors('desa');
+    } else {
+      setError('desa', { type: 'manual', message: 'Desa wajib diisi' });
+    }
+  }, [desa, clearErrors, setError]);
 
   const areValuesEqual = () => isEqual(currentValues, defaultValues);
 
@@ -195,7 +242,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
         headers: { 'Content-Type': 'multipart/form-data' }
       },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
           enqueueSnackbar('', {
             variant: 'success',
             content: () => (
@@ -210,6 +257,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
             )
           });
           setIsEdit();
+          dispatch(setUser({ ...userData, logo: res?.data?.photo_logo }));
         },
         onError: (err) => {
           enqueueSnackbar(err.message, { variant: 'error' });

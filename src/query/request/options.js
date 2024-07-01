@@ -5,6 +5,7 @@ import axiosCore from 'src/utils/axiosCoreService';
 const isRegis = !!getSessionToken();
 const service = isRegis ? axiosUnregistered : axios;
 
+
 export function getProvincies() {
   return service.get('/address/province');
 }

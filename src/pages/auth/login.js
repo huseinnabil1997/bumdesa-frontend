@@ -13,6 +13,7 @@ import Image from '../../components/Image';
 // sections
 import { LoginForm } from '../../sections/auth/login';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +63,17 @@ export default function Login() {
 
   const mdUp = useResponsive('up', 'md');
 
+  const token = localStorage.getItem('@token');
+
+  useEffect(() => {
+    if (token) {
+      const previousUrl = localStorage.getItem('previousUrl');
+      if (previousUrl) {
+        window.location.href = previousUrl;
+      }
+    }
+  }, []);
+
   return (
     <GuestGuard>
       <Page title="Login">
@@ -94,7 +106,7 @@ export default function Login() {
                       Masuk ke BUM Desa
                     </Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
-                      Silahkan masukkan email dan password.
+                      Silahkan masukkan email dan Kata Sandi.
                     </Typography>
                   </Box>
                 </Stack>

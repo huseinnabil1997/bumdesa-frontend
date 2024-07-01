@@ -2,16 +2,19 @@
 import { Container, Grid } from '@mui/material';
 // hooks
 import {
-  DashboardBestSalesman,
-  DashboardYearlySales,
   DashboardWelcome,
-  DashboardNewProducts,
   DashboardUnit,
   DashboardEducation,
+  DashboardSales,
+  DashboardFinances,
+  DashboardProfitLoss,
 } from 'src/sections/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
+import { getSessionToken } from 'src/utils/axiosReportService';
+import jwtDecode from 'jwt-decode';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -22,34 +25,41 @@ Dashboard.getLayout = function getLayout(page) {
 
 export default function Dashboard() {
   const { themeStretch } = useSettings();
+  const token = getSessionToken();
+  const [decoded, setDecoded] = useState(jwtDecode(token));
+
+  useEffect(() => {
+    if (token) setDecoded(jwtDecode(token));
+    else setDecoded(null);
+  }, [token]);
 
   return (
     <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <DashboardWelcome />
+            <DashboardWelcome isUnit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardYearlySales />
+            <DashboardFinances unit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <DashboardBestSalesman />
+          <Grid item xs={12}>
+            <DashboardSales unit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <DashboardNewProducts />
+          <Grid item xs={12}>
+            <DashboardProfitLoss unit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
             <DashboardUnit />
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <DashboardEducation />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>
