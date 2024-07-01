@@ -66,6 +66,15 @@ export default function Login() {
   const token = localStorage.getItem('@token');
 
   useEffect(() => {
+    const envVariables = {
+      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+      NEXT_PUBLIC_CORE_SERVICE: process.env.NEXT_PUBLIC_CORE_SERVICE,
+      NEXT_PUBLIC_REPORT_SERVICE: process.env.NEXT_PUBLIC_REPORT_SERVICE,
+      NEXT_PUBLIC_BUMDESA_ASSET: process.env.NEXT_PUBLIC_BUMDESA_ASSET,
+      NEXT_PUBLIC_IS_TESTING: process.env.NEXT_PUBLIC_IS_TESTING,
+    };
+    console.log('env:', envVariables);
+
     if (token) {
       const previousUrl = localStorage.getItem('previousUrl');
       if (previousUrl) {
