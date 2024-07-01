@@ -66,7 +66,12 @@ export default function Login() {
   const token = localStorage.getItem('@token');
 
   useEffect(() => {
-    if (token) router.back();
+    if (token) {
+      const previousUrl = localStorage.getItem('previousUrl');
+      if (previousUrl) {
+        window.location.href = previousUrl;
+      }
+    }
   }, []);
 
   return (

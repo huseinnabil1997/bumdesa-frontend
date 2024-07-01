@@ -20,7 +20,7 @@ import Iconify from "src/components/Iconify";
 import { fBumdesId } from "src/utils/formatNumber";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "src/redux/slices/user";
-import { alphabetRegex, htmlTagRegex } from "src/utils/regex";
+import { alphabetAddressRegex, alphabetRegex, htmlTagRegex } from "src/utils/regex";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -35,6 +35,7 @@ const ProfileInfoFormSchema = Yup.object().shape({
     .test('no-html', 'Tanggal Didirikan BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   alamat: Yup.string()
     .required('Alamat wajib diisi')
+    .matches(alphabetAddressRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
     .test('no-html', 'Alamat tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),

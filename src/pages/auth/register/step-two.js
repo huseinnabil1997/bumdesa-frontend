@@ -9,12 +9,12 @@ import GuestGuard from '../../../guards/GuestGuard';
 import Page from '../../../components/Page';
 import Image from '../../../components/Image';
 // sections
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import VerticalLinearStepper from '../../../sections/auth/register/Stepper';
 import StepTwoForm from 'src/sections/auth/register/StepTwoForm';
 import { useRouter } from 'next/router';
 import { PATH_AUTH } from 'src/routes/paths';
-import { setRegisSession, setSession } from 'src/utils/jwt';
+import { setRegisSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -72,6 +72,10 @@ export default function Register() {
   const [isSuccess, setSuccess] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    localStorage.setItem('previousUrl', '/auth/register/step-two');
+  }, []);
 
   const handleLogin = () => {
     setRegisSession();
