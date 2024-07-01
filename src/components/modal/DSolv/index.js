@@ -36,11 +36,18 @@ export default function ModalProfitInfo({ open, onClose }) {
       <Stack spacing={2} alignItems="center" sx={{ p: 3 }}>
         <Stack>
           <Typography sx={titleStyle}>Solvabilitas</Typography>
-          <Typography variant="caption" align="center">
-            Ukuran kemampuan suatu perusahaan untuk memenuhi kewajiban jangka panjangnya. Ini
-            mencerminkan stabilitas keuangan perusahaan dan kemampuannya untuk bertahan dalam jangka
-            panjang dengan membayar utang dan kewajiban lainnya yang jatuh tempo lebih dari satu
-            tahun.
+          <Typography variant="caption" align="justify">
+            Kemampuan perusahaan dalam menyelesaikan kewajiban/utang kepada kreditur baik dalam
+            jangka pendek maupun jangka panjang. Rasio ini mencerminkan seberapa stabil keuangan
+            perusahaan. Hasil perhitungan rasio utang terhadap aset (debt-to-aset ratio) menunjukkan
+            sejauh mana perusahaan menggunakan utang untuk membiayai asetnya. Investor menggunakan
+            rasio ini untuk mengevaluasi apakah perusahaan memiliki cukup dana untuk memenuhi
+            kewajiban/utang jangka pendek dan jangka panjangnya saat ini dan untuk menilai apakah
+            perusahaan dapat membayar bagi hasil (return) investasinya. Kreditur menggunakan rasio
+            ini untuk melihat seberapa besar utang yang telah dimiliki perusahaan dan apakah
+            perusahaan mampu melunasi utang yang ada. Hal ini akan menentukan keputusan memberikan
+            pinjaman atau tidak ke perusahaan. Secara umum, rasio yang dapat diterima investor
+            maupun kreditur yaitu sekitar 0,3 hingga 0,6,dan tergantung jenis industri.
           </Typography>
         </Stack>
         <StyledLoadingButton sx={{ width: 200 }} onClick={onClose} variant="outlined">

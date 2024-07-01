@@ -18,7 +18,7 @@ import moment from 'moment';
 import { useGetFinances } from 'src/query/hooks/dashboard/useGetFinances';
 import { InfoOutlined } from '@mui/icons-material';
 import ModalProfitInfo from 'src/components/modal/DProf';
-import ModalSolvabilitasInfo from 'src/components/modal/DProf';
+import ModalSolvabilitasInfo from 'src/components/modal/DSolv';
 import ModalLikuiditasInfo from 'src/components/modal/DLiq';
 
 // ----------------------------------------------------------------------

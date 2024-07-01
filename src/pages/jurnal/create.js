@@ -105,6 +105,7 @@ export default function JurnalCreate() {
   };
 
   const accounts = watch('accounts');
+  const isFirstBalance = watch('is_first_balance');
 
   const handleAppend = () => {
     trigger();
@@ -135,6 +136,15 @@ export default function JurnalCreate() {
     generateTotalDebt();
     generateTotalCred();
   }, [accounts]);
+
+  useEffect(() => {
+    if (isFirstBalance) {
+      let lastYear = moment().year() - 1;
+      let lastDayOfLastYear = moment().year(lastYear).month(11).date(31).format('yyyy-MM-DD');
+
+      setValue('date', lastDayOfLastYear);
+    }
+  }, [isFirstBalance]);
 
   const formChecking = (index) => {
     if (watch(`accounts.${index}.debit`) > 0 || watch(`accounts.${index}.credit`) > 0) {
@@ -176,7 +186,7 @@ export default function JurnalCreate() {
           >
             Kembali
           </BtnLightPrimary>
-          {watch('is_first_balance') && (
+          {isFirstBalance && (
             <Chip
               variant="contained"
               color="success"
@@ -204,7 +214,7 @@ export default function JurnalCreate() {
                     format="dd MMM yyyy"
                     name="date"
                     disableFuture
-                    disabled={!watch('transaction_information')}
+                    disabled={isFirstBalance}
                     sx={{
                       width: '293px',
                       '& .MuiInputBase-root': {
@@ -259,7 +269,7 @@ export default function JurnalCreate() {
                         )}
                       />
                     </Grid>
-                    <Grid item xs={watch('is_first_balance') ? 3 : 2}>
+                    <Grid item xs={isFirstBalance ? 3 : 2}>
                       <RHFTextField
                         size="small"
                         label={i === 0 ? 'Debit' : ''}
@@ -272,7 +282,7 @@ export default function JurnalCreate() {
                         }
                       />
                     </Grid>
-                    <Grid item xs={watch('is_first_balance') ? 3 : 2}>
+                    <Grid item xs={isFirstBalance ? 3 : 2}>
                       <RHFTextField
                         size="small"
                         label={i === 0 ? 'Kredit' : ''}
@@ -285,12 +295,12 @@ export default function JurnalCreate() {
                         }
                       />
                     </Grid>
-                    {!watch('is_first_balance') && (
+                    {!isFirstBalance && (
                       <Grid item xs={fields.length > 2 ? 3 : 4}>
                         <CreateCashFlow
                           formChecking={formChecking}
                           i={i}
-                          isFirstBalance={watch('is_first_balance')}
+                          isFirstBalance={isFirstBalance}
                           type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
                           account={watch(`accounts.${i}.account_code`)?.value ?? ''}
                           disabled={!isHasKas}
