@@ -19,7 +19,7 @@ import Iconify from 'src/components/Iconify';
 import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
-import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
+import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -53,6 +53,7 @@ export default function EditUnitUsaha() {
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string()
       .required('Nama Manager Unit Usaha wajib diisi')
+      .matches(alphabetRegex, 'Nama Manager Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
       .test('no-html', 'Nama Manager Unit Usaha tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
     position: Yup.string()
       .required('Jabatan wajib diisi')
@@ -60,6 +61,7 @@ export default function EditUnitUsaha() {
     manager_phone: Yup.string()
       .required('Nomor telepon wajib diisi')
       .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
+      .matches(numberRegex, 'Nomor telepon harus diawali dengan 08 dan minimal 10 digit')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(13, 'Nomor telepon maksimal diisi 13 digit'),
   });
