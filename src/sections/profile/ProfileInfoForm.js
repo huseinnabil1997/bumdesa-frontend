@@ -35,7 +35,7 @@ const ProfileInfoFormSchema = Yup.object().shape({
     .test('no-html', 'Tanggal Didirikan BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   alamat: Yup.string()
     .required('Alamat wajib diisi')
-    .matches(alphabetAddressRegex, 'Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol yang diperbolehkan')
+    .matches(alphabetAddressRegex, `Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol( ' " / . , - )`)
     .test('no-html', 'Alamat tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
   provinsi: Yup.mixed().required('Provinsi wajib diisi'),
   kota: Yup.mixed().required('Kabupaten wajib diisi'),
