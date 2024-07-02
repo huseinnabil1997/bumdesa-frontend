@@ -97,6 +97,7 @@ export default function RHFDatePicker({
               }}
               renderInput={(params) => (
                 <TextField
+                  {...field}
                   {...params}
                   fullWidth
                   error={!!error}
