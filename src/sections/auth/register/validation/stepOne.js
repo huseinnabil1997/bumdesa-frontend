@@ -5,13 +5,27 @@ import * as Yup from 'yup';
 export const StepOneSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama BUM Desa wajib diisi')
-    .matches(alphabetRegex, 'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
-    .test('no-html', 'Nama BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    .matches(
+      alphabetRegex,
+      'Nama BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik'
+    )
+    .test(
+      'no-html',
+      'Nama BUM Desa tidak boleh mengandung tag HTML',
+      (value) => !htmlTagRegex.test(value)
+    ),
   bumdesa_id: Yup.string().required('ID BUM Desa wajib diisi'),
   address: Yup.string()
     .required('Alamat BUM Desa wajib diisi')
-    .matches(alphabetAddressRegex, `Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol(' " / . , -)`)
-    .test('no-html', 'Alamat BUM Desa tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    .matches(
+      alphabetAddressRegex,
+      `Alamat BUM Desa harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol(' " / . , -)`
+    )
+    .test(
+      'no-html',
+      'Alamat BUM Desa tidak boleh mengandung tag HTML',
+      (value) => !htmlTagRegex.test(value)
+    ),
   province: Yup.mixed().required('Provinsi wajib diisi'),
   city: Yup.mixed().required('Kabupaten wajib diisi'),
   district: Yup.mixed().required('Kecamatan wajib diisi'),
@@ -21,10 +35,11 @@ export const StepOneSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto BUM Desa wajib diisi'),
   image_logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
   employees: Yup.number()
-    .transform(value => (isNaN(value) ? 0 : value))
+    .transform((value) => (isNaN(value) ? 0 : value))
     .positive('Hanya dapat diisi angka positif')
     .integer('Hanya dapat diisi angka bulat')
     .min(3, 'Jumlah pegawai tetap minimal adalah 3')
+    .max(1000, 'Jumlah pegawai tetap maksimal adalah 1000')
     .required('Jumlah pegawai tetap wajib diisi'),
 });
 
