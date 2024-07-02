@@ -40,6 +40,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
     setValue,
     setError,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -66,6 +67,8 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
     router.push('/auth/login');
   };
 
+  console.log(watch());
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
@@ -77,6 +80,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
           accept="image/*"
           maxSize={10000000}
           imageFrom={'organization'}
+          errorPosition="bottom"
           onDrop={(file) => handleDrop(file, (val) => setValue('image', val))}
           helperText={
             <Typography

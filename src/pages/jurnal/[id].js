@@ -192,6 +192,7 @@ export default function JurnalCreate() {
                       label="Pilih Tanggal"
                       require
                       format="dd MMM yyyy"
+                      disableFuture
                       disabled={!watch('transaction_information')}
                       name="date"
                       sx={{
@@ -397,7 +398,7 @@ export default function JurnalCreate() {
                 loading={updating}
                 variant="contained"
                 sx={{ width: 200, height: 42 }}
-                disabled={watch('credit') !== watch('debit')}
+                disabled={watch('credit') !== watch('debit') || !watch('transaction_information')}
                 type="submit"
               >
                 Simpan

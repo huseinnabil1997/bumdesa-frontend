@@ -89,6 +89,7 @@ export default function StepThreeForm() {
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFUploadPhoto
+          errorPosition="bottom"
           name="image"
           label="Foto Kantor Unit Usaha"
           accept="image/*"
