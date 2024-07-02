@@ -47,7 +47,7 @@ export default function ResetPasswordForm({ onSent }) {
       if (res?.data?.id_user) {
         onSent();
         setEmailSent(true);
-        setCountdown(60); // Set countdown to 60 seconds
+        setCountdown(300); // Set countdown to 60 seconds
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });

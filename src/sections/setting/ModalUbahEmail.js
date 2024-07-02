@@ -78,18 +78,18 @@ ModalUbahEmail.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   email: PropTypes.string,
+  emailState: PropTypes.object, // Tambahkan prop emailState
+  setEmailState: PropTypes.func, // Tambahkan prop setEmailState
 };
 
-export default function ModalUbahEmail({ open, onClose, email }) {
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [timeLeft, setTimeLeft] = useState(1);
-  const [isClicked, setIsClicked] = useState(false);
+export default function ModalUbahEmail({ open, onClose, email, emailState, setEmailState }) {
+  const [isSuccess, setIsSuccess] = useState(emailState?.isSuccess || false);
+  const [otp, setOtp] = useState(emailState?.otp || '');
+  const [timeLeft, setTimeLeft] = useState(emailState?.timeLeft || 300);
+  const [isClicked, setIsClicked] = useState(emailState?.isClicked || false);
 
   const { enqueueSnackbar } = useSnackbar();
-
   const router = useRouter();
-
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function ModalUbahEmail({ open, onClose, email }) {
     onSend(payload, {
       onSuccess: () => {
         setIsClicked(true);
-        setTimeLeft(60);
+        setTimeLeft(300);
         setTimeout(() => {
           setIsClicked(false);
         }, 200);
@@ -151,14 +151,12 @@ export default function ModalUbahEmail({ open, onClose, email }) {
         enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
-
   };
 
   const handleLogout = async () => {
     try {
       await logout();
       router.replace(PATH_AUTH.login);
-
     } catch (error) {
       console.error(error);
     }
@@ -215,16 +213,16 @@ export default function ModalUbahEmail({ open, onClose, email }) {
     );
   }
 
+  const handleClose = () => {
+    setEmailState({ isSuccess, otp, timeLeft, isClicked }); // Simpan state lokal ke state induk
+    onClose();
+  };
+
   return (
     <Dialog
       open={open}
-      onClose={onClose}
-      onBackdropClick={() => {
-        onClose();
-        methods.reset();
-        setOtp('');
-        setIsSuccess(false);
-      }}
+      onClose={handleClose}
+      onBackdropClick={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       PaperProps={{
@@ -238,12 +236,7 @@ export default function ModalUbahEmail({ open, onClose, email }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" sx={styles.title}>
           <Typography color="#292929" fontSize="24px" fontWeight={700}>Ubah Alamat Email</Typography>
-          <IconButton onClick={() => {
-            onClose();
-            methods.reset();
-            setOtp('');
-            setIsSuccess(false);
-          }}>
+          <IconButton onClick={handleClose}>
             <Close />
           </IconButton>
         </Stack>
