@@ -78,7 +78,7 @@ export default function JurnalList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <LedgerHeader
-            isEmpty={data?.length === 0}
+            isEmpty={data?.length < 1}
             filter={{
               page,
               account_code: watch('account')?.value ?? null,
