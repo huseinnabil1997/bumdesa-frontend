@@ -68,6 +68,12 @@ const styles = {
 export default function AccountInfo() {
   const [openEmail, setOpenEmail] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
+  const [emailState, setEmailState] = useState({
+    isSuccess: false,
+    otp: '',
+    timeLeft: 300,
+    isClicked: false,
+  }); // Inisialisasi emailState dengan nilai default
 
   const { data, refetch } = useGetUserMe();
 
@@ -113,7 +119,13 @@ export default function AccountInfo() {
             value={defaultValues?.email}
           />
           <StyledLoadingButton
-            onClick={() => setOpenEmail(true)}
+            onClick={() => {
+              setEmailState((prevState) => ({
+                ...prevState,
+                email: defaultValues?.email,
+              })); // Set state email saat membuka modal
+              setOpenEmail(true);
+            }}
             variant="text"
           >
             Ubah
@@ -144,7 +156,8 @@ export default function AccountInfo() {
           setOpenEmail(false);
           refetch();
         }} 
-        email={data?.email}
+        email={emailState.email} // Oper state email sebagai prop
+        setEmailState={setEmailState} // Oper fungsi setEmailState sebagai prop
       />
       <ModalChangePassword
         open={openPassword}
