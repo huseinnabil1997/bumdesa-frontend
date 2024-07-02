@@ -40,6 +40,7 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
     setValue,
     setError,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
 
@@ -65,6 +66,8 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
     localStorage.removeItem('@token');
     router.push('/auth/login');
   };
+
+  console.log(watch());
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
