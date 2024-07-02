@@ -409,7 +409,7 @@ export default function JurnalCreate() {
                 loading={creating}
                 variant="contained"
                 sx={{ width: 200, height: 42 }}
-                disabled={watch('credit') !== watch('debit')}
+                disabled={watch('credit') !== watch('debit') || !watch('transaction_information')}
                 type="submit"
               >
                 Simpan

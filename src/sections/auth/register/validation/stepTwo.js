@@ -4,11 +4,21 @@ import * as Yup from 'yup';
 const organizationSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama pengurus wajib diisi')
-    .matches(alphabetRegex, 'Nama pengurus harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
-    .test('no-html', 'Nama pengurus tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    .matches(
+      alphabetRegex,
+      'Nama pengurus harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik'
+    )
+    .test(
+      'no-html',
+      'Nama pengurus tidak boleh mengandung tag HTML',
+      (value) => !htmlTagRegex.test(value)
+    ),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')
-    .matches(numberRegex, 'Nomor telepon harus diawali dengan 08 dan minimal 10 digit')
+    .matches(
+      numberRegex,
+      'Nomor telepon harus diawali dengan 08 dan tidak boleh mengandung (.) dan (,)'
+    )
     .min(10, 'Nomor telepon minimal diisi 10 digit')
     .max(15, 'Nomor telepon minimal diisi 15 digit'),
   image: Yup.mixed().required('Foto pengurus wajib diisi'),
@@ -17,11 +27,21 @@ const organizationSchema = Yup.object().shape({
 export const StepTwoSchema = Yup.object().shape({
   name: Yup.string()
     .required('Nama direktur wajib diisi')
-    .matches(alphabetRegex, 'Nama direktur harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
-    .test('no-html', 'Nama direktur tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    .matches(
+      alphabetRegex,
+      'Nama direktur harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik'
+    )
+    .test(
+      'no-html',
+      'Nama direktur tidak boleh mengandung tag HTML',
+      (value) => !htmlTagRegex.test(value)
+    ),
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')
-    .matches(numberRegex, 'Nomor telepon harus diawali dengan 08 dan minimal 10 digit')
+    .matches(
+      numberRegex,
+      'Nomor telepon harus diawali dengan 08 dan tidak boleh mengandung (.) dan (,)'
+    )
     .min(10, 'Nomor telepon minimal diisi 10 digit')
     .max(15, 'Nomor telepon maksimal diisi 15 digit'),
   image: Yup.mixed().required('Foto direktur wajib diisi'),
