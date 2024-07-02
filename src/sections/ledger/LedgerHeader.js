@@ -74,6 +74,7 @@ export default function LedgerHeader({ filter, isEmpty }) {
     <Stack direction="row">
       <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
         <RHFAutocomplete
+          disableClearable
           sx={{ width: 200 }}
           size="small"
           name="account"
