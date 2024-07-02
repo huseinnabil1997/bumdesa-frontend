@@ -11,7 +11,7 @@ import { Info } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import { useAddManager } from 'src/query/hooks/manager/useAddManager';
-import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
+import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
 
 const NewModalSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Anggota wajib diisi'),
@@ -23,6 +23,7 @@ const NewModalSchema = Yup.object().shape({
   phone: Yup.string()
     .required('Nomor telepon wajib diisi')
     .matches(/^\d+$/, 'Nomor telepon hanya boleh berisi angka')
+    .matches(numberRegex, 'Nomor telepon harus diawali dengan 08 dan minimal 10 digit')
     .min(10, 'Nomor telepon minimal diisi 10 digit')
     .max(13, 'Nomor telepon maksimal diisi 13 digit'),
 });
