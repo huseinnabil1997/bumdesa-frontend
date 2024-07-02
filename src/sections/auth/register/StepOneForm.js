@@ -110,11 +110,6 @@ export default function StepOneForm() {
   }, [city]);
 
   useEffect(() => {
-    if (isNaN(watch('employees'))) setValue('employees', 0);
-    else setValue('employees', parseInt(watch('employees')));
-  }, [watch('employees')]);
-
-  useEffect(() => {
     if (watch('founded_at') === 'Invalid date') setValue('founded_at', '');
     else setValue('founded_at', watch('founded_at'));
   }, [watch('founded_at')]);
@@ -153,6 +148,7 @@ export default function StepOneForm() {
 
         <Stack spacing={1}>
           <RHFUploadPhoto
+            errorPosition="bottom"
             errorTextAlign="left"
             name="image"
             label="Foto Kantor BUM Desa"
@@ -178,6 +174,7 @@ export default function StepOneForm() {
           />
 
           <RHFUploadPhoto
+            errorPosition="bottom"
             errorTextAlign="left"
             name="image_logo"
             label="Logo BUM Desa"
@@ -307,7 +304,7 @@ export default function StepOneForm() {
           name="employees"
           label="Jumlah Pegawai Tetap"
           require
-          type="text"
+          type="number"
           placeholder="Masukan Jumlah Pegawai Tetap"
         />
 

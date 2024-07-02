@@ -94,6 +94,7 @@ export default function StepTwoForm() {
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFUploadPhoto
+          errorPosition="bottom"
           name="image"
           label="Foto Direktur BUM Desa"
           accept="image/*"
@@ -119,13 +120,14 @@ export default function StepTwoForm() {
 
         <RHFTextField name="name" label="Nama Direktur BUM Desa" require />
         <RHFTextField name="position" label="Jabatan" require disabled />
-        <RHFTextField name="phone" label="Nomor HP" require type="tel" />
+        <RHFTextField name="phone" label="Nomor HP" require type="number" />
 
         <Divider />
 
         {fields.map((row, i) => (
           <Fragment key={row.id}>
             <RHFUploadPhoto
+              errorPosition="bottom"
               name={`organizations.${i}.image`}
               label="Foto Pengurus BUM Desa"
               accept="image/*"
@@ -153,7 +155,12 @@ export default function StepTwoForm() {
 
             <RHFTextField name={`organizations.${i}.name`} label="Nama Pengurus BUM Desa" require />
             <RHFTextField name={`organizations.${i}.position`} label="Jabatan" require disabled />
-            <RHFTextField name={`organizations.${i}.phone`} label="Nomor HP" require type="tel" />
+            <RHFTextField
+              name={`organizations.${i}.phone`}
+              label="Nomor HP"
+              require
+              type="number"
+            />
 
             <Divider />
           </Fragment>
