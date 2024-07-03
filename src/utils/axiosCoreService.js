@@ -14,7 +14,9 @@ const checkAuth = (error) => {
     // if ([444].includes(error.response?.status ?? 0)) {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
-    window.location.href = '/auth/login';
+    setTimeout(() => {
+      window.location.href = '/auth/login';
+    }, 5000);
   }
 
   return Promise.reject((error.response && error.response.data) || 'Something went wrong');
