@@ -4,3 +4,4 @@ export const htmlTagRegex = /<[^>]*>/g;
 export const commaAndDotRegex = /^(?!.*[,.]).*$/;
 export const alphabetRegex = /^(?=.*[a-zA-Z])[a-zA-Z0-9\s'"]*$/;
 export const alphabetAddressRegex = /^(?=.*[a-zA-Z])[a-zA-Z0-9\s'"/.,-]*$/;
+export const searchRegex = /^[a-zA-Z0-9\s'"]*$/;
