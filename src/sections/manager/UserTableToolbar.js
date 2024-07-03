@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Stack, InputAdornment, TextField } from '@mui/material';
 import Iconify from 'src/components/Iconify';
+import { searchRegex } from 'src/utils/regex';
 // components
 
 // ----------------------------------------------------------------------
@@ -18,8 +19,13 @@ export default function UserTableToolbarUnit({ filterName, onFilterName, handleI
         fullWidth
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        onKeyDown={(event) => handleInputChange(event)}
-        helperText="Klik enter untuk mencari"
+        onKeyDown={(event) =>
+          !searchRegex.test(event.target.value) && event.target.value !== ''
+            ? null
+            : handleInputChange(event)
+        }
+        error={!searchRegex.test(filterName) && filterName !== ''}
+        helperText={!searchRegex.test(filterName) && filterName !== '' ? 'Pencarian tidak valid' : ''}
         placeholder="Cari nama pengurus"
         sx={{
           width: '100%', // Menggunakan persen agar responsif
