@@ -17,15 +17,17 @@ import { RHFDateRangePicker, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { useDownloadJurnal } from 'src/query/hooks/jurnals/useDownloadJurnal';
+import { searchRegex } from 'src/utils/regex';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
 JurnalHeader.propTypes = {
   filter: PropTypes.object,
   isEmpty: PropTypes.bool,
+  value: PropTypes.string,
 };
 
-export default function JurnalHeader({ filter, isEmpty }) {
+export default function JurnalHeader({ filter, isEmpty, value }) {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -145,6 +147,8 @@ export default function JurnalHeader({ filter, isEmpty }) {
         sx={{ mt: 3 }}
         fullWidth
         size="small"
+        error={!searchRegex.test(value) && value !== ''}
+        helperText={!searchRegex.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
         placeholder="Cari berdasarkan nomor bukti atau keterangan"
         name="search"
         InputProps={{

@@ -214,7 +214,7 @@ export default function JurnalCreate() {
                     format="dd MMM yyyy"
                     name="date"
                     disableFuture
-                    disabled={isFirstBalance}
+                    disabled={!watch('transaction_information') || isFirstBalance}
                     sx={{
                       width: '293px',
                       '& .MuiInputBase-root': {

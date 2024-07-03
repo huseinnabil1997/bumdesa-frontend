@@ -53,6 +53,7 @@ export default function JurnalList() {
 
   const methods = useForm({
     defaultValues: { date: [start_date, end_date], search: '' },
+    mode: 'onChange',
   });
 
   const { watch, setValue } = methods;
@@ -104,6 +105,7 @@ export default function JurnalList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <JurnalHeader
+            value={watch('search')}
             isEmpty={data?.length === 0}
             filter={{
               page,

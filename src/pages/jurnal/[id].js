@@ -115,6 +115,7 @@ export default function JurnalCreate() {
   };
 
   const accounts = watch('accounts');
+  const isFirstBalance = watch('is_first_balance');
 
   const handleAppend = () =>
     append({ account_code: null, debit: 0, credit: 0, cash_flow_code: null });
@@ -193,7 +194,7 @@ export default function JurnalCreate() {
                       require
                       format="dd MMM yyyy"
                       disableFuture
-                      disabled={!watch('transaction_information')}
+                      disabled={!watch('transaction_information') || isFirstBalance}
                       name="date"
                       sx={{
                         width: '293px',
@@ -249,7 +250,7 @@ export default function JurnalCreate() {
                           )}
                         />
                       </Grid>
-                      <Grid item xs={watch('is_first_balance') ? 3 : 2}>
+                      <Grid item xs={isFirstBalance ? 3 : 2}>
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Debit' : ''}
@@ -262,7 +263,7 @@ export default function JurnalCreate() {
                           }
                         />
                       </Grid>
-                      <Grid item xs={watch('is_first_balance') ? 3 : 2}>
+                      <Grid item xs={isFirstBalance ? 3 : 2}>
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Kredit' : ''}
