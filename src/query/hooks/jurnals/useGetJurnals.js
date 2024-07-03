@@ -1,5 +1,6 @@
 import { useQuery } from 'react-query';
 import { getJurnals } from 'src/query/request/jurnal';
+import { searchRegex } from 'src/utils/regex';
 
 const fetchData = async (param) => {
   try {
@@ -16,7 +17,8 @@ export const useGetJurnals = (param) => {
     ['GET_JURNALS', param.page, param.start_date, param.end_date, param.search],
     () => fetchData(param),
     {
-      enabled: !!(param?.page && param?.start_date && param?.end_date),
+      enabled:
+        !!(param?.page && param?.start_date && param?.end_date) && searchRegex.test(param.search),
     }
   );
 

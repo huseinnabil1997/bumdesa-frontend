@@ -36,6 +36,14 @@ export const jurnalSchema = Yup.object().shape({
   accounts: Yup.array().of(accountsSchema),
 });
 
+export const searchJurnalSchema = Yup.object().shape({
+  search: Yup.string().test(
+    'no-html',
+    'Nomor bukti tidak boleh mengandung tag HTML',
+    (value) => !htmlTagRegex.test(value)
+  ),
+});
+
 export const jurnalDefaultValues = {
   transaction_information: '',
   date: moment().format('yyyy-MM-DD'),
