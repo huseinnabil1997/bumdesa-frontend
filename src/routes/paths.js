@@ -54,6 +54,7 @@ export const PATH_DASHBOARD = {
       detail: path(ROOTS_APP, 'profile/detail/detail'),
       administrator: path(ROOTS_APP, 'profile/administrator/detail'),
     },
+    education: path(ROOTS_APP, 'education/list'),
   },
   other: {
     evaluation: path(ROOTS_OTHER, 'evaluation'),
