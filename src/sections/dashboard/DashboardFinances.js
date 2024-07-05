@@ -45,7 +45,7 @@ export default function DashboardFinances({ unit }) {
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
       <CardHeader
         sx={{ p: 3, pb: 0 }}
-        title="Penjualan"
+        title="Ratio Keuangan"
         action={
           <DatePicker
             views={['year']}
@@ -125,7 +125,7 @@ export default function DashboardFinances({ unit }) {
                 </Box>
 
                 <Typography variant="subtitle2" sx={{ my: 0.5 }}>
-                  Ratio Hutang Terhadap Aset
+                  Rasio Hutang Terhadap Aset
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
                   {data.solvabilitas}%
