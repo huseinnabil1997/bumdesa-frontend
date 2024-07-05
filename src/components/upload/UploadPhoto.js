@@ -88,14 +88,21 @@ export default function UploadPhoto({
   errorPosition,
   ...other
 }) {
-  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
-    multiple: false,
-    ...other,
-  });
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
+  const [fileRejections, setFileRejections] = useState([]);
+  
+  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
+    multiple: false,
+    ...other,
+    onDropAccepted: () => {
+      setFileRejections([]); // Tambahkan ini untuk menghapus fileRejections
+    },
+    onDropRejected: (rejectedFiles) => {
+      setFileRejections(rejectedFiles);
+    },
+  });
 
   const handleOpenModal = (image) => {
     setModalImage(image);
