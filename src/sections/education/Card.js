@@ -2,11 +2,11 @@ import { Card, CardContent, CardActions, Box, Avatar, Typography, Rating, Avatar
 import { blue } from '@mui/material/colors';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import StarIcon from '@mui/icons-material/Star';
+import { useRouter } from 'next/router';
 
 export default function EducationCard({ content }) {
-  if (!content) {
-    return null;
-  }
+
+  const router = useRouter();
 
   const { author, title, rating, participants, contents, commentators } = content;
 
@@ -89,7 +89,7 @@ export default function EducationCard({ content }) {
               )}
             </AvatarGroup>
           </Box>
-          <StyledLoadingButton variant="contained" color="primary" sx={{ width: '105px', height: '40px', fontSize: '12px' }}>
+          <StyledLoadingButton onClick={() => router.push(`/education/detail?title=${content.title}&id=${content.id}`)} variant="contained" color="primary" sx={{ width: '105px', height: '40px', fontSize: '12px' }}>
             Lihat Modul
           </StyledLoadingButton>
         </Box>
