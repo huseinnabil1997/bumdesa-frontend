@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Grid, Box, TablePagination, Pagination, PaginationItem } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Grid, Box, TablePagination, Pagination, PaginationItem, Skeleton } from '@mui/material';
 import EducationCard from './Card';
 import { styled } from '@mui/system';
 import Filter from './Filter';
+import { TableNoData } from 'src/components/table';
 
 const PaginationContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -38,12 +39,12 @@ const StyledTablePagination = styled(TablePagination)(() => ({
   },
   '& .MuiTablePagination-actions button': {
     border: '1px solid #1078CA',
-    borderRadius: '8px', 
+    borderRadius: '8px',
     padding: '3px',
     margin: '5px',
   },
   '& .MuiTablePagination-actions .MuiSvgIcon-root': {
-    color: '#1078CA', 
+    color: '#1078CA',
   },
   '& .MuiSelect-select': {
     color: '#000000', // Mengubah warna teks pada opsi rowsPerPage menjadi hitam
@@ -61,6 +62,15 @@ export default function EducationList({ data }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [selected, setSelected] = React.useState('Pelatihan Umum');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulasi loading data
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // 2 detik
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -74,12 +84,29 @@ export default function EducationList({ data }) {
   return (
     <Box sx={{ p: 2 }}>
       <Filter selected={selected} setSelected={setSelected} />
-      <Grid container spacing={2}>
-        {data.slice((page - 1) * rowsPerPage, page * rowsPerPage).map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <EducationCard content={item} />
+      <Grid container spacing={2} sx={{ mt: 1 }}>
+        {loading ? (
+          Array.from(new Array(rowsPerPage)).map((_, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Skeleton variant="rectangular" width="100%" height={200} sx={{ borderRadius: '16px' }} />
+            </Grid>
+          ))
+        ) : (
+          data.slice((page - 1) * rowsPerPage, page * rowsPerPage).map((item, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <EducationCard content={item} />
+            </Grid>
+          ))
+        )}
+        {data?.length === 0 && (
+          <Grid item xs={12} alignItems="center" justifyContent="center" display="flex">
+            <TableNoData
+              isNotFound={data?.length === 0}
+              title="Konten Edukasi belum tersedia."
+              sx={{ display: 'flex', justifyContent: 'center' }}
+            />
           </Grid>
-        ))}
+        )}
       </Grid>
       <PaginationContainer>
         <StyledPagination
