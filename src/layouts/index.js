@@ -5,6 +5,7 @@ import AuthGuard from '../guards/AuthGuard';
 import MainLayout from './main';
 import DashboardLayout from './dashboard';
 import LogoOnlyLayout from './LogoOnlyLayout';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,11 @@ export default function Layout({ variant = 'dashboard', children }) {
 
   return (
     <AuthGuard>
-      <DashboardLayout> {children} </DashboardLayout>
+      <DashboardLayout>
+        <RoleBasedGuard>
+          {children}
+        </RoleBasedGuard>
+      </DashboardLayout>
     </AuthGuard>
   );
 }
