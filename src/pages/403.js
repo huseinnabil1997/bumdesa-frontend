@@ -8,9 +8,9 @@ import { Box, Typography } from '@mui/material';
 import Page from '../components/Page';
 // sections
 import { useRouter } from 'next/router';
-import { PageNotFoundIllustration } from '../assets';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import Image from 'src/components/Image';
 
 // ----------------------------------------------------------------------
 
@@ -36,13 +36,13 @@ const ContentStyle = styled('div')(() => ({
 
 // ----------------------------------------------------------------------
 
-export default function PageNotFound() {
+export default function Page403() {
   const router = useRouter();
 
   const isLogin = localStorage.getItem('token') || sessionStorage.getItem('token');
 
   return (
-    <Page title="404 Halaman Tidak di temukan">
+    <Page title="403 Akses Ditolak">
       <RootStyle>
         {/* <Container> */}
         <ContentStyle>
@@ -53,13 +53,18 @@ export default function PageNotFound() {
               sx={{ justifyContent: 'center', alignItems: 'center', mt: '10px', textAlign: 'center' }}
             >
               <Typography variant="h3" paragraph>
-                Maaf, halaman tidak ditemukan!
+                Maaf, akses ditolak!
               </Typography>
               <Typography sx={{ color: 'text.secondary' }}>
-                Maaf, kami tidak dapat menemukan halaman yang anda cari. Mungkin saja anda mengalami kesalahan mengetik URL?
-                Pastikan untuk memeriksa ejaan Anda.
+                Maaf, Anda tidak memiliki izin untuk mengakses halaman ini.
               </Typography>
-              <PageNotFoundIllustration sx={{ height: '216px', m: 5 }} />
+              <Image
+                visibleByDefault
+                disabledEffect
+                src="/image/delete_active_unit.svg"
+                alt="403"
+                sx={{ width: '216px', height: '216px', m: 5 }}
+              />
               <StyledLoadingButton
                 sx={{ width: 432, height: 48, fontSize: '16px', fontWeight: 700 }}
                 variant="contained"

@@ -10,13 +10,17 @@ const axiosInstance = axios.create({
 });
 
 const checkAuth = (error) => {
-  if ([401, 403].includes(error.response?.status ?? 0)) {
+  if ([401].includes(error.response?.status ?? 0)) {
     // if ([444].includes(error.response?.status ?? 0)) {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
     setTimeout(() => {
       window.location.href = '/auth/login';
     }, 5000);
+  }
+
+  if ([403].includes(error.response?.status ?? 0)) {
+    window.location.href = '/403';
   }
 
   return Promise.reject((error.response && error.response.data) || 'Something went wrong');
