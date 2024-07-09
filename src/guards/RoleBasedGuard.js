@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,14 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   //     </Container>
   //   );
   // }
+
+  useEffect(() => {
+    if ((path === 'unit' && currentRole === 'unit') 
+      || (path === 'manager' && currentRole === 'unit')
+      || (path === 'employee' && currentRole === 'bumdesa')) {
+      router.push('/403');
+    }
+  }, [path, currentRole, router]);
 
   if ((path === 'unit' && currentRole === 'unit') 
     || (path === 'manager' && currentRole === 'unit')
