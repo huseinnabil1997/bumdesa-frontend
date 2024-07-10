@@ -34,7 +34,7 @@ export default function Dashboard() {
   }, [token]);
 
   return (
-    <Page title="Dashboard">
+    <Page title="Dashboard Kantor Pusat">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -53,11 +53,9 @@ export default function Dashboard() {
             <DashboardProfitLoss unit={decoded.sub.businessid} />
           </Grid>
 
-          {!decoded?.sub?.businessid && (
-            <Grid item xs={12}>
-              <DashboardUnit />
-            </Grid>
-          )}
+          <Grid item xs={12}>
+            <DashboardUnit />
+          </Grid>
 
           {/* <Grid item xs={12}>
             <DashboardEducation />
