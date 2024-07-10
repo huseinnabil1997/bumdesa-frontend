@@ -80,7 +80,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
         <TableCell>{number_of_evidence}</TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>
-          <Tooltip title={business_unit_name}>
+          <Tooltip title={transaction_information}>
             <Typography
               fontSize={14}
               sx={{
