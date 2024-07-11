@@ -96,7 +96,7 @@ function ProductItem({ data }) {
         <Chip label={sector} color="primary" size="small" sx={{ width: 'fit-content' }} />
         <Box display={'flex'}>
           <Link sx={{ color: 'text.primary', typography: 'subtitle2' }}>{name}</Link>
-          {status && <Verified color="primary" fontSize="small" sx={{ ml: 1 }} />}
+          {!!status && <Verified color="primary" fontSize="small" sx={{ ml: 1 }} />}
         </Box>
 
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
