@@ -109,7 +109,7 @@ export default function JurnalCreate() {
 
   const handleAppend = () => {
     trigger();
-    append({ account_code: null, debit: 0, credit: 0, cash_flow_code: null });
+    append({ account_code: null, debit: null, credit: null, cash_flow_code: null });
   };
 
   const handleBack = () => router.push('/jurnal/list');
