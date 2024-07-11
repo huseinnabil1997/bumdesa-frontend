@@ -1,11 +1,19 @@
-import { Card, CardContent, CardActions, Box, Avatar, Typography, Rating, AvatarGroup } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Box,
+  Avatar,
+  Typography,
+  Rating,
+  AvatarGroup,
+} from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import StarIcon from '@mui/icons-material/Star';
 import { useRouter } from 'next/router';
 
 export default function EducationCard({ content }) {
-
   const router = useRouter();
 
   const { author, title, rating, participants, contents, commentators } = content;
@@ -23,12 +31,15 @@ export default function EducationCard({ content }) {
           <Box display="flex" alignItems="center">
             <Rating
               value={rating / 5}
-              max={5 / 5}
+              max={1}
               precision={0.01}
               readOnly
-              size="large"
-              icon={<StarIcon sx={{ color: '#1078CA', fontSize: 'inherit', borderRadius: '50%' }} />}
-              emptyIcon={<StarIcon sx={{ color: '#BBDEFA', fontSize: 'inherit', borderRadius: '50%' }} />}
+              icon={
+                <StarIcon sx={{ color: '#1078CA', fontSize: 'inherit', borderRadius: '50%' }} />
+              }
+              emptyIcon={
+                <StarIcon sx={{ color: '#BBDEFA', fontSize: 'inherit', borderRadius: '50%' }} />
+              }
             />
             <Typography variant="body2" color="textSecondary" ml={0.5}>
               {rating}
@@ -71,9 +82,21 @@ export default function EducationCard({ content }) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" sx={{ bgcolor: blue[50], p: 1, borderRadius: 1 }}>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          sx={{ bgcolor: blue[50], p: 1, borderRadius: 1 }}
+        >
           <Box display="flex" flexDirection="row-reverse">
-            <AvatarGroup max={5} sx={{ '& .MuiAvatar-root': { width: 25, height: 25, fontSize: 12 }, '& .MuiAvatarGroup-avatar': { width: 25, height: 25, fontSize: 12 } }}>
+            <AvatarGroup
+              max={5}
+              sx={{
+                '& .MuiAvatar-root': { width: 25, height: 25, fontSize: 12 },
+                '& .MuiAvatarGroup-avatar': { width: 25, height: 25, fontSize: 12 },
+              }}
+            >
               {commentators?.slice(0, 4).map((commentator, index) => (
                 <Avatar
                   key={index}
@@ -89,7 +112,12 @@ export default function EducationCard({ content }) {
               )}
             </AvatarGroup>
           </Box>
-          <StyledLoadingButton onClick={() => router.push(`/education/detail?title=${content.title}&id=${content.id}`)} variant="contained" color="primary" sx={{ width: '105px', height: '40px', fontSize: '12px' }}>
+          <StyledLoadingButton
+            onClick={() => router.push(`/education/detail?title=${content.title}&id=${content.id}`)}
+            variant="contained"
+            color="primary"
+            sx={{ width: '105px', height: '40px', fontSize: '12px' }}
+          >
             Lihat Modul
           </StyledLoadingButton>
         </Box>
