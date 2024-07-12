@@ -78,9 +78,9 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
           link.href = url;
           link.setAttribute(
             'download',
-            `Laporan_Neraca_${selectedUnit?.id}_${formatDate(selectedDate[0])}_${formatDate(
-              selectedDate[1]
-            )}.${type === 1 ? 'pdf' : 'xlsx'}`
+            `${decoded?.bumdesid}_Laporan_Neraca_${selectedUnit?.id}_${formatDate(
+              selectedDate[0]
+            )}_${formatDate(selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`
           );
           document.body.appendChild(link);
           link.click();
@@ -231,7 +231,11 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
             name="date"
             onChange={(date) => {
               setSelectedDate([selectedDate[0], formatDate(date)]);
-              onSubmit({ unit: selectedUnit?.id, start_date: formatDate(selectedDate[0]), end_date: formatDate(date) })
+              onSubmit({
+                unit: selectedUnit?.id,
+                start_date: formatDate(selectedDate[0]),
+                end_date: formatDate(date),
+              });
               defaultRangeDate(formatDate(selectedDate[0]), formatDate(date));
             }}
             value={formatDate(selectedDate[1])}

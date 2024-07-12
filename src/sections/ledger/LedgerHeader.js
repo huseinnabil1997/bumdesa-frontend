@@ -18,6 +18,8 @@ import { useGetAccount } from 'src/query/hooks/options/useGetAccount';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from 'src/utils/onDownload';
 import onPreview from 'src/utils/onPreview';
+import { getSessionToken } from 'src/utils/axiosReportService';
+import jwtDecode from 'jwt-decode';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -28,6 +30,9 @@ LedgerHeader.propTypes = {
 
 export default function LedgerHeader({ filter, isEmpty }) {
   const { enqueueSnackbar } = useSnackbar();
+
+  const token = getSessionToken();
+  const user = jwtDecode(token);
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -48,7 +53,7 @@ export default function LedgerHeader({ filter, isEmpty }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         index === 99
           ? onPreview({ file: res, type: 1 })
-          : onDownload({ file: res, title: 'Buku_Besar', type: index });
+          : onDownload({ file: res, title: user?.bumdesid + '_Buku_Besar', type: index });
         setSelectedIndex(index);
         setOpen(false);
       },
