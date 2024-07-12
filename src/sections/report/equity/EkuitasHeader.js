@@ -75,7 +75,7 @@ export default function EkuitasHeader({ onSubmit, loading }) {
           link.href = url;
           link.setAttribute(
             'download',
-            `Laporan_Perubahan_Ekuitas_${selectedUnit?.id}_${formatDate(
+            `${decoded?.bumdesid}_Laporan_Perubahan_Ekuitas_${selectedUnit?.id}_${formatDate(
               selectedDate[0]
             )}_${formatDate(selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`
           );
@@ -138,7 +138,7 @@ export default function EkuitasHeader({ onSubmit, loading }) {
     await setSelectedUnit(data?.[0]);
   }, [data]);
 
-  console.log('selectedDate ekuitas', selectedDate, start_date, end_date)
+  console.log('selectedDate ekuitas', selectedDate, start_date, end_date);
 
   return (
     <Stack direction="row" spacing={1}>

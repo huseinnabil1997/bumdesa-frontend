@@ -18,6 +18,8 @@ import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { useDownloadJurnal } from 'src/query/hooks/jurnals/useDownloadJurnal';
 import { searchRegex } from 'src/utils/regex';
+import { getSessionToken } from 'src/utils/axiosReportService';
+import jwtDecode from 'jwt-decode';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -29,6 +31,10 @@ JurnalHeader.propTypes = {
 
 export default function JurnalHeader({ filter, isEmpty, value }) {
   const router = useRouter();
+  const token = getSessionToken();
+  const user = jwtDecode(token);
+
+  console.log(user);
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -54,7 +60,7 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: 'Jurnal_' + filter?.start_date + '_' + filter?.end_date,
+          title: user?.bumdesid + '_Jurnal_' + filter?.start_date + '_' + filter?.end_date,
           type: index,
         });
         setSelectedIndex(index);
