@@ -197,7 +197,6 @@ export default function JurnalCreate() {
                       disabled={!watch('transaction_information') || isFirstBalance}
                       name="date"
                       sx={{
-                        width: '293px',
                         '& .MuiInputBase-root': {
                           height: '40px',
                           borderRadius: '8px',

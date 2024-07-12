@@ -23,6 +23,7 @@ RHFDatePicker.propTypes = {
   value: PropTypes.any, // Added propType for value
   disableFuture: PropTypes.bool,
   disabled: PropTypes.bool,
+  minDate: PropTypes.string,
 };
 
 const theme = createTheme({
@@ -50,6 +51,7 @@ export default function RHFDatePicker({
   value,
   disabled,
   disableFuture = false,
+  minDate,
   ...other
 }) {
   const { control } = useFormContext();
@@ -131,6 +133,7 @@ export default function RHFDatePicker({
               openTo={openTo}
               orientation="portrait"
               maxDate={new Date(currentYear, 11, 31)}
+              minDate={new Date(minDate ? minDate : '2023-12-31')}
               disableFuture={disableFuture}
             />
           </ThemeProvider>

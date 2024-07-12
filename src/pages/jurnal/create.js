@@ -56,9 +56,9 @@ export default function JurnalCreate() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState();
+  const [choosen, setChoosen] = useState(false);
 
   const { data: accOpt, isLoading: loadingAcc } = useGetAccount();
-  const { data: evidenceNumber, isLoading: loadingEvidence, isFetched } = useGenerateEvidence();
   const { mutate: onCreate, isLoading: creating } = useCreateJurnal();
 
   const methods = useForm({
@@ -66,13 +66,6 @@ export default function JurnalCreate() {
     defaultValues: jurnalDefaultValues,
     mode: 'onChange',
   });
-
-  useEffect(() => {
-    if (evidenceNumber) {
-      setValue('number_of_evidence', evidenceNumber?.number_of_evidence);
-      if (!evidenceNumber.first_balance && isFetched) setOpen(true);
-    }
-  }, [evidenceNumber]);
 
   const { handleSubmit, control, watch, setValue, trigger } = methods;
 
@@ -106,6 +99,26 @@ export default function JurnalCreate() {
 
   const accounts = watch('accounts');
   const isFirstBalance = watch('is_first_balance');
+  const date = watch('date');
+
+  const {
+    data: evidenceNumber,
+    isLoading: loadingEvidence,
+    isFetched,
+  } = useGenerateEvidence({
+    is_first_balance: isFirstBalance,
+    date: moment(date).format('yyyy-MM-DD'),
+  });
+
+  useEffect(() => {
+    if (evidenceNumber) {
+      if (!choosen) {
+        setValue('number_of_evidence', evidenceNumber?.number_of_evidence);
+        if (!evidenceNumber.first_balance && isFetched) setOpen(true);
+        else setOpen(false);
+      } else setValue('number_of_evidence', evidenceNumber?.number_of_evidence);
+    }
+  }, [evidenceNumber]);
 
   const handleAppend = () => {
     trigger();
@@ -214,9 +227,9 @@ export default function JurnalCreate() {
                     format="dd MMM yyyy"
                     name="date"
                     disableFuture
+                    minDate={evidenceNumber?.first_balance_date}
                     disabled={!watch('transaction_information') || isFirstBalance}
                     sx={{
-                      width: '293px',
                       '& .MuiInputBase-root': {
                         height: '40px',
                         borderRadius: '8px',
@@ -418,10 +431,14 @@ export default function JurnalCreate() {
           </Card>
           <FirstBalance
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => {
+              setOpen(false);
+              setChoosen(true);
+            }}
             onAccept={() => {
               setValue('is_first_balance', true);
               setOpen(false);
+              setChoosen(true);
             }}
           />
         </FormProvider>
