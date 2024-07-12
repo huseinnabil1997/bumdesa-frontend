@@ -17,7 +17,7 @@ export const useGetUnitById = (id) => {
     }
   };
 
-  const getQuery = useQuery(['GET_UNIT_BY_ID', id], () => fetchData(id));
+  const getQuery = useQuery(['GET_UNIT_BY_ID', id], () => fetchData(id), { enabled: id != 0 });
 
   return getQuery;
 };

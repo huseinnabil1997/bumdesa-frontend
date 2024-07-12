@@ -14,6 +14,18 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
   const [open, setOpen] = useState(false);
   const { nama, saldo, saldo_lalu } = row;
 
+  const generateBgColor = (nama) => {
+    if (nama.toLowerCase() === 'total aset') return '#DDEFFC';
+    else if (isTotalName(nama)) return '#E1F8EB';
+    else return 'white';
+  };
+
+  const generateHoverColor = (nama, index) => {
+    if (nama.toLowerCase() === 'total aset') return '#A6D6FF !important';
+    else if (isTotalName(nama)) return '#A4EBC2 !important';
+    else return `${generateColor(index, index)} !important`;
+  };
+
   return (
     <>
       <TableRow
@@ -21,52 +33,80 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
         hover
         onClick={() => setOpen(!open)}
         sx={{
-          backgroundColor: isTotalName(nama) ? '#E1F8EB' : 'white',
+          backgroundColor: generateBgColor(nama),
           height: '56px',
-          "&:hover": {
-            backgroundColor: isTotalName(nama) ? '#A4EBC2 !important' : `${generateColor(index, index)} !important`,
+          '&:hover': {
+            backgroundColor: generateHoverColor(nama, index),
           },
         }}
       >
-        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell
+          sx={{
+            color: isTotalName(nama) ? '#292929' : '#1078CA',
+            fontWeight: 600,
+            fontSize: '14px',
+          }}
+        >
           {row?.child2 && (
             <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
-              {open ?
+              {open ? (
                 <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-up-box'} />
-                :
+              ) : (
                 <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-down-box'} />
-              }
+              )}
             </IconButton>
           )}
           {nama}
         </TableCell>
-        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell
+          sx={{
+            color: isTotalName(nama) ? '#292929' : '#1078CA',
+            fontWeight: 600,
+            fontSize: '14px',
+          }}
+        >
           {saldo === 0 ? 'Rp. -' : formatCurrency(saldo)}
         </TableCell>
-        <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
+        <TableCell
+          sx={{
+            color: isTotalName(nama) ? '#292929' : '#1078CA',
+            fontWeight: 600,
+            fontSize: '14px',
+          }}
+        >
           {saldo_lalu === 0 || isNaN(saldo_lalu) ? 'Rp. -' : formatCurrency(saldo_lalu)}
         </TableCell>
       </TableRow>
-      {open && row?.child2?.map((historyRow, idx) => (
-        <TableRow key={historyRow.nama} sx={{ backgroundColor: generateColor(index, idx), height: '56px' }}>
-          <TableCell
-            sx={{ display: 'flex', flexDirection: 'row', fontSize: '12px', fontWeight: 500, color: '#777777' }}
+      {open &&
+        row?.child2?.map((historyRow, idx) => (
+          <TableRow
+            key={historyRow.nama}
+            sx={{ backgroundColor: generateColor(index, idx), height: '56px' }}
           >
-            <Stack><DotIcon /></Stack>
-            {historyRow.nama}
-          </TableCell>
-          <TableCell
-            sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
-          >
-            {historyRow?.saldo === 0 ? 'Rp. -' : formatCurrency(historyRow?.saldo)}
-          </TableCell>
-          <TableCell
-            sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}
-          >
-            {historyRow?.saldo_lalu === 0 || isNaN(historyRow?.saldo_lalu) ? 'Rp. -' : formatCurrency(historyRow?.saldo_lalu)}
-          </TableCell>
-        </TableRow>
-      ))}
+            <TableCell
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                fontSize: '12px',
+                fontWeight: 500,
+                color: '#777777',
+              }}
+            >
+              <Stack>
+                <DotIcon />
+              </Stack>
+              {historyRow.nama}
+            </TableCell>
+            <TableCell sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}>
+              {historyRow?.saldo === 0 ? 'Rp. -' : formatCurrency(historyRow?.saldo)}
+            </TableCell>
+            <TableCell sx={{ fontSize: '12px', fontWeight: 500, color: '#777777' }}>
+              {historyRow?.saldo_lalu === 0 || isNaN(historyRow?.saldo_lalu)
+                ? 'Rp. -'
+                : formatCurrency(historyRow?.saldo_lalu)}
+            </TableCell>
+          </TableRow>
+        ))}
     </>
   );
 }
@@ -124,24 +164,23 @@ export default function UserTableRow({ row, selected }) {
     return formattedAmount;
   };
 
-
   const bgColor = () => {
     if (level === '1' && !child) {
-      return '#DDEFFC'
+      return '#DDEFFC';
     }
     if (level === '1' && child) {
-      return 'white'
+      return 'white';
     }
-  }
+  };
 
   const bgColorHover = () => {
     if (level === '1' && !child) {
-      return '#A6D6FF'
+      return '#A6D6FF';
     }
     if (level === '1' && child) {
-      return '#EAEBEB'
+      return '#EAEBEB';
     }
-  }
+  };
 
   return (
     <>
@@ -151,33 +190,54 @@ export default function UserTableRow({ row, selected }) {
         sx={{
           backgroundColor: bgColor(),
           height: '56px',
-          "&:hover": {
-            backgroundColor: `${bgColorHover()} !important`
+          '&:hover': {
+            backgroundColor: `${bgColorHover()} !important`,
           },
-          borderLeft: level === '1' && child ? '6px solid #F87304' : null
+          borderLeft: level === '1' && child ? '6px solid #F87304' : null,
         }}
       >
-        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
+        <TableCell
+          sx={{
+            fontSize: '14px',
+            color: level === '1' && !child ? '#1078CA' : '#292929',
+            fontWeight: 600,
+          }}
+        >
           {title}
         </TableCell>
-        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
-          {level === '1' && !child ? saldo === 0 ? 'Rp. -' : formatCurrency(saldo) : null}
+        <TableCell
+          sx={{
+            fontSize: '14px',
+            color: level === '1' && !child ? '#1078CA' : '#292929',
+            fontWeight: 600,
+          }}
+        >
+          {level === '1' && !child ? (saldo === 0 ? 'Rp. -' : formatCurrency(saldo)) : null}
         </TableCell>
-        <TableCell sx={{ fontSize: '14px', color: level === '1' && !child ? '#1078CA' : '#292929', fontWeight: 600 }}>
-          {level === '1' && !child ? (saldo_lalu === 0 || isNaN(saldo_lalu) ? 'Rp. -' : formatCurrency(saldo_lalu)) : null}
+        <TableCell
+          sx={{
+            fontSize: '14px',
+            color: level === '1' && !child ? '#1078CA' : '#292929',
+            fontWeight: 600,
+          }}
+        >
+          {level === '1' && !child
+            ? saldo_lalu === 0 || isNaN(saldo_lalu)
+              ? 'Rp. -'
+              : formatCurrency(saldo_lalu)
+            : null}
         </TableCell>
       </TableRow>
-      {row?.child && row?.child.map((nestedRow, i) => (
-        <NestedTableRow
-          key={nestedRow.nama}
-          row={nestedRow}
-          index={i}
-          generateColor={generateColor}
-          formatCurrency={formatCurrency}
-        />
-      ))}
+      {row?.child &&
+        row?.child.map((nestedRow, i) => (
+          <NestedTableRow
+            key={nestedRow.nama}
+            row={nestedRow}
+            index={i}
+            generateColor={generateColor}
+            formatCurrency={formatCurrency}
+          />
+        ))}
     </>
   );
 }
-
-

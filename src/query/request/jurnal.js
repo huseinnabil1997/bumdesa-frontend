@@ -27,6 +27,6 @@ export function downloadJurnal(param) {
   });
 }
 
-export function generateEvidenceNumber() {
-  return axios.get('number-of-evidence');
+export function generateEvidenceNumber(params) {
+  return axios.get('number-of-evidence', { params });
 }
