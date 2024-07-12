@@ -100,13 +100,15 @@ export default function JurnalList() {
     }
   }, [watch('date')]);
 
+  console.log(data);
+
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <JurnalHeader
             value={watch('search')}
-            isEmpty={data?.length === 0}
+            isEmpty={data?.journals?.length === 0}
             filter={{
               page,
               start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
@@ -130,14 +132,14 @@ export default function JurnalList() {
               <Table>
                 <TableHeadCustom
                   headLabel={JURNAL_HEAD}
-                  rowCount={data?.length}
+                  rowCount={data?.journals?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data?.length > 0 &&
-                    data.map((row, i) => (
+                    data?.journals?.length > 0 &&
+                    data?.journals.map((row, i) => (
                       <TableRow
                         key={row.id}
                         index={i}
@@ -149,7 +151,7 @@ export default function JurnalList() {
 
                   {isLoading && <TableSkeleton />}
 
-                  {!data?.length > 0 && !isError && !isLoading && (
+                  {!data?.journals?.length > 0 && !isError && !isLoading && (
                     <TableNoData
                       isNotFound
                       title="Jurnal belum tersedia."
@@ -178,14 +180,14 @@ export default function JurnalList() {
             </TableContainer>
           </Scrollbar>
 
-          {data?.length > 0 && (
+          {data?.journals?.length > 0 && (
             <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
               <Pagination
                 showFirstButton
                 showLastButton
                 color="primary"
-                count={data?.lastPage}
-                rowsPerPage={data?.totalPerPage}
+                count={data?.page?.total_page}
+                rowsPerPage={data?.page?.limit}
                 page={page}
                 onChange={onChangePage}
               />

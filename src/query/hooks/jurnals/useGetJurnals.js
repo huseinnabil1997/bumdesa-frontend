@@ -6,7 +6,7 @@ const fetchData = async (param) => {
   try {
     const { data } = await getJurnals(param);
 
-    return data?.data ?? [];
+    return { journals: data?.data ?? [], page: data?.metadata?.paging };
   } catch (err) {
     throw new Error();
   }
