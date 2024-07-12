@@ -29,7 +29,6 @@ const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
     decimalSeparator=","
     decimalScale={0}
     isNumericString
-    prefix="Rp "
   />
 );
 
@@ -73,9 +72,14 @@ export default function RHFTextField({ name, require, isLoading, ...other }) {
             InputProps={{
               ...other.InputProps,
               inputComponent: other.type === 'currency' ? CurrencyFormatCustom : null,
-              startAdornment: (
-                <>{isLoading && <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />}</>
-              ),
+              startAdornment:
+                other.type === 'currency' ? (
+                  <Typography fontSize={14} sx={{ color: '#777', mr: 1 }}>
+                    Rp{' '}
+                  </Typography>
+                ) : (
+                  <>{isLoading && <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />}</>
+                ),
             }}
           />
         )}

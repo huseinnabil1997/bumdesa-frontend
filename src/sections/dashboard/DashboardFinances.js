@@ -105,7 +105,7 @@ export default function DashboardFinances({ unit }) {
                   Rasio Lancar
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {data.luquiditas}%
+                  {data.luquiditas}
                 </Typography>
               </Stack>
             </Grid>

@@ -27,11 +27,10 @@ const IconWrapper = styled('div')(({ theme, selected }) => ({
   height: 40,
   borderRadius: '50%',
   backgroundColor: selected ? 'white' : 'inherit',
-  color: selected ? theme.palette.primary.main : theme.palette.primary.main,
+  color: selected ? theme.palette.primary.main : theme.palette.primary.light,
 }));
 
 const Filter = ({ selected, setSelected }) => {
-
   const handleButtonClick = (filter) => {
     setSelected(filter);
   };
@@ -61,8 +60,12 @@ const Filter = ({ selected, setSelected }) => {
               precision={0.01}
               readOnly
               size="large"
-              icon={<StarIcon sx={{ color: '#1078CA', fontSize: 'inherit', borderRadius: '50%' }} />}
-              emptyIcon={<StarIcon sx={{ color: '#BBDEFA', fontSize: 'inherit', borderRadius: '50%' }} />}
+              icon={
+                <StarIcon sx={{ color: '#1078CA', fontSize: 'inherit', borderRadius: '50%' }} />
+              }
+              emptyIcon={
+                <StarIcon sx={{ color: '#BBDEFA', fontSize: 'inherit', borderRadius: '50%' }} />
+              }
             />
           </IconWrapper>
           Modul Rekomendasi
