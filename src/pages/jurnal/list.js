@@ -100,8 +100,6 @@ export default function JurnalList() {
     }
   }, [watch('date')]);
 
-  console.log(data);
-
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
