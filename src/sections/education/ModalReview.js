@@ -33,8 +33,6 @@ const ModalReview = ({ open, handleClose, parentRating }) => {
   const [rating, setRating] = useState(parentRating);
   const [hoverRating, setHoverRating] = useState(0);
 
-  console.log('parentRating:', parentRating);
-
   const defaultValues = {
     message: '',
     details: '',
@@ -80,17 +78,25 @@ const ModalReview = ({ open, handleClose, parentRating }) => {
     >
       <Box sx={style}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography fontWeight={700} fontSize={{ xs: '20px', sm: '24px' }} id="modal-title" variant="h6" component="h2">
+          <Typography
+            fontWeight={700}
+            fontSize={{ xs: '20px', sm: '24px' }}
+            id="modal-title"
+            variant="h6"
+            component="h2"
+          >
             Tulis Ulasan
           </Typography>
-          <IconButton onClick={handleModalClose}> {/* Ganti handleClose dengan handleModalClose */}
+          <IconButton onClick={handleModalClose}>
+            {' '}
+            {/* Ganti handleClose dengan handleModalClose */}
             <CloseIcon />
           </IconButton>
         </Box>
         <Box display="flex" justifyContent="center" mt={2}>
           {[1, 2, 3, 4, 5].map((value) => (
-            <IconButton 
-              key={value} 
+            <IconButton
+              key={value}
               onClick={() => {
                 setRating(value);
                 setValue('rating', value);
@@ -99,14 +105,14 @@ const ModalReview = ({ open, handleClose, parentRating }) => {
               onMouseEnter={() => setHoverRating(value)} // Set hover rating
               onMouseLeave={() => setHoverRating(0)} // Reset hover rating
             >
-              <StarIcon 
-                sx={{ 
+              <StarIcon
+                sx={{
                   fontSize: { xs: '36px', sm: '48px' }, // Ubah ukuran font menjadi responsif
                   color: value <= (hoverRating || rating) ? '#EDB812' : 'disabled', // Use hoverRating or rating
                   '&:hover': {
-                    color: '#EDB812'
-                  }
-                }} 
+                    color: '#EDB812',
+                  },
+                }}
               />
             </IconButton>
           ))}
@@ -116,15 +122,26 @@ const ModalReview = ({ open, handleClose, parentRating }) => {
             {errors?.rating?.message}
           </Typography>
         )}
-        <Typography variant="body1" align="center" m={2} fontSize={{ xs: '16px', sm: '18px' }} fontWeight={600}>
-          {rating === 5 ? 'Sempurna! 🤩' :
-           rating === 4 ? 'Bagus! 😊' :
-           rating === 3 ? 'Cukup Baik! 🙂' :
-           rating === 2 ? 'Kurang Memuaskan 😕' :
-           rating === 1 ? 'Sangat Buruk 😞' :
-           'Ayo Berikan Ratingmu 😉'}
+        <Typography
+          variant="body1"
+          align="center"
+          m={2}
+          fontSize={{ xs: '16px', sm: '18px' }}
+          fontWeight={600}
+        >
+          {rating === 5
+            ? 'Sempurna! 🤩'
+            : rating === 4
+            ? 'Bagus! 😊'
+            : rating === 3
+            ? 'Cukup Baik! 🙂'
+            : rating === 2
+            ? 'Kurang Memuaskan 😕'
+            : rating === 1
+            ? 'Sangat Buruk 😞'
+            : 'Ayo Berikan Ratingmu 😉'}
         </Typography>
-        
+
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={2}>
             <RHFTextField
