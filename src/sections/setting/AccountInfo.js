@@ -82,7 +82,6 @@ export default function AccountInfo() {
   const defaultValues = {
     id: fBumdesId(data?.bumdesa_id) ?? '',
     email: userData?.email ?? '',
-    password: 'P@ssw0rd1234@',
   };
 
   const methods = useForm({
@@ -141,6 +140,7 @@ export default function AccountInfo() {
             type="password"
             sx={styles.textfield}
             variant="standard"
+            placeholder="*************"
           />
           <StyledLoadingButton
             onClick={() => setOpenPassword(true)}

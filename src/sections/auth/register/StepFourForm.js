@@ -67,8 +67,6 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
     router.push('/auth/login');
   };
 
-  console.log(watch());
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>

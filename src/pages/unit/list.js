@@ -21,11 +21,7 @@ import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import {
-  TableHeadCustom,
-  TableNoData,
-  TableSkeleton,
-} from '../../components/table';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
@@ -38,7 +34,6 @@ import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
-
 
 // ----------------------------------------------------------------------
 
@@ -58,16 +53,11 @@ UserList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  const {
-    page,
-    rowsPerPage,
-    onChangeRowsPerPage,
-    selected,
-    onSelectRow,
-    onChangePage,
-  } = useTable({ defaultCurrentPage: 1 });
+  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
+    defaultCurrentPage: 1,
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
   const { themeStretch } = useSettings();
 
@@ -108,13 +98,15 @@ export default function UserList() {
       const response = await mutationPost.mutateAsync({
         endpoint: `/business-units/resend-verify/${id}`,
       });
-      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', { variant: 'success' });
+      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', {
+        variant: 'success',
+      });
       refetch();
     } catch (error) {
       await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
       console.log('error handleResendRow', error);
     }
-  }
+  };
 
   const handleDeleteRow = (id) => {
     setAlertDelete({ id: id });
@@ -125,16 +117,15 @@ export default function UserList() {
       const response = await mutationDelete.mutateAsync({
         endpoint: `/business-units/${alertDelete?.id}`,
       });
-      enqueueSnackbar(response.message ?? "Sukses menghapus data", { variant: 'success' });
+      enqueueSnackbar(response.message ?? 'Sukses menghapus data', { variant: 'success' });
       refetch();
       setAlertDelete(null);
-      console.log('response delete', response)
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
       if (error.code === 412) {
         setAlertDelete({ id: alertDelete?.id, status: 1 });
       }
-      console.log('error delete', error)
+      console.log('error delete', error);
     }
   };
 
@@ -146,40 +137,43 @@ export default function UserList() {
 
   const handleChangeStatus = async (id, status) => {
     setAlertChangeStatus({ id: id, status: status });
-  }
+  };
 
   const onChangeStatus = async () => {
     if (alertChangeStatus?.status !== 3) {
       onDeactivate(alertChangeStatus?.id, {
         onSuccess: (res) => {
-          enqueueSnackbar(res.message ?? "Sukses menonaktifkan unit usaha", { variant: 'success' });
+          enqueueSnackbar(res.message ?? 'Sukses menonaktifkan unit usaha', { variant: 'success' });
           refetch();
           setAlertChangeStatus(null);
         },
         onError: (err) => {
-          enqueueSnackbar(err.message ?? "Gagal menonaktifkan unit usaha", { variant: 'error' });
+          enqueueSnackbar(err.message ?? 'Gagal menonaktifkan unit usaha', { variant: 'error' });
           console.log('error handleDeactivateRow', err);
         },
       });
     } else {
       onActivate(alertChangeStatus?.id, {
         onSuccess: (res) => {
-          enqueueSnackbar(res.message ?? "Sukses mengaktifkan unit usaha", { variant: 'success' });
+          enqueueSnackbar(res.message ?? 'Sukses mengaktifkan unit usaha', { variant: 'success' });
           refetch();
           setAlertChangeStatus(null);
         },
         onError: (err) => {
-          enqueueSnackbar(err.message ?? "Gagal mengaktifkan unit usaha", { variant: 'error' });
+          enqueueSnackbar(err.message ?? 'Gagal mengaktifkan unit usaha', { variant: 'error' });
           console.log('error handleActivateRow', err);
         },
       });
     }
-  }
+  };
 
   return (
     <Page title="Unit Usaha: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Box flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box
+          flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}
+          sx={{ display: 'flex', alignItems: 'center' }}
+        >
           <Box sx={{ flexGrow: 1 }}>
             <UserTableToolbarUnit
               filterName={filterName}
@@ -193,9 +187,10 @@ export default function UserList() {
               width: 210,
               height: '48px',
               backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 }
+              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
             }}
-            variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}
+            variant="contained"
+            startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => router.push('new')}
           >
             Tambah Unit Usaha
@@ -203,18 +198,23 @@ export default function UserList() {
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
-          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2, }}>
-
+          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
             <Table>
               <TableHeadCustom
                 headLabel={TABLE_HEAD}
                 rowCount={units?.data?.length}
                 numSelected={selected.length}
-                sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                sx={{
+                  backgroundColor: '#F8F9F9',
+                  border: 1,
+                  borderRadius: 8,
+                  borderColor: '#EAEBEB',
+                }}
               />
 
               <TableBody>
-                {!isLoading && units &&
+                {!isLoading &&
+                  units &&
                   units?.data?.map((row, index) => (
                     <UserTableRowUnit
                       id={row.id}
@@ -230,7 +230,12 @@ export default function UserList() {
                       onViewRow={() => router.push(`detail?id=${row.id}`)}
                       onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
                       onActivateRow={() => handleChangeStatus(row.id, row.status)}
-                      sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                      sx={{
+                        backgroundColor: '#F8F9F9',
+                        border: 1,
+                        borderRadius: 8,
+                        borderColor: '#EAEBEB',
+                      }}
                     />
                   ))}
                 <TableNoData
@@ -248,19 +253,25 @@ export default function UserList() {
                     </StyledButton>
                   }
                 />
-                {isLoading && (<TableSkeleton />)}
+                {isLoading && <TableSkeleton />}
               </TableBody>
             </Table>
           </TableContainer>
         </Card>
 
-        <Box display="flex" justifyContent="space-between" sx={{ p: 3 }} flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          sx={{ p: 3 }}
+          flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}
+        >
           <FormControl>
             <Select
               value={rowsPerPage}
               onChange={onChangeRowsPerPage}
               displayEmpty
-              inputProps={{ 'aria-label': 'Rows per page' }} aria-controls=''
+              inputProps={{ 'aria-label': 'Rows per page' }}
+              aria-controls=""
               sx={{ height: 32, width: 70 }}
             >
               <MenuItem value={5}>5</MenuItem>
@@ -287,16 +298,26 @@ export default function UserList() {
                 color: '#1078CA',
               },
               '& .MuiPaginationItem-previousNext': {
-                borderColor: "#1078CA",
+                borderColor: '#1078CA',
               },
               '& .MuiPaginationItem-firstLast': {
-                borderColor: "#1078CA",
+                borderColor: '#1078CA',
               },
             }}
           />
         </Box>
-        <ChangeStatusModal open={!!alertChangeStatus} onClose={() => setAlertChangeStatus(null)} action={onChangeStatus} status={alertChangeStatus?.status} />
-        <AlertDeleteUnit open={!!alertDelete} onClose={() => setAlertDelete(null)} action={onDelete} status={alertDelete?.status} />
+        <ChangeStatusModal
+          open={!!alertChangeStatus}
+          onClose={() => setAlertChangeStatus(null)}
+          action={onChangeStatus}
+          status={alertChangeStatus?.status}
+        />
+        <AlertDeleteUnit
+          open={!!alertDelete}
+          onClose={() => setAlertDelete(null)}
+          action={onDelete}
+          status={alertDelete?.status}
+        />
       </Container>
     </Page>
   );

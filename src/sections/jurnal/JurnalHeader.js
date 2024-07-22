@@ -34,8 +34,6 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
   const token = getSessionToken();
   const user = jwtDecode(token);
 
-  console.log(user);
-
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
