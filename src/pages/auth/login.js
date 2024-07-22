@@ -89,7 +89,7 @@ export default function Login() {
         <RootStyle>
           {mdUp && (
             <SectionStyle>
-              <Image visibleByDefault disabledEffect src="/image/login.svg" alt="login" />
+              <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <Title>
                 <Image
                   visibleByDefault

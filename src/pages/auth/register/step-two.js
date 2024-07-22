@@ -88,7 +88,7 @@ export default function Register() {
         <RootStyle>
           {mdUp && (
             <SectionStyle>
-              <Image id="bg" visibleByDefault disabledEffect src="/image/login.svg" alt="login" />
+              <Image id="bg" visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <SideContainer>
                 <SideContent justifyContent="center">
                   <Image

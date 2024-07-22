@@ -37,7 +37,7 @@ export default function ColorPreview({ colors, limit = 3, sx }) {
     <RootStyle component="span" sx={sx}>
       {showColor.map((color, index) => (
         <IconStyle key={color + index} sx={{ bgcolor: color, zIndex: index + 10 }}>
-          <Image alt={name} src="/image/login.svg" />
+          <Image alt={name} src="/image/login.png" />
         </IconStyle>
       ))}
 
