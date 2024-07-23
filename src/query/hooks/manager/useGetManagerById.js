@@ -11,7 +11,10 @@ const fetchData = async (id) => {
 };
 
 export const useGetManagerById = (id) => {
-  const getQuery = useQuery(['GET_MANAGER_BY_ID', id], () => fetchData(id));
+  console.log('husein', !!id);
+  const getQuery = useQuery(['GET_MANAGER_BY_ID', id], () => fetchData(id), {
+    enabled: !!id,
+  });
 
   return getQuery;
 };
