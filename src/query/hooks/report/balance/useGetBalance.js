@@ -11,7 +11,9 @@ const fetchData = async (param) => {
 };
 
 export const useGetBalance = (param) => {
-  const getQuery = useQuery(['GET_BALANCE', param], () => fetchData(param));
+  const getQuery = useQuery(['GET_BALANCE', param], () => fetchData(param), {
+    enabled: !!param,
+  });
 
   return getQuery;
 };

@@ -67,7 +67,7 @@ const SideContent = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   const [isSuccess, setSuccess] = useState(false);
 

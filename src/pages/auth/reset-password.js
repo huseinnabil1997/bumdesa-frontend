@@ -74,7 +74,7 @@ export default function ResetPassword() {
 
   const router = useRouter();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   // const startCountdown = () => {
   //   setSent(true);
@@ -115,9 +115,16 @@ export default function ResetPassword() {
                 <Image
                   visibleByDefault
                   disabledEffect
-                  src="/image/bri-square.svg"
+                  src="/image/bri_square.svg"
                   alt="bri"
-                  sx={{ width: 160, m: 'auto', mb: 1 }}
+                  sx={{ width: 98, m: 'auto', mb: 2.3 }}
+                />
+                <Image
+                  visibleByDefault
+                  disabledEffect
+                  src="/image/bumdesa_digital.png"
+                  alt="bri"
+                  sx={{ width: 160, m: 'auto', mb: 2 }}
                 />
                 <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
                   Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu

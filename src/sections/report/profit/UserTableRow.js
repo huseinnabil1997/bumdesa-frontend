@@ -97,22 +97,22 @@ export default function UserTableRow({ row, selected }) {
     if (amount === 0 || amount === '0') {
       return 'Rp. -';
     }
-
+  
     const formattedAmount = new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(Math.abs(amount));
-
+  
     if (amount < 0) {
-      return `(${formattedAmount.replace('Rp', 'Rp.')})`;
+      return `Rp. (${formattedAmount.replace('Rp', '').trim()})`;
     }
-
+  
     if (!formattedAmount.includes(',')) {
       return formattedAmount.replace('Rp', 'Rp.');
     }
-
+  
     return formattedAmount;
   };
 

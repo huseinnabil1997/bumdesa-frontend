@@ -172,12 +172,14 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
           name="date"
           onChange={(newValue) => {
             setSelectedDate(newValue);
-            onSubmit({
-              unit: selectedUnit?.id,
-              start_date: formatDate(newValue[0]),
-              end_date: formatDate(newValue[1]),
-            });
-            defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
+            if (newValue[1] && newValue[0]) {
+              onSubmit({
+                unit: selectedUnit?.id,
+                start_date: formatDate(newValue[0]),
+                end_date: formatDate(newValue[1]),
+              });
+              defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
+            }
           }}
           value={selectedDate}
           disabled={downloading}

@@ -11,7 +11,10 @@ const fetchData = async (param) => {
 };
 
 export const useGetProfit = (param) => {
-  const getQuery = useQuery(['GET_PROFIT', param], () => fetchData(param));
+  const getQuery = useQuery(['GET_PROFIT', param], () => fetchData(param), {
+    enabled: !!param,
+  });
 
   return getQuery;
 };
+  
