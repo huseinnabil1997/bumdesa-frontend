@@ -63,7 +63,7 @@ ResetPassword.getLayout = function getLayout(page) {
 
 export default function ResetPassword() {
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   return (
     <GuestGuard>

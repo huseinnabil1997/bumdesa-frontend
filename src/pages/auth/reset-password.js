@@ -74,7 +74,7 @@ export default function ResetPassword() {
 
   const router = useRouter();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   // const startCountdown = () => {
   //   setSent(true);

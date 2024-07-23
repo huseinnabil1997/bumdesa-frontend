@@ -63,7 +63,7 @@ const Title = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   return (
     <GuestGuard>
