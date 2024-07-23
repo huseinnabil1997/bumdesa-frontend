@@ -69,8 +69,10 @@ export default function JurnalList() {
   };
 
   useEffect(() => {
-    handleChangeFilter();
-    refetch();
+    if (watch('year')[0] && watch('year')[1]) {
+      handleChangeFilter();
+      refetch();
+    }
   }, [watch('year'), watch('account_code')]);
 
   return (
