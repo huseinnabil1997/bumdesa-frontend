@@ -91,6 +91,7 @@ export default function DashboardHeader({
       }
       return setTitle('Unit Usaha BUM Desa');
     }
+    if (value === 'bumdesa') return setTitle('Kelola BUM Desa');
     if (value === 'education') return setTitle('Konten Edukasi');
     if (value === 'faqs') return setTitle('Frequently Asked Questions');
     if (value === 'manager') return setTitle('Pengurus BUM Desa');
