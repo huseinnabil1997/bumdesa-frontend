@@ -93,7 +93,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const handleMenuItemClick = (event, index) => {
     const payload = {
       ...filter,
-      limit: 10,
+      province_id: filter?.provinsi?.value,
+      city_id: filter?.kota?.value,
+      district_id: filter?.kecamatan?.value,
+      subdistrict_id: filter?.desa?.value,
       type: index === 99 ? 1 : index,
     };
 
@@ -102,7 +105,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: user?.bumdesid + '_BUMDesa_Report',
+          title: user?.bumdesid + '_BUMDesa_Report_' + filter?.provinsi?.label + '_' + filter?.kota?.label + '_' + filter?.kecamatan?.label + '_' + filter?.desa?.label + '_' + new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
           type: index,
         });
         setSelectedIndex(index);
@@ -154,8 +157,9 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const handleKecamatan = (value) => {
     setValue('kecamatan', value)
     setValue('desa', null);
-    setValue('kode_pos', null);
   }
+
+  console.log('filter', filter);
 
   return (
     <>

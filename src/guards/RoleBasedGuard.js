@@ -21,7 +21,7 @@ const RoleType = (role) => {
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
-  const token = getSessionToken();
+  const token = localStorage?.getItem('token') || sessionStorage?.getItem('token');
   const user = jwtDecode(token);
   const role = RoleType(user?.sub?.role);
   console.log('role', role);

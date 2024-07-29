@@ -178,10 +178,11 @@ export default function UserList() {
             isEmpty={bumdesas?.data?.length === 0}
             filter={{
               page,
-              provinsi: watch('provinsi'),
-              kota: watch('kota'),
-              kecamatan: watch('kecamatan'),
-              desa: watch('desa'),
+              limit: rowsPerPage,
+              provinsi: watch('provinsi') ?? null,
+              kota: watch('kota') ?? null,
+              kecamatan: watch('kecamatan') ?? null,
+              desa: watch('desa') ?? null,
             }}
             setValue={setValue}
           />
