@@ -1995,6 +1995,11 @@
     "@sigstore/core" "^1.0.0"
     "@sigstore/protobuf-specs" "^0.3.0"
 
+"@svg-maps/indonesia@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@svg-maps/indonesia/-/indonesia-1.0.0.tgz"
+  integrity sha512-SDLWMHkLuuqOtfGPWcK703tiI149AOBb5U/jRMxtcGCMUv5ru+xGWHWBgxdz5GoQd71mlHrsXBU66kxjrKyc4A==
+
 "@tufjs/canonical-json@2.0.0":
   version "2.0.0"
 
@@ -6627,7 +6632,7 @@ react-datepicker@^6.3.0:
     prop-types "^15.7.2"
     react-onclickoutside "^6.13.0"
 
-"react-dom@^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react-dom@^0.14.0 || ^15.0.0 || ^16 || ^17", "react-dom@^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0", "react-dom@^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0 || ^17.0", "react-dom@^15.5.x || ^16.x || ^17.x || ^18.x", "react-dom@^15.x.x || ^16.x.x || ^17.x.x", "react-dom@^16 || ^17", "react-dom@^16.7.0 || ^17", "react-dom@^16.8.0 || ^17.0.0", "react-dom@^16.8.5 || ^17.0.0", "react-dom@^16.9.0 || ^17 || ^18", react-dom@^17.0.0, react-dom@^17.0.2, "react-dom@^17.0.2 || ^18.0.0-0", react-dom@>=16, react-dom@>=16.3, react-dom@>=16.6.0, "react-dom@>=16.8 || ^17.0.0 || ^18.0.0", react-dom@>=16.8.0, "react-dom@>=16.8.6 || ^17.0.0 || ^18.0.0", "react-dom@16.x || 17.x":
+"react-dom@^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react-dom@^0.14.0 || ^15.0.0 || ^16 || ^17", "react-dom@^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0", "react-dom@^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0 || ^17.0", "react-dom@^15.5.x || ^16.x || ^17.x || ^18.x", "react-dom@^15.x.x || ^16.x.x || ^17.x.x", "react-dom@^16 || ^17", react-dom@^16.0.0, "react-dom@^16.7.0 || ^17", "react-dom@^16.8.0 || ^17.0.0", "react-dom@^16.8.5 || ^17.0.0", "react-dom@^16.9.0 || ^17 || ^18", react-dom@^17.0.0, react-dom@^17.0.2, "react-dom@^17.0.2 || ^18.0.0-0", react-dom@>=16, react-dom@>=16.3, react-dom@>=16.6.0, "react-dom@>=16.8 || ^17.0.0 || ^18.0.0", react-dom@>=16.8.0, "react-dom@>=16.8.6 || ^17.0.0 || ^18.0.0", "react-dom@16.x || 17.x":
   version "17.0.2"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
@@ -6811,6 +6816,13 @@ react-slick@^0.28.0:
     json2mq "^0.2.0"
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
+
+react-svg-map@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/react-svg-map/-/react-svg-map-2.2.0.tgz"
+  integrity sha512-slZTt4ffXgOb3ND/WEHOc0ojX5lBEv9FKbTU3tWnTLZPQ9L0e686SBqgVxmsuTD+o52Aor87InMzAzDRTQedpA==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-toastify@^10.0.4:
   version "10.0.4"
@@ -7134,6 +7146,8 @@ safe-buffer@^5.1.0, safe-buffer@>=5.1.0, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
 
 "safer-buffer@>= 2.1.2 < 3.0.0":
   version "2.1.2"
+  resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
+  integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
 saxes@^5.0.1:
   version "5.0.1"
