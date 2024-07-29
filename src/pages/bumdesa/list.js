@@ -40,7 +40,7 @@ import { useForm } from 'react-hook-form';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'BUMDesa', align: 'left' },
+  { id: 'name', label: 'Nama BUMDesa', align: 'left' },
   { id: 'tdr', label: 'Alamat Email', align: 'left' },
   { id: 'tdr_start_date', label: 'Tahun Berdiri', align: 'left' },
   { id: 'tdr_end_date', label: 'Status', align: 'left' },

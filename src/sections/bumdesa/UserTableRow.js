@@ -61,7 +61,9 @@ export default function UserTableRow({
         backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
       }}>
 
-      <TableCell>{name}</TableCell>
+      <TableCell sx={{ position: 'sticky', left: 0, backgroundColor: 'inherit', zIndex: 1 }}>
+        {name}
+      </TableCell>
       <TableCell sx={{ color: '#777777', height: 56 }}>{email}</TableCell>
       <TableCell sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
       <TableCell>
