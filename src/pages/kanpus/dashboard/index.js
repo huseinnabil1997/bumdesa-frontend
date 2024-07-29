@@ -4,17 +4,22 @@ import { Container, Grid } from '@mui/material';
 import {
   DashboardWelcome,
   DashboardUnit,
-  DashboardEducation,
   DashboardSales,
   DashboardFinances,
   DashboardProfitLoss,
-} from 'src/sections/dashboard';
+} from 'src/sections/kanpus/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const DashboardDemographic = dynamic(
+  () => import('../../../sections/kanpus/dashboard/DashboardDemo'),
+  { ssr: false }
+);
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +44,10 @@ export default function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <DashboardWelcome isUnit={decoded.sub.businessid} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardDemographic isUnit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
