@@ -169,7 +169,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
 
   return (
     <>
-      <Stack direction="row" spacing={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         {/* <IconButtonAnimate ref={anchorRefFilter}>
           <TuneIcon
             onClick={handleToggleFilter}
@@ -177,10 +177,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           />
         </IconButtonAnimate> */}
         <Grid container spacing={1}>
-          <Grid item xs={2.4}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="provinsi"
-              placeholder="Provinsi"
+              placeholder="Semua Provinsi"
               loading={isLoadingProvincies}
               disabled={isLoadingProvincies}
               sx={styles.textfield}
@@ -194,10 +194,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={2.4}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="kota"
-              placeholder="Kabupaten"
+              placeholder="Semua Kabupaten"
               loading={isLoadingCities}
               disabled={isLoadingCities || !filter?.provinsi?.value}
               sx={styles.textfield}
@@ -211,10 +211,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={2.4}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="kecamatan"
-              placeholder="Kecamatan"
+              placeholder="Semua Kecamatan"
               loading={isLoadingDistricts}
               disabled={isLoadingDistricts || !filter?.kota?.value}
               sx={styles.textfield}
@@ -228,10 +228,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={2.4}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="desa"
-              placeholder="Desa"
+              placeholder="Semua Desa"
               loading={isLoadingSubdistricts}
               disabled={isLoadingSubdistricts || !filter?.kecamatan?.value}
               sx={styles.textfield}
@@ -244,10 +244,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={2.4}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="report"
-              placeholder="Laporan Keuangan"
+              placeholder="Semua Laporan Keuangan"
               loading={false}
               sx={styles.textfield}
               options={reports?.map((option) => option) ?? []}
