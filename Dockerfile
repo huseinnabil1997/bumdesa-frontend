@@ -1,5 +1,5 @@
 # Gunakan image node:18-alpine sebagai dasar
-FROM node:18-alpine
+FROM opsdev17/node:18
 
 # Set working directory di dalam container
 WORKDIR /app

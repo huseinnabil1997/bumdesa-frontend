@@ -11,10 +11,11 @@ import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+  title: PropTypes.string,
   variant: PropTypes.oneOf(['dashboard', 'main', 'logoOnly']),
 };
 
-export default function Layout({ variant = 'dashboard', children }) {
+export default function Layout({ variant = 'dashboard', children, title }) {
   if (variant === 'logoOnly') {
     return <LogoOnlyLayout> {children} </LogoOnlyLayout>;
   }
@@ -25,10 +26,8 @@ export default function Layout({ variant = 'dashboard', children }) {
 
   return (
     <AuthGuard>
-      <DashboardLayout>
-        <RoleBasedGuard>
-          {children}
-        </RoleBasedGuard>
+      <DashboardLayout title={title}>
+        <RoleBasedGuard>{children}</RoleBasedGuard>
       </DashboardLayout>
     </AuthGuard>
   );

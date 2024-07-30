@@ -200,7 +200,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
         />
 
         <Stack>
-          <Stack
+          {/* <Stack
             onClick={() => {
               router.push('/auth/terms-and-conditions');
               setValue('termsAndConditions', false);
@@ -220,7 +220,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
                 setValue('termsAndConditions', false);
               }}
             />
-          </Stack>
+          </Stack> */}
           <Stack
             onClick={() => {
               router.push('/auth/privacy-policy');

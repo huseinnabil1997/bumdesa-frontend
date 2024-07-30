@@ -32,6 +32,14 @@ const theme = createTheme({
 export default function RHFDateRangePicker({ name, require, isLoading, ...other }) {
   const { control } = useFormContext();
 
+  const handleDateChange = (dates, onChange) => {
+    let [startDate, endDate] = dates;
+    if (startDate > endDate) {
+      endDate = startDate;
+    }
+    onChange([startDate, endDate]);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={idLocale}>
       <Stack>
@@ -54,7 +62,7 @@ export default function RHFDateRangePicker({ name, require, isLoading, ...other 
                 disableFuture
                 toolbarTitle="Pilih Rentang Tanggal"
                 value={value}
-                onChange={onChange}
+                onChange={(dates) => handleDateChange(dates, onChange)}
                 calendars={1}
                 autoOk={true}
                 showToolbar={false}

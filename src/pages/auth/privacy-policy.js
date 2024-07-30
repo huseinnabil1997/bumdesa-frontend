@@ -1,9 +1,10 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Stack, Typography, Divider, Checkbox } from '@mui/material';
+import { Stack, Typography, Checkbox } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // hooks
+import { useEffect } from 'react';
 // guards
 import GuestGuard from '../../guards/GuestGuard';
 // components
@@ -12,8 +13,8 @@ import Page from '../../components/Page';
 import { useRouter } from 'next/router';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useState } from 'react';
-import { privacyPolicy } from 'src/sections/auth/terms-and-conditions/data';
 import { registerForm } from 'src/utils/helperFunction';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,18 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function TermsAndConditions() {
   const [pnp, setPnp] = useState(false);
+  const [html, setHtml] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy.html`)
+      .then(res => {
+        setHtml(res.data)
+      })
+      .catch(err => {
+        console.log('err:', err);
+      });
+  }, [html]);
 
   return (
     <GuestGuard>
@@ -36,24 +48,7 @@ export default function TermsAndConditions() {
           <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>
             Kebijakan Privasi BUM Desa
           </Typography>
-          {privacyPolicy.map((item, index) => (
-            <Stack my={2} key={index}>
-              <Typography fontSize='18px' fontWeight={600} color='#1078CA'>
-                {item.title}
-              </Typography>
-              <Divider sx={{ bgcolor: '#DDEFFC', height: '2px', my: 1 }} />
-              {item.list.map((item, index) => (
-                <Stack my={1} key={index}>
-                  {item.point && <Typography color='#3D3D3D' fontSize='18px' fontWeight={600}>
-                    {item.point}
-                  </Typography>}
-                  <Typography color='#3D3D3D' fontSize='16px' fontWeight={500}>
-                    {item.description}
-                  </Typography>
-                </Stack>
-              ))}
-            </Stack>
-          ))}
+          <div dangerouslySetInnerHTML={{ __html: html }} />
           <Stack
             display='flex'
             direction='row'

@@ -67,7 +67,7 @@ const SideContent = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   const [isSuccess, setSuccess] = useState(false);
 
@@ -88,7 +88,7 @@ export default function Register() {
         <RootStyle>
           {mdUp && (
             <SectionStyle>
-              <Image id="bg" visibleByDefault disabledEffect src="/image/login.svg" alt="login" />
+              <Image id="bg" visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <SideContainer>
                 <SideContent justifyContent="center">
                   <Image

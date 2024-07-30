@@ -24,6 +24,20 @@ export const PROFIT_HEAD = [
   { id: 'saldo', label: 'Saldo', align: 'left', width: 480 },
 ];
 
+export const BUMDES_HEAD = [
+  { id: 'nama_provinsi', label: 'Nama Provinsi', align: 'left', minWidth: 180 },
+  { id: 'jumlah_bumdesa', label: 'Jumlah BUMDesa', align: 'left', minWidth: 160 },
+  { id: 'jumlah_unit', label: 'Jumlah Unit Usaha', align: 'left', minWidth: 160 },
+  { id: 'input_laporan', label: 'Input Laporan Keuangan', align: 'left', minWidth: 160 },
+  { id: 'total_kas', label: 'Total Kas Tunai', align: 'left', minWidth: 240 },
+  { id: 'profitabilitas', label: 'Profitabilitas', align: 'left', minWidth: 240 },
+  { id: 'liquiditas', label: 'Liquiditas', align: 'left', minWidth: 240 },
+  { id: 'solvabilitas', label: 'Solvabilitas', align: 'left', minWidth: 240 },
+  { id: 'total_omzet', label: 'Total Omzet', align: 'left', minWidth: 240 },
+  { id: 'profit_loss', label: 'Laba/Rugi', align: 'left', minWidth: 240 },
+  { id: 'action', label: 'Aksi', align: 'center', minWidth: 100 },
+];
+
 export const DEFAULT_FILTER = {
   limit: 10,
   page: 1,

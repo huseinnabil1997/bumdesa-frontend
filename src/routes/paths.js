@@ -38,6 +38,11 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
+  kanpus: {
+    root: path(ROOTS_APP, 'kanpus'),
+    dashboard: path(ROOTS_APP, 'kanpus/dashboard'),
+    bumdes: path(ROOTS_APP, 'kanpus/list'),
+  },
   bumdes: {
     jurnal: path(ROOTS_APP, 'jurnal/list'),
     ledger: path(ROOTS_APP, 'ledger'),

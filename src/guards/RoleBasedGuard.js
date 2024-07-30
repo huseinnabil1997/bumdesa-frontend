@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { getSessionToken } from 'src/utils/axiosReportService';
+import jwtDecode from 'jwt-decode';
 
 // ----------------------------------------------------------------------
 
@@ -11,17 +12,19 @@ RoleBasedGuard.propTypes = {
   children: PropTypes.node,
 };
 
-const useCurrentRole = () => {
-  const userData = useSelector(state => state.user.userData);
-  const role = userData.unit_id !== 0 ? 'unit' : 'bumdesa';
-  return role;
+const RoleType = (role) => {
+  if (role === 3) return 'unit';
+  if (role === 2) return 'bumdesa';
+  if (role === 1) return 'kanpus';
 };
 
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
-  const currentRole = useCurrentRole();
-
+  const token = getSessionToken();
+  const user = jwtDecode(token);
+  const role = RoleType(user?.sub?.role);
+  console.log('role', role);
   // if (!accessibleRoles.includes(currentRole)) {
   //   return (
   //     <Container>
@@ -34,16 +37,18 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   // }
 
   useEffect(() => {
-    if ((path === 'unit' && currentRole === 'unit') 
-      || (path === 'manager' && currentRole === 'unit')
-      || (path === 'employee' && currentRole === 'bumdesa')) {
+    if ((path === 'unit' && role === 'unit') 
+      || (path === 'manager' && role === 'unit')
+      || (path === 'employee' && role === 'bumdesa')) {
+      // || (path === 'bumdesa' && (role === 'bumdesa' || role === 'unit'))) {
       router.push('/403');
     }
-  }, [path, currentRole, router]);
+  }, [path, role, router]);
 
-  if ((path === 'unit' && currentRole === 'unit') 
-    || (path === 'manager' && currentRole === 'unit')
-    || (path === 'employee' && currentRole === 'bumdesa')) {
+  if ((path === 'unit' && role === 'unit') 
+    || (path === 'manager' && role === 'unit')
+    || (path === 'employee' && role === 'bumdesa')) {
+    // || (path === 'bumdesa' && (role === 'bumdesa' || role === 'unit'))) {
     return (
       <Container>
         <Alert severity="error">

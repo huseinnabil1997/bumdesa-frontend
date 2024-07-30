@@ -70,7 +70,7 @@ export default function Register() {
 
   const { verify, resendOtp } = useAuth();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   const [isSuccess, setSuccess] = useState(false);
   const [otp, setOtp] = useState('');
@@ -149,14 +149,21 @@ export default function Register() {
         <RootStyle>
           {mdUp && (
             <SectionStyle>
-              <Image visibleByDefault disabledEffect src="/image/login.svg" alt="login" />
+              <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <Title>
                 <Image
                   visibleByDefault
                   disabledEffect
-                  src="/image/bri-square.svg"
+                  src="/image/bri_square.svg"
                   alt="bri"
-                  sx={{ width: 160, m: 'auto', mb: 1 }}
+                  sx={{ width: 98, m: 'auto', mb: 2.3 }}
+                />
+                <Image
+                  visibleByDefault
+                  disabledEffect
+                  src="/image/bumdesa_digital.png"
+                  alt="bri"
+                  sx={{ width: 160, m: 'auto', mb: 2 }}
                 />
                 <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
                   Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu

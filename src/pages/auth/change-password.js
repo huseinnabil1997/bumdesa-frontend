@@ -63,22 +63,29 @@ ResetPassword.getLayout = function getLayout(page) {
 
 export default function ResetPassword() {
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   return (
     <GuestGuard>
       <Page title="Mengatur Ulang Kata Sandi" sx={{ height: 1 }}>
         <RootStyle>
-          {mdUp && (
+        {mdUp && (
             <SectionStyle>
-              <Image visibleByDefault disabledEffect src="/image/login.svg" alt="login" />
+              <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <Title>
                 <Image
                   visibleByDefault
                   disabledEffect
-                  src="/image/bri-square.svg"
+                  src="/image/bri_square.svg"
                   alt="bri"
-                  sx={{ width: 160, m: 'auto', mb: 1 }}
+                  sx={{ width: 98, m: 'auto', mb: 2.3 }}
+                />
+                <Image
+                  visibleByDefault
+                  disabledEffect
+                  src="/image/bumdesa_digital.png"
+                  alt="bri"
+                  sx={{ width: 160, m: 'auto', mb: 2 }}
                 />
                 <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
                   Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu
