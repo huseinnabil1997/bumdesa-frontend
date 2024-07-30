@@ -59,13 +59,16 @@ DashboardHeader.propTypes = {
   isCollapse: PropTypes.bool,
   onOpenSidebar: PropTypes.func,
   verticalLayout: PropTypes.bool,
+  header: PropTypes.string,
 };
 
 export default function DashboardHeader({
   onOpenSidebar,
   isCollapse = false,
   verticalLayout = false,
+  header,
 }) {
+  console.log(header);
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
 
   const isDesktop = useResponsive('up', 'lg');
@@ -81,6 +84,9 @@ export default function DashboardHeader({
   const generateTitle = () => {
     const value = router.pathname.split('/')[1];
     const value2 = router.pathname.split('/')[2];
+
+    if (header) return setTitle(header);
+
     if (value === 'ledger') return setTitle('Buku Besar');
     if (value === 'unit') {
       if (value2 === 'new') {

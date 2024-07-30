@@ -1,7 +1,12 @@
 // @mui
 import { Container, Grid } from '@mui/material';
 // hooks
-import { KanpusHeader, KanpusDemographic } from 'src/sections/kanpus/dashboard';
+import {
+  DashboardWelcome,
+  DashboardSales,
+  DashboardFinances,
+  DashboardProfitLoss,
+} from 'src/sections/kanpus/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
@@ -12,7 +17,7 @@ import { useEffect, useState } from 'react';
 // ----------------------------------------------------------------------
 
 Dashboard.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <Layout title="Summary">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
@@ -27,15 +32,23 @@ export default function Dashboard() {
   }, [token]);
 
   return (
-    <Page title="Dashboard Kantor Pusat">
+    <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <KanpusHeader unit={decoded.sub.businessid} />
+            <DashboardWelcome isUnit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
-            <KanpusDemographic unit={decoded.sub.businessid} />
+            <DashboardFinances unit={decoded.sub.businessid} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardSales unit={decoded.sub.businessid} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardProfitLoss unit={decoded.sub.businessid} />
           </Grid>
         </Grid>
       </Container>
