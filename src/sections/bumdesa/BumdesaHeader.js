@@ -89,6 +89,12 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const { data: cities, isLoading: isLoadingCities } = useGetCities({ prov_id: filter?.provinsi?.value });
   const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({ city_id: filter?.kota?.value });
   const { data: subdistricts, isLoading: isLoadingSubdistricts } = useGetSubdistricts({ dis_id: filter?.kecamatan?.value });
+  const reports = [
+    { value: 1, label: 'Laba Rugi' },
+    { value: 2, label: 'Perubahan Ekuitas' },
+    { value: 3, label: 'Posisi Keuangan' },
+    { value: 4, label: 'Arus Kas' },
+  ];
 
   const handleMenuItemClick = (event, index) => {
     const payload = {
@@ -171,7 +177,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           />
         </IconButtonAnimate> */}
         <Grid container spacing={1}>
-          <Grid item xs={3}>
+          <Grid item xs={2.4}>
             <RHFAutocomplete
               name="provinsi"
               placeholder="Provinsi"
@@ -188,7 +194,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2.4}>
             <RHFAutocomplete
               name="kota"
               placeholder="Kabupaten"
@@ -205,7 +211,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2.4}>
             <RHFAutocomplete
               name="kecamatan"
               placeholder="Kecamatan"
@@ -222,7 +228,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2.4}>
             <RHFAutocomplete
               name="desa"
               placeholder="Desa"
@@ -230,6 +236,21 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               disabled={isLoadingSubdistricts || !filter?.kecamatan?.value}
               sx={styles.textfield}
               options={subdistricts?.map((option) => option) ?? []}
+              getOptionLabel={(option) => option.label}
+              renderOption={(props, option) => (
+                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
+                  {option.label}
+                </li>
+              )}
+            />
+          </Grid>
+          <Grid item xs={2.4}>
+            <RHFAutocomplete
+              name="report"
+              placeholder="Laporan Keuangan"
+              loading={false}
+              sx={styles.textfield}
+              options={reports?.map((option) => option) ?? []}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
                 <li {...props} key={option.value} style={{ fontSize: '12px' }}>
@@ -377,7 +398,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         </Popper> */}
       </Stack>
       <RHFTextField
-        sx={{ mt: 3 }}
+        sx={{ my: 1 }}
         fullWidth
         size="small"
         error={!searchRegex.test(value) && value !== ''}

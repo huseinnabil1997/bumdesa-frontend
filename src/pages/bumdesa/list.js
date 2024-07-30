@@ -44,7 +44,7 @@ const TABLE_HEAD = [
   { id: 'tdr', label: 'Alamat Email', align: 'left' },
   { id: 'tdr_start_date', label: 'Tahun Berdiri', align: 'left' },
   { id: 'tdr_end_date', label: 'Status', align: 'left' },
-  { id: 'status', label: 'Action', align: 'center' },
+  { id: 'detail', label: 'Detail', align: 'center' },
 ];
 
 // ----------------------------------------------------------------------
@@ -91,6 +91,7 @@ export default function UserList() {
     city: watch('kota')?.value,
     district: watch('kecamatan')?.value,
     subdistrict: watch('desa')?.value,
+    report: watch('report')?.value,
   });
 
   useEffect(() => {
@@ -183,6 +184,7 @@ export default function UserList() {
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
+              report: watch('report') ?? null,
             }}
             setValue={setValue}
           />
