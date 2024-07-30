@@ -14,47 +14,46 @@ import {
   MenuItem,
 } from '@mui/material';
 // hooks
-import useSettings from '../../hooks/useSettings';
-import useTable from '../../hooks/useTable';
+import useSettings from '../../../hooks/useSettings';
+import useTable from '../../../hooks/useTable';
 // layouts
-import Layout from '../../layouts';
+import Layout from '../../../layouts';
 // components
-import Page from '../../components/Page';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
+import Page from '../../../components/Page';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
-import { StyledButton } from 'src/theme/custom/Button';
 // sections
-import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import usePost from 'src/query/hooks/mutation/usePost';
 import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
-import { UserTableRow } from 'src/sections/bumdesa';
+import { UserTableRow } from 'src/sections/data-bumdesa';
 import { useGetListBumdesa } from 'src/query/hooks/bumdesa/useGetListBumdesa';
 import { FormProvider } from 'src/components/hook-form';
-import BumdesaHeader from 'src/sections/bumdesa/BumdesaHeader';
+import BumdesaHeader from 'src/sections/data-bumdesa/BumdesaHeader';
 import { useForm } from 'react-hook-form';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Nama BUMDesa', align: 'left' },
-  { id: 'tdr', label: 'Alamat Email', align: 'left' },
-  { id: 'tdr_start_date', label: 'Tahun Berdiri', align: 'left' },
-  { id: 'tdr_end_date', label: 'Status', align: 'left' },
+  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
+  { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left' },
+  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },
+  { id: 'cash_count', label: 'Jumlah Kas Tunai', align: 'left' },
   { id: 'detail', label: 'Detail', align: 'center' },
 ];
 
 // ----------------------------------------------------------------------
 
-UserList.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+BumdesaList.getLayout = function getLayout(page) {
+  return <Layout title="Data BUMDesa">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function UserList() {
+export default function BumdesaList() {
   const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
     defaultCurrentPage: 1,
   });
@@ -226,7 +225,7 @@ export default function UserList() {
                       disableDelete={bumdesas?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => router.push(`detail?id=${row.id}`)}
+                      onViewRow={() => router.push(`${row.id}`)}
                       onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
                       onActivateRow={() => handleChangeStatus(row.id, row.status)}
                       sx={{
@@ -240,17 +239,17 @@ export default function UserList() {
                 <TableNoData
                   isNotFound={bumdesas?.data?.length === 0}
                   title="BUMDesa belum tersedia."
-                  description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
-                  action={
-                    <StyledButton
-                      sx={{ mt: 2, width: 200 }}
-                      variant="outlined"
-                      startIcon={<Add fontSize="small" />}
-                      onClick={() => router.push('new')}
-                    >
-                      Tambah BUMDesa
-                    </StyledButton>
-                  }
+                  // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
+                  // action={
+                  //   <StyledButton
+                  //     sx={{ mt: 2, width: 200 }}
+                  //     variant="outlined"
+                  //     startIcon={<Add fontSize="small" />}
+                  //     onClick={() => router.push('new')}
+                  //   >
+                  //     Tambah BUMDesa
+                  //   </StyledButton>
+                  // }
                 />
                 {isLoading && <TableSkeleton />}
               </TableBody>

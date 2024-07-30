@@ -1,4 +1,4 @@
-import { Box, Button, Card, Chip, Container, Divider, Modal, Stack, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Button, Card, Chip, Container, Divider, Link, Modal, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Page from 'src/components/Page';
@@ -10,7 +10,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
-import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import usePatch from 'src/query/hooks/mutation/usePatch';
@@ -21,6 +20,8 @@ import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useTheme } from '@mui/material/styles';
 import { checkUrlImage } from 'src/utils/helperFunction';
 import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 
 const styles = {
   textfield: {
@@ -47,7 +48,7 @@ const styles = {
 }
 
 DetailUnitUsaha.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <Layout title="Detail Unit Usaha">{page}</Layout>;
 };
 
 export default function DetailUnitUsaha() {
@@ -65,6 +66,8 @@ export default function DetailUnitUsaha() {
   const theme = useTheme();
 
   const { data } = useGetUnitById(router.query.id);
+
+  const { data: dataBumdesa } = useGetProfile(data?.bumdesa_id);
 
   const mutation = usePatch();
 
@@ -116,7 +119,7 @@ export default function DetailUnitUsaha() {
 
   const {
     handleSubmit,
-    isSubmitting,
+    // isSubmitting,
     // reset,
   } = methods;
 
@@ -205,9 +208,9 @@ export default function DetailUnitUsaha() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteRow = (id) => {
-    setAlertDelete({ id });
-  };
+  // const handleDeleteRow = (id) => {
+  //   setAlertDelete({ id });
+  // };
 
   const onDelete = async () => {
     try {
@@ -242,11 +245,11 @@ export default function DetailUnitUsaha() {
   return (
     <Page title="Unit Usaha: Detail">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" alignItems="center">
           <Button
             variant="contained"
             startIcon={<ArrowBackIcon />}
-            onClick={() => router.push('list')}
+            onClick={() => router.back()}
             sx={{
               '&:hover': { backgroundColor: '#1976D2', color: 'white' },
               backgroundColor: '#DDEFFC',
@@ -257,32 +260,29 @@ export default function DetailUnitUsaha() {
           >
             Kembali
           </Button>
-          <Stack direction="row" spacing={2}>
-            <StyledLoadingButton
-              variant="outlined"
-              sx={{ width: '106px', height: '48px' }}
-              onClick={() => router.push(`edit?id=${data?.id}`)}
-              loading={isSubmitting}
+          <Breadcrumbs
+            ml={2}
+            aria-label="breadcrumb"
+            separator={<NavigateNextIcon fontSize="small" />}
+          >
+            <Link
+              underline="hover"
+              color="inherit"
+              onClick={() => router.push('list')}
+              sx={{ cursor: 'pointer' }}
             >
-              Edit
-            </StyledLoadingButton>
-            <StyledLoadingButton
-              variant="text"
-              sx={{
-                width: '106px',
-                height: '48px',
-                color: '#E84040',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  color: '#E84040'
-                }
-              }}
-              onClick={() => handleDeleteRow(data?.id)}
-              loading={isSubmitting}
+              Semua BUMDesa
+            </Link>
+            <Link
+              underline="hover"
+              color="inherit"
+              onClick={() => router.push(`${data?.bumdesa_id}`)}
+              sx={{ cursor: 'pointer' }}
             >
-              Hapus
-            </StyledLoadingButton>
-          </Stack>
+              {dataBumdesa?.name ?? '-'}
+            </Link>
+            <Typography color="text.primary">{data?.name ?? '-'}</Typography>
+          </Breadcrumbs>
         </Stack>
 
         <Card

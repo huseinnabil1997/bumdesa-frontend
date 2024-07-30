@@ -12,7 +12,7 @@ const fetchData = async (param) => {
 };
 
 export const useGetProfile = (param) => {
-  const getQuery = useQuery(['GET_PROFILES'], () => fetchData(param));
+  const getQuery = useQuery(['GET_PROFILES', param], () => fetchData(param));
 
   return getQuery;
 };

@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 // import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
@@ -413,7 +413,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         size="small"
         error={!searchRegex.test(value) && value !== ''}
         helperText={!searchRegex.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
-        placeholder="Cari BUM Desa"
+        placeholder="Cari BUMDesa"
         name="search"
         InputProps={{
           startAdornment: <Search sx={{ color: '#777', mr: 1 }} />,

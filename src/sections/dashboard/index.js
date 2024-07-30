@@ -10,4 +10,5 @@ export { default as DashboardWidgetSummary } from './DashboardWidgetSummary';
 export { default as DashboardLatestProducts } from './DashboardLatestProducts';
 export { default as DashboardCurrentBalance } from './DashboardCurrentBalance';
 export { default as DashboardUnit } from './DashboardUnit';
+export { default as DashboardUnitKanpus } from './DashboardUnitKanpus';
 export { default as DashboardEducation } from './DashboardEducation';
