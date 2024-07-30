@@ -77,7 +77,13 @@ export default function UserList() {
   const { mutate: onActivate } = useActivate();
 
   const methods = useForm({
-    defaultValues: { search: '' },
+    defaultValues: { 
+      search: '',
+      provinsi: null,
+      kota: null,
+      kecamatan: null,
+      desa: null,
+    },
     mode: 'onChange',
   });
 
