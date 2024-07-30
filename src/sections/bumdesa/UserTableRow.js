@@ -4,7 +4,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Chip, Tooltip, tooltipClasses, IconButton } from '@mui/material';
 // components
 import Iconify from '../../components/Iconify';
-import { CheckCircle, DoNotDisturb, Info } from '@mui/icons-material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -78,40 +79,15 @@ export default function UserTableRow({
         )}
       </TableCell>
 
-      <TableCell align="left" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <IconButton onClick={onViewRow}>
-          <Info sx={{ color: theme.palette.primary.main, fontSize: 18 }} />
-        </IconButton>
-        {is_resend && (
-          <DeleteTooltip title="Re-send email">
-            <IconButton onClick={onResendRow}>
-              <Iconify
-                icon={'mdi:email-resend-outline'}
-                sx={{ color: theme.palette.primary.main, fontSize: 16 }}
-              />
-            </IconButton>
-          </DeleteTooltip>
-        )}
-        <IconButton onClick={onEditRow}>
-          <Iconify
-            icon={'lucide:edit'}
-            sx={{ color: theme.palette.primary.main, fontSize: 16 }}
-          />
-        </IconButton>
-        {status !== 3 &&
-          <DeleteTooltip title="Nonaktifkan Unit">
-            <IconButton onClick={onDeactivateRow}>
-              <DoNotDisturb sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
-            </IconButton>
-          </DeleteTooltip>
-        }
-        {status === 3 &&
-          <DeleteTooltip title="Aktifkan Unit">
-            <IconButton onClick={onActivateRow}>
-              <CheckCircle sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
-            </IconButton>
-          </DeleteTooltip>
-        }
+      <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
+        <StyledLoadingButton
+          // size="small"
+          variant="outlined"
+          onClick={onViewRow}
+          startIcon={<InfoOutlinedIcon />}
+        >
+          Detail
+        </StyledLoadingButton>
       </TableCell>
     </TableRow>
   );

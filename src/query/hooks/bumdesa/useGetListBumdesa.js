@@ -20,13 +20,15 @@ export const useGetListBumdesa = (param) => {
     param.city,
     param.district,
     param.subdistrict,
+    param.report,
   ], () => fetchData(param), {
     enabled:
       !!searchRegex.test(param.search) ||
       !!param.province ||
       !!param.city ||
       !!param.district ||
-      !!param.subdistrict,
+      !!param.subdistrict ||
+      !!param.report,
   });
 
   return getQuery;
