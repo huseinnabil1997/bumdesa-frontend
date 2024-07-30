@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 // import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
@@ -27,6 +27,7 @@ import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
 import { useGetCities } from 'src/query/hooks/options/useGetCities';
 import { useGetDistricts } from 'src/query/hooks/options/useGetDistricts';
 import { useGetSubdistricts } from 'src/query/hooks/options/useGetSubdistricts';
+import { styled } from '@mui/material';
 
 const styles = {
   textfield: {
@@ -36,32 +37,36 @@ const styles = {
     '& .MuiInputBase-input': {
       height: '1px',
       fontSize: '12px',
-      '&::placeholder': {
-        color: '#1078CA',
-      },
+      // '&::placeholder': {
+      //   color: '#1078CA',
+      // },
     },
-    '& .MuiOutlinedInput-root': {
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#1078CA',
-      },
-      '&.MuiInputBase-root:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#1078CA',
-      },
-      '&.MuiInputBase-root:not(.Mui-disabled) .MuiInputBase-input::placeholder': { 
-        color: '#1078CA',
-      },
-      '&.MuiInputBase-root:not(.Mui-disabled) .MuiSvgIcon-root': { 
-        color: '#1078CA',
-      },
-      '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'initial',
-      },
-      '&.Mui-disabled:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'initial',
-      },
-    },
+    // '& .MuiOutlinedInput-root': {
+    //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    //     borderColor: '#1078CA',
+    //   },
+    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
+    //     borderColor: '#1078CA',
+    //   },
+    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiInputBase-input::placeholder': { 
+    //     color: '#1078CA',
+    //   },
+    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiSvgIcon-root': { 
+    //     color: '#1078CA',
+    //   },
+    //   '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+    //     borderColor: 'initial',
+    //   },
+    //   '&.Mui-disabled:hover .MuiOutlinedInput-notchedOutline': {
+    //     borderColor: 'initial',
+    //   },
+    // },
   },
 }
+
+const StyledNoOptionsText = styled('div')({
+  fontSize: '12px',
+});
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -147,24 +152,21 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   //   setOpenFilter((prevOpen) => !prevOpen);
   // };
 
-  const handleProvinsi = (value) => {
-    setValue('provinsi', value)
+  useEffect(() => {
     setValue('kota', null);
     setValue('kecamatan', null);
     setValue('desa', null);
-  }
+  }, [filter?.provinsi]);
 
-  const handleKota = (value) => {
-    setValue('kota', value)
+  useEffect(() => {
     setValue('kecamatan', null);
     setValue('desa', null);
-  }
+  }, [filter?.kota]);
 
-  const handleKecamatan = (value) => {
-    setValue('kecamatan', value)
+  useEffect(() => {
     setValue('desa', null);
-  }
-
+  }, [filter?.kecamatan]);
+  
   console.log('filter', filter);
 
   return (
@@ -184,7 +186,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               loading={isLoadingProvincies}
               disabled={isLoadingProvincies}
               sx={styles.textfield}
-              onChange={(e, value) => handleProvinsi(value)}
+              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={provincies?.map((option) => option) ?? []}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
@@ -197,11 +199,12 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="kota"
+              dependentField="provinsi"
               placeholder="Semua Kabupaten"
               loading={isLoadingCities}
-              disabled={isLoadingCities || !filter?.provinsi?.value}
+              disabled={isLoadingCities}
               sx={styles.textfield}
-              onChange={(e, value) => handleKota(value)}
+              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={cities?.map((option) => option) ?? []}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
@@ -214,11 +217,12 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="kecamatan"
+              dependentField="kota"
               placeholder="Semua Kecamatan"
               loading={isLoadingDistricts}
-              disabled={isLoadingDistricts || !filter?.kota?.value}
+              disabled={isLoadingDistricts}
               sx={styles.textfield}
-              onChange={(e, value) => handleKecamatan(value)}
+              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={districts?.map((option) => option) ?? []}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
@@ -231,10 +235,12 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="desa"
+              dependentField="kecamatan"
               placeholder="Semua Desa"
               loading={isLoadingSubdistricts}
-              disabled={isLoadingSubdistricts || !filter?.kecamatan?.value}
+              disabled={isLoadingSubdistricts}
               sx={styles.textfield}
+              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={subdistricts?.map((option) => option) ?? []}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (

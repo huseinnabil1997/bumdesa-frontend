@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@mui/material';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 
@@ -21,10 +21,29 @@ const RoleType = (role) => {
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
-  const token = localStorage?.getItem('token') || sessionStorage?.getItem('token');
-  const user = jwtDecode(token);
-  const role = RoleType(user?.sub?.role);
-  console.log('role', role);
+  const token = getSessionToken();
+  const [decoded, setDecoded] = useState(null);
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setDecoded(decodedToken);
+        const user = jwtDecode(decodedToken);
+        setRole(RoleType(user?.sub?.role));
+      } catch (error) {
+        console.error('Invalid token:', error);
+        setDecoded(null);
+        setRole(null);
+      }
+    } else {
+      setDecoded(null);
+      setRole(null);
+    }
+  }, [token]);
+
+  console.log('role', role, decoded);
   // if (!accessibleRoles.includes(currentRole)) {
   //   return (
   //     <Container>
