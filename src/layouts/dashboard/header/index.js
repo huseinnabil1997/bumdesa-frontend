@@ -137,7 +137,7 @@ export default function DashboardHeader({
           sx={{ width: '100%' }}
         >
           <Typography sx={{ color: '#3D3D3D' }} fontWeight={700} fontSize={22}>
-            {title}
+            {header ?? title}
           </Typography>
           <AccountPopover />
         </Stack>
