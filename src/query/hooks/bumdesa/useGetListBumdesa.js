@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query';
 import { getListBumdesa } from 'src/query/request/bumdesa';
-import { searchRegex } from 'src/utils/regex';
 
 const fetchData = async (param) => {
   try {
@@ -21,15 +20,7 @@ export const useGetListBumdesa = (param) => {
     param.district,
     param.subdistrict,
     param.report,
-  ], () => fetchData(param), {
-    enabled:
-      !!searchRegex.test(param.search) ||
-      !!param.province ||
-      !!param.city ||
-      !!param.district ||
-      !!param.subdistrict ||
-      !!param.report,
-  });
+  ], () => fetchData(param));
 
   return getQuery;
 };

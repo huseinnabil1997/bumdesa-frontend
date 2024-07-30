@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@mui/material';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { getSessionToken } from 'src/utils/axiosReportService';
-import jwtDecode from 'jwt-decode';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -12,38 +11,19 @@ RoleBasedGuard.propTypes = {
   children: PropTypes.node,
 };
 
-const RoleType = (role) => {
-  if (role === 3) return 'unit';
-  if (role === 2) return 'bumdesa';
-  if (role === 1) return 'kanpus';
+const useCurrentRole = () => {
+  const userData = useSelector(state => state.user.userData);
+  const role = userData.unit_id !== 0 ? 'unit' : 'bumdesa';
+  return role;
 };
 
-export default function RoleBasedGuard({ accessibleRoles, children }) {
+
+export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
-  const token = getSessionToken();
-  const [decoded, setDecoded] = useState(null);
-  const [role, setRole] = useState(null);
-
-  useEffect(() => {
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        setDecoded(decodedToken);
-        const user = jwtDecode(decodedToken);
-        setRole(RoleType(user?.sub?.role));
-      } catch (error) {
-        console.error('Invalid token:', error);
-        setDecoded(null);
-        setRole(null);
-      }
-    } else {
-      setDecoded(null);
-      setRole(null);
-    }
-  }, [token]);
-
-  console.log('role', role, decoded);
+  const currentRole = useCurrentRole();
+  
+  console.log('rolebaseguard', currentRole);
   // if (!accessibleRoles.includes(currentRole)) {
   //   return (
   //     <Container>
@@ -56,18 +36,18 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   // }
 
   useEffect(() => {
-    if ((path === 'unit' && role === 'unit') 
-      || (path === 'manager' && role === 'unit')
-      || (path === 'employee' && role === 'bumdesa')) {
-      // || (path === 'bumdesa' && (role === 'bumdesa' || role === 'unit'))) {
+    if ((path === 'unit' && currentRole === 'unit')
+      || (path === 'manager' && currentRole === 'unit')
+      || (path === 'employee' && currentRole === 'bumdesa')) {
+      // || (path === 'bumdesa' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
       router.push('/403');
     }
-  }, [path, role, router]);
+  }, [path, currentRole, router]);
 
-  if ((path === 'unit' && role === 'unit') 
-    || (path === 'manager' && role === 'unit')
-    || (path === 'employee' && role === 'bumdesa')) {
-    // || (path === 'bumdesa' && (role === 'bumdesa' || role === 'unit'))) {
+  if ((path === 'unit' && currentRole === 'unit')
+    || (path === 'manager' && currentRole === 'unit')
+    || (path === 'employee' && currentRole === 'bumdesa')) {
+    // || (path === 'bumdesa' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
     return (
       <Container>
         <Alert severity="error">

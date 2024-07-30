@@ -152,20 +152,23 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   //   setOpenFilter((prevOpen) => !prevOpen);
   // };
 
-  useEffect(() => {
+  const handleProvinsi = (value) => {
     setValue('kota', null);
     setValue('kecamatan', null);
     setValue('desa', null);
-  }, [filter?.provinsi]);
+    setValue('provinsi', value);
+  };
 
-  useEffect(() => {
+  const handleKota = (value) => {
     setValue('kecamatan', null);
     setValue('desa', null);
-  }, [filter?.kota]);
+    setValue('kota', value);
+  };
 
-  useEffect(() => {
+  const handleKecamatan = (value) => {
     setValue('desa', null);
-  }, [filter?.kecamatan]);
+    setValue('kecamatan', value);
+  };
   
   console.log('filter', filter);
 
@@ -188,6 +191,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               sx={styles.textfield}
               noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={provincies?.map((option) => option) ?? []}
+              onChange={(e, value) => handleProvinsi(value)}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
                 <li {...props} key={option.value} style={{ fontSize: '12px' }}>
@@ -199,13 +203,13 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="kota"
-              dependentField="provinsi"
               placeholder="Semua Kabupaten"
               loading={isLoadingCities}
               disabled={isLoadingCities}
               sx={styles.textfield}
               noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={cities?.map((option) => option) ?? []}
+              onChange={(e, value) => handleKota(value)}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
                 <li {...props} key={option.value} style={{ fontSize: '12px' }}>
@@ -217,13 +221,13 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
               name="kecamatan"
-              dependentField="kota"
               placeholder="Semua Kecamatan"
               loading={isLoadingDistricts}
               disabled={isLoadingDistricts}
               sx={styles.textfield}
               noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
               options={districts?.map((option) => option) ?? []}
+              onChange={(e, value) => handleKecamatan(value)}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
                 <li {...props} key={option.value} style={{ fontSize: '12px' }}>
