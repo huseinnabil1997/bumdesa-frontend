@@ -225,7 +225,7 @@ export default function UserList() {
                       disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => router.push(`/data-bumdesa/${row.id}`)}
+                      onViewRow={() => router.push(`detail?id=${row.id}`)}
                       onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
                       onActivateRow={() => handleChangeStatus(row.id, row.status)}
                       sx={{
