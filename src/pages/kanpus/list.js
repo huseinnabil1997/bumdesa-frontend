@@ -17,7 +17,7 @@ import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import TableError from 'src/components/table/TableError';
 import { Header, TableRow } from 'src/sections/kanpus/list';
-import { useGetListBumdesa } from 'src/query/hooks/bumdesa/useGetListBumdesa';
+import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdesa';
 
 // ----------------------------------------------------------------------
 

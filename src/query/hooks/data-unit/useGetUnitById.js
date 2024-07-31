@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query';
-import { getBumdesaById } from 'src/query/request/bumdesa';
 import { useRouter } from 'next/router';
+import { getUnitById } from 'src/query/request/data-unit';
 
-export const useGetBumdesaById = (id) => {
+export const useGetUnitById = (id) => {
   const router = useRouter();
 
   const fetchData = async (id) => {
     try {
-      const { data } = await getBumdesaById(id);
+      const { data } = await getUnitById(id);
       return data.data ?? null;
     } catch (error) {
       if (error.code === 404 && id !== 0) {
@@ -17,7 +17,7 @@ export const useGetBumdesaById = (id) => {
     }
   };
 
-  const getQuery = useQuery(['GET_BUMDESA_BY_ID', id], () => fetchData(id), { enabled: id != 0 });
+  const getQuery = useQuery(['GET_UNIT_BY_ID', id], () => fetchData(id), { enabled: id != 0 });
 
   return getQuery;
 };

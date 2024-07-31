@@ -20,7 +20,6 @@ import onDownload from '../../utils/onDownload';
 import { searchRegex } from 'src/utils/regex';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
-import { useDownloadBumdesa } from 'src/query/hooks/data-bumdesa/useDownloadBumdesa';
 // import { IconButtonAnimate } from 'src/components/animate';
 // import TuneIcon from '@mui/icons-material/Tune';
 import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
@@ -28,6 +27,7 @@ import { useGetCities } from 'src/query/hooks/options/useGetCities';
 import { useGetDistricts } from 'src/query/hooks/options/useGetDistricts';
 import { useGetSubdistricts } from 'src/query/hooks/options/useGetSubdistricts';
 import { styled } from '@mui/material';
+import { useDownloadUnit } from 'src/query/hooks/data-unit/useDownloadUnit';
 
 const styles = {
   textfield: {
@@ -70,13 +70,13 @@ const StyledNoOptionsText = styled('div')({
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
-BumdesaHeader.propTypes = {
+UnitHeader.propTypes = {
   filter: PropTypes.object,
   isEmpty: PropTypes.bool,
   value: PropTypes.string,
 };
 
-export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
+export default function UnitHeader({ filter, isEmpty, value, setValue }) {
   const token = getSessionToken();
   const user = jwtDecode(token);
 
@@ -88,7 +88,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutate: download, isLoading } = useDownloadBumdesa();
+  const { mutate: download, isLoading } = useDownloadUnit();
 
   const { data: provincies, isLoading: isLoadingProvincies } = useGetProvincies();
   const { data: cities, isLoading: isLoadingCities } = useGetCities({ prov_id: filter?.provinsi?.value });
@@ -116,7 +116,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: user?.bumdesid + '_BUMDesa_Report_' + filter?.provinsi?.label + '_' + filter?.kota?.label + '_' + filter?.kecamatan?.label + '_' + filter?.desa?.label + '_' + new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
+          title: user?.bumdesid + '_Business_Unit_Report_' + filter?.provinsi?.label + '_' + filter?.kota?.label + '_' + filter?.kecamatan?.label + '_' + filter?.desa?.label + '_' + new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
           type: index,
         });
         setSelectedIndex(index);
@@ -413,7 +413,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         size="small"
         error={!searchRegex.test(value) && value !== ''}
         helperText={!searchRegex.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
-        placeholder="Cari BUMDesa"
+        placeholder="Cari Unit Usaha"
         name="search"
         InputProps={{
           startAdornment: <Search sx={{ color: '#777', mr: 1 }} />,
