@@ -1,5 +1,5 @@
 # Gunakan image node:18-alpine sebagai dasar
-FROM opsdev17/node:18
+FROM node:18.20.4-bookworm-slim
 
 # Set working directory di dalam container
 WORKDIR /app
