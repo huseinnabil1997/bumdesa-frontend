@@ -38,16 +38,16 @@ export default function RoleBasedGuard({ children }) {
   useEffect(() => {
     if ((path === 'unit' && currentRole === 'unit')
       || (path === 'manager' && currentRole === 'unit')
-      || (path === 'employee' && currentRole === 'bumdesa')) {
-      // || (path === 'bumdesa' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
+      || (path === 'employee' && currentRole === 'bumdesa')
+      || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
       router.push('/403');
     }
   }, [path, currentRole, router]);
 
   if ((path === 'unit' && currentRole === 'unit')
     || (path === 'manager' && currentRole === 'unit')
-    || (path === 'employee' && currentRole === 'bumdesa')) {
-    // || (path === 'bumdesa' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
+    || (path === 'employee' && currentRole === 'bumdesa')
+    || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
     return (
       <Container>
         <Alert severity="error">
