@@ -61,7 +61,7 @@ export default function TermsAndConditions() {
               checked={pnp}
               sx={{ ml: -1 }}
             />
-            <Typography fontSize='14px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+            <Typography id="Typography-privacy-policy-kebijakan-privasi" fontSize='14px' fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
               Saya telah membaca
               <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>
               BUM Desa
