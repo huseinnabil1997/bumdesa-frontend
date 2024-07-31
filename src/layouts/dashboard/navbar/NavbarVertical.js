@@ -18,7 +18,7 @@ import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import Image from 'src/components/Image';
-import { checkUrlImage, logo } from 'src/utils/helperFunction';
+import { checkUrlImage } from 'src/utils/helperFunction';
 import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
@@ -68,7 +68,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     };
 
     checkImage();
-  }, [logo]);
+  }, [userData?.logo]);
 
   const renderContent = (
     <Scrollbar
