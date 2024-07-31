@@ -60,7 +60,8 @@ export default function TableHeadCustom({
             sx={{
               width: headCell.width,
               minWidth: headCell.minWidth,
-              ...(headCell.label === 'Nama BUMDesa' && {
+              ...(headCell.label === 'Nama BUMDesa' 
+                || headCell.label === 'Nama Unit Usaha' && {
                 position: 'sticky',
                 left: 0,
                 backgroundColor: '#F8F9F9',
