@@ -1,13 +1,13 @@
 import { useMutation } from 'react-query';
-import { downloadBumdesa } from 'src/query/request/bumdesa';
+import { downloadUnit } from 'src/query/request/data-unit';
 
 export const onDownload = async (param) => {
-  const { data } = await downloadBumdesa(param);
+  const { data } = await downloadUnit(param);
 
   return data;
 };
 
-export const useDownloadBumdesa = () => {
+export const useDownloadUnit = () => {
   const downloadMutation = useMutation((param) => onDownload(param));
 
   return downloadMutation;

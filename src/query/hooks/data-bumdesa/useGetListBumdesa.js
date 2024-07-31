@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getListBumdesa } from 'src/query/request/bumdesa';
+import { getListBumdesa } from 'src/query/request/data-bumdesa';
 
 const fetchData = async (param) => {
   try {

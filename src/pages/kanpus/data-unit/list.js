@@ -22,27 +22,25 @@ import Layout from '../../../layouts';
 import Page from '../../../components/Page';
 import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
-import { StyledButton } from 'src/theme/custom/Button';
 // sections
-import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import usePost from 'src/query/hooks/mutation/usePost';
 import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
-import { UserTableRow } from 'src/sections/data-bumdesa';
-import { useGetListBumdesa } from 'src/query/hooks/bumdesa/useGetListBumdesa';
+import { UserTableRow } from 'src/sections/data-unit';
 import { FormProvider } from 'src/components/hook-form';
-import BumdesaHeader from 'src/sections/data-bumdesa/BumdesaHeader';
 import { useForm } from 'react-hook-form';
+import { useGetListUnit } from 'src/query/hooks/data-unit/useGetListUnit';
+import UnitHeader from 'src/sections/data-unit/UnitHeader';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nama BUMDesa', align: 'left' },
+  { id: 'name', label: 'Nama Unit Usaha', align: 'left' },
+  { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
-  { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left' },
   { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },
   { id: 'cash_count', label: 'Jumlah Kas Tunai', align: 'left' },
   { id: 'detail', label: 'Detail', align: 'center' },
@@ -51,7 +49,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 UserList.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <Layout title="Data Unit Usaha">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
@@ -90,7 +88,7 @@ export default function UserList() {
 
   const { watch, setValue } = methods;
 
-  const { data: bumdesas, isLoading, refetch } = useGetListBumdesa({
+  const { data: units, isLoading, refetch } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
     search: watch('search'),
@@ -178,12 +176,12 @@ export default function UserList() {
   };
 
   return (
-    <Page title="BUMDesa: List">
+    <Page title="Data Unit Usaha: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
-          <BumdesaHeader
+          <UnitHeader
             value={watch('search')}
-            isEmpty={bumdesas?.data?.length === 0}
+            isEmpty={units?.data?.length === 0}
             filter={{
               page,
               limit: rowsPerPage,
@@ -202,7 +200,7 @@ export default function UserList() {
             <Table>
               <TableHeadCustom
                 headLabel={TABLE_HEAD}
-                rowCount={bumdesas?.data?.length}
+                rowCount={units?.data?.length}
                 numSelected={selected.length}
                 sx={{
                   backgroundColor: '#F8F9F9',
@@ -214,8 +212,8 @@ export default function UserList() {
 
               <TableBody>
                 {!isLoading &&
-                  bumdesas &&
-                  bumdesas?.data?.map((row, index) => (
+                  units &&
+                  units?.data?.map((row, index) => (
                     <UserTableRow
                       id={row.id}
                       key={row.id}
@@ -224,7 +222,7 @@ export default function UserList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={bumdesas?.data.length === 1 && page === 1}
+                      disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
                       onViewRow={() => router.push(`/data-bumdesa/${row.id}`)}
@@ -239,8 +237,8 @@ export default function UserList() {
                     />
                   ))}
                 <TableNoData
-                  isNotFound={bumdesas?.data?.length === 0}
-                  title="BUMDesa belum tersedia."
+                  isNotFound={units?.data?.length === 0}
+                  title="Data Unit Usaha belum tersedia."
                   // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
                   // action={
                   //   <StyledButton
@@ -286,7 +284,7 @@ export default function UserList() {
             variant="outlined"
             shape="rounded"
             color="primary"
-            count={bumdesas?.metadata?.paging?.total_page}
+            count={units?.metadata?.paging?.total_page}
             rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}

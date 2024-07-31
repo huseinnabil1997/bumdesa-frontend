@@ -30,7 +30,7 @@ import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 import { UserTableRow } from 'src/sections/data-bumdesa';
-import { useGetListBumdesa } from 'src/query/hooks/bumdesa/useGetListBumdesa';
+import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdesa';
 import { FormProvider } from 'src/components/hook-form';
 import BumdesaHeader from 'src/sections/data-bumdesa/BumdesaHeader';
 import { useForm } from 'react-hook-form';
