@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 // @mui
 import {
   Card,
@@ -17,26 +17,34 @@ import { DatePicker } from '@mui/lab';
 import moment from 'moment';
 import { useGetFinances } from 'src/query/hooks/dashboard/useGetFinances';
 import { fNumber } from 'src/utils/formatNumber';
+import { useGetStatistics } from 'src/query/hooks/dashboard/useGetStatistics';
 
-// ----------------------------------------------------------------------
-
-const CONTENTS = [
-  { title: 'Total BUMDesa', value: 1234 },
-  { title: 'User Login', value: 2534 },
-  { title: 'BUMDesa Aktif', value: 82345 },
-  { title: 'Unit Usaha Aktif', value: 52933 },
-  { title: 'Laporan Keuangan', value: 92347 },
-];
+// --------
 
 export default function DashboardFinances({ unit }) {
   const theme = useTheme();
 
+  const { data: stat } = useGetStatistics();
+
   const [seriesData, setSeriesData] = useState(new Date());
+
+  const contents = useMemo(
+    () => [
+      { title: 'Total BUMDesa', value: stat?.total_bumdesa },
+      { title: 'User Login', value: stat?.total_user_regis },
+      { title: 'BUMDesa Aktif', value: stat?.total_bumdesa_active },
+      { title: 'Unit Usaha Aktif', value: stat?.total_unit_active },
+      { title: 'Laporan Keuangan', value: stat?.total_report },
+    ],
+    [stat]
+  );
 
   const { data, isLoading } = useGetFinances({
     date: moment(seriesData).format('yyyy'),
     unit,
   });
+
+  console.log(stat);
 
   return (
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
@@ -61,7 +69,7 @@ export default function DashboardFinances({ unit }) {
       <CardContent>
         {!isLoading && data && (
           <Grid container spacing={3}>
-            {CONTENTS.map((row, i) => (
+            {contents.map((row, i) => (
               <Grid item xs={4} md={2.4} key={i}>
                 <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5 }}>
                   <Box display="flex" justifyContent="space-between">

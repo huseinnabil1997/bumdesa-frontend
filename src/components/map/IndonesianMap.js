@@ -1,13 +1,9 @@
 import { SVGMap } from 'react-svg-map';
-import Indonesia from '@svg-maps/indonesia';
 import { scaleQuantize } from 'd3-scale';
 import { useEffect, useState } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import 'react-svg-map/lib/index.css';
-
-const colorScale = scaleQuantize()
-  .domain([1, 350])
-  .range(['#deebf7', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#08519c', '#08306b']);
+import { path } from './path';
 
 const StyledSVGMap = styled(SVGMap)(() => ({
   '& .svg-map__location': {
@@ -23,43 +19,6 @@ const StyledSVGMap = styled(SVGMap)(() => ({
     stroke: 'orange !important',
   },
 }));
-
-const provinceColors = {
-  'id-ja': colorScale(100),
-  'id-ji': colorScale(200),
-  'id-jb': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ac': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ba': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-bb': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-be': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-bt': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-go': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-jk': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-jt': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-kb': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ki': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-kr': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ks': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-kt': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ku': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-la': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ma': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-mu': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-nb': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-nt': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-pa': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-pb': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ri': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-sa': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-sb': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-sg': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-sn': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-sr': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-ss': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-st': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-su': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-  'id-yo': colorScale(Math.floor(Math.random() * (300 - 1 + 1)) + 1),
-};
 
 const Tooltip = ({ content, position }) => {
   if (!content) return null;
@@ -78,16 +37,27 @@ const Tooltip = ({ content, position }) => {
       }}
       style={{ left: `${x}px`, top: `${y}px` }}
     >
-      <Typography variant="subtitle2">
-        Nama Kota: <b>{content}</b>
-      </Typography>
+      <Typography variant="subtitle2">{content}</Typography>
     </Box>
   );
 };
 
-export default function IndonesianMap() {
+export default function IndonesianMap({ data }) {
   const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
+  const colorScale = scaleQuantize()
+    .domain([0, 5])
+    .range([
+      '#deebf7',
+      '#c6dbef',
+      '#9ecae1',
+      '#6baed6',
+      '#4292c6',
+      '#2171b5',
+      '#08519c',
+      '#08306b',
+    ]);
 
   const handleLocationClick = (event) => {
     const locations = document.querySelectorAll('.svg-map__location');
@@ -99,8 +69,7 @@ export default function IndonesianMap() {
     const region = event.target;
     if (region.classList.contains('svg-map__location')) {
       const content = region.getAttribute('data-info');
-      const id = region.getAttribute('id');
-      setTooltipContent(`${content}(${id})`);
+      setTooltipContent(content);
       setTooltipPosition({ x: event.pageX + 10, y: event.pageY + 10 });
     }
   };
@@ -116,17 +85,23 @@ export default function IndonesianMap() {
   };
 
   useEffect(() => {
-    const locations = document.querySelectorAll('.svg-map__location');
-    locations.forEach((location) => {
-      location.classList.remove('svg-map__location');
-      location.style.fill = provinceColors[location.id] || '#333';
-      location.style.stroke = provinceColors[location.id] || '#333';
-      location.classList.add('svg-map__location');
-      location.setAttribute('data-info', location.ariaLabel);
+    if (data?.length > 0) {
+      const locations = document.querySelectorAll('.svg-map__location');
+      locations.forEach((location) => {
+        const find = data.find((row) => row.id === location.id);
+        const color = colorScale(find.total_bumdesa);
+        location.classList.remove('svg-map__location');
+        location.style.fill = color || '#333';
+        location.style.stroke = color || '#333';
+        location.classList.add('svg-map__location');
+        location.setAttribute('data-info', `${location.ariaLabel}: ${find.total_bumdesa}`);
 
-      return location;
-    });
-  }, []);
+        return location;
+      });
+    }
+  }, [data]);
+
+  console.log(data);
 
   return (
     <Box
@@ -135,7 +110,7 @@ export default function IndonesianMap() {
       onMouseMove={handleMouseMove}
       onMouseOut={handleMouseOut}
     >
-      <StyledSVGMap map={Indonesia} onLocationClick={handleLocationClick} />
+      <StyledSVGMap map={path} onLocationClick={handleLocationClick} />
       <Tooltip content={tooltipContent} position={tooltipPosition} />
     </Box>
   );

@@ -11,27 +11,20 @@ import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
-export default function KanpusDemographics() {
+export default function KanpusDemographics({ demo }) {
   const theme = useTheme();
 
   const router = useRouter();
 
   const [chartData, setChartData] = useState([]);
 
-  const data = [122, 344, 224, 255, 143, 304];
-  const data2 = [224, 255, 143, 304, 122, 344];
-
   const chartOptions = merge(BaseOptionChart(), {
     legend: { show: false },
     xaxis: {
-      categories: [
-        'Jawa Barat',
-        'Jakarta',
-        'Jawa Timur',
-        'Jawa Tengah',
-        'Yogyakarta',
-        'Sulawesi Selatan',
-      ],
+      categories: demo
+        ?.sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
+        ?.slice(0, 6)
+        ?.map((row) => row.province),
     },
     dataLabels: {
       enabled: true,
@@ -66,26 +59,33 @@ export default function KanpusDemographics() {
   });
 
   useEffect(() => {
-    setChartData([
-      {
-        name: 'Data 1',
-        data: data,
-        color: theme.palette.primary.main,
-      },
-      {
-        name: 'Data 2',
-        data: data2,
-        color: theme.palette.warning.main,
-      },
-    ]);
-  }, []);
+    if (demo?.length > 0)
+      setChartData([
+        {
+          name: 'BUM Desa',
+          data: demo
+            .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
+            .slice(0, 6)
+            .map((row) => row.total_bumdesa),
+          color: theme.palette.primary.main,
+        },
+        {
+          name: 'Kemendes',
+          data: demo
+            .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
+            .slice(0, 6)
+            .map((row, i) => row.total_kemendes + 1 + i * 2),
+          color: theme.palette.warning.main,
+        },
+      ]);
+  }, [demo]);
 
   return (
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
       <CardHeader sx={{ p: 3, pb: 0 }} title="Demografi BUMDesa Berdasarkan Provinsi" />
 
       <CardContent sx={{ py: 5 }}>
-        <IndonesianMap />
+        <IndonesianMap data={demo} />
         {chartOptions && (
           <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
             <ReactApexChart type="bar" series={chartData} options={chartOptions} height={360} />
