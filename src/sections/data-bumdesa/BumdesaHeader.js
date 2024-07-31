@@ -20,7 +20,7 @@ import onDownload from '../../utils/onDownload';
 import { searchRegex } from 'src/utils/regex';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
-import { useDownloadBumdesa } from 'src/query/hooks/bumdesa/useDownloadBumdesa';
+import { useDownloadBumdesa } from 'src/query/hooks/data-bumdesa/useDownloadBumdesa';
 // import { IconButtonAnimate } from 'src/components/animate';
 // import TuneIcon from '@mui/icons-material/Tune';
 import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
