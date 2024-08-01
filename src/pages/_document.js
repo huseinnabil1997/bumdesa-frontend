@@ -39,6 +39,8 @@ export default class MyDocument extends Document {
           />
           <meta name="keywords" content="bumdesa,bumdesa digital,bumdesa digital indonesia" />
           <meta name="author" content="PT Bank Rakyat Indonesia (Persero) Tbk." />
+          <script src="/elementIdGenerator.js" defer />
+          {/* <script src="/autoIdGenerator.js" strategy="afterInteractive" /> */}
         </Head>
 
         <body>
