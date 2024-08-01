@@ -63,8 +63,8 @@ export default function UserTableRow({
       <TableCell sx={{ position: 'sticky', left: 0, backgroundColor: 'inherit', zIndex: 1 }}>
         {name}
       </TableCell>
-      <TableCell align="center" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
-      <TableCell align="center" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
       <TableCell align="center">
         {status === 1 && (
           <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
@@ -76,9 +76,20 @@ export default function UserTableRow({
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
         )}
       </TableCell>
-      <TableCell align="center" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell align="center">
+        {status === 1 && (
+          <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
+        )}
+        {status === 0 && (
+          <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
+        )}
+        {status === 3 && (
+          <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
+        )}
+      </TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
 
-      <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
+      <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
         <StyledLoadingButton
           // size="small"
           variant="outlined"
