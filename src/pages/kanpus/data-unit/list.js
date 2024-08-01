@@ -41,6 +41,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Nama Unit Usaha', align: 'left' },
   { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
+  { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center' },
   { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },
   { id: 'cash_count', label: 'Jumlah Kas Tunai', align: 'left' },
   { id: 'detail', label: 'Detail', align: 'center' },
