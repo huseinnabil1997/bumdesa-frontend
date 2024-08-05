@@ -12,3 +12,7 @@ export { default as DashboardCurrentBalance } from './DashboardCurrentBalance';
 export { default as DashboardUnit } from './DashboardUnit';
 export { default as DashboardUnitKanpus } from './DashboardUnitKanpus';
 export { default as DashboardEducation } from './DashboardEducation';
+export { default as DashboardFinancesBumdesKanpus } from './DashboardFinancesBumdesKanpus';
+export { default as DashboardBumdesaManagerList } from './DashboardBumdesaManagerList';
+export { default as DashboardUnitList } from './DashboardUnitList';
+export { default as DashboardUnitManagerList } from './DashboardUnitManagerList';
