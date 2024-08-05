@@ -8,7 +8,9 @@ function generateElementIds(elements) {
   document.querySelectorAll('[id]').forEach(el => existingIds.add(el.id));
 
   elements.forEach(element => {
-    if (element.id && element.id.match(/^[a-z]+-\d+$/)) return;
+    // if (element.id && element.id.match(/^[a-z]+-\d+$/)) return;
+    // Periksa apakah elemen memiliki ID dan apakah ID tersebut sesuai dengan pola yang diinginkan
+    if (element.id && typeof element.id === 'string' && element.id.match(/^[a-z]+-\d+$/)) return;
 
     const tagName = element.tagName.toLowerCase();
     // Gunakan hash dari konten elemen untuk membuat ID yang konsisten

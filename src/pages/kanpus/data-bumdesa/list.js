@@ -38,12 +38,17 @@ import { useForm } from 'react-hook-form';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nama BUMDesa', align: 'left' },
+  { id: 'name', label: 'Nama BUM Desa', align: 'left' },
   { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
   { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center' },
   { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },
-  { id: 'cash_count', label: 'Jumlah Kas Tunai', align: 'left' },
+  { id: 'profitability', label: 'Profitabilitas', align: 'left' },
+  { id: 'liquidity', label: 'Liquiditas', align: 'left' },
+  { id: 'solvency', label: 'Solvabilitas', align: 'left' },
+  { id: 'total_omset', label: 'Total Omset', align: 'left' },
+  { id: 'profit', label: 'Laba Rugi', align: 'left' },
+  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left' },
   { id: 'detail', label: 'Detail', align: 'center' },
 ];
 

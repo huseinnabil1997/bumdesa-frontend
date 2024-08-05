@@ -5,8 +5,7 @@ import {
   DashboardSales,
   DashboardProfitLoss,
   DashboardFinancesBumdesKanpus,
-  DashboardBumdesaManagerList,
-  DashboardUnitList,
+  DashboardUnitManagerList,
 } from 'src/sections/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
@@ -18,10 +17,10 @@ import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
-import { useSelector } from 'react-redux';
-import { ProfileInfo } from 'src/sections/profile';
+// import { useSelector } from 'react-redux';
+import { ProfileInfoUnitKanpus } from 'src/sections/profile';
 import { useTheme } from '@emotion/react';
+import { useGetUnitById } from 'src/query/hooks/data-unit/useGetUnitById';
 
 // ----------------------------------------------------------------------
 
@@ -40,14 +39,14 @@ DetailBumdesa.getLayout = function getLayout(page) {
 
 export default function DetailBumdesa() {
   const theme = useTheme();
-  const userData = useSelector(state => state.user.userData);
+  // const userData = useSelector(state => state.user.userData);
   const { themeStretch } = useSettings();
   const router = useRouter();
   const token = getSessionToken();
   const [decoded, setDecoded] = useState(jwtDecode(token));
   const { id } = router.query;
 
-  const { data } = useGetProfile(userData?.bumdesa_id);
+  const { data } = useGetUnitById(id);
 
   console.log('id:', id, decoded);
 
@@ -113,11 +112,11 @@ export default function DetailBumdesa() {
           <Grid item xs={12}>
             <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
               <CardHeader
-                title="Informasi BUMDesa"
+                title="Informasi Unit Usaha"
                 sx={{ p: 3, pb: 0 }}
               />
               <CardContent>
-                <ProfileInfo
+                <ProfileInfoUnitKanpus
                   data={data}
                   from="kanpus"
                 />
@@ -126,11 +125,7 @@ export default function DetailBumdesa() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardBumdesaManagerList />
-          </Grid>
-
-          <Grid item xs={12}>
-            <DashboardUnitList />
+            <DashboardUnitManagerList />
           </Grid>
 
           {/* <Grid item xs={12}>

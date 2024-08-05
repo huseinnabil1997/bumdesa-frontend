@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
-import { Box, Chip, Grid, Modal, Stack, Typography } from "@mui/material";
+import { Box, Chip, Grid, Modal, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
@@ -70,7 +70,7 @@ const styles = {
   }
 }
 
-export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
+export default function ProfileInfoUnitKanpus({ data, setIsEdit, from = '' }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
@@ -171,6 +171,19 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
+            name="email"
+            label="Alamat Email Aktif Unit Usaha"
+            placeholder="Contoh: email@email.com"
+            inputProps={{
+              readOnly: true
+            }}
+            sx={styles.textfield}
+            variant="standard"
+            value={defaultValues?.email}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <RHFTextField
             name="year_founded"
             label="Tahun Berdiri"
             placeholder="Pilih Tahun"
@@ -193,50 +206,6 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
             sx={styles.textfield}
             value={defaultValues?.sector?.label}
             variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
-            Data Pengurus Unit Usaha
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            name="manager_name"
-            label="Nama Manager Unit Usaha"
-            placeholder="Contoh: Budi Jailani"
-            inputProps={{
-              readOnly: true
-            }}
-            sx={styles.textfield}
-            variant="standard"
-            value={defaultValues?.manager_name}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            name="position"
-            label="Jabatan"
-            placeholder="Manager"
-            inputProps={{
-              readOnly: true
-            }}
-            sx={styles.textfield}
-            variant="standard"
-            value={defaultValues?.position}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <RHFTextField
-            name="manager_phone"
-            label="Nomor Telepon"
-            placeholder="Contoh: 081xxx"
-            inputProps={{
-              readOnly: true
-            }}
-            sx={styles.textfield}
-            variant="standard"
-            value={defaultValues?.manager_phone}
           />
         </Grid>
       </Grid>
@@ -266,7 +235,7 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
   )
 }
 
-ProfileInfoUnit.propTypes = {
+ProfileInfoUnitKanpus.propTypes = {
   isEdit: PropTypes.bool,
   setIsEdit: PropTypes.func,
   data: PropTypes.object,

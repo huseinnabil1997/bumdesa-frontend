@@ -41,6 +41,7 @@ export default function UserTableRow({
   onDeleteRow,
   disableDelete = false,
   role,
+  from = '',
 }) {
   const theme = useTheme();
   const { name, position_name, phone } = row;
@@ -60,7 +61,7 @@ export default function UserTableRow({
       <TableCell sx={{ color: '#777777', height: 56 }}>{position_name}</TableCell>
       <TableCell sx={{ color: '#777777', height: 56 }}>{phone}</TableCell>
 
-      <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
+      {from !== 'kanpus' && <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
         <IconButton onClick={onEditRow}>
           <Iconify
             icon={'lucide:edit'}
@@ -84,7 +85,7 @@ export default function UserTableRow({
             />
           </IconButton>
         )}
-      </TableCell>
+      </TableCell>}
     </TableRow>
   );
 }

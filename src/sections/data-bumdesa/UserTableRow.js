@@ -48,6 +48,14 @@ export default function UserTableRow({
 }) {
   // const theme = useTheme();
   const { name, year_founded, status } = row;
+  const temp = 400000000;
+  
+  const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(angka);
 
   return (
     <TableRow
@@ -87,7 +95,12 @@ export default function UserTableRow({
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
         )}
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(temp)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(temp)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(temp)}</TableCell>
 
       <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
         <StyledLoadingButton

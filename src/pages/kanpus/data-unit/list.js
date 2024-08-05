@@ -41,9 +41,13 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Nama Unit Usaha', align: 'left' },
   { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
-  { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center' },
   { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },
-  { id: 'cash_count', label: 'Jumlah Kas Tunai', align: 'left' },
+  { id: 'profitability', label: 'Profitabilitas', align: 'left' },
+  { id: 'liquidity', label: 'Liquiditas', align: 'left' },
+  { id: 'solvency', label: 'Solvabilitas', align: 'left' },
+  { id: 'total_omset', label: 'Total Omset', align: 'left' },
+  { id: 'profit', label: 'Laba Rugi', align: 'left' },
+  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left' },
   { id: 'detail', label: 'Detail', align: 'center' },
 ];
 
@@ -226,7 +230,7 @@ export default function UserList() {
                       disableDelete={units?.data.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => router.push(`detail?id=${row.id}`)}
+                      onViewRow={() => router.push(`${row.id}`)}
                       onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
                       onActivateRow={() => handleChangeStatus(row.id, row.status)}
                       sx={{
