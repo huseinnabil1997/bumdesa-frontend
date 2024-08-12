@@ -1,5 +1,5 @@
 // @mui
-import { Button, Card, Container, Paper, Typography } from '@mui/material';
+import { Button, Chip, Container, Paper, Typography } from '@mui/material';
 // hooks
 // layouts
 import Layout from '../../layouts';
@@ -14,7 +14,6 @@ import {
   TimelineContent,
   TimelineSeparator,
   TimelineConnector,
-  TimelineOppositeContent,
 } from '@mui/lab';
 import Iconify from 'src/components/Iconify';
 import useSettings from 'src/hooks/useSettings';
@@ -29,41 +28,12 @@ JurnalList.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
-const TIMELINES = [
-  {
-    key: 1,
-    title: 'Primary',
-    des: 'Morbi mattis ullamcorper',
-    time: '10:00 am',
-    color: 'primary',
-    icon: <Iconify icon="eva:image-2-fill" width={24} height={24} />,
-  },
-  {
-    key: 2,
-    title: 'Primary',
-    des: 'Morbi mattis ullamcorper',
-    time: '10:00 am',
-    color: 'primary',
-    icon: <Iconify icon="eva:image-2-fill" width={24} height={24} />,
-  },
-  {
-    key: 3,
-    title: 'Primary',
-    des: 'Morbi mattis ullamcorper',
-    time: '10:00 am',
-    color: 'primary',
-    icon: <Iconify icon="eva:image-2-fill" width={24} height={24} />,
-  },
-];
-
 export default function JurnalList() {
   const { themeStretch } = useSettings();
 
   const { push } = useRouter();
 
   const { data } = useGetLogs({ page: 1, limit: 5 });
-
-  console.log(data);
 
   const generateIcon = (value) => {
     if (value === 'tambah') return <Iconify icon="eva:plus-fill" width={24} height={24} />;
@@ -103,7 +73,16 @@ export default function JurnalList() {
                     <Typography variant="caption" sx={{ color: '#777' }}>
                       {moment(item?.timestamp).format('DD/MM/yyyy HH.mm')}
                     </Typography>
-                    <Typography variant="subtitle2">{item?.description ?? '-'}</Typography>
+                    <Chip
+                      label={item?.modul}
+                      size="small"
+                      sx={{ ml: 1, textTransform: 'capitalize' }}
+                      variant="outlined"
+                      color={generateColor(item?.action)}
+                    />
+                    <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                      {item?.description ?? '-'}
+                    </Typography>
                   </Paper>
                 </TimelineContent>
               </TimelineItem>
