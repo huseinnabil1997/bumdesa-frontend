@@ -10,6 +10,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  TextField,
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -26,6 +27,9 @@ import { useTheme } from '@mui/material/styles';
 import TableError from 'src/components/table/TableError';
 import { useGetLogs } from 'src/query/hooks/log/useGetLog';
 import { LOG_HEAD } from 'src/utils/constant';
+import { Search } from '@mui/icons-material';
+import { useEffect, useMemo, useState } from 'react';
+import { debounce } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -39,15 +43,33 @@ export default function JurnalList() {
     defaultCurrentPage: 1,
   });
 
+  const [search, setSearch] = useState('');
+
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  const { data, isLoading, isError } = useGetLogs({ page, limit: rowsPerPage });
+  const debounceRefetch = useMemo(() => debounce((search) => refetch({ search }), 1000), []);
+
+  const { data, isLoading, isError, refetch } = useGetLogs({ page, limit: rowsPerPage, search });
+
+  useEffect(() => {
+    onChangePage(null, 1);
+    debounceRefetch(search);
+  }, [search, debounceRefetch]);
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Header />
+        <TextField
+          sx={{ mt: 3 }}
+          size="small"
+          placeholder="Cari log aktivitas disini..."
+          InputProps={{ startAdornment: <Search sx={{ mr: 1 }} /> }}
+          fullWidth
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>

@@ -41,8 +41,8 @@ export const BUMDES_HEAD = [
 export const LOG_HEAD = [
   { id: 'activity', label: 'Aktivitas', align: 'left', width: 200 },
   { id: 'time', label: 'Waktu', align: 'left', width: 100 },
-  { id: 'place', label: 'Tempat', align: 'left', width: 100 },
-  { id: 'device', label: 'Perangkat', align: 'left', width: 200 },
+  { id: 'place', label: 'Modul', align: 'left', width: 100 },
+  { id: 'device', label: 'User Agent', align: 'left', width: 200 },
 ];
 
 export const DEFAULT_FILTER = {
