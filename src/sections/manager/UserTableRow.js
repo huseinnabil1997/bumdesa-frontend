@@ -55,37 +55,49 @@ export default function UserTableRow({
         borderRadius: 8,
         borderColor: '#EAEBEB',
         backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
-      }}>
-
+      }}
+    >
       <TableCell>{name}</TableCell>
       <TableCell sx={{ color: '#777777', height: 56 }}>{position_name}</TableCell>
       <TableCell sx={{ color: '#777777', height: 56 }}>{phone}</TableCell>
 
-      {from !== 'kanpus' && <TableCell align="left" sx={{ display: 'flex', justifyContent: 'space-around' }}>
-        <IconButton onClick={onEditRow}>
-          <Iconify
-            icon={'lucide:edit'}
-            sx={{ color: theme.palette.primary.main, fontSize: 16 }}
-          />
-        </IconButton>
-        {disableDelete ? (
-          <DeleteTooltip title={`Setidaknya harus ada ${role === 'unit' ? '1' : '3'} Pengurus aktif di ${role === 'unit' ? 'Unit Usaha' : 'BUM Desa'}.`}>
+      {from !== 'kanpus' && (
+        <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
+          <IconButton onClick={onEditRow}>
+            <Iconify
+              icon={'lucide:edit'}
+              sx={{ color: theme.palette.primary.main, fontSize: 16 }}
+            />
+          </IconButton>
+          {disableDelete ? (
+            <DeleteTooltip
+              title={`Setidaknya harus ada ${role === 'unit' ? '1' : '3'} Pengurus aktif di ${
+                role === 'unit' ? 'Unit Usaha' : 'BUM Desa'
+              }.`}
+            >
+              <IconButton onClick={disableDelete ? null : onDeleteRow}>
+                <Iconify
+                  icon={'lucide:trash'}
+                  sx={{
+                    color: disableDelete ? theme.palette.grey : theme.palette.error.main,
+                    fontSize: 16,
+                  }}
+                />
+              </IconButton>
+            </DeleteTooltip>
+          ) : (
             <IconButton onClick={disableDelete ? null : onDeleteRow}>
               <Iconify
                 icon={'lucide:trash'}
-                sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
+                sx={{
+                  color: disableDelete ? theme.palette.grey : theme.palette.error.main,
+                  fontSize: 16,
+                }}
               />
             </IconButton>
-          </DeleteTooltip>
-        ) : (
-          <IconButton onClick={disableDelete ? null : onDeleteRow}>
-            <Iconify
-              icon={'lucide:trash'}
-              sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
-            />
-          </IconButton>
-        )}
-      </TableCell>}
+          )}
+        </TableCell>
+      )}
     </TableRow>
   );
 }
