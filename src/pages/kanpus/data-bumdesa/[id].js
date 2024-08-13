@@ -1,5 +1,14 @@
 // @mui
-import { Breadcrumbs, Card, CardContent, CardHeader, Container, Grid, Link, Typography } from '@mui/material';
+import {
+  Breadcrumbs,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Grid,
+  Link,
+  Typography,
+} from '@mui/material';
 // hooks
 import {
   DashboardSales,
@@ -40,7 +49,7 @@ DetailBumdesa.getLayout = function getLayout(page) {
 
 export default function DetailBumdesa() {
   const theme = useTheme();
-  const userData = useSelector(state => state.user.userData);
+  const userData = useSelector((state) => state.user.userData);
   const { themeStretch } = useSettings();
   const router = useRouter();
   const token = getSessionToken();
@@ -48,8 +57,6 @@ export default function DetailBumdesa() {
   const { id } = router.query;
 
   const { data } = useGetProfile(userData?.bumdesa_id);
-
-  console.log('id:', id, decoded);
 
   // useEffect(() => {
   //   if (data?.name && typeof window !== 'undefined') {
@@ -112,15 +119,9 @@ export default function DetailBumdesa() {
 
           <Grid item xs={12}>
             <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
-              <CardHeader
-                title="Informasi BUMDesa"
-                sx={{ p: 3, pb: 0 }}
-              />
+              <CardHeader title="Informasi BUMDesa" sx={{ p: 3, pb: 0 }} />
               <CardContent>
-                <ProfileInfo
-                  data={data}
-                  from="kanpus"
-                />
+                <ProfileInfo data={data} from="kanpus" />
               </CardContent>
             </Card>
           </Grid>

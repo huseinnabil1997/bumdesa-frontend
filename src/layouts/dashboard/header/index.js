@@ -68,7 +68,6 @@ export default function DashboardHeader({
   verticalLayout = false,
   header,
 }) {
-  console.log(header);
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
 
   const isDesktop = useResponsive('up', 'lg');
