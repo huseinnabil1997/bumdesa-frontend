@@ -38,6 +38,13 @@ export const BUMDES_HEAD = [
   { id: 'action', label: 'Aksi', align: 'center', minWidth: 100 },
 ];
 
+export const LOG_HEAD = [
+  { id: 'activity', label: 'Aktivitas', align: 'left', width: 200 },
+  { id: 'time', label: 'Waktu', align: 'left', width: 100 },
+  { id: 'place', label: 'Tempat', align: 'left', width: 100 },
+  { id: 'device', label: 'Perangkat', align: 'left', width: 200 },
+];
+
 export const DEFAULT_FILTER = {
   limit: 10,
   page: 1,
