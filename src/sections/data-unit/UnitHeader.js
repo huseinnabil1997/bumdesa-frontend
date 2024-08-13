@@ -48,10 +48,10 @@ const styles = {
     //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
     //     borderColor: '#1078CA',
     //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiInputBase-input::placeholder': { 
+    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiInputBase-input::placeholder': {
     //     color: '#1078CA',
     //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiSvgIcon-root': { 
+    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiSvgIcon-root': {
     //     color: '#1078CA',
     //   },
     //   '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
@@ -62,7 +62,7 @@ const styles = {
     //   },
     // },
   },
-}
+};
 
 const StyledNoOptionsText = styled('div')({
   fontSize: '12px',
@@ -91,9 +91,15 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
   const { mutate: download, isLoading } = useDownloadUnit();
 
   const { data: provincies, isLoading: isLoadingProvincies } = useGetProvincies();
-  const { data: cities, isLoading: isLoadingCities } = useGetCities({ prov_id: filter?.provinsi?.value });
-  const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({ city_id: filter?.kota?.value });
-  const { data: subdistricts, isLoading: isLoadingSubdistricts } = useGetSubdistricts({ dis_id: filter?.kecamatan?.value });
+  const { data: cities, isLoading: isLoadingCities } = useGetCities({
+    prov_id: filter?.provinsi?.value,
+  });
+  const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({
+    city_id: filter?.kota?.value,
+  });
+  const { data: subdistricts, isLoading: isLoadingSubdistricts } = useGetSubdistricts({
+    dis_id: filter?.kecamatan?.value,
+  });
   const reports = [
     { value: 1, label: 'Laba Rugi' },
     { value: 2, label: 'Perubahan Ekuitas' },
@@ -116,7 +122,22 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: user?.bumdesid + '_Business_Unit_Report_' + filter?.provinsi?.label + '_' + filter?.kota?.label + '_' + filter?.kecamatan?.label + '_' + filter?.desa?.label + '_' + new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
+          title:
+            user?.bumdesid +
+            '_Business_Unit_Report_' +
+            filter?.provinsi?.label +
+            '_' +
+            filter?.kota?.label +
+            '_' +
+            filter?.kecamatan?.label +
+            '_' +
+            filter?.desa?.label +
+            '_' +
+            new Date().toLocaleDateString('id-ID', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }),
           type: index,
         });
         setSelectedIndex(index);
@@ -169,12 +190,14 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
     setValue('desa', null);
     setValue('kecamatan', value);
   };
-  
-  console.log('filter', filter);
 
   return (
     <>
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={1}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
         {/* <IconButtonAnimate ref={anchorRefFilter}>
           <TuneIcon
             onClick={handleToggleFilter}

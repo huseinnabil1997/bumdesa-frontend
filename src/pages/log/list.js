@@ -10,7 +10,9 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Autocomplete,
   TextField,
+  CircularProgress,
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -27,9 +29,11 @@ import { useTheme } from '@mui/material/styles';
 import TableError from 'src/components/table/TableError';
 import { useGetLogs } from 'src/query/hooks/log/useGetLog';
 import { LOG_HEAD } from 'src/utils/constant';
-import { Search } from '@mui/icons-material';
-import { useEffect, useMemo, useState } from 'react';
-import { debounce } from 'lodash';
+import { useState } from 'react';
+import { capitalCase } from 'change-case';
+import jwtDecode from 'jwt-decode';
+import { getSessionToken } from 'src/utils/axios';
+import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 
 // ----------------------------------------------------------------------
 
@@ -39,37 +43,92 @@ JurnalList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function JurnalList() {
+  const token = getSessionToken();
+  let decoded = {};
+  if (token) {
+    decoded = jwtDecode(token);
+  } else {
+    console.error('Token not available');
+  }
+
   const { page, rowsPerPage, onChangeRowsPerPage, onChangePage } = useTable({
     defaultCurrentPage: 1,
   });
 
-  const [search, setSearch] = useState('');
+  const [module, setModule] = useState('0');
+  const [action, setAction] = useState('0');
+  const [business, setBusiness] = useState(null);
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
-  const debounceRefetch = useMemo(() => debounce((search) => refetch({ search }), 1000), []);
-
-  const { data, isLoading, isError, refetch } = useGetLogs({ page, limit: rowsPerPage, search });
-
-  useEffect(() => {
-    onChangePage(null, 1);
-    debounceRefetch(search);
-  }, [search, debounceRefetch]);
+  const { data: businesses, isLoading: loadingBusiness } = useGetBusinessUnits();
+  const { data, isLoading, isError } = useGetLogs({
+    page,
+    limit: rowsPerPage,
+    module,
+    action,
+    unit: business?.id,
+  });
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Header />
-        <TextField
-          sx={{ mt: 3 }}
-          size="small"
-          placeholder="Cari log aktivitas disini..."
-          InputProps={{ startAdornment: <Search sx={{ mr: 1 }} /> }}
-          fullWidth
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <Box display="flex">
+          <Select
+            fullWidth
+            sx={{ mt: 3 }}
+            size="small"
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
+          >
+            <MenuItem value="0">-- Pilih Aksi --</MenuItem>
+            {['tambah', 'hapus', 'edit'].map((row) => (
+              <MenuItem key={row} value={row}>
+                {capitalCase(row)}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <Select
+            fullWidth
+            sx={{ mt: 3, ml: 1 }}
+            size="small"
+            value={module}
+            onChange={(e) => setModule(e.target.value)}
+          >
+            <MenuItem value="0">-- Pilih Modul --</MenuItem>
+            {['jurnal', 'profile', 'unit usaha', 'password'].map((row) => (
+              <MenuItem key={row} value={row}>
+                {capitalCase(row)}
+              </MenuItem>
+            ))}
+          </Select>
+          {decoded?.sub?.businessid === 0 && (
+            <Autocomplete
+              InputProps={{
+                startAdornment: (
+                  <>
+                    {loadingBusiness && (
+                      <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />
+                    )}
+                  </>
+                ),
+              }}
+              value={business}
+              onChange={(event, newValue) => {
+                setBusiness(newValue);
+              }}
+              sx={{ ml: 1, mt: 3 }}
+              size="small"
+              getOptionLabel={(option) => option?.name}
+              options={businesses}
+              fullWidth
+              renderInput={(params) => <TextField {...params} placeholder="Pilih Unit" />}
+            />
+          )}
+        </Box>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
