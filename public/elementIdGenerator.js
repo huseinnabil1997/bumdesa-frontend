@@ -1,44 +1,53 @@
 function generateElementIds(elements) {
-  const idCounts = {};
-  const existingIds = new Set();
   const currentPath = window.location.pathname.slice(1);
   const sanitizedPath = currentPath.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').toLowerCase();
+  const elementCounts = new Map();
 
-  // Kumpulkan semua ID yang sudah ada
-  document.querySelectorAll('[id]').forEach(el => existingIds.add(el.id));
-
-  elements.forEach(element => {
-    // if (element.id && element.id.match(/^[a-z]+-\d+$/)) return;
-    // Periksa apakah elemen memiliki ID dan apakah ID tersebut sesuai dengan pola yang diinginkan
-    if (element.id && typeof element.id === 'string' && element.id.match(/^[a-z]+-\d+$/)) return;
-
+  elements.forEach((element) => {
     const tagName = element.tagName.toLowerCase();
-    // Gunakan hash dari konten elemen untuk membuat ID yang konsisten
-    const contentHash = hashCode(element.outerHTML);
-    const newId = `${tagName}-${sanitizedPath}-${contentHash}`;
+    const attributes = encodeAttributes(element.attributes);
+    const parentIndex = getParentIndex(element);
+    const siblingIndex = getSiblingIndex(element);
+    const elementKey = `${tagName}-${sanitizedPath}-${attributes}`;
+    
+    // Menghitung jumlah elemen yang sama persis
+    elementCounts.set(elementKey, (elementCounts.get(elementKey) || 0) + 1);
+    const elementCount = elementCounts.get(elementKey);
 
-    if (!existingIds.has(newId)) {
-      element.setAttribute('id', newId);
-      existingIds.add(newId);
-    }
+    const newId = `${elementKey}-${elementCount}`
+      .replace(/[^a-zA-Z0-9-]/g, '-');
+    element.setAttribute('id', newId);
   });
 }
 
-// Fungsi untuk menghasilkan hash sederhana
-function hashCode(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Konversi ke 32-bit integer
+function getSiblingIndex(element) {
+  if (element.parentNode) {
+    const siblings = Array.from(element.parentNode.children);
+    return siblings.filter(sibling => sibling.tagName === element.tagName).indexOf(element);
   }
-  return Math.abs(hash).toString(36);
+  return 0;
+}
+
+function getParentIndex(element) {
+  if (element.parentNode && element.parentNode.parentNode) {
+    const parentSiblings = Array.from(element.parentNode.parentNode.children);
+    return parentSiblings.indexOf(element.parentNode);
+  }
+  return '';
+}
+
+function encodeAttributes(attributes) {
+  const attributesString = Array.from(attributes)
+    .filter(attr => attr.name !== 'id')
+    .map(attr => `${attr.name}=${attr.value}`)
+    .join('&');
+  return btoa(attributesString).replace(/[+/=]/g, '').substring(0, 12);
 }
 
 function scanAndGenerateIds() {
-  const elements = document.querySelectorAll('*:not([id])');
+  const elements = document.querySelectorAll('*');
   generateElementIds(elements);
-  console.log('ID elemen telah dibuat untuk elemen baru');
+  console.log('ID elemen telah dibuat atau diperbarui untuk semua elemen');
 }
 
 // MutationObserver untuk mendeteksi perubahan DOM
@@ -63,17 +72,4 @@ document.addEventListener('DOMContentLoaded', () => {
   scanAndGenerateIds();
   observer.observe(document.body, config);
   console.log('Observasi DOM dimulai');
-});
-
-// Tambahan untuk memastikan skrip berjalan
-window.addEventListener('load', () => {
-  const allElements = document.querySelectorAll('*');
-  const allHaveIds = Array.from(allElements).every(el => el.id);
-  
-  if (!allHaveIds) {
-    console.log('Beberapa elemen tidak memiliki ID, melakukan pemindaian ulang...');
-    scanAndGenerateIds();
-  } else {
-    console.log('Semua elemen telah memiliki ID');
-  }
 });
