@@ -231,7 +231,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
             <RHFCheckbox
               name="privacyPolicy"
               label={
-                <Typography fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                <Typography id="Typography-register-kebijakan-privasi" fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
                   Saya telah membaca{' '}
                   <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>{' '}
                   BUM Desa

@@ -35,10 +35,12 @@ export default class MyDocument extends Document {
 
           <meta
             name="description"
-            content="The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style"
+            content="BUM Desa Digital"
           />
-          <meta name="keywords" content="react,material,kit,application,dashboard,admin,template" />
-          <meta name="author" content="Minimal UI Kit" />
+          <meta name="keywords" content="bumdesa,bumdesa digital,bumdesa digital indonesia" />
+          <meta name="author" content="PT Bank Rakyat Indonesia (Persero) Tbk." />
+          <script src="/elementIdGenerator.js" defer />
+          {/* <script src="/autoIdGenerator.js" strategy="afterInteractive" /> */}
         </Head>
 
         <body>

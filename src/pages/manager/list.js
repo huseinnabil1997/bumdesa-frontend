@@ -21,20 +21,21 @@ import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import {
-  TableHeadCustom,
-  TableNoData,
-  TableSkeleton,
-} from '../../components/table';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
-import { DeleteModal, EditModal, NewModal, UserTableRow, UserTableToolbar } from 'src/sections/manager';
+import {
+  DeleteModal,
+  EditModal,
+  NewModal,
+  UserTableRow,
+  UserTableToolbar,
+} from 'src/sections/manager';
 import { useGetManagers } from 'src/query/hooks/manager/useGetManagers';
 import { useDeleteManager } from 'src/query/hooks/manager/useDeleteManager';
 import { useGetPositions } from 'src/query/hooks/manager/useGetPositions';
-
 
 // ----------------------------------------------------------------------
 
@@ -52,13 +53,13 @@ const styles = {
     backgroundColor: '#E1F8EB',
     gap: '8px',
     padding: '8px',
-    borderRadius: '4px'
+    borderRadius: '4px',
   },
   snackbarIcon: {
     width: '16px',
     height: '16px',
-    color: '#27AE60'
-  }
+    color: '#27AE60',
+  },
 };
 
 // ----------------------------------------------------------------------
@@ -69,14 +70,9 @@ ManagerList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function ManagerList() {
-  const {
-    page,
-    rowsPerPage,
-    onChangeRowsPerPage,
-    selected,
-    onSelectRow,
-    onChangePage,
-  } = useTable({ defaultCurrentPage: 1 });
+  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
+    defaultCurrentPage: 1,
+  });
 
   const { themeStretch } = useSettings();
 
@@ -91,7 +87,11 @@ export default function ManagerList() {
   const [openNewModal, setOpenNewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(null);
 
-  const { data: managers, isLoading, refetch } = useGetManagers({
+  const {
+    data: managers,
+    isLoading,
+    refetch,
+  } = useGetManagers({
     page: page,
     limit: rowsPerPage,
     search: filterName,
@@ -115,15 +115,11 @@ export default function ManagerList() {
         enqueueSnackbar('', {
           variant: 'success',
           content: () => (
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={styles.snackbar}
-            >
+            <Box display="flex" alignItems="center" sx={styles.snackbar}>
               <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
               <Typography fontSize="12px">Hapus Data Pengurus Berhasil!</Typography>
             </Box>
-          )
+          ),
         });
         refetch();
         setAlertDelete(null);
@@ -143,7 +139,10 @@ export default function ManagerList() {
   return (
     <Page title="Pengurus: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Box flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box
+          flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}
+          sx={{ display: 'flex', alignItems: 'center' }}
+        >
           <Box sx={{ flexGrow: 1 }}>
             <UserTableToolbar
               filterName={filterName}
@@ -162,7 +161,8 @@ export default function ManagerList() {
               fontSize: '13px',
               fontWeight: 700,
             }}
-            variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}
+            variant="contained"
+            startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => setOpenNewModal(true)}
           >
             Tambah Anggota
@@ -170,18 +170,23 @@ export default function ManagerList() {
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
-          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2, }}>
-
+          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
             <Table>
               <TableHeadCustom
                 headLabel={TABLE_HEAD}
                 rowCount={managers?.data?.length}
                 numSelected={selected.length}
-                sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                sx={{
+                  backgroundColor: '#F8F9F9',
+                  border: 1,
+                  borderRadius: 8,
+                  borderColor: '#EAEBEB',
+                }}
               />
 
               <TableBody>
-                {!isLoading && managers &&
+                {!isLoading &&
+                  managers &&
                   managers?.data?.map((row, index) => (
                     <UserTableRow
                       id={row.id}
@@ -193,11 +198,19 @@ export default function ManagerList() {
                       onDeleteRow={() => handleDeleteRow(row.id)}
                       disableDelete={managers?.data.length <= 3 && page === 1}
                       onEditRow={() => setOpenEditModal(row.id)}
-                      sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                      sx={{
+                        backgroundColor: '#F8F9F9',
+                        border: 1,
+                        borderRadius: 8,
+                        borderColor: '#EAEBEB',
+                      }}
                     />
                   ))}
                 <TableNoData
-                  isNotFound={(managers?.data?.length === 0 || managers?.data?.length === undefined) && !isLoading}
+                  isNotFound={
+                    (managers?.data?.length === 0 || managers?.data?.length === undefined) &&
+                    !isLoading
+                  }
                   title="Pengurus BUM Desa belum tersedia."
                   description="Silakan tambah Pengurus BUM Desa dengan klik tombol di bawah ini."
                   action={
@@ -211,19 +224,25 @@ export default function ManagerList() {
                     </StyledButton>
                   }
                 />
-                {isLoading && (<TableSkeleton />)}
+                {isLoading && <TableSkeleton />}
               </TableBody>
             </Table>
           </TableContainer>
         </Card>
 
-        <Box display="flex" justifyContent="space-between" sx={{ p: 3 }} flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          sx={{ p: 3 }}
+          flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}
+        >
           <FormControl>
             <Select
               value={rowsPerPage}
               onChange={onChangeRowsPerPage}
               displayEmpty
-              inputProps={{ 'aria-label': 'Rows per page' }} aria-controls=''
+              inputProps={{ 'aria-label': 'Rows per page' }}
+              aria-controls=""
               sx={{ height: 32, width: 70 }}
             >
               <MenuItem value={5}>5</MenuItem>
@@ -250,10 +269,10 @@ export default function ManagerList() {
                 color: '#1078CA',
               },
               '& .MuiPaginationItem-previousNext': {
-                borderColor: "#1078CA",
+                borderColor: '#1078CA',
               },
               '& .MuiPaginationItem-firstLast': {
-                borderColor: "#1078CA",
+                borderColor: '#1078CA',
               },
             }}
           />

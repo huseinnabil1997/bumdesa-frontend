@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -17,11 +17,13 @@ const useCurrentRole = () => {
   return role;
 };
 
-export default function RoleBasedGuard({ accessibleRoles, children }) {
+
+export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
   const currentRole = useCurrentRole();
-
+  
+  console.log('rolebaseguard', currentRole);
   // if (!accessibleRoles.includes(currentRole)) {
   //   return (
   //     <Container>
@@ -34,16 +36,18 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   // }
 
   useEffect(() => {
-    if ((path === 'unit' && currentRole === 'unit') 
+    if ((path === 'unit' && currentRole === 'unit')
       || (path === 'manager' && currentRole === 'unit')
-      || (path === 'employee' && currentRole === 'bumdesa')) {
+      || (path === 'employee' && currentRole === 'bumdesa')
+      || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
       router.push('/403');
     }
   }, [path, currentRole, router]);
 
-  if ((path === 'unit' && currentRole === 'unit') 
+  if ((path === 'unit' && currentRole === 'unit')
     || (path === 'manager' && currentRole === 'unit')
-    || (path === 'employee' && currentRole === 'bumdesa')) {
+    || (path === 'employee' && currentRole === 'bumdesa')
+    || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
     return (
       <Container>
         <Alert severity="error">

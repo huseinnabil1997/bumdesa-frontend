@@ -59,12 +59,14 @@ DashboardHeader.propTypes = {
   isCollapse: PropTypes.bool,
   onOpenSidebar: PropTypes.func,
   verticalLayout: PropTypes.bool,
+  header: PropTypes.string,
 };
 
 export default function DashboardHeader({
   onOpenSidebar,
   isCollapse = false,
   verticalLayout = false,
+  header,
 }) {
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
 
@@ -81,6 +83,9 @@ export default function DashboardHeader({
   const generateTitle = () => {
     const value = router.pathname.split('/')[1];
     const value2 = router.pathname.split('/')[2];
+
+    if (header) return setTitle(header);
+
     if (value === 'ledger') return setTitle('Buku Besar');
     if (value === 'unit') {
       if (value2 === 'new') {
@@ -91,6 +96,7 @@ export default function DashboardHeader({
       }
       return setTitle('Unit Usaha BUM Desa');
     }
+    if (value === 'bumdesa') return setTitle('Kelola BUM Desa');
     if (value === 'education') return setTitle('Konten Edukasi');
     if (value === 'faqs') return setTitle('Frequently Asked Questions');
     if (value === 'manager') return setTitle('Pengurus BUM Desa');
@@ -130,7 +136,7 @@ export default function DashboardHeader({
           sx={{ width: '100%' }}
         >
           <Typography sx={{ color: '#3D3D3D' }} fontWeight={700} fontSize={22}>
-            {title}
+            {header ?? title}
           </Typography>
           <AccountPopover />
         </Stack>
