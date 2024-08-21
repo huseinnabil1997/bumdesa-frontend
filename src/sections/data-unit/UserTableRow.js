@@ -47,8 +47,21 @@ export default function UserTableRow({
   // onActivateRow,
 }) {
   // const theme = useTheme();
-  const { name, year_founded, status } = row;
-  const temp = 400000000;
+  const {
+    // unit_id,
+    // count_unit,
+    year_registered,
+    // status_active,
+    status_report,
+    profitability,
+    liquidity,
+    solvability,
+    omset,
+    profit_loss,
+    cash,
+    unit_name,
+    bumdesa_name,
+  } = row;
   
   const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -68,28 +81,47 @@ export default function UserTableRow({
         backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
       }}>
 
-      <TableCell sx={{ fontWeight: 600, color: '#1078CA', position: 'sticky', left: 0, backgroundColor: 'inherit', zIndex: 1 }}>
-        {name}
+      <TableCell 
+        sx={{ 
+          fontWeight: 600, 
+          color: '#1078CA', 
+          position: 'sticky', 
+          left: 0, 
+          backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
+          zIndex: 2,
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: 4,
+            height: '100%',
+            backgroundColor: 'inherit',
+            zIndex: 1
+          }
+        }}
+      >
+        {unit_name}
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{name}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{bumdesa_name}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_registered}</TableCell>
       <TableCell align="center">
-        {status === 1 && (
+        {status_report === "1" && (
           <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
         )}
-        {status === 0 && (
+        {status_report === "0" && (
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
         )}
-        {status === 3 && (
+        {status_report === "3" && (
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
         )}
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_founded}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(temp)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(temp)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(temp)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitability}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{liquidity}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvability}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(omset)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(profit_loss)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(cash)}</TableCell>
 
       <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
         <StyledLoadingButton

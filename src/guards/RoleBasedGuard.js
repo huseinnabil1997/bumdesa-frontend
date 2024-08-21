@@ -7,16 +7,18 @@ import { useSelector } from 'react-redux';
 // ----------------------------------------------------------------------
 
 RoleBasedGuard.propTypes = {
-  accessibleRoles: PropTypes.array,
   children: PropTypes.node,
 };
 
 const useCurrentRole = () => {
-  const userData = useSelector(state => state.user.userData);
-  const role = userData.unit_id !== 0 ? 'unit' : 'bumdesa';
-  return role;
+  const { unit_id } = useSelector(state => state.user.userData);
+  return unit_id !== 0 ? 'unit' : 'bumdesa';
 };
 
+const RESTRICTED_PATHS = {
+  unit: ['unit', 'manager', 'kanpus'],
+  bumdesa: ['employee', 'kanpus'],
+};
 
 export default function RoleBasedGuard({ children }) {
   const router = useRouter();
@@ -24,30 +26,14 @@ export default function RoleBasedGuard({ children }) {
   const currentRole = useCurrentRole();
   
   console.log('rolebaseguard', currentRole);
-  // if (!accessibleRoles.includes(currentRole)) {
-  //   return (
-  //     <Container>
-  //       <Alert severity="error">
-  //         <AlertTitle>Izin Ditolak</AlertTitle>
-  //         Anda tidak memiliki izin untuk mengakses halaman ini
-  //       </Alert>
-  //     </Container>
-  //   );
-  // }
 
   useEffect(() => {
-    if ((path === 'unit' && currentRole === 'unit')
-      || (path === 'manager' && currentRole === 'unit')
-      || (path === 'employee' && currentRole === 'bumdesa')
-      || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
+    if (RESTRICTED_PATHS[currentRole]?.includes(path)) {
       router.push('/403');
     }
   }, [path, currentRole, router]);
 
-  if ((path === 'unit' && currentRole === 'unit')
-    || (path === 'manager' && currentRole === 'unit')
-    || (path === 'employee' && currentRole === 'bumdesa')
-    || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
+  if (RESTRICTED_PATHS[currentRole]?.includes(path)) {
     return (
       <Container>
         <Alert severity="error">

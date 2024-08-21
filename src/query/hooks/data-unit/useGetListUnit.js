@@ -20,6 +20,8 @@ export const useGetListUnit = (param) => {
     param.district,
     param.subdistrict,
     param.report,
+    param.page,
+    param.limit,
   ], () => fetchData(param));
 
   return getQuery;

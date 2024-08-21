@@ -48,7 +48,7 @@ export default function UserTableRow({
 }) {
   // const theme = useTheme();
   const { name, unit_count, founded_at, full_registered, profitabilitas, luquiditas, solvabilitas, total_omset, laba_rugi, kas_tunai } = row;
-  
+
   const formatRupiah = (angka) => angka ? new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
@@ -69,7 +69,26 @@ export default function UserTableRow({
         backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
       }}>
 
-      <TableCell sx={{ fontWeight: 600, color: '#1078CA', position: 'sticky', left: 0, backgroundColor: 'inherit', zIndex: 1 }}>
+      <TableCell
+        sx={{
+          fontWeight: 600,
+          color: '#1078CA',
+          position: 'sticky',
+          left: 0,
+          backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
+          zIndex: 2,
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: 4,
+            height: '100%',
+            backgroundColor: 'inherit',
+            zIndex: 1
+          }
+        }}
+      >
         {name ?? '-'}
       </TableCell>
       <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{unit_count ?? '-'}</TableCell>

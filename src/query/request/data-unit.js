@@ -2,7 +2,7 @@ import axiosInstance from 'src/utils/axiosCoreService';
 import axios, { getSessionToken } from 'src/utils/axios';
 
 export function getListUnit(params) {
-  return axiosInstance.get('/business-units', { params });
+  return axiosInstance.get('/business-units/summary', { params });
 }
 
 export function getUnitById(id) {
