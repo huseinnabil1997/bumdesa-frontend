@@ -34,6 +34,7 @@ import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { useGetListUnit } from 'src/query/hooks/data-unit/useGetListUnit';
 import UnitHeader from 'src/sections/data-unit/UnitHeader';
+import TableError from 'src/components/table/TableError';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +82,7 @@ export default function UserList() {
   const { mutate: onActivate } = useActivate();
 
   const methods = useForm({
-    defaultValues: { 
+    defaultValues: {
       search: '',
       provinsi: null,
       kota: null,
@@ -93,7 +94,7 @@ export default function UserList() {
 
   const { watch, setValue } = methods;
 
-  const { data: units, isLoading, refetch } = useGetListUnit({
+  const { data: units, isLoading, isError, refetch } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
     search: watch('search'),
@@ -244,18 +245,24 @@ export default function UserList() {
                 <TableNoData
                   isNotFound={units?.data?.length === 0}
                   title="Data Unit Usaha belum tersedia."
-                  // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
-                  // action={
-                  //   <StyledButton
-                  //     sx={{ mt: 2, width: 200 }}
-                  //     variant="outlined"
-                  //     startIcon={<Add fontSize="small" />}
-                  //     onClick={() => router.push('new')}
-                  //   >
-                  //     Tambah BUMDesa
-                  //   </StyledButton>
-                  // }
+                // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
+                // action={
+                //   <StyledButton
+                //     sx={{ mt: 2, width: 200 }}
+                //     variant="outlined"
+                //     startIcon={<Add fontSize="small" />}
+                //     onClick={() => router.push('new')}
+                //   >
+                //     Tambah BUMDesa
+                //   </StyledButton>
+                // }
                 />
+                {!isLoading && isError && (
+                  <TableError
+                    title="Koneksi Error"
+                    description="Silakan cek koneksi Anda dan muat ulang halaman."
+                  />
+                )}
                 {isLoading && <TableSkeleton />}
               </TableBody>
             </Table>
