@@ -36,15 +36,18 @@ import jwtDecode from 'jwt-decode';
 import { getSessionToken } from 'src/utils/axios';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useGetModules } from 'src/query/hooks/options/useGetModules';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
-JurnalList.getLayout = function getLayout(page) {
+LogList.getLayout = function getLayout(page) {
   return <Layout title="Semua Log Aktivitas">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function JurnalList() {
+export default function LogList() {
+  const { push } = useRouter();
+
   const token = getSessionToken();
   let decoded = {};
   if (token) {
@@ -152,7 +155,14 @@ export default function JurnalList() {
                 <TableBody>
                   {!isLoading &&
                     data?.length > 0 &&
-                    data?.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
+                    data?.map((row, i) => (
+                      <TableRow
+                        key={row.id}
+                        index={i}
+                        row={row}
+                        onClickDetail={() => push(row?.url)}
+                      />
+                    ))}
 
                   {isLoading && <TableSkeleton />}
 

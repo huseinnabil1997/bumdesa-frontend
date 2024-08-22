@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Typography, IconButton, Tooltip, Box } from '@mui/material';
 // components
 import moment from 'moment';
-import DeleteConfirmation from 'src/components/modal/DeleteConfirmation';
 import { AccessTime, Info, Today } from '@mui/icons-material';
 import TextMaxLine from 'src/components/TextMaxLine';
 
@@ -14,17 +12,11 @@ import TextMaxLine from 'src/components/TextMaxLine';
 UserTableRow.propTypes = {
   row: PropTypes.object,
   index: PropTypes.number,
-  selected: PropTypes.bool,
-  onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
-  onViewRow: PropTypes.func,
+  onClickDetail: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onDeleteRow, index }) {
+export default function UserTableRow({ row, selected, onClickDetail, index }) {
   const theme = useTheme();
-
-  const [showDelete, setDelete] = useState(false);
 
   const { description, timestamp, modul, user_agent, url } = row;
 
@@ -68,23 +60,12 @@ export default function UserTableRow({ row, selected, onDeleteRow, index }) {
         </TableCell>
         <TableCell align="right">
           {url && (
-            <IconButton color="primary">
+            <IconButton color="primary" onClick={onClickDetail}>
               <Info fontSize="small" />
             </IconButton>
           )}
         </TableCell>
       </TableRow>
-
-      <DeleteConfirmation
-        open={showDelete}
-        onClose={() => setDelete(false)}
-        title="Peringatan Hapus!"
-        description="Apakah Anda yakin ingin menghapus jurnal ini?"
-        action={() => {
-          onDeleteRow();
-          setDelete(false);
-        }}
-      />
     </>
   );
 }
