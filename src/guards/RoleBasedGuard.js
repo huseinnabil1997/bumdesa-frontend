@@ -12,17 +12,16 @@ RoleBasedGuard.propTypes = {
 };
 
 const useCurrentRole = () => {
-  const userData = useSelector(state => state.user.userData);
+  const userData = useSelector((state) => state.user.userData);
   const role = userData.unit_id !== 0 ? 'unit' : 'bumdesa';
   return role;
 };
-
 
 export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
   const currentRole = useCurrentRole();
-  
+
   console.log('rolebaseguard', currentRole);
   // if (!accessibleRoles.includes(currentRole)) {
   //   return (
@@ -36,18 +35,22 @@ export default function RoleBasedGuard({ children }) {
   // }
 
   useEffect(() => {
-    if ((path === 'unit' && currentRole === 'unit')
-      || (path === 'manager' && currentRole === 'unit')
-      || (path === 'employee' && currentRole === 'bumdesa')
-      || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
+    if (
+      (path === 'unit' && currentRole === 'unit') ||
+      (path === 'manager' && currentRole === 'unit') ||
+      (path === 'employee' && currentRole === 'bumdesa') ||
+      (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
+    ) {
       router.push('/403');
     }
   }, [path, currentRole, router]);
 
-  if ((path === 'unit' && currentRole === 'unit')
-    || (path === 'manager' && currentRole === 'unit')
-    || (path === 'employee' && currentRole === 'bumdesa')
-    || (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))) {
+  if (
+    (path === 'unit' && currentRole === 'unit') ||
+    (path === 'manager' && currentRole === 'unit') ||
+    (path === 'employee' && currentRole === 'bumdesa') ||
+    (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
+  ) {
     return (
       <Container>
         <Alert severity="error">

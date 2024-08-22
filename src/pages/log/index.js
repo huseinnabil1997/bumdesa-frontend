@@ -1,5 +1,5 @@
 // @mui
-import { Button, Chip, Container, Paper, Typography } from '@mui/material';
+import { Button, Chip, Container, IconButton, Paper, Typography } from '@mui/material';
 // hooks
 // layouts
 import Layout from '../../layouts';
@@ -20,6 +20,7 @@ import useSettings from 'src/hooks/useSettings';
 import { useRouter } from 'next/router';
 import { useGetLogs } from 'src/query/hooks/log/useGetLog';
 import moment from 'moment';
+import { Details, Info } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -80,9 +81,21 @@ export default function JurnalList() {
                       variant="outlined"
                       color={generateColor(item?.action)}
                     />
+
                     <Typography variant="subtitle2" sx={{ mt: 1 }}>
                       {item?.description ?? '-'}
                     </Typography>
+                    {item?.url && (
+                      <Button
+                        size="small"
+                        sx={{ mt: 2 }}
+                        onClick={() => push(item?.url)}
+                        variant="outlined"
+                      >
+                        <Info sx={{ mr: 0.5 }} fontSize="small" />
+                        Lihat Detail
+                      </Button>
+                    )}
                   </Paper>
                 </TimelineContent>
               </TimelineItem>

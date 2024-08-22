@@ -13,6 +13,7 @@ import {
   Autocomplete,
   TextField,
   CircularProgress,
+  InputAdornment,
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -34,15 +35,19 @@ import { capitalCase } from 'change-case';
 import jwtDecode from 'jwt-decode';
 import { getSessionToken } from 'src/utils/axios';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
+import { useGetModules } from 'src/query/hooks/options/useGetModules';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
-JurnalList.getLayout = function getLayout(page) {
+LogList.getLayout = function getLayout(page) {
   return <Layout title="Semua Log Aktivitas">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function JurnalList() {
+export default function LogList() {
+  const { push } = useRouter();
+
   const token = getSessionToken();
   let decoded = {};
   if (token) {
@@ -62,6 +67,7 @@ export default function JurnalList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
+  const { data: modules, isLoading: loadingModules } = useGetModules();
   const { data: businesses, isLoading: loadingBusiness } = useGetBusinessUnits();
   const { data, isLoading, isError } = useGetLogs({
     page,
@@ -97,11 +103,18 @@ export default function JurnalList() {
             size="small"
             value={module}
             onChange={(e) => setModule(e.target.value)}
+            {...(loadingModules && {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <CircularProgress size={20} />
+                </InputAdornment>
+              ),
+            })}
           >
             <MenuItem value="0">-- Pilih Modul --</MenuItem>
-            {['jurnal', 'profile', 'unit usaha', 'password'].map((row) => (
-              <MenuItem key={row} value={row}>
-                {capitalCase(row)}
+            {modules?.map((row) => (
+              <MenuItem key={row} value={row?.id}>
+                {capitalCase(row?.name)}
               </MenuItem>
             ))}
           </Select>
@@ -142,7 +155,14 @@ export default function JurnalList() {
                 <TableBody>
                   {!isLoading &&
                     data?.length > 0 &&
-                    data?.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
+                    data?.map((row, i) => (
+                      <TableRow
+                        key={row.id}
+                        index={i}
+                        row={row}
+                        onClickDetail={() => push(row?.url)}
+                      />
+                    ))}
 
                   {isLoading && <TableSkeleton />}
 

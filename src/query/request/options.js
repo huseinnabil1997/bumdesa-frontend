@@ -5,7 +5,6 @@ import axiosCore from 'src/utils/axiosCoreService';
 const isRegis = !!getSessionToken();
 const service = isRegis ? axiosUnregistered : axios;
 
-
 export function getProvincies() {
   return service.get('/address/province');
 }
@@ -40,4 +39,8 @@ export function getCashFlowOpt(params) {
 
 export function getUnitOpt() {
   return axiosCore.get('/units');
+}
+
+export function getModuls() {
+  return axiosCore.get('/logs/module');
 }
