@@ -104,7 +104,7 @@ export default function LogList() {
             value={module}
             onChange={(e) => setModule(e.target.value)}
             {...(loadingModules && {
-              endAdornment: (
+              startAdornment: (
                 <InputAdornment position="end">
                   <CircularProgress size={20} />
                 </InputAdornment>
@@ -148,14 +148,14 @@ export default function LogList() {
               <Table>
                 <TableHeadCustom
                   headLabel={LOG_HEAD}
-                  rowCount={data?.length}
+                  rowCount={data?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data?.length > 0 &&
-                    data?.map((row, i) => (
+                    data?.data?.length > 0 &&
+                    data?.data?.map((row, i) => (
                       <TableRow
                         key={row.id}
                         index={i}
@@ -166,7 +166,7 @@ export default function LogList() {
 
                   {isLoading && <TableSkeleton />}
 
-                  {!data?.length > 0 && !isError && !isLoading && (
+                  {!data?.data?.length > 0 && !isError && !isLoading && (
                     <TableNoData
                       isNotFound
                       title="Data Kosong"
@@ -213,7 +213,7 @@ export default function LogList() {
             variant="outlined"
             shape="rounded"
             color="primary"
-            count={10}
+            count={data?.metadata?.paging?.total_page}
             rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}

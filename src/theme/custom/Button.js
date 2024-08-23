@@ -6,6 +6,7 @@ export const BtnLightPrimary = styled(Button)(() => ({
   background: '#DDEFFC',
   color: '#1078CA',
   boxShadow: 'none',
+  ':hover': { backgroundColor: '#DDEFFC', color: '#1078CA' },
 }));
 
 export const BtnLightError = styled(Button)(() => ({

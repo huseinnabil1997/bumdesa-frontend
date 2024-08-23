@@ -5,11 +5,10 @@ const fetchData = async (param) => {
   try {
     if (param.module === '0') param.module = '';
     if (param.action === '0') param.action = '';
-    if (param.unit < 0) param.unit = '';
 
     const { data } = await getLogs(param);
 
-    return data?.data ?? [];
+    return data ?? null;
   } catch (err) {
     throw new Error();
   }

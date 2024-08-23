@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { TableRow, TableCell, Typography, IconButton, Tooltip, Box } from '@mui/material';
+import { TableRow, TableCell, Typography, Tooltip, Box } from '@mui/material';
 // components
 import moment from 'moment';
 import { AccessTime, Info, Today } from '@mui/icons-material';
 import TextMaxLine from 'src/components/TextMaxLine';
+import { StyledButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
 
@@ -60,9 +61,10 @@ export default function UserTableRow({ row, selected, onClickDetail, index }) {
         </TableCell>
         <TableCell align="right">
           {url && (
-            <IconButton color="primary" onClick={onClickDetail}>
-              <Info fontSize="small" />
-            </IconButton>
+            <StyledButton color="primary" onClick={onClickDetail} variant="outlined">
+              <Info fontSize="small" sx={{ mr: 1 }} />
+              Detail
+            </StyledButton>
           )}
         </TableCell>
       </TableRow>
