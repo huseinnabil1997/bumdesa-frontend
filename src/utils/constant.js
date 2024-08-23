@@ -39,10 +39,11 @@ export const BUMDES_HEAD = [
 ];
 
 export const LOG_HEAD = [
-  { id: 'activity', label: 'Aktivitas', align: 'left', width: 200 },
-  { id: 'time', label: 'Waktu', align: 'left', width: 100 },
+  { id: 'activity', label: 'Aktivitas', align: 'left', width: 280 },
+  { id: 'time', label: 'Waktu', align: 'left', width: 50 },
   { id: 'place', label: 'Modul', align: 'left', width: 100 },
   { id: 'device', label: 'User Agent', align: 'left', width: 200 },
+  { id: 'detail', label: '', align: 'right', width: 50 },
 ];
 
 export const DEFAULT_FILTER = {
