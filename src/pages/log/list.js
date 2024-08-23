@@ -62,7 +62,7 @@ export default function LogList() {
 
   const [module, setModule] = useState('0');
   const [action, setAction] = useState('0');
-  const [business, setBusiness] = useState(null);
+  const [business, setBusiness] = useState({ id: -1, name: 'SEMUA' });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
@@ -74,7 +74,7 @@ export default function LogList() {
     limit: rowsPerPage,
     module,
     action,
-    unit: business?.id,
+    unit: business?.id ?? -1,
   });
 
   return (
