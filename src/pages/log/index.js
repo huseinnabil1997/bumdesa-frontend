@@ -20,6 +20,7 @@ import useSettings from 'src/hooks/useSettings';
 import { useRouter } from 'next/router';
 import { useGetLogs } from 'src/query/hooks/log/useGetLog';
 import moment from 'moment';
+import { Info } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,7 @@ export default function JurnalList() {
 
   const { push } = useRouter();
 
-  const { data } = useGetLogs({ page: 1, limit: 5 });
+  const { data } = useGetLogs({ page: 1, limit: 5, unit: -1 });
 
   const generateIcon = (value) => {
     if (value === 'tambah') return <Iconify icon="eva:plus-fill" width={24} height={24} />;
@@ -54,13 +55,13 @@ export default function JurnalList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Scrollbar>
           <Timeline position="right">
-            {data?.map((item, i) => (
+            {data?.data?.map((item, i) => (
               <TimelineItem key={item.key} sx={{ '&:before': { display: 'none' } }}>
                 <TimelineSeparator>
                   <TimelineDot color={generateColor(item?.action)} sx={{ color: 'white' }}>
                     {generateIcon(item?.action)}
                   </TimelineDot>
-                  {data?.length - 1 !== i && <TimelineConnector />}
+                  {data?.data?.length - 1 !== i && <TimelineConnector />}
                 </TimelineSeparator>
                 <TimelineContent>
                   <Paper
@@ -80,9 +81,21 @@ export default function JurnalList() {
                       variant="outlined"
                       color={generateColor(item?.action)}
                     />
+
                     <Typography variant="subtitle2" sx={{ mt: 1 }}>
                       {item?.description ?? '-'}
                     </Typography>
+                    {item?.url && (
+                      <Button
+                        size="small"
+                        sx={{ mt: 2 }}
+                        onClick={() => push(item?.url)}
+                        variant="outlined"
+                      >
+                        <Info sx={{ mr: 0.5 }} fontSize="small" />
+                        Lihat Detail
+                      </Button>
+                    )}
                   </Paper>
                 </TimelineContent>
               </TimelineItem>

@@ -13,6 +13,7 @@ import {
   Autocomplete,
   TextField,
   CircularProgress,
+  InputAdornment,
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -34,15 +35,19 @@ import { capitalCase } from 'change-case';
 import jwtDecode from 'jwt-decode';
 import { getSessionToken } from 'src/utils/axios';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
+import { useGetModules } from 'src/query/hooks/options/useGetModules';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
-JurnalList.getLayout = function getLayout(page) {
+LogList.getLayout = function getLayout(page) {
   return <Layout title="Semua Log Aktivitas">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function JurnalList() {
+export default function LogList() {
+  const { push } = useRouter();
+
   const token = getSessionToken();
   let decoded = {};
   if (token) {
@@ -57,18 +62,19 @@ export default function JurnalList() {
 
   const [module, setModule] = useState('0');
   const [action, setAction] = useState('0');
-  const [business, setBusiness] = useState(null);
+  const [business, setBusiness] = useState({ id: -1, name: 'SEMUA' });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
+  const { data: modules, isLoading: loadingModules } = useGetModules();
   const { data: businesses, isLoading: loadingBusiness } = useGetBusinessUnits();
   const { data, isLoading, isError } = useGetLogs({
     page,
     limit: rowsPerPage,
     module,
     action,
-    unit: business?.id,
+    unit: business?.id ?? -1,
   });
 
   return (
@@ -97,11 +103,18 @@ export default function JurnalList() {
             size="small"
             value={module}
             onChange={(e) => setModule(e.target.value)}
+            {...(loadingModules && {
+              startAdornment: (
+                <InputAdornment position="end">
+                  <CircularProgress size={20} />
+                </InputAdornment>
+              ),
+            })}
           >
             <MenuItem value="0">-- Pilih Modul --</MenuItem>
-            {['jurnal', 'profile', 'unit usaha', 'password'].map((row) => (
-              <MenuItem key={row} value={row}>
-                {capitalCase(row)}
+            {modules?.map((row) => (
+              <MenuItem key={row} value={row?.id}>
+                {capitalCase(row?.name)}
               </MenuItem>
             ))}
           </Select>
@@ -135,18 +148,25 @@ export default function JurnalList() {
               <Table>
                 <TableHeadCustom
                   headLabel={LOG_HEAD}
-                  rowCount={data?.length}
+                  rowCount={data?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data?.length > 0 &&
-                    data?.map((row, i) => <TableRow key={row.id} index={i} row={row} />)}
+                    data?.data?.length > 0 &&
+                    data?.data?.map((row, i) => (
+                      <TableRow
+                        key={row.id}
+                        index={i}
+                        row={row}
+                        onClickDetail={() => push(row?.url)}
+                      />
+                    ))}
 
                   {isLoading && <TableSkeleton />}
 
-                  {!data?.length > 0 && !isError && !isLoading && (
+                  {!data?.data?.length > 0 && !isError && !isLoading && (
                     <TableNoData
                       isNotFound
                       title="Data Kosong"
@@ -193,7 +213,7 @@ export default function JurnalList() {
             variant="outlined"
             shape="rounded"
             color="primary"
-            count={10}
+            count={data?.metadata?.paging?.total_page}
             rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
