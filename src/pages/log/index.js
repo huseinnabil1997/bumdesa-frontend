@@ -40,14 +40,16 @@ export default function JurnalList() {
     if (value === 'tambah') return <Iconify icon="eva:plus-fill" width={24} height={24} />;
     else if (value === 'edit') return <Iconify icon="eva:edit-2-fill" width={24} height={24} />;
     else if (value === 'hapus') return <Iconify icon="eva:trash-2-fill" width={24} height={24} />;
+    else if (value === 'unduh') return <Iconify icon="eva:download-fill" width={24} height={24} />;
     else return <Iconify icon="eva:info-fill" width={24} height={24} />;
   };
 
   const generateColor = (value) => {
-    if (value === 'tambah') return 'secondary';
+    if (value === 'tambah') return 'primary';
     else if (value === 'edit') return 'warning';
     else if (value === 'hapus') return 'error';
-    else return 'grey';
+    else if (value === 'unduh') return 'info';
+    else return 'success';
   };
 
   return (
