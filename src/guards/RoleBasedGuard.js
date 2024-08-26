@@ -11,13 +11,15 @@ RoleBasedGuard.propTypes = {
 };
 
 const useCurrentRole = () => {
-  const { unit_id } = useSelector(state => state.user.userData);
+  const { unit_id, bumdesa_id } = useSelector(state => state.user.userData);
+  if (unit_id !== 0 && bumdesa_id !== 0) return 'kanpus';
   return unit_id !== 0 ? 'unit' : 'bumdesa';
 };
 
 const RESTRICTED_PATHS = {
   unit: ['unit', 'manager', 'kanpus'],
   bumdesa: ['employee', 'kanpus'],
+  kanpus: ['unit', 'manager', 'employee'],
 };
 
 export default function RoleBasedGuard({ children }) {
