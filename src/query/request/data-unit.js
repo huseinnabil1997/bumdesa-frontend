@@ -1,8 +1,10 @@
 import axiosInstance from 'src/utils/axiosCoreService';
+import axiosInstanceReport from 'src/utils/axiosReportService';
 import axios, { getSessionToken } from 'src/utils/axios';
 
+
 export function getListUnit(params) {
-  return axiosInstance.get('/business-units/summary', { params });
+  return axiosInstanceReport.get('/report/summary-unit', { params });
 }
 
 export function getUnitById(id) {
