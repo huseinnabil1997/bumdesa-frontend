@@ -69,16 +69,19 @@ export default function LoginForm() {
       setLoading(true);
       const res = await login(data.email, data.password);
       if (res?.data) {
-        dispatch(setUser(res.data));
-        if (res?.data?.full_register === 0) {
-          await setRegisSession(res?.metadata?.token ?? '');
-          enqueueSnackbar(res.message, { variant: 'success' });
-          window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
+        const { data, metadata, message } = res;
+        const isKanpus = data?.bumdesa_id === 0 && data?.unit_id === 0;
+
+        dispatch(setUser(data));
+        enqueueSnackbar(message, { variant: 'success' });
+
+        if (data?.full_register === 0 && !isKanpus) {
+          await setRegisSession(metadata?.token ?? '');
+          window.location.href = `/auth/register/step-${steps[data?.sequence]}`;
         } else {
-          await setSession(res?.metadata?.token ?? '', data.remember);
-          enqueueSnackbar(res.message, { variant: 'success' });
+          await setSession(metadata?.token ?? '', data.remember);
           defaultRangeDate();
-          router.push(PATH_DASHBOARD.root);
+          router.push(isKanpus ? PATH_DASHBOARD.kanpus.dashboard : PATH_DASHBOARD.root);
         }
       }
     } catch (error) {

@@ -12,7 +12,7 @@ RoleBasedGuard.propTypes = {
 
 const useCurrentRole = () => {
   const { unit_id, bumdesa_id } = useSelector(state => state.user.userData);
-  if (unit_id !== 0 && bumdesa_id !== 0) return 'kanpus';
+  if (unit_id === 0 && bumdesa_id === 0) return 'kanpus';
   return unit_id !== 0 ? 'unit' : 'bumdesa';
 };
 
