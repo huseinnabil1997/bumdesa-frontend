@@ -115,14 +115,14 @@ export default function UserTableRowUnit({
             />
           </IconButton>
         )}
-        {status !== 3 &&
+        {status !== 3 && status !== 0 &&
           <DeleteTooltip title="Nonaktifkan Unit">
             <IconButton onClick={onDeactivateRow}>
               <DoNotDisturb sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
             </IconButton>
           </DeleteTooltip>
         }
-        {status === 3 &&
+        {status === 3 && status !== 0 &&
           <DeleteTooltip title="Aktifkan Unit">
             <IconButton onClick={onActivateRow}>
               <CheckCircle sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
