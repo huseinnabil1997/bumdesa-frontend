@@ -11,31 +11,49 @@ RoleBasedGuard.propTypes = {
 };
 
 const useCurrentRole = () => {
-  const { unit_id, bumdesa_id } = useSelector(state => state.user.userData);
-  if (unit_id === 0 && bumdesa_id === 0) return 'kanpus';
-  return unit_id !== 0 ? 'unit' : 'bumdesa';
-};
+  const userData = useSelector((state) => state.user.userData);
 
-const RESTRICTED_PATHS = {
-  unit: ['unit', 'manager', 'kanpus'],
-  bumdesa: ['employee', 'kanpus'],
-  kanpus: ['unit', 'manager', 'employee'],
+  if (userData.role === 1) return 'kanpus';
+  if (userData.role === 2) return 'bumdesa';
+  if (userData.role === 3) return 'unit';
+  else return 'pengawas';
 };
 
 export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
   const currentRole = useCurrentRole();
-  
-  console.log('rolebaseguard', currentRole);
+
+  // if (!accessibleRoles.includes(currentRole)) {
+  //   return (
+  //     <Container>
+  //       <Alert severity="error">
+  //         <AlertTitle>Izin Ditolak</AlertTitle>
+  //         Anda tidak memiliki izin untuk mengakses halaman ini
+  //       </Alert>
+  //     </Container>
+  //   );
+  // }
 
   useEffect(() => {
-    if (RESTRICTED_PATHS[currentRole]?.includes(path)) {
+    if (
+      (path === 'unit' && currentRole === 'unit') ||
+      (path === 'dashboard' && currentRole === 'kanpus') ||
+      (path === 'manager' && currentRole === 'unit') ||
+      (path === 'employee' && currentRole === 'bumdesa') ||
+      (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
+    ) {
       router.push('/403');
     }
   }, [path, currentRole, router]);
 
-  if (RESTRICTED_PATHS[currentRole]?.includes(path)) {
+  if (
+    (path === 'unit' && currentRole === 'unit') ||
+    (path === 'dashboard' && currentRole === 'kanpus') ||
+    (path === 'manager' && currentRole === 'unit') ||
+    (path === 'employee' && currentRole === 'bumdesa') ||
+    (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
+  ) {
     return (
       <Container>
         <Alert severity="error">

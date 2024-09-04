@@ -79,7 +79,9 @@ export default function LoginForm() {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
-          router.push(PATH_DASHBOARD.root);
+          router.push(
+            res?.data?.role === 1 ? PATH_DASHBOARD.kanpus.dashboard : PATH_DASHBOARD.root
+          );
         }
       }
     } catch (error) {

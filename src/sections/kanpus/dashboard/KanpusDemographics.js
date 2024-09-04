@@ -85,7 +85,7 @@ export default function KanpusDemographics({ demo }) {
       <CardHeader sx={{ p: 3, pb: 0 }} title="Demografi BUMDesa Berdasarkan Provinsi" />
 
       <CardContent sx={{ py: 5 }}>
-        <IndonesianMap data={demo} />
+        {<IndonesianMap data={demo} />}
         {chartOptions && (
           <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
             <ReactApexChart type="bar" series={chartData} options={chartOptions} height={360} />
@@ -96,7 +96,7 @@ export default function KanpusDemographics({ demo }) {
           size="large"
           fullWidth
           sx={{ mt: 3 }}
-          onClick={() => router.push('/kanpus/list')}
+          onClick={() => router.push('/kanpus/summary')}
         >
           Lihat Selengkapnya
         </Button>

@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableRow, TableCell, IconButton, Tooltip, Typography } from '@mui/material';
+import { TableRow, TableCell, IconButton, Tooltip, styled } from '@mui/material';
 // components
-import moment from 'moment';
-import { fCurrency } from 'src/utils/formatNumber';
+import { fCurrency, fNumber } from 'src/utils/formatNumber';
 import Iconify from 'src/components/Iconify';
+import { capitalCase } from 'change-case';
 
 // ----------------------------------------------------------------------
 
@@ -14,50 +14,46 @@ UserTableRow.propTypes = {
   onViewRow: PropTypes.func,
 };
 
+const FixedTableCell = styled(TableCell)(() => ({
+  position: 'sticky',
+  left: 0,
+  backgroundColor: 'white',
+  zIndex: 1,
+  color: '#1078CA',
+  fontWeight: 600,
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: '2px',
+    backgroundColor: '#eee', // Right border color
+    zIndex: 2, // Ensure the border is on top
+  },
+}));
+
 export default function UserTableRow({ row, onViewRow }) {
-  const { number_of_evidence, date, transaction_information, debit, credit, business_unit_name } =
-    row;
+  const nameSortener = (value) => {
+    switch (value) {
+      case 'DAERAH ISTIMEWA YOGYAKARTA':
+        return 'DI YOGYAKARTA';
+      case 'KEPULAUAN BANGKA BELITUNG':
+        return 'BANGKA BELITUNG';
+      default:
+        return value;
+    }
+  };
 
   return (
     <TableRow>
-      <TableCell>Sumatera Utara</TableCell>
-      <TableCell>203</TableCell>
-      <TableCell>999</TableCell>
-      <TableCell>389</TableCell>
-      <TableCell>{number_of_evidence}</TableCell>
-      <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
-      <TableCell>
-        <Tooltip title={transaction_information}>
-          <Typography
-            fontSize={14}
-            sx={{
-              maxWidth: 125,
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-            }}
-          >
-            {transaction_information === '' ? '-' : transaction_information}
-          </Typography>
-        </Tooltip>
-      </TableCell>
-      <TableCell>
-        <Tooltip title={business_unit_name}>
-          <Typography
-            fontSize={14}
-            sx={{
-              maxWidth: 100,
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-            }}
-          >
-            {business_unit_name === '' ? '-' : business_unit_name}
-          </Typography>
-        </Tooltip>
-      </TableCell>
-      <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
-      <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
+      <FixedTableCell>{capitalCase(nameSortener(row?.area))}</FixedTableCell>
+      <TableCell>{fNumber(row?.count_bumdesa ?? 0)}</TableCell>
+      <TableCell>{fNumber(row?.count_unit ?? 0)}</TableCell>
+      <TableCell>{fNumber(row?.count_report ?? 0)}</TableCell>
+      <TableCell>{fCurrency(row?.cash ?? 0)}</TableCell>
+      <TableCell>{fCurrency(row?.omzet ?? 0)}</TableCell>
+      <TableCell>{fCurrency(row?.labarugi ?? 0)}</TableCell>
 
       <TableCell align="center">
         <Tooltip title="Lihat Detail BUMDesa">

@@ -46,6 +46,9 @@ export default function IndonesianMap({ data }) {
   const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
+  // data?.reduce((max, item) => (item.total_bumdesa > max.total_bumdesa ? item : max), data[0])
+  //       ?.total_bumdesa
+
   const colorScale = scaleQuantize()
     .domain([0, 5])
     .range([
@@ -89,19 +92,17 @@ export default function IndonesianMap({ data }) {
       const locations = document.querySelectorAll('.svg-map__location');
       locations.forEach((location) => {
         const find = data.find((row) => row.id === location.id);
-        const color = colorScale(find.total_bumdesa);
+        const color = colorScale(find?.total_bumdesa ?? 0);
         location.classList.remove('svg-map__location');
         location.style.fill = color || '#333';
         location.style.stroke = color || '#333';
         location.classList.add('svg-map__location');
-        location.setAttribute('data-info', `${location.ariaLabel}: ${find.total_bumdesa}`);
+        location.setAttribute('data-info', `${location.ariaLabel}: ${find?.total_bumdesa}`);
 
         return location;
       });
     }
   }, [data]);
-
-  console.log(data);
 
   return (
     <Box
