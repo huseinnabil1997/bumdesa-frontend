@@ -19,3 +19,7 @@ export function getDemographic() {
 export function getStatistics() {
   return axiosInstance.get(`dashboard/static`);
 }
+
+export function getProvinceSummary(params) {
+  return axiosInstance.get(`dashboard/demografi/summary`, { params });
+}
