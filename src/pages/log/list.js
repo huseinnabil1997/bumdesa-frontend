@@ -14,6 +14,11 @@ import {
   TextField,
   CircularProgress,
   InputAdornment,
+  Popper,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -30,13 +35,18 @@ import { useTheme } from '@mui/material/styles';
 import TableError from 'src/components/table/TableError';
 import { useGetLogs } from 'src/query/hooks/log/useGetLog';
 import { LOG_HEAD } from 'src/utils/constant';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { capitalCase } from 'change-case';
 import jwtDecode from 'jwt-decode';
 import { getSessionToken } from 'src/utils/axios';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useGetModules } from 'src/query/hooks/options/useGetModules';
 import { useRouter } from 'next/router';
+import { StyledButton } from 'src/theme/custom/Button';
+import { ArrowDropDown, Download } from '@mui/icons-material';
+import { useDownloadLog } from 'src/query/hooks/log/useDownloadLog';
+import { useSnackbar } from 'notistack';
+import onDownload from 'src/utils/onDownload';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +55,11 @@ LogList.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
+const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
+
 export default function LogList() {
   const { push } = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
   let decoded = {};
@@ -58,15 +71,33 @@ export default function LogList() {
 
   const { page, rowsPerPage, onChangeRowsPerPage, onChangePage } = useTable({
     defaultCurrentPage: 1,
+    defaultRowsPerPage: 10,
   });
 
+  const [selectedIndex, setSelectedIndex] = useState(1);
   const [module, setModule] = useState('0');
   const [action, setAction] = useState('0');
   const [business, setBusiness] = useState({ id: -1, name: 'SEMUA' });
+  const [open, setOpen] = useState(false);
+
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
+  const { mutate: download, isLoading: downloading } = useDownloadLog();
   const { data: modules, isLoading: loadingModules } = useGetModules();
   const { data: businesses, isLoading: loadingBusiness } = useGetBusinessUnits();
   const { data, isLoading, isError } = useGetLogs({
@@ -76,6 +107,36 @@ export default function LogList() {
     action,
     unit: business?.id ?? -1,
   });
+
+  const handleMenuItemClick = (event, index) => {
+    const payload = {
+      page,
+      limit: rowsPerPage,
+      module,
+      action,
+      unit: business?.id ?? -1,
+      type: index,
+    };
+
+    if (payload.module === '0') delete payload.module;
+    if (payload.action === '0') delete payload.action;
+
+    download(payload, {
+      onSuccess: (res) => {
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        onDownload({
+          file: res,
+          title: decoded?.bumdesid + '_Log_Activity',
+          type: index,
+        });
+        setSelectedIndex(index);
+        setOpen(false);
+      },
+      onError: () => {
+        enqueueSnackbar('Gagal mengunduh!', { variant: 'error' });
+      },
+    });
+  };
 
   return (
     <Page>
@@ -136,11 +197,59 @@ export default function LogList() {
               sx={{ ml: 1, mt: 3 }}
               size="small"
               getOptionLabel={(option) => option?.name}
-              options={businesses}
+              options={businesses ?? []}
               fullWidth
               renderInput={(params) => <TextField {...params} placeholder="Pilih Unit" />}
             />
           )}
+          <StyledButton
+            ref={anchorRef}
+            sx={{ ml: 1, mt: 3 }}
+            fullWidth
+            aria-controls={open ? 'split-button-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-label="select merge strategy"
+            aria-haspopup="menu"
+            onClick={handleToggle}
+            startIcon={downloading ? <CircularProgress size="1rem" /> : <Download />}
+            endIcon={<ArrowDropDown />}
+            variant="outlined"
+            disabled={data?.data?.length === 0}
+          >
+            Unduh Dokumen
+          </StyledButton>
+          <Popper
+            sx={{ zIndex: 99 }}
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList id="split-button-menu" autoFocusItem>
+                      {options.map((option, index) => (
+                        <MenuItem
+                          key={option}
+                          selected={index === selectedIndex}
+                          onClick={(event) => handleMenuItemClick(event, index)}
+                        >
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </Box>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
@@ -199,12 +308,11 @@ export default function LogList() {
               displayEmpty
               inputProps={{ 'aria-label': 'Rows per page' }}
               aria-controls=""
-              sx={{ height: 32, width: 70 }}
+              sx={{ height: 32, width: 100 }}
             >
-              <MenuItem value={5}>5</MenuItem>
               <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
             </Select>
           </FormControl>
           <Pagination
@@ -213,9 +321,9 @@ export default function LogList() {
             variant="outlined"
             shape="rounded"
             color="primary"
-            count={data?.metadata?.paging?.total_page}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            count={data?.metadata?.paging?.total_page ?? 0}
+            rowsPerPage={rowsPerPage ?? 10}
+            page={page ?? 0}
             onChange={onChangePage}
             sx={{
               '& .MuiPaginationItem-page': {
