@@ -1,7 +1,12 @@
 // @mui
 import { Container, Grid } from '@mui/material';
 // hooks
-import { KanpusHeader, KanpusDemographic } from 'src/sections/kanpus/dashboard';
+import {
+  KanpusHeader,
+  KanpusDemographic,
+  DashboardProfitLoss,
+  DashboardSales,
+} from 'src/sections/kanpus/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
@@ -39,6 +44,14 @@ export default function Dashboard() {
 
           <Grid item xs={12}>
             {demo?.length > 0 && <KanpusDemographic demo={demo} unit={decoded.sub.businessid} />}
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardSales unit={decoded.sub.businessid} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardProfitLoss />
           </Grid>
         </Grid>
       </Container>

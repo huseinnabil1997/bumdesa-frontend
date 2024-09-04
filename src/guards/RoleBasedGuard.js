@@ -13,8 +13,11 @@ RoleBasedGuard.propTypes = {
 
 const useCurrentRole = () => {
   const userData = useSelector((state) => state.user.userData);
-  const role = userData.unit_id !== 0 ? 'unit' : 'bumdesa';
-  return role;
+
+  if (userData.role === 1) return 'kanpus';
+  if (userData.role === 2) return 'bumdesa';
+  if (userData.role === 3) return 'unit';
+  else return 'pengawas';
 };
 
 export default function RoleBasedGuard({ children }) {
@@ -22,7 +25,6 @@ export default function RoleBasedGuard({ children }) {
   const path = router.pathname.split('/')[1];
   const currentRole = useCurrentRole();
 
-  console.log('rolebaseguard', currentRole);
   // if (!accessibleRoles.includes(currentRole)) {
   //   return (
   //     <Container>
@@ -37,6 +39,7 @@ export default function RoleBasedGuard({ children }) {
   useEffect(() => {
     if (
       (path === 'unit' && currentRole === 'unit') ||
+      (path === 'dashboard' && currentRole === 'kanpus') ||
       (path === 'manager' && currentRole === 'unit') ||
       (path === 'employee' && currentRole === 'bumdesa') ||
       (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
@@ -47,6 +50,7 @@ export default function RoleBasedGuard({ children }) {
 
   if (
     (path === 'unit' && currentRole === 'unit') ||
+    (path === 'dashboard' && currentRole === 'kanpus') ||
     (path === 'manager' && currentRole === 'unit') ||
     (path === 'employee' && currentRole === 'bumdesa') ||
     (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
