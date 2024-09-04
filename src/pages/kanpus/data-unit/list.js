@@ -102,6 +102,7 @@ export default function UserList() {
     city: watch('kota')?.value,
     district: watch('kecamatan')?.value,
     subdistrict: watch('desa')?.value,
+    area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     report: watch('report')?.value,
   });
 

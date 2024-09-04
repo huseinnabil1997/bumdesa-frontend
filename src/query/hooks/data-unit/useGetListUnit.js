@@ -22,6 +22,7 @@ export const useGetListUnit = (param) => {
     param.report,
     param.page,
     param.limit,
+    param.area_code,
   ], () => fetchData(param));
 
   return getQuery;
