@@ -222,19 +222,19 @@ export default function UserList() {
                   units &&
                   units?.data?.map((row, index) => (
                     <UserTableRow
-                      id={row.id}
-                      key={row.id}
+                      id={row.unit_id}
+                      key={row.unit_id}
                       row={row}
                       index={index}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
+                      selected={selected.includes(row.unit_id)}
+                      onSelectRow={() => onSelectRow(row.unit_id)}
+                      onDeleteRow={() => handleDeleteRow(row.unit_id)}
                       disableDelete={units?.data.length === 1 && page === 1}
-                      onEditRow={() => router.push(`edit?id=${row.id}`)}
-                      onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => router.push(`${row.id}`)}
-                      onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
-                      onActivateRow={() => handleChangeStatus(row.id, row.status)}
+                      onEditRow={() => router.push(`edit?id=${row.unit_id}`)}
+                      onResendRow={() => handleResendRow(row.unit_id)}
+                      onViewRow={() => router.push(`${row.unit_id}`)}
+                      onDeactivateRow={() => handleChangeStatus(row.unit_id, row.status)}
+                      onActivateRow={() => handleChangeStatus(row.unit_id, row.status)}
                       sx={{
                         backgroundColor: '#F8F9F9',
                         border: 1,

@@ -57,6 +57,8 @@ export default function DetailBumdesa() {
 
   const { data } = useGetUnitById(id);
 
+  console.log('husein', data, decoded);
+
   // useEffect(() => {
   //   if (data?.name && typeof window !== 'undefined') {
   //     localStorage.setItem('bumdesaName', data.name);
@@ -69,7 +71,7 @@ export default function DetailBumdesa() {
   }, [token]);
 
   return (
-    <Page title="Detail BUMDesa">
+    <Page title="Detail Unit Usaha">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -98,22 +100,22 @@ export default function DetailBumdesa() {
                 onClick={() => router.push('kanpus/data-bumdesa/list')}
                 sx={{ cursor: 'pointer' }}
               >
-                Semua BUMDesa
+                Semua Unit Usaha
               </Link>
               <Typography color="text.primary">{data?.name ?? '-'}</Typography>
             </Breadcrumbs>
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus unit={decoded.sub.businessid} />
+            <DashboardFinancesBumdesKanpus unit={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardSales unit={decoded.sub.businessid} />
+            <DashboardSales unit={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardProfitLoss unit={decoded.sub.businessid} />
+            <DashboardProfitLoss unit={id} />
           </Grid>
 
           <Grid item xs={12}>
