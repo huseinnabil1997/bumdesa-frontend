@@ -1,8 +1,9 @@
 import axiosInstance from 'src/utils/axiosCoreService';
+import axiosReport from 'src/utils/axiosReportService';
 import axios, { getSessionToken } from 'src/utils/axios';
 
 export function getListBumdesa(params) {
-  return axiosInstance.get('/business-units', { params });
+  return axiosReport.get('/report/summary-bumdesa', { params });
 }
 
 export function getBumdesaById(id) {

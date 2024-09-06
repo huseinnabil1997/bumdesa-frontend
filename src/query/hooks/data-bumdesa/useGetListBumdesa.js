@@ -19,7 +19,8 @@ export const useGetListBumdesa = (param) => {
     param.city,
     param.district,
     param.subdistrict,
-    param.report,
+    param.area_code,
+    param.status_report,
   ], () => fetchData(param));
 
   return getQuery;

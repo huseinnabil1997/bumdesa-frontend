@@ -47,14 +47,14 @@ export default function UserTableRow({
   // onActivateRow,
 }) {
   // const theme = useTheme();
-  const { name, unit_count, founded_at, full_registered, profitabilitas, luquiditas, solvabilitas, total_omset, laba_rugi, kas_tunai } = row;
+  const { bumdesa_name, count_unit, year_registered, status_active, status_report, profitability, liquidity, solvability, omset, profit_loss, cash } = row;
 
   const formatRupiah = (angka) => angka ? new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(angka) : '-';
+  }).format(angka) : 'Rp 0';
 
   const getYear = (tanggal) => tanggal ? tanggal.slice(0, 4) : '-';
 
@@ -89,38 +89,38 @@ export default function UserTableRow({
           }
         }}
       >
-        {name ?? '-'}
+        {bumdesa_name ?? '-'}
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{unit_count ?? '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{getYear(founded_at)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{count_unit ?? '-'}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_registered ?? '-'}</TableCell>
       <TableCell align="center">
-        {full_registered === 1 && (
+        {status_active === '1' && (
           <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
         )}
-        {full_registered === 0 && (
+        {status_active === '0' && (
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
         )}
-        {!full_registered && (
+        {!status_active && (
           <Chip label="Tidak Ada Data" sx={{ backgroundColor: '#EAEBEB', color: '#292929' }} />
         )}
       </TableCell>
       <TableCell align="center">
-        {full_registered === 1 && (
+        {status_report === '1' && (
           <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
         )}
-        {full_registered === 0 && (
+        {status_report === '0' && (
           <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
         )}
-        {!full_registered && (
+        {!status_report && (
           <Chip label="Tidak Ada Data" sx={{ backgroundColor: '#EAEBEB', color: '#292929' }} />
         )}
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitabilitas ? `${profitabilitas}%` : '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{luquiditas ? `${luquiditas}%` : '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvabilitas ? `${solvabilitas}%` : '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(total_omset)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(laba_rugi)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(kas_tunai)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitability}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{liquidity}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvability}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(omset)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(profit_loss)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(cash)}</TableCell>
 
       <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
         <StyledLoadingButton

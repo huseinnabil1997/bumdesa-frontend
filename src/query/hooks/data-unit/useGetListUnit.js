@@ -13,13 +13,13 @@ const fetchData = async (param) => {
 
 export const useGetListUnit = (param) => {
   const getQuery = useQuery([
-    'GET_LIST_BUMDESA',
+    'GET_LIST_UNIT',
     param.search,
     param.province,
     param.city,
     param.district,
     param.subdistrict,
-    param.report,
+    param.status_report,
     param.page,
     param.limit,
     param.area_code,

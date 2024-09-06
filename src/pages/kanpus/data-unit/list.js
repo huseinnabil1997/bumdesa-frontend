@@ -103,7 +103,7 @@ export default function UserList() {
     district: watch('kecamatan')?.value,
     subdistrict: watch('desa')?.value,
     area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
-    report: watch('report')?.value,
+    status_report: watch('report')?.value,
   });
 
   useEffect(() => {

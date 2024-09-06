@@ -102,7 +102,8 @@ export default function BumdesaList() {
     city: watch('kota')?.value,
     district: watch('kecamatan')?.value,
     subdistrict: watch('desa')?.value,
-    report: watch('report')?.value,
+    area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    status_report: watch('report')?.value,
   });
 
   useEffect(() => {
@@ -182,7 +183,7 @@ export default function BumdesaList() {
   };
 
   return (
-    <Page title="BUMDesa: List">
+    <Page title="Data BUM Desa: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <BumdesaHeader
@@ -225,15 +226,15 @@ export default function BumdesaList() {
                       key={row.id}
                       row={row}
                       index={index}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
+                      selected={selected.includes(row.bumdesa_id)}
+                      onSelectRow={() => onSelectRow(row.bumdesa_id)}
+                      onDeleteRow={() => handleDeleteRow(row.bumdesa_id)}
                       disableDelete={bumdesas?.data.length === 1 && page === 1}
-                      onEditRow={() => router.push(`edit?id=${row.id}`)}
-                      onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => router.push(`${row.id}`)}
-                      onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
-                      onActivateRow={() => handleChangeStatus(row.id, row.status)}
+                      onEditRow={() => router.push(`edit?id=${row.bumdesa_id}`)}
+                      onResendRow={() => handleResendRow(row.bumdesa_id)}
+                      onViewRow={() => router.push(`${row.bumdesa_id}`)}
+                      onDeactivateRow={() => handleChangeStatus(row.bumdesa_id, row.status)}
+                      onActivateRow={() => handleChangeStatus(row.bumdesa_id, row.status)}
                       sx={{
                         backgroundColor: '#F8F9F9',
                         border: 1,
