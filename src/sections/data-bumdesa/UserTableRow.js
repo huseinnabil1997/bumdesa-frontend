@@ -56,7 +56,7 @@ export default function UserTableRow({
     maximumFractionDigits: 0
   }).format(angka) : 'Rp 0';
 
-  const getYear = (tanggal) => tanggal ? tanggal.slice(0, 4) : '-';
+  // const getYear = (tanggal) => tanggal ? tanggal.slice(0, 4) : '-';
 
   return (
     <TableRow
