@@ -23,6 +23,7 @@ export const useGetListUnit = (param) => {
     param.page,
     param.limit,
     param.area_code,
+    param.bumdesa_id,
   ], () => fetchData(param));
 
   return getQuery;

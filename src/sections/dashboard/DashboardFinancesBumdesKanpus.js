@@ -29,25 +29,28 @@ const DEFAULT_SHOW = {
   l: false,
 };
 
-export default function DashboardFinancesBumdesKanpus({ unit }) {
+export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
   const theme = useTheme();
 
   const [seriesData, setSeriesData] = useState(new Date());
 
-  const temp = 400000000;
-
-  const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(angka);
+  const formatRupiah = (angka) => {
+    if (isNaN(angka) || angka === null || angka === 0) {
+      return 'Rp 0';
+    }
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(angka);
+  };
 
   const [show, setShow] = useState(DEFAULT_SHOW);
 
   const { data, isLoading } = useGetFinances({
     date: moment(seriesData).format('yyyy'),
-    unit,
+    ...(unit ? { unit_id: id } : { bumdesa_id: id }),
   });
 
   return (
@@ -114,7 +117,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Rasio Lancar
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {data.luquiditas}
+                  {data.luquiditas}%
                 </Typography>
               </Stack>
             </Grid>
@@ -160,7 +163,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Total Omset
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(temp)}
+                  {formatRupiah(data.totalomset)}
                 </Typography>
               </Stack>
             </Grid>
@@ -183,7 +186,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Laba Rugi
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(temp)}
+                  {formatRupiah(data.labarugi)}
                 </Typography>
               </Stack>
             </Grid>
@@ -206,7 +209,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Total Kas Tunai
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(temp)}
+                  {formatRupiah(data.cash)}
                 </Typography>
               </Stack>
             </Grid>

@@ -11,10 +11,10 @@ import {
 } from '@mui/material';
 // hooks
 import {
-  DashboardSales,
-  DashboardProfitLoss,
   DashboardFinancesBumdesKanpus,
   DashboardUnitManagerList,
+  DashboardProfitLossKanpus,
+  DashboardSalesKanpus,
 } from 'src/sections/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
@@ -107,15 +107,15 @@ export default function DetailBumdesa() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus unit={id} />
+            <DashboardFinancesBumdesKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardSales unit={id} />
+            <DashboardSalesKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardProfitLoss unit={id} />
+            <DashboardProfitLossKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
@@ -128,7 +128,7 @@ export default function DetailBumdesa() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardUnitManagerList />
+            <DashboardUnitManagerList id={id} />
           </Grid>
 
           {/* <Grid item xs={12}>

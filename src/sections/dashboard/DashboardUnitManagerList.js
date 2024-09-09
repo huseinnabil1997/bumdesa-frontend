@@ -29,7 +29,7 @@ const TABLE_HEAD = [
   // { id: 'status', label: 'Action', align: 'center' },
 ];
 
-export default function DashboardUnitManagerList() {
+export default function DashboardUnitManagerList({ id }) {
   const {
     page,
     rowsPerPage,
@@ -43,6 +43,7 @@ export default function DashboardUnitManagerList() {
   const { data: managers, isLoading, refetch } = useGetManagers({
     page: page,
     limit: rowsPerPage,
+    unit_id: id,
   });
 
   useEffect(() => {

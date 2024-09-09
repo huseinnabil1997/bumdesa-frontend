@@ -38,7 +38,7 @@ import { useForm } from 'react-hook-form';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nama BUM Desa', align: 'left' },
+  { id: 'name_kanpus', label: 'Nama BUM Desa', align: 'left' },
   { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
   { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center' },

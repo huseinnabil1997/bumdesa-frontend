@@ -37,7 +37,7 @@ const TABLE_HEAD = [
   { id: 'detail', label: 'Detail', align: 'center' },
 ];
 
-export default function DashboardBumdesaManagerList() {
+export default function DashboardUnitList({ id }) {
   const {
     page,
     rowsPerPage,
@@ -51,6 +51,7 @@ export default function DashboardBumdesaManagerList() {
   const { data: units, isLoading, refetch } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
+    bumdesa_id: id,
   });
 
   useEffect(() => {

@@ -39,7 +39,7 @@ import TableError from 'src/components/table/TableError';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nama Unit Usaha', align: 'left' },
+  { id: 'name_kanpus', label: 'Nama Unit Usaha', align: 'left' },
   { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
   { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },

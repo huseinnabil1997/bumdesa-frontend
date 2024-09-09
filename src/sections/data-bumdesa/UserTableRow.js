@@ -85,7 +85,7 @@ export default function UserTableRow({
             width: 4,
             height: '100%',
             backgroundColor: 'inherit',
-            zIndex: 1
+            zIndex: 1,
           }
         }}
       >

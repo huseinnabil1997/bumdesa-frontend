@@ -12,7 +12,7 @@ const fetchData = async (param) => {
 };
 
 export const useGetSales = (param) => {
-  const getQuery = useQuery(['GET_SALES', param.date], () => fetchData(param));
+  const getQuery = useQuery(['GET_SALES', param.date, param.bumdesa_id], () => fetchData(param));
 
   return getQuery;
 };

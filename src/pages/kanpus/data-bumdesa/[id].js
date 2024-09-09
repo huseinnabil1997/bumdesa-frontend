@@ -20,15 +20,15 @@ import {
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
-import { getSessionToken } from 'src/utils/axiosReportService';
-import jwtDecode from 'jwt-decode';
-import { useEffect, useState } from 'react';
+// import { getSessionToken } from 'src/utils/axiosReportService';
+// import jwtDecode from 'jwt-decode';
+// import { useEffect, useState } from 'react';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { ProfileInfo } from 'src/sections/profile';
 import { useTheme } from '@emotion/react';
 
@@ -49,14 +49,14 @@ DetailBumdesa.getLayout = function getLayout(page) {
 
 export default function DetailBumdesa() {
   const theme = useTheme();
-  const userData = useSelector((state) => state.user.userData);
+  // const userData = useSelector((state) => state.user.userData);
   const { themeStretch } = useSettings();
   const router = useRouter();
-  const token = getSessionToken();
-  const [decoded, setDecoded] = useState(jwtDecode(token));
+  // const token = getSessionToken();
+  // const [decoded, setDecoded] = useState(jwtDecode(token));
   const { id } = router.query;
 
-  const { data } = useGetProfile(userData?.bumdesa_id);
+  const { data } = useGetProfile(id);
 
   // useEffect(() => {
   //   if (data?.name && typeof window !== 'undefined') {
@@ -64,13 +64,13 @@ export default function DetailBumdesa() {
   //   }
   // }, [data]);
 
-  useEffect(() => {
-    if (token) setDecoded(jwtDecode(token));
-    else setDecoded(null);
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) setDecoded(jwtDecode(token));
+  //   else setDecoded(null);
+  // }, [token]);
 
   return (
-    <Page title="Detail BUMDesa">
+    <Page title="Detail BUM Desa">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -96,25 +96,25 @@ export default function DetailBumdesa() {
               <Link
                 underline="hover"
                 color="inherit"
-                onClick={() => router.push('kanpus/data-bumdesa/list')}
+                onClick={() => router.push('list')}
                 sx={{ cursor: 'pointer' }}
               >
-                Semua BUMDesa
+                Semua BUM Desa
               </Link>
               <Typography color="text.primary">{data?.name ?? '-'}</Typography>
             </Breadcrumbs>
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus unit={decoded.sub.businessid} />
+            <DashboardFinancesBumdesKanpus id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardSales unit={decoded.sub.businessid} />
+            <DashboardSales id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardProfitLoss unit={decoded.sub.businessid} />
+            <DashboardProfitLoss id={id} />
           </Grid>
 
           <Grid item xs={12}>
@@ -127,11 +127,11 @@ export default function DetailBumdesa() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardBumdesaManagerList />
+            <DashboardBumdesaManagerList id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardUnitList />
+            <DashboardUnitList id={id} />
           </Grid>
 
           {/* <Grid item xs={12}>
