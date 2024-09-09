@@ -103,7 +103,7 @@ export default function BumdesaList() {
     district: watch('kecamatan')?.value,
     subdistrict: watch('desa')?.value,
     area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
-    status_report: watch('report')?.value,
+    status_active: watch('status_active')?.value,
   });
 
   useEffect(() => {
@@ -196,7 +196,7 @@ export default function BumdesaList() {
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
-              report: watch('report') ?? null,
+              status_active: watch('status_active') ?? null,
             }}
             setValue={setValue}
           />

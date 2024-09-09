@@ -100,11 +100,9 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const { data: subdistricts, isLoading: isLoadingSubdistricts } = useGetSubdistricts({
     dis_id: filter?.kecamatan?.value,
   });
-  const reports = [
-    { value: 1, label: 'Laba Rugi' },
-    { value: 2, label: 'Perubahan Ekuitas' },
-    { value: 3, label: 'Posisi Keuangan' },
-    { value: 4, label: 'Arus Kas' },
+  const activeStatus = [
+    { value: 1, label: 'Aktif' },
+    { value: 0, label: 'Belum Aktif' },
   ];
 
   const handleMenuItemClick = (event, index) => {
@@ -279,11 +277,11 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           </Grid>
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
-              name="report"
-              placeholder="Semua Laporan Keuangan"
+              name="status_active"
+              placeholder="Semua Status"
               loading={false}
               sx={styles.textfield}
-              options={reports?.map((option) => option) ?? []}
+              options={activeStatus?.map((option) => option) ?? []}
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (
                 <li {...props} key={option.value} style={{ fontSize: '12px' }}>
