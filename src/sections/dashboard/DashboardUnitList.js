@@ -19,6 +19,7 @@ import { TableHeadCustom, TableNoData, TableSkeleton } from 'src/components/tabl
 import { UserTableRow } from '../data-unit';
 import useTable from 'src/hooks/useTable';
 import { useGetListUnit } from 'src/query/hooks/data-unit/useGetListUnit';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,7 @@ const TABLE_HEAD = [
 ];
 
 export default function DashboardUnitList({ id }) {
+  const router = useRouter();
   const {
     page,
     rowsPerPage,
@@ -91,6 +93,9 @@ export default function DashboardUnitList({ id }) {
                         key={row.id}
                         row={row}
                         index={index}
+                        onViewRow={() => {
+                          router.push(`/kanpus/data-unit/${row.id}`);
+                        }}
                         selected={selected.includes(row.id)}
                         disableDelete={units?.data.length === 1 && page === 1}
                         sx={{
