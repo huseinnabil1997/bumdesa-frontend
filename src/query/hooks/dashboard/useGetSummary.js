@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
-import { getProvinceSummary } from 'src/query/request/dashboard';
+import { getAreaSummary } from 'src/query/request/dashboard';
 
 const fetchData = async (param) => {
   try {
-    const { data } = await getProvinceSummary(param);
+    const { data } = await getAreaSummary(param);
 
     return data ?? { data: [] };
   } catch (err) {

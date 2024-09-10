@@ -23,23 +23,24 @@ import { TableHeadCustom, TableNoData, TableSkeleton } from 'src/components/tabl
 // sections
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
-import { BUMDES_HEAD } from 'src/utils/constant';
+import { BUMDES_DETAIL_HEAD } from 'src/utils/constant';
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import TableError from 'src/components/table/TableError';
-import { Header, TableRow } from 'src/sections/kanpus/list';
-import { useGetSummary } from 'src/query/hooks/dashboard/useGetSummary';
+import { TableRow } from 'src/sections/kanpus/summary-bumdesa';
+import { Header } from 'src/sections/kanpus/list';
+import { useGetSummaryBumdesa } from 'src/query/hooks/dashboard/useGetSummaryBumdesa';
 
 // ----------------------------------------------------------------------
 
-DistrictSummaryPage.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+DetailSummaryPage.getLayout = function getLayout(page) {
+  return <Layout title="Summary BUM Desa">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function DistrictSummaryPage() {
+export default function DetailSummaryPage() {
   const router = useRouter();
-  const { area, city } = router.query;
+  const { area } = router.query;
 
   const { page, onChangePage, rowsPerPage, onChangeRowsPerPage } = useTable({
     defaultCurrentPage: 1,
@@ -60,14 +61,14 @@ export default function DistrictSummaryPage() {
     data: summary,
     isLoading,
     isError,
-  } = useGetSummary({
+  } = useGetSummaryBumdesa({
     limit: rowsPerPage,
     page,
     area,
   });
 
   const handleViewRow = (row) => {
-    router.push(`/kanpus/summary/${city}/${row.area}?area=${row.area_code}`);
+    router.push(`/unit/detail?id=${row.bumdesa_id}`);
   };
 
   return (
@@ -82,7 +83,7 @@ export default function DistrictSummaryPage() {
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={BUMDES_HEAD}
+                  headLabel={BUMDES_DETAIL_HEAD}
                   rowCount={summary?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />

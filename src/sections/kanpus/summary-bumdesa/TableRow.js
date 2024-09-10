@@ -5,6 +5,7 @@ import { TableRow, TableCell, IconButton, Tooltip, styled } from '@mui/material'
 import { fCurrency, fNumber } from 'src/utils/formatNumber';
 import Iconify from 'src/components/Iconify';
 import { capitalCase } from 'change-case';
+import Label from 'src/components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -43,27 +44,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function UserTableRow({ row, onViewRow }) {
-  const nameSortener = (value) => {
-    switch (value) {
-      case 'DAERAH ISTIMEWA YOGYAKARTA':
-        return 'DI YOGYAKARTA';
-      case 'KEPULAUAN BANGKA BELITUNG':
-        return 'BANGKA BELITUNG';
-      default:
-        return value;
-    }
-  };
-
   return (
     <StyledTableRow onClick={onViewRow} sx={{ cursor: 'pointer' }} hover>
-      <FixedTableCell>{capitalCase(nameSortener(row?.area))}</FixedTableCell>
-      <TableCell>{fNumber(row?.count_bumdesa ?? 0)}</TableCell>
+      <FixedTableCell>{capitalCase(row?.bumdesa_name ?? '')}</FixedTableCell>
       <TableCell>{fNumber(row?.count_unit ?? 0)}</TableCell>
-      <TableCell>{fNumber(row?.count_registered ?? 0)}</TableCell>
-      <TableCell>{fNumber(row?.count_active ?? 0)}</TableCell>
-      <TableCell>{fNumber(row?.count_report ?? 0)}</TableCell>
+      <TableCell>{row?.year_registered ?? 0}</TableCell>
+      <TableCell align="center">
+        <Label color={row?.status_active === '1' ? 'success' : 'error'}>
+          {row?.status_active === '1' ? 'Aktif' : 'Tidak Aktif'}
+        </Label>
+      </TableCell>
+      <TableCell align="center">
+        <Label color={row?.status_active === '1' ? 'success' : 'error'}>
+          {row?.status_active === '1' ? 'Aktif' : 'Tidak Aktif'}
+        </Label>
+      </TableCell>
       <TableCell>{fCurrency(row?.omset ?? 0)}</TableCell>
-      <TableCell>{fCurrency(row?.labarugi ?? 0)}</TableCell>
+      <TableCell>{fCurrency(row?.profit_loss ?? 0)}</TableCell>
       <TableCell>{fCurrency(row?.cash ?? 0)}</TableCell>
 
       <TableCell align="center">
