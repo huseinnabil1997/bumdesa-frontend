@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { PATH_AUTH } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axiosCoreService';
-import { setSession } from 'src/utils/jwt';
+// import { setSession } from 'src/utils/jwt';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 
 // ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ export default function Login() {
       setLoading(false);
       setIsExpired(false);
       setError('');
-      setSession(null);
+      // setSession(null);
     } catch (error) {
       console.log('error verifyEmail', error);
       setIsExpired(true);
