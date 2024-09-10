@@ -121,6 +121,7 @@ export default function StepThreeForm() {
           label="Tahun Berdiri"
           placeholder="Pilih Tahun"
           format="yyyy"
+          minDate={moment(data?.founded_at).format('yyyy-MM-DD')}
           views={['year']}
           openTo="year"
           sx={{

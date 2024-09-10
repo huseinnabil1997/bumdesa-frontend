@@ -78,6 +78,7 @@ export default function DashboardProfitLoss({ unit }) {
               views={['year']}
               label="Tahun Akhir"
               minDate={startDate}
+              maxDate={new Date(new Date().getFullYear(), 11, 31)}
               value={endDate}
               onChange={(newValue) => {
                 setEndDate(newValue);

@@ -25,14 +25,28 @@ export const PROFIT_HEAD = [
 ];
 
 export const BUMDES_HEAD = [
-  { id: 'name', label: 'Nama Provinsi', align: 'left', minWidth: 200 },
+  { id: 'name', label: 'Nama Daerah', align: 'left', minWidth: 200 },
   { id: 'jumlah_bumdesa', label: 'Total BUMDesa', align: 'left', minWidth: 150 },
   { id: 'jumlah_unit', label: 'Total Unit Usaha', align: 'left', minWidth: 150 },
-  { id: 'input_laporan', label: 'Input Laporan Keuangan', align: 'left', minWidth: 200 },
-  { id: 'total_kas', label: 'Total Kas Tunai', align: 'left', minWidth: 200 },
+  { id: 'total_registered', label: 'BUM Desa Registrasi', align: 'left', minWidth: 150 },
+  { id: 'total_active', label: 'BUM Desa Aktif', align: 'left', minWidth: 150 },
+  { id: 'input_laporan', label: 'Input Laporan Keuangan', align: 'left', minWidth: 150 },
   { id: 'total_omzet', label: 'Total Omzet', align: 'left', minWidth: 200 },
   { id: 'profit_loss', label: 'Laba/Rugi', align: 'left', minWidth: 200 },
-  { id: 'action', label: 'Aksi', align: 'center', minWidth: 100 },
+  { id: 'total_cash', label: 'Total Kas Tunai', align: 'left', minWidth: 200 },
+  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
+];
+
+export const BUMDES_DETAIL_HEAD = [
+  { id: 'name', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
+  { id: 'jumlah_unit', label: 'Total Unit Usaha', align: 'left', minWidth: 150 },
+  { id: 'created_year', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
+  { id: 'status', label: 'Status Aktivasi BUM Desa', align: 'center', minWidth: 175 },
+  { id: 'report', label: 'Status Laporan Keuangan', align: 'center', minWidth: 175 },
+  { id: 'total_omzet', label: 'Total Omzet', align: 'left', minWidth: 200 },
+  { id: 'profit_loss', label: 'Laba/Rugi', align: 'left', minWidth: 200 },
+  { id: 'total_cash', label: 'Total Kas Tunai', align: 'left', minWidth: 200 },
+  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
 ];
 
 export const LOG_HEAD = [

@@ -33,7 +33,7 @@ import { useGetSummary } from 'src/query/hooks/dashboard/useGetSummary';
 // ----------------------------------------------------------------------
 
 SummaryPage.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <Layout title="Dashboard Kantor Pusat">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ export default function SummaryPage() {
   });
 
   const handleViewRow = (row) => {
-    router.push(`/kanpus/summary/${row.area}?area=${row.area_code}`);
+    router.push(`/kanpus/summary/detail?province=${row.area}&area=${row.area_code}`);
   };
 
   return (

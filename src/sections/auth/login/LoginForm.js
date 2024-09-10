@@ -50,7 +50,7 @@ export default function LoginForm() {
   const defaultValues = {
     email: '',
     password: '',
-    remember: true,
+    remember: false,
   };
 
   const methods = useForm({
