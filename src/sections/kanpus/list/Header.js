@@ -24,7 +24,7 @@ export default function Header() {
           sx={{ cursor: 'pointer' }}
           onClick={() => router.push('/kanpus/summary')}
         >
-          Demografi BUMDesa
+          Demografi BUM Desa
         </Typography>
         {province && (
           <Typography
@@ -32,7 +32,11 @@ export default function Header() {
             color={!city && 'text.primary'}
             fontWeight={!city ? 600 : 400}
             sx={{ cursor: 'pointer' }}
-            onClick={() => router.push(`/kanpus/summary/${province}?area=${area}`)}
+            onClick={() =>
+              router.push(
+                `/kanpus/summary/detail?area=${area.substring(0, 2)}&province=${province}`
+              )
+            }
           >
             {province}
           </Typography>
@@ -43,7 +47,14 @@ export default function Header() {
             color={!district && 'text.primary'}
             fontWeight={!district ? 600 : 400}
             sx={{ cursor: 'pointer' }}
-            onClick={() => router.push(`/kanpus/summary/${city}?area=${area}`)}
+            onClick={() =>
+              router.push(
+                `/kanpus/summary/detail?area=${area.substring(
+                  0,
+                  4
+                )}&city=${city}&province=${province}`
+              )
+            }
           >
             {city}
           </Typography>

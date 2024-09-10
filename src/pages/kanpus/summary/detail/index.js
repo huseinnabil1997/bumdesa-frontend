@@ -32,14 +32,14 @@ import { useGetSummary } from 'src/query/hooks/dashboard/useGetSummary';
 
 // ----------------------------------------------------------------------
 
-CitySummaryPage.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+DetailSummaryPage.getLayout = function getLayout(page) {
+  return <Layout title="Summary Daerah">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function CitySummaryPage() {
+export default function DetailSummaryPage() {
   const router = useRouter();
-  const { area, province } = router.query;
+  const { area, province, city } = router.query;
 
   const { page, onChangePage, rowsPerPage, onChangeRowsPerPage } = useTable({
     defaultCurrentPage: 1,
@@ -67,7 +67,11 @@ export default function CitySummaryPage() {
   });
 
   const handleViewRow = (row) => {
-    router.push(`/kanpus/summary/${province}/${row.area}?area=${row.area_code}`);
+    let areaUrl = `/kanpus/summary/detail?area=${row.area_code}`;
+    let buUrl = `/kanpus/summary/detail/bumdesa?area=${row.area_code}`;
+
+    if (city) router.push(buUrl + `&province=${province}&city=${city}&district=${row.area}`);
+    else router.push(areaUrl + `&province=${province}&city=${row.area}`);
   };
 
   return (

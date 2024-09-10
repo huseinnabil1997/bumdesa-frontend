@@ -47,7 +47,7 @@ export default function UserTableRow({ row, selected, onClickDetail, index }) {
           <Box display="flex" sx={{ mt: 0.5 }}>
             <AccessTime color="primary" fontSize="small" sx={{ mr: 1 }} />
             <Typography fontSize={12} fontWeight={400}>
-              {moment(timestamp).format('HH:mm')}
+              {moment(timestamp).utc().format('HH:mm')}
             </Typography>
           </Box>
         </TableCell>
