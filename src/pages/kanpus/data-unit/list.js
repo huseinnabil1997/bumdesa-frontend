@@ -60,7 +60,7 @@ UserList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
+  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage, setPage } = useTable({
     defaultCurrentPage: 1,
   });
 
@@ -112,7 +112,12 @@ export default function UserList() {
 
   useEffect(() => {
     refetch();
-  }, [page, rowsPerPage, watch('search')]);
+  }, [page, rowsPerPage]);
+
+  useEffect(() => {
+    setPage(1);
+    refetch();
+  }, [watch('search')]);
 
   const handleResendRow = async (id) => {
     try {

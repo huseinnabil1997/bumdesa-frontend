@@ -24,7 +24,7 @@ import { useRouter } from 'next/router';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nama Unit Usaha', align: 'left' },
+  { id: 'name_kanpus', label: 'Nama Unit Usaha', align: 'left' },
   { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left' },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
   // { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center' },
@@ -89,14 +89,14 @@ export default function DashboardUnitList({ id }) {
                     units &&
                     units?.data?.map((row, index) => (
                       <UserTableRow
-                        id={row.id}
-                        key={row.id}
+                        id={row.unit_id}
+                        key={row.unit_id}
                         row={row}
                         index={index}
                         onViewRow={() => {
-                          router.push(`/kanpus/data-unit/${row.id}`);
+                          router.push(`/kanpus/data-unit/${row.unit_id}`);
                         }}
-                        selected={selected.includes(row.id)}
+                        selected={selected.includes(row.unit_id)}
                         disableDelete={units?.data.length === 1 && page === 1}
                         sx={{
                           backgroundColor: '#F8F9F9',

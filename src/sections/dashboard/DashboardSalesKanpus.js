@@ -21,7 +21,7 @@ export default function DashboardSalesKanpus({ id, unit = false }) {
 
   const { data, isLoading } = useGetSales({
     date: moment(seriesData).format('yyyy'),
-    ...(unit ? { unit_id: id } : { bumdesa_id: id }),
+    ...(unit ? { unit: id } : { bumdesa_id: id }),
   });
 
   const chartOptions = merge(BaseOptionChart(), {

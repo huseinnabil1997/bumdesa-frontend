@@ -26,7 +26,7 @@ export default function DashboardProfitLossKanpus({ id, unit = false }) {
   const { data, isLoading } = useGetProfileLoss({
     start_date: moment(startDate).format('yyyy'),
     end_date: moment(endDate).format('yyyy'),
-    ...(unit ? { unit_id: id } : { bumdesa_id: id }),
+    ...(unit ? { unit: id } : { bumdesa_id: id }),
   });
 
   const chartOptions = merge(BaseOptionChart(), {

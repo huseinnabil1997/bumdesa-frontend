@@ -19,9 +19,6 @@ import {
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
-import { getSessionToken } from 'src/utils/axiosReportService';
-import jwtDecode from 'jwt-decode';
-import { useEffect, useState } from 'react';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -33,42 +30,18 @@ import { useGetUnitById } from 'src/query/hooks/data-unit/useGetUnitById';
 
 // ----------------------------------------------------------------------
 
-// DetailBumdesa.getLayout = function getLayout(page) {
-//   return (
-//     <Layout title={`Ringkasan ${typeof window !== 'undefined' ? localStorage?.getItem('bumdesaName') : ''}`}>
-//       {page}
-//     </Layout>
-//   );
-// };
-
-DetailBumdesa.getLayout = function getLayout(page) {
-  return <Layout title="Detail BUMDesa">{page}</Layout>;
+DetailUnit.getLayout = function getLayout(page) {
+  return <Layout title="Detail Unit Usaha">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function DetailBumdesa() {
+export default function DetailUnit() {
   const theme = useTheme();
-  // const userData = useSelector(state => state.user.userData);
   const { themeStretch } = useSettings();
   const router = useRouter();
-  const token = getSessionToken();
-  const [decoded, setDecoded] = useState(jwtDecode(token));
   const { id } = router.query;
 
   const { data } = useGetUnitById(id);
-
-  console.log('husein', data, decoded);
-
-  // useEffect(() => {
-  //   if (data?.name && typeof window !== 'undefined') {
-  //     localStorage.setItem('bumdesaName', data.name);
-  //   }
-  // }, [data]);
-
-  useEffect(() => {
-    if (token) setDecoded(jwtDecode(token));
-    else setDecoded(null);
-  }, [token]);
 
   return (
     <Page title="Detail Unit Usaha">
@@ -97,7 +70,7 @@ export default function DetailBumdesa() {
               <Link
                 underline="hover"
                 color="inherit"
-                onClick={() => router.push('kanpus/data-bumdesa/list')}
+                onClick={() => router.push('list')}
                 sx={{ cursor: 'pointer' }}
               >
                 Semua Unit Usaha

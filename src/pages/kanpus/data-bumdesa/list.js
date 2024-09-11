@@ -60,8 +60,9 @@ BumdesaList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function BumdesaList() {
-  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
+  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage, setPage } = useTable({
     defaultCurrentPage: 1,
+    defaultRowsPerPage: 5,
   });
 
   const router = useRouter();
@@ -82,7 +83,7 @@ export default function BumdesaList() {
   const { mutate: onActivate } = useActivate();
 
   const methods = useForm({
-    defaultValues: { 
+    defaultValues: {
       search: '',
       provinsi: null,
       kota: null,
@@ -112,7 +113,12 @@ export default function BumdesaList() {
 
   useEffect(() => {
     refetch();
-  }, [page, rowsPerPage, watch('search')]);
+  }, [page, rowsPerPage]);
+
+  useEffect(() => {
+    setPage(1);
+    refetch();
+  }, [watch('search')]);
 
   const handleResendRow = async (id) => {
     try {
@@ -246,17 +252,17 @@ export default function BumdesaList() {
                 <TableNoData
                   isNotFound={bumdesas?.data?.length === 0}
                   title="BUMDesa belum tersedia."
-                  // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
-                  // action={
-                  //   <StyledButton
-                  //     sx={{ mt: 2, width: 200 }}
-                  //     variant="outlined"
-                  //     startIcon={<Add fontSize="small" />}
-                  //     onClick={() => router.push('new')}
-                  //   >
-                  //     Tambah BUMDesa
-                  //   </StyledButton>
-                  // }
+                // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
+                // action={
+                //   <StyledButton
+                //     sx={{ mt: 2, width: 200 }}
+                //     variant="outlined"
+                //     startIcon={<Add fontSize="small" />}
+                //     onClick={() => router.push('new')}
+                //   >
+                //     Tambah BUMDesa
+                //   </StyledButton>
+                // }
                 />
                 {isLoading && <TableSkeleton />}
               </TableBody>

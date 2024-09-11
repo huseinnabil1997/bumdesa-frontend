@@ -50,7 +50,7 @@ export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
 
   const { data, isLoading } = useGetFinances({
     date: moment(seriesData).format('yyyy'),
-    ...(unit ? { unit_id: id } : { bumdesa_id: id }),
+    ...(unit ? { unit: id } : { bumdesa_id: id }),
   });
 
   return (
