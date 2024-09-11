@@ -62,7 +62,9 @@ export default function DetailProfil() {
 
   const userData = useSelector(state => state.user.userData);
 
-  const { data, refetch } = useGetProfile(userData?.bumdesa_id)
+  const { data, refetch } = useGetProfile(userData?.bumdesa_id);
+
+  const founded_at = data?.founded_at?.split('T')[0]
 
   const { data: unitData, refetch: refetchUnit } = useGetUnitById(userData?.unit_id);
 
@@ -155,6 +157,7 @@ export default function DetailProfil() {
               {isEdit ? (
                 <ProfileInfoFormUnit
                   data={unitData}
+                  foundedAt={founded_at}
                   setIsEdit={() => {
                     setIsEdit(!isEdit);
                     refetch();
