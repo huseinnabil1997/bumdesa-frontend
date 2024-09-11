@@ -20,12 +20,20 @@ import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
+import { useSelector } from 'react-redux';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
+import moment from 'moment';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
 export default function EditUnitUsaha() {
+  const userData = useSelector(state => state.user.userData);
+
+  const { data: dataBumdesa } = useGetProfile(userData?.bumdesa_id);
+
+  const founded_at = dataBumdesa?.founded_at?.split('T')[0]
 
   const { themeStretch } = useSettings();
 
@@ -311,6 +319,7 @@ export default function EditUnitUsaha() {
                   name="year_founded"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
+                  minDate={moment(founded_at).format('yyyy-MM-DD')}
                   format="yyyy"
                   views={['year']}
                   openTo="year"
