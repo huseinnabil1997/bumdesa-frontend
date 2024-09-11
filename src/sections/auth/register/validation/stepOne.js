@@ -14,7 +14,9 @@ export const StepOneSchema = Yup.object().shape({
       'Nama BUM Desa tidak boleh mengandung tag HTML',
       (value) => !htmlTagRegex.test(value)
     ),
-  bumdesa_id: Yup.string().required('ID BUM Desa wajib diisi'),
+  bumdesa_id: Yup.string()
+    .min(19, 'ID BUM Desa harus teridiri dari 17 digit angka')
+    .required('ID BUM Desa wajib diisi'),
   address: Yup.string()
     .required('Alamat BUM Desa wajib diisi')
     .matches(

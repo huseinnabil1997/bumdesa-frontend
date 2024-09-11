@@ -116,7 +116,7 @@ export default function Register() {
                       Tambahkan Data Manager Unit Usaha
                     </Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
-                      Silahkan masukkan informasi Manager Unit Usaha.
+                      Silakan masukkan informasi Manager Unit Usaha.
                     </Typography>
                   </Box>
                 </Stack>

@@ -64,12 +64,10 @@ export default function ResetPasswordForm({ onSent }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
-        <RHFTextField name="email" label="Email" placeholder='Masukkan email' />
-        
+        <RHFTextField name="email" label="Email" placeholder="Masukkan email" require={true} />
+
         {emailSent && countdown > 0 && (
-          <Typography variant="body2">
-            Belum menerima email?
-          </Typography>
+          <Typography variant="body2">Belum menerima email?</Typography>
         )}
 
         <StyledLoadingButton
@@ -80,7 +78,11 @@ export default function ResetPasswordForm({ onSent }) {
           loading={isSubmitting}
           disabled={countdown > 0}
         >
-          {countdown > 0 ? `Kirim Ulang ${countdown} detik` : (emailSent ? 'Kirim Ulang' : 'Atur ulang Kata Sandi')}
+          {countdown > 0
+            ? `Kirim Ulang ${countdown} detik`
+            : emailSent
+            ? 'Kirim Ulang'
+            : 'Atur ulang Kata Sandi'}
         </StyledLoadingButton>
       </Stack>
     </FormProvider>

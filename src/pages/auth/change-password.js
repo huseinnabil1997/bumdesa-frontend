@@ -62,14 +62,13 @@ ResetPassword.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function ResetPassword() {
-
   const mdUp = useResponsive('up', 'lg');
 
   return (
     <GuestGuard>
       <Page title="Mengatur Ulang Kata Sandi" sx={{ height: 1 }}>
         <RootStyle>
-        {mdUp && (
+          {mdUp && (
             <SectionStyle>
               <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <Title>
@@ -99,11 +98,11 @@ export default function ResetPassword() {
             <ContentStyle>
               <Card sx={{ p: 5 }}>
                 <>
-                  <Typography variant="h3" paragraph align='center'>
+                  <Typography variant="h3" paragraph align="center">
                     Buat Kata Sandi Baru
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', mb: 5 }} align='center'>
-                    Silahkan buat kata sandi demi keamanan akun anda.
+                  <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
+                    Silakan buat kata sandi demi keamanan akun Anda.
                   </Typography>
 
                   <AccountChangePassword />

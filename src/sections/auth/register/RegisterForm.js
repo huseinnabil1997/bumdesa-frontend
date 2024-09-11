@@ -190,11 +190,11 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
           required
           name="re-password"
           label="Konfirmasi Kata Sandi"
-          type={showPassword ? 'text' : 'password'}
+          type={showRePassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton edge="end" onClick={() => setShowRePassword(!showPassword)}>
+                <IconButton edge="end" onClick={() => setShowRePassword(!showRePassword)}>
                   <Iconify icon={showRePassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
