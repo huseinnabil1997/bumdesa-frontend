@@ -104,7 +104,7 @@ export default function Login() {
                       Buat Kata Sandi Baru
                     </Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
-                      Silahkan buat kata sandi demi keamanan akun anda.
+                      Silakan buat kata sandi demi keamanan akun Anda.
                     </Typography>
                   </Box>
                 </Stack>

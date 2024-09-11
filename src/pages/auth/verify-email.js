@@ -50,7 +50,6 @@ export default function Login() {
   const fetchVerifyEmail = async (unit_verify) => {
     setLoading(false);
     try {
-
       await axiosInstance.post('/business-units/email-verify', { unit_verify });
       setLoading(false);
       setIsExpired(false);
@@ -62,11 +61,11 @@ export default function Login() {
       setError(error?.message);
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchVerifyEmail(router.query.unit_verify);
-  }, [])
+  }, []);
 
   return (
     <Page title="Verify Email">
@@ -92,7 +91,7 @@ export default function Login() {
                     {error}
                   </Typography>
                   <Typography textAlign="center" fontSize="16px" fontWeight={500} color="#666666">
-                    Silahkan hubungi admin BUM Desa Anda untuk mengirimkan kembali link verifikasi.
+                    Silakan hubungi admin BUM Desa Anda untuk mengirimkan kembali link verifikasi.
                   </Typography>
                 </Box>
               </Box>
@@ -125,7 +124,8 @@ export default function Login() {
                   <StyledLoadingButton
                     sx={{ width: 432, height: 48, fontSize: '16px', fontWeight: 700 }}
                     variant="contained"
-                    onClick={() => router.push(PATH_AUTH.login)}>
+                    onClick={() => router.push(PATH_AUTH.login)}
+                  >
                     Kembali ke Halaman Login
                   </StyledLoadingButton>
                 </Box>

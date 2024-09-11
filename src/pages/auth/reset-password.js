@@ -141,7 +141,7 @@ export default function ResetPassword() {
                   Lupa Kata Sandi?
                 </Typography>
                 <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
-                  Silahkan masukkan email akun BUM Desa, untuk memulihkan akun anda.
+                  Silakan masukkan email akun BUM Desa, untuk memulihkan akun anda.
                 </Typography>
 
                 <ResetPasswordForm onSent={() => setSent(true)} sentStatus={sent} />

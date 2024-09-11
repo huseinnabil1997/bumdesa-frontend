@@ -13,7 +13,10 @@ export default function Header() {
         Kembali
       </BtnLightPrimary>
       <Breadcrumbs sx={{ mt: 1, ml: 3 }} separator={<NavigateNext fontSize="small" />}>
-        <Typography fontSize={14}>Dashboard</Typography>,
+        <Typography fontSize={14} sx={{ cursor: 'pointer' }} onClick={() => router.push('/log')}>
+          Log Aktivitas
+        </Typography>
+
         <Typography fontSize={14} color="text.primary" fontWeight={600}>
           Semua Log Aktivitas
         </Typography>
