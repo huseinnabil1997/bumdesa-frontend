@@ -183,7 +183,7 @@ export default function Register() {
                         Buat Akun BUM Desa
                       </Typography>
                       <Typography sx={{ color: 'text.secondary' }}>
-                        Silahkan isi form berikut untuk membuat akun
+                        Silakan isi form berikut untuk membuat akun
                       </Typography>
                     </Box>
                   </Stack>

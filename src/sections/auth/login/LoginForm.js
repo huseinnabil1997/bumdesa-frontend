@@ -104,9 +104,10 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email" />
+        <RHFTextField name="email" label="Email" require={true} />
 
         <RHFTextField
+          require={true}
           name="password"
           label="Kata Sandi"
           type={showPassword ? 'text' : 'password'}

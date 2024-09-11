@@ -117,7 +117,7 @@ export default function Register() {
                         Tambahkan Data Pengurus BUM Desa
                       </Typography>
                       <Typography sx={{ color: 'text.secondary' }}>
-                        Silahkan masukkan informasi pengurus.
+                        Silakan masukkan informasi pengurus.
                       </Typography>
                     </Box>
                   </Stack>
