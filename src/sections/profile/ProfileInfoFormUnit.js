@@ -20,6 +20,7 @@ import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useTheme } from '@mui/material/styles';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
+import moment from 'moment';
 
 const styles = {
   content: {
@@ -73,7 +74,7 @@ const styles = {
   },
 };
 
-export default function ProfileInfoFormUnit({ data, setIsEdit }) {
+export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
   const theme = useTheme();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -257,6 +258,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit }) {
             label="Tahun Berdiri"
             placeholder="Pilih Tahun"
             format="yyyy"
+            minDate={moment(foundedAt).format('yyyy-MM-DD')}
             views={['year']}
             openTo="year"
             sx={{
