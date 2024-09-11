@@ -40,7 +40,6 @@ export default function StepFourForm({ setSuccess, isSuccess }) {
     setValue,
     setError,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = methods;
 

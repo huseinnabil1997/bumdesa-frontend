@@ -30,6 +30,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -87,7 +88,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     registerForm['re-password'] = watch('re-password');
     registerForm.termsAndConditions = watch('termsAndConditions');
     registerForm.privacyPolicy = watch('privacyPolicy');
-  }
+  };
 
   const resetRegisterForm = () => {
     registerForm.name = '';
@@ -96,7 +97,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     registerForm['re-password'] = '';
     registerForm.termsAndConditions = false;
     registerForm.privacyPolicy = false;
-  }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -106,7 +107,9 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-        {!!errors.termsAndConditions && <Alert severity="error">{errors.termsAndConditions.message}</Alert>}
+        {!!errors.termsAndConditions && (
+          <Alert severity="error">{errors.termsAndConditions.message}</Alert>
+        )}
         {!!errors.privacyPolicy && <Alert severity="error">{errors.privacyPolicy.message}</Alert>}
 
         <RHFTextField name="name" label="Nama BUM Desa" required />
@@ -187,12 +190,12 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
           required
           name="re-password"
           label="Konfirmasi Kata Sandi"
-          type={showPassword ? 'text' : 'password'}
+          type={showRePassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                <IconButton edge="end" onClick={() => setShowRePassword(!showRePassword)}>
+                  <Iconify icon={showRePassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -231,10 +234,16 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
             <RHFCheckbox
               name="privacyPolicy"
               label={
-                <Typography id="Typography-register-kebijakan-privasi" fontSize="12px" fontWeight={400} color="#292929" sx={{ ml: 0.2 }}>
+                <Typography
+                  id="Typography-register-kebijakan-privasi"
+                  fontSize="12px"
+                  fontWeight={400}
+                  color="#292929"
+                  sx={{ ml: 0.2 }}
+                >
                   Saya telah membaca{' '}
-                  <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span>{' '}
-                  BUM Desa
+                  <span style={{ fontWeight: 600, color: '#1078CA' }}> Kebijakan Privasi </span> BUM
+                  Desa
                 </Typography>
               }
               onChange={() => {

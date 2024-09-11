@@ -19,3 +19,19 @@ export function getDemographic() {
 export function getStatistics() {
   return axiosInstance.get(`dashboard/static`);
 }
+
+export function getAreaSummary(params) {
+  return axiosInstance.get(`dashboard/demografi/summary`, { params });
+}
+
+export function getDetailSummary(params) {
+  if (params.area) {
+    params['province'] = params.area.substring(0, 2);
+    params['city'] = params.area.substring(2, 4);
+    params['district'] = params.area.substring(4, 6);
+
+    delete params.area;
+  }
+
+  return axiosInstance.get(`report/summary-bumdesa`, { params });
+}

@@ -59,9 +59,9 @@ const observer = new MutationObserver((mutations) => {
       break;
     }
   }
-  if (shouldScan) {
-    scanAndGenerateIds();
-  }
+  // if (shouldScan) {
+  //   scanAndGenerateIds();
+  // }
 });
 
 // Konfigurasi observer
@@ -69,7 +69,7 @@ const config = { childList: true, subtree: true };
 
 // Mulai observasi
 document.addEventListener('DOMContentLoaded', () => {
-  scanAndGenerateIds();
+  // scanAndGenerateIds();
   observer.observe(document.body, config);
   console.log('Observasi DOM dimulai');
 });

@@ -32,7 +32,6 @@ NavSectionVertical.propTypes = {
 };
 
 export default function NavSectionVertical({ isCollapse = false, ...other }) {
-  
   const safeParseJSON = (json) => {
     try {
       return JSON.parse(json);
@@ -49,13 +48,13 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
 
   useEffect(() => {
     if (data) {
-      const cleanedData = data.map(group => ({
+      const cleanedData = data.map((group) => ({
         ...group,
         subheader: DOMPurify.sanitize(group.subheader),
-        items: group.items.map(item => ({
+        items: group.items.map((item) => ({
           ...item,
-          title: DOMPurify.sanitize(item.title)
-        }))
+          title: DOMPurify.sanitize(item.title),
+        })),
       }));
       localStorage.setItem('@menu', JSON.stringify(cleanedData));
       setNavConfig(cleanedData);

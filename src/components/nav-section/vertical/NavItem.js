@@ -29,7 +29,7 @@ const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 
 
 export function cleanPath(path) {
   // Hapus karakter yang tidak diinginkan atau berpotensi berbahaya
-  const sanitizedPath = path.replace(/[^a-zA-Z0-9/-_]/g, '');
+  const sanitizedPath = path.replace(/[^a-zA-Z0-9/_-]/g, '');
   // Pastikan path diawali dengan '/'
   return sanitizedPath.startsWith('/') ? sanitizedPath : `/${sanitizedPath}`;
 }

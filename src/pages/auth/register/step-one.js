@@ -117,7 +117,7 @@ export default function Register() {
                         Informasi BUM Desa
                       </Typography>
                       <Typography sx={{ color: 'text.secondary' }}>
-                        Silahkan masukkan informasi BUM Desa kamu.
+                        Silakan masukkan informasi BUM Desa kamu.
                       </Typography>
                     </Box>
                   </Stack>

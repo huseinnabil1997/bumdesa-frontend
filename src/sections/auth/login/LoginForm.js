@@ -50,7 +50,7 @@ export default function LoginForm() {
   const defaultValues = {
     email: '',
     password: '',
-    remember: true,
+    remember: false,
   };
 
   const methods = useForm({
@@ -78,7 +78,9 @@ export default function LoginForm() {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
-          router.push(PATH_DASHBOARD.root);
+          router.push(
+            res?.data?.role === 1 ? PATH_DASHBOARD.kanpus.dashboard : PATH_DASHBOARD.root
+          );
         }
       }
     } catch (error) {
@@ -101,9 +103,10 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email" />
+        <RHFTextField name="email" label="Email" require={true} />
 
         <RHFTextField
+          require={true}
           name="password"
           label="Kata Sandi"
           type={showPassword ? 'text' : 'password'}

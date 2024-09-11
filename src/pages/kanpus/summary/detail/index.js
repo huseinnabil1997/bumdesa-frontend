@@ -1,14 +1,25 @@
 // @mui
-import { Box, Card, Table, TableBody, Container, TableContainer, Pagination } from '@mui/material';
+import {
+  Box,
+  Card,
+  Table,
+  TableBody,
+  Container,
+  TableContainer,
+  Pagination,
+  FormControl,
+  Select,
+  MenuItem,
+} from '@mui/material';
 // hooks
-import useSettings from '../../hooks/useSettings';
-import useTable from '../../hooks/useTable';
+import useSettings from 'src/hooks/useSettings';
+import useTable from 'src/hooks/useTable';
 // layouts
-import Layout from '../../layouts';
+import Layout from 'src/layouts';
 // components
-import Page from '../../components/Page';
-import Scrollbar from '../../components/Scrollbar';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
+import Page from 'src/components/Page';
+import Scrollbar from 'src/components/Scrollbar';
+import { TableHeadCustom, TableNoData, TableSkeleton } from 'src/components/table';
 // sections
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
@@ -17,21 +28,26 @@ import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import TableError from 'src/components/table/TableError';
 import { Header, TableRow } from 'src/sections/kanpus/list';
-import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdesa';
+import { useGetSummary } from 'src/query/hooks/dashboard/useGetSummary';
 
 // ----------------------------------------------------------------------
 
-JurnalList.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+DetailSummaryPage.getLayout = function getLayout(page) {
+  return <Layout title="Summary Daerah">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function JurnalList() {
-  const { page, onChangePage } = useTable({ defaultCurrentPage: 1 });
+export default function DetailSummaryPage() {
+  const router = useRouter();
+  const { area, province, city } = router.query;
+
+  const { page, onChangePage, rowsPerPage, onChangeRowsPerPage } = useTable({
+    defaultCurrentPage: 1,
+    defaultRowsPerPage: 10,
+  });
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const router = useRouter();
 
   const methods = useForm({
     defaultValues: { search: '' },
@@ -40,21 +56,29 @@ export default function JurnalList() {
 
   const { watch } = methods;
 
-  const { data, isLoading, isError } = useGetListBumdesa({
-    limit: 10,
+  const {
+    data: summary,
+    isLoading,
+    isError,
+  } = useGetSummary({
+    limit: rowsPerPage,
     page,
-    search: watch('search'),
+    area,
   });
 
   const handleViewRow = (row) => {
-    router.push(`/kanpus/dashboard/${row.id}`);
+    let areaUrl = `/kanpus/summary/detail?area=${row.area_code}`;
+    let buUrl = `/kanpus/summary/detail/bumdesa?area=${row.area_code}`;
+
+    if (city) router.push(buUrl + `&province=${province}&city=${city}&district=${row.area}`);
+    else router.push(areaUrl + `&province=${province}&city=${row.area}`);
   };
 
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
-          <Header value={watch('search')} />
+          <Header value={watch('search')} province={province} />
         </FormProvider>
 
         <Card sx={{ mt: 3 }} elevation={3}>
@@ -63,14 +87,14 @@ export default function JurnalList() {
               <Table>
                 <TableHeadCustom
                   headLabel={BUMDES_HEAD}
-                  rowCount={data?.journals?.length}
+                  rowCount={summary?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
 
                 <TableBody>
                   {!isLoading &&
-                    data?.data?.length > 0 &&
-                    data?.data?.map((row, i) => (
+                    summary?.data?.length > 0 &&
+                    summary?.data?.map((row, i) => (
                       <TableRow
                         key={row.id}
                         index={i}
@@ -81,7 +105,7 @@ export default function JurnalList() {
 
                   {isLoading && <TableSkeleton />}
 
-                  {!data?.data?.length > 0 && !isError && !isLoading && (
+                  {!summary?.data?.length > 0 && !isError && !isLoading && (
                     <TableNoData
                       isNotFound
                       title="BUMDesa belum tersedia."
@@ -100,16 +124,30 @@ export default function JurnalList() {
             </TableContainer>
           </Scrollbar>
 
-          <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
+          <Box display="flex" justifyContent="space-between" sx={{ p: 3 }}>
+            <FormControl>
+              <Select
+                value={rowsPerPage}
+                onChange={onChangeRowsPerPage}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Rows per page' }}
+                aria-controls=""
+                sx={{ height: 32, width: 72 }}
+              >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={25}>25</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
             <Pagination
               showFirstButton
               showLastButton
               variant="outlined"
               shape="rounded"
               color="primary"
-              count={data?.metadata?.paging?.total_page}
-              rowsPerPage={10}
-              page={page}
+              count={summary?.metadata?.paging?.total_page ?? 0}
+              rowsPerPage={rowsPerPage ?? 10}
+              page={page ?? 0}
               onChange={onChangePage}
               sx={{
                 '& .MuiPaginationItem-page': {
