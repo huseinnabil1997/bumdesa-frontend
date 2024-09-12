@@ -113,6 +113,7 @@ export default function LinkUmkm() {
                     borderRadius: '4px',
                     width: '16px',
                     height: '8px',
+                    margin: '0 4px',
                   },
                   '& .MuiMobileStepper-dotActive': {
                     backgroundColor: 'primary.main',
