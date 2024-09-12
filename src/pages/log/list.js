@@ -35,7 +35,7 @@ import { useTheme } from '@mui/material/styles';
 import TableError from 'src/components/table/TableError';
 import { useGetLogs } from 'src/query/hooks/log/useGetLog';
 import { LOG_HEAD } from 'src/utils/constant';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { capitalCase } from 'change-case';
 import jwtDecode from 'jwt-decode';
 import { getSessionToken } from 'src/utils/axios';
@@ -69,7 +69,7 @@ export default function LogList() {
     console.error('Token not available');
   }
 
-  const { page, rowsPerPage, onChangeRowsPerPage, onChangePage } = useTable({
+  const { page, rowsPerPage, onChangeRowsPerPage, onChangePage, setPage } = useTable({
     defaultCurrentPage: 1,
     defaultRowsPerPage: 10,
   });
@@ -107,6 +107,10 @@ export default function LogList() {
     action,
     unit: business?.id ?? -1,
   });
+
+  useEffect(() => {
+    setPage(1);
+  }, [module, action, business, rowsPerPage, business?.id]);
 
   const handleMenuItemClick = (event, index) => {
     const payload = {
