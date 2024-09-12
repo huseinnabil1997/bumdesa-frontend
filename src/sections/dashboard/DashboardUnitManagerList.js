@@ -43,7 +43,7 @@ export default function DashboardUnitManagerList({ id }) {
   const { data: managers, isLoading, refetch } = useGetManagers({
     page: page,
     limit: rowsPerPage,
-    unit_id: id,
+    unit: id,
   });
 
   useEffect(() => {
