@@ -40,6 +40,7 @@ export default function StepThreeForm() {
   const methods = useForm({
     resolver: yupResolver(StepThreeSchema),
     defaultValues: threeDefaultValues,
+    mode: 'onChange',
   });
 
   const {
@@ -79,7 +80,7 @@ export default function StepThreeForm() {
       setValue('email', data.email);
       setValue('year_founded', data?.year_founded ? new Date(data.year_founded, 0, 1) : new Date());
       setValue('sector', data.sector);
-      setValue('image', data.image);
+      setValue('image', data?.image ? data?.image : null);
     }
   }, [data]);
 
@@ -90,6 +91,7 @@ export default function StepThreeForm() {
 
         <RHFUploadPhoto
           errorPosition="bottom"
+          errorTextAlign="left"
           name="image"
           label="Foto Kantor Unit Usaha"
           accept="image/*"
