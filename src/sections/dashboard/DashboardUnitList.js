@@ -20,6 +20,8 @@ import { UserTableRow } from '../data-unit';
 import useTable from 'src/hooks/useTable';
 import { useGetListUnit } from 'src/query/hooks/data-unit/useGetListUnit';
 import { useRouter } from 'next/router';
+import TableError from 'src/components/table/TableError';
+import Scrollbar from 'src/components/Scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -44,13 +46,12 @@ export default function DashboardUnitList({ id }) {
     page,
     rowsPerPage,
     onChangeRowsPerPage,
-    selected,
     onChangePage,
   } = useTable({ defaultCurrentPage: 1 });
 
   const theme = useTheme();
 
-  const { data: units, isLoading, refetch } = useGetListUnit({
+  const { data: units, isLoading, refetch, isError } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
     bumdesa_id: id,
@@ -70,61 +71,47 @@ export default function DashboardUnitList({ id }) {
       <CardContent>
         {!isLoading && units && (
           <>
-            <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
-              <Table>
-                <TableHeadCustom
-                  headLabel={TABLE_HEAD}
-                  rowCount={units?.data?.length}
-                  numSelected={selected.length}
-                  sx={{
-                    backgroundColor: '#F8F9F9',
-                    border: 1,
-                    borderRadius: 8,
-                    borderColor: '#EAEBEB',
-                  }}
-                />
-
-                <TableBody>
-                  {!isLoading &&
-                    units &&
-                    units?.data?.map((row, index) => (
-                      <UserTableRow
-                        id={row.unit_id}
-                        key={row.unit_id}
-                        row={row}
-                        index={index}
-                        onViewRow={() => {
-                          router.push(`/kanpus/data-unit/${row.unit_id}`);
-                        }}
-                        selected={selected.includes(row.unit_id)}
-                        disableDelete={units?.data.length === 1 && page === 1}
-                        sx={{
-                          backgroundColor: '#F8F9F9',
-                          border: 1,
-                          borderRadius: 8,
-                          borderColor: '#EAEBEB',
-                        }}
-                      />
-                    ))}
-                  <TableNoData
-                    isNotFound={units?.data?.length === 0}
-                    title="Data Unit Usaha belum tersedia."
-                  // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
-                  // action={
-                  //   <StyledButton
-                  //     sx={{ mt: 2, width: 200 }}
-                  //     variant="outlined"
-                  //     startIcon={<Add fontSize="small" />}
-                  //     onClick={() => router.push('new')}
-                  //   >
-                  //     Tambah BUMDesa
-                  //   </StyledButton>
-                  // }
+            <Scrollbar>
+              <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+                <Table>
+                  <TableHeadCustom
+                    headLabel={TABLE_HEAD}
+                    rowCount={units?.data?.length}
+                    sx={{ background: theme.palette.grey[200] }}
                   />
-                  {isLoading && <TableSkeleton />}
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+                  <TableBody>
+                    {!isLoading &&
+                      units?.data?.length > 0 &&
+                      units?.data?.map((row, i) => (
+                        <UserTableRow
+                          key={row.unit_id}
+                          index={i}
+                          row={row}
+                          onViewRow={() => router.push(`/kanpus/data-unit/${row.unit_id}`)}
+                        />
+                      ))}
+
+                    {isLoading && <TableSkeleton />}
+
+                    {!units?.data?.length > 0 && !isError && !isLoading && (
+                      <TableNoData
+                        isNotFound
+                        title="Unit Usaha belum tersedia."
+                        description="Silakan cek koneksi Anda dan muat ulang halaman."
+                      />
+                    )}
+
+                    {!isLoading && isError && (
+                      <TableError
+                        title="Koneksi Error"
+                        description="Silakan cek koneksi Anda dan muat ulang halaman."
+                      />
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
             <Box
               display="flex"
               justifyContent="space-between"

@@ -20,6 +20,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import ModalProfitInfo from 'src/components/modal/DProf';
 import ModalSolvabilitasInfo from 'src/components/modal/DSolv';
 import ModalLikuiditasInfo from 'src/components/modal/DLiq';
+import { fCurrencyNoSpace } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -33,18 +34,6 @@ export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
   const theme = useTheme();
 
   const [seriesData, setSeriesData] = useState(new Date());
-
-  const formatRupiah = (angka) => {
-    if (isNaN(angka) || angka === null || angka === 0) {
-      return 'Rp 0';
-    }
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(angka);
-  };
 
   const [show, setShow] = useState(DEFAULT_SHOW);
 
@@ -163,7 +152,7 @@ export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
                   Total Omset
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(data.totalomset)}
+                  {fCurrencyNoSpace(data.totalomset)}
                 </Typography>
               </Stack>
             </Grid>
@@ -186,7 +175,7 @@ export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
                   Laba Rugi
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(data.labarugi)}
+                  {fCurrencyNoSpace(data.labarugi)}
                 </Typography>
               </Stack>
             </Grid>
@@ -209,7 +198,7 @@ export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
                   Total Kas Tunai
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(data.cash)}
+                  {fCurrencyNoSpace(data.cash)}
                 </Typography>
               </Stack>
             </Grid>

@@ -59,8 +59,8 @@ export default function TableHeadCustom({
             sortDirection={orderBy === headCell.id ? order : false}
             sx={{
               width: headCell.width,
-              minWidth: headCell.id === 'name_kanpus' ? '150px' : headCell.minWidth, // Menambahkan lebar minimum default
-              ...(headCell.id === 'name_kanpus' && {
+              minWidth: headCell.minWidth,
+              ...(headCell.id.includes('sticky') && {
                 position: 'sticky',
                 left: 0,
                 backgroundColor: '#F4F6F8',

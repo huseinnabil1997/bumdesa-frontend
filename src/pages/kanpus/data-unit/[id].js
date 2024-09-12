@@ -23,7 +23,6 @@ import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-// import { useSelector } from 'react-redux';
 import { ProfileInfoUnitKanpus } from 'src/sections/profile';
 import { useTheme } from '@emotion/react';
 import { useGetUnitById } from 'src/query/hooks/data-unit/useGetUnitById';
@@ -101,7 +100,7 @@ export default function DetailUnit() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardUnitManagerList id={id} />
+            <DashboardUnitManagerList unit={true} id={id} />
           </Grid>
 
           {/* <Grid item xs={12}>

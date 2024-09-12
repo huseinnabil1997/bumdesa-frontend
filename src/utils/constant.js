@@ -25,7 +25,7 @@ export const PROFIT_HEAD = [
 ];
 
 export const BUMDES_HEAD = [
-  { id: 'name', label: 'Nama Daerah', align: 'left', minWidth: 200 },
+  { id: 'name_sticky', label: 'Nama Daerah', align: 'left', minWidth: 200 },
   { id: 'jumlah_bumdesa', label: 'Total BUMDesa', align: 'left', minWidth: 150 },
   { id: 'jumlah_unit', label: 'Total Unit Usaha', align: 'left', minWidth: 150 },
   { id: 'total_registered', label: 'BUM Desa Registrasi', align: 'left', minWidth: 150 },
@@ -38,7 +38,7 @@ export const BUMDES_HEAD = [
 ];
 
 export const BUMDES_DETAIL_HEAD = [
-  { id: 'name', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
+  { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
   { id: 'jumlah_unit', label: 'Total Unit Usaha', align: 'left', minWidth: 150 },
   { id: 'created_year', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
   { id: 'status', label: 'Status Aktivasi BUM Desa', align: 'center', minWidth: 175 },

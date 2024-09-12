@@ -11,17 +11,12 @@ import {
   CircularProgress,
   Grid,
 } from '@mui/material';
-// import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { searchRegex } from 'src/utils/regex';
-import { getSessionToken } from 'src/utils/axiosReportService';
-import jwtDecode from 'jwt-decode';
-// import { IconButtonAnimate } from 'src/components/animate';
-// import TuneIcon from '@mui/icons-material/Tune';
 import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
 import { useGetCities } from 'src/query/hooks/options/useGetCities';
 import { useGetDistricts } from 'src/query/hooks/options/useGetDistricts';
@@ -37,30 +32,7 @@ const styles = {
     '& .MuiInputBase-input': {
       height: '1px',
       fontSize: '12px',
-      // '&::placeholder': {
-      //   color: '#1078CA',
-      // },
     },
-    // '& .MuiOutlinedInput-root': {
-    //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: '#1078CA',
-    //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: '#1078CA',
-    //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiInputBase-input::placeholder': {
-    //     color: '#1078CA',
-    //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiSvgIcon-root': {
-    //     color: '#1078CA',
-    //   },
-    //   '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: 'initial',
-    //   },
-    //   '&.Mui-disabled:hover .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: 'initial',
-    //   },
-    // },
   },
 };
 
@@ -77,13 +49,9 @@ UnitHeader.propTypes = {
 };
 
 export default function UnitHeader({ filter, isEmpty, value, setValue }) {
-  const token = getSessionToken();
-  const user = jwtDecode(token);
 
   const [open, setOpen] = useState(false);
-  // const [openFilter, setOpenFilter] = useState(false);
   const anchorRef = useRef(null);
-  // const anchorRefFilter = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -120,9 +88,7 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title:
-            user?.bumdesid +
-            '_Business_Unit_Report_' +
+          title: 'Business_Unit_Report_' +
             filter?.provinsi?.label +
             '_' +
             filter?.kota?.label +
@@ -159,18 +125,6 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
     setOpen(false);
   };
 
-  // const handleCloseFilter = (event) => {
-  //   if (anchorRefFilter.current && anchorRefFilter.current.contains(event.target)) {
-  //     return;
-  //   }
-
-  //   setOpenFilter(false);
-  // };
-
-  // const handleToggleFilter = () => {
-  //   setOpenFilter((prevOpen) => !prevOpen);
-  // };
-
   const handleProvinsi = (value) => {
     setValue('kota', null);
     setValue('kecamatan', null);
@@ -196,12 +150,6 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
         spacing={1}
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        {/* <IconButtonAnimate ref={anchorRefFilter}>
-          <TuneIcon
-            onClick={handleToggleFilter}
-            sx={{ color: '#1078CA' }}
-          />
-        </IconButtonAnimate> */}
         <Grid container spacing={1}>
           <Grid item xs={12} sm={6} md={2.4}>
             <RHFAutocomplete
@@ -339,94 +287,6 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
             </Grow>
           )}
         </Popper>
-
-        {/* <Popper
-          sx={{ zIndex: 99, boxShadow: 3 }}
-          open={openFilter}
-          anchorEl={anchorRefFilter.current}
-          role={undefined}
-          transition
-          placement="right-start"
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
-              <Paper sx={{ p: 2, boxShadow: 3 }}>
-                <ClickAwayListener onClickAway={handleCloseFilter}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={3}>
-                      <RHFAutocomplete
-                        name="provinsi"
-                        label="Provinsi"
-                        loading={false}
-                        sx={styles.textfield}
-                        onChange={(e, value) => handleProvinsi(value)}
-                        options={provincies?.map((option) => option) ?? []}
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option.value}>
-                            {option.label}
-                          </li>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <RHFAutocomplete
-                        name="kota"
-                        label="Kabupaten"
-                        loading={false}
-                        sx={styles.textfield}
-                        onChange={(e, value) => handleKota(value)}
-                        options={cities?.map((option) => option) ?? []}
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option.value}>
-                            {option.label}
-                          </li>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <RHFAutocomplete
-                        name="kecamatan"
-                        label="Kecamatan"
-                        loading={false}
-                        sx={styles.textfield}
-                        onChange={(e, value) => handleKecamatan(value)}
-                        options={districts?.map((option) => option) ?? []}
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option.value}>
-                            {option.label}
-                          </li>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <RHFAutocomplete
-                        name="desa"
-                        label="Desa"
-                        loading={false}
-                        sx={styles.textfield}
-                        options={subdistricts?.map((option) => option) ?? []}
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option.value}>
-                            {option.label}
-                          </li>
-                        )}
-                      />
-                    </Grid>
-                  </Grid>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper> */}
       </Stack>
       <RHFTextField
         sx={{ my: 1 }}
