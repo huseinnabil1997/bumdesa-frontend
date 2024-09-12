@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 // ----------------------------------------------------------------------
 
 RoleBasedGuard.propTypes = {
-  accessibleRoles: PropTypes.array,
   children: PropTypes.node,
 };
 

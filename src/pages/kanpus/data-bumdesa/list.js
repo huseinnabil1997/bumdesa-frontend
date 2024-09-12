@@ -24,7 +24,6 @@ import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 // sections
 import { useSnackbar } from 'notistack';
-import usePost from 'src/query/hooks/mutation/usePost';
 import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
@@ -34,22 +33,25 @@ import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdes
 import { FormProvider } from 'src/components/hook-form';
 import BumdesaHeader from 'src/sections/data-bumdesa/BumdesaHeader';
 import { useForm } from 'react-hook-form';
+import Scrollbar from 'src/components/Scrollbar';
+import { useTheme } from '@mui/material/styles';
+import TableError from 'src/components/table/TableError';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nama BUM Desa', align: 'left' },
-  { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left' },
-  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left' },
-  { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center' },
-  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center' },
-  { id: 'profitability', label: 'Profitabilitas', align: 'left' },
-  { id: 'liquidity', label: 'Liquiditas', align: 'left' },
-  { id: 'solvency', label: 'Solvabilitas', align: 'left' },
-  { id: 'total_omset', label: 'Total Omset', align: 'left' },
-  { id: 'profit', label: 'Laba Rugi', align: 'left' },
-  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left' },
-  { id: 'detail', label: 'Detail', align: 'center' },
+  { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
+  { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left', minWidth: 150 },
+  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
+  { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center', minWidth: 150 },
+  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center', minWidth: 150 },
+  { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
+  { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
+  { id: 'solvency', label: 'Solvabilitas', align: 'left', minWidth: 150 },
+  { id: 'total_omset', label: 'Total Omset', align: 'left', minWidth: 150 },
+  { id: 'profit', label: 'Laba Rugi', align: 'left', minWidth: 150 },
+  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left', minWidth: 150 },
+  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
 ];
 
 // ----------------------------------------------------------------------
@@ -60,8 +62,9 @@ BumdesaList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function BumdesaList() {
-  const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
+  const { page, rowsPerPage, onChangeRowsPerPage, onChangePage, setPage } = useTable({
     defaultCurrentPage: 1,
+    defaultRowsPerPage: 5,
   });
 
   const router = useRouter();
@@ -70,7 +73,7 @@ export default function BumdesaList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const mutationPost = usePost();
+  const theme = useTheme();
 
   const mutationDelete = useDelete();
 
@@ -82,7 +85,7 @@ export default function BumdesaList() {
   const { mutate: onActivate } = useActivate();
 
   const methods = useForm({
-    defaultValues: { 
+    defaultValues: {
       search: '',
       provinsi: null,
       kota: null,
@@ -94,15 +97,16 @@ export default function BumdesaList() {
 
   const { watch, setValue } = methods;
 
-  const { data: bumdesas, isLoading, refetch } = useGetListBumdesa({
+  const { data: bumdesas, isLoading, refetch, isError } = useGetListBumdesa({
     page: page,
     limit: rowsPerPage,
     search: watch('search'),
-    province: watch('provinsi')?.value,
-    city: watch('kota')?.value,
-    district: watch('kecamatan')?.value,
-    subdistrict: watch('desa')?.value,
-    report: watch('report')?.value,
+    // province: watch('provinsi')?.value,
+    // city: watch('kota')?.value,
+    // district: watch('kecamatan')?.value,
+    // subdistrict: watch('desa')?.value,
+    area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    status_active: watch('status_active')?.value,
   });
 
   useEffect(() => {
@@ -111,26 +115,12 @@ export default function BumdesaList() {
 
   useEffect(() => {
     refetch();
-  }, [page, rowsPerPage, watch('search')]);
+  }, [page, rowsPerPage]);
 
-  const handleResendRow = async (id) => {
-    try {
-      const response = await mutationPost.mutateAsync({
-        endpoint: `/business-units/resend-verify/${id}`,
-      });
-      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', {
-        variant: 'success',
-      });
-      refetch();
-    } catch (error) {
-      await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
-      console.log('error handleResendRow', error);
-    }
-  };
-
-  const handleDeleteRow = (id) => {
-    setAlertDelete({ id: id });
-  };
+  useEffect(() => {
+    setPage(1);
+    refetch();
+  }, [watch('search'), watch('status_active'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa')]);
 
   const onDelete = async () => {
     try {
@@ -147,10 +137,6 @@ export default function BumdesaList() {
       }
       console.log('error delete', error);
     }
-  };
-
-  const handleChangeStatus = async (id, status) => {
-    setAlertChangeStatus({ id: id, status: status });
   };
 
   const onChangeStatus = async () => {
@@ -182,7 +168,7 @@ export default function BumdesaList() {
   };
 
   return (
-    <Page title="BUMDesa: List">
+    <Page title="Data BUM Desa: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
           <BumdesaHeader
@@ -195,72 +181,54 @@ export default function BumdesaList() {
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
-              report: watch('report') ?? null,
+              status_active: watch('status_active') ?? null,
             }}
             setValue={setValue}
           />
         </FormProvider>
 
         <Card sx={{ borderRadius: 2 }}>
-          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
-            <Table>
-              <TableHeadCustom
-                headLabel={TABLE_HEAD}
-                rowCount={bumdesas?.data?.length}
-                numSelected={selected.length}
-                sx={{
-                  backgroundColor: '#F8F9F9',
-                  border: 1,
-                  borderRadius: 8,
-                  borderColor: '#EAEBEB',
-                }}
-              />
-
-              <TableBody>
-                {!isLoading &&
-                  bumdesas &&
-                  bumdesas?.data?.map((row, index) => (
-                    <UserTableRow
-                      id={row.id}
-                      key={row.id}
-                      row={row}
-                      index={index}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={bumdesas?.data.length === 1 && page === 1}
-                      onEditRow={() => router.push(`edit?id=${row.id}`)}
-                      onResendRow={() => handleResendRow(row.id)}
-                      onViewRow={() => router.push(`${row.id}`)}
-                      onDeactivateRow={() => handleChangeStatus(row.id, row.status)}
-                      onActivateRow={() => handleChangeStatus(row.id, row.status)}
-                      sx={{
-                        backgroundColor: '#F8F9F9',
-                        border: 1,
-                        borderRadius: 8,
-                        borderColor: '#EAEBEB',
-                      }}
-                    />
-                  ))}
-                <TableNoData
-                  isNotFound={bumdesas?.data?.length === 0}
-                  title="BUMDesa belum tersedia."
-                  // description="Silakan tambah BUMDesa dengan klik tombol di bawah ini."
-                  // action={
-                  //   <StyledButton
-                  //     sx={{ mt: 2, width: 200 }}
-                  //     variant="outlined"
-                  //     startIcon={<Add fontSize="small" />}
-                  //     onClick={() => router.push('new')}
-                  //   >
-                  //     Tambah BUMDesa
-                  //   </StyledButton>
-                  // }
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+              <Table>
+                <TableHeadCustom
+                  headLabel={TABLE_HEAD}
+                  rowCount={bumdesas?.data?.length}
+                  sx={{ background: theme.palette.grey[200] }}
                 />
-                {isLoading && <TableSkeleton />}
-              </TableBody>
-            </Table>
-          </TableContainer>
+
+                <TableBody>
+                  {!isLoading &&
+                    bumdesas?.data?.length > 0 &&
+                    bumdesas?.data?.map((row, i) => (
+                      <UserTableRow
+                        key={row.bumdesa_id}
+                        index={i}
+                        row={row}
+                        onViewRow={() => router.push(`${row.bumdesa_id}`)}
+                      />
+                    ))}
+
+                  {isLoading && <TableSkeleton />}
+
+                  {!bumdesas?.data?.length > 0 && !isError && !isLoading && (
+                    <TableNoData
+                      isNotFound
+                      title="BUMDesa belum tersedia."
+                      description="Silakan cek koneksi Anda dan muat ulang halaman."
+                    />
+                  )}
+
+                  {!isLoading && isError && (
+                    <TableError
+                      title="Koneksi Error"
+                      description="Silakan cek koneksi Anda dan muat ulang halaman."
+                    />
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Scrollbar>
         </Card>
 
         <Box

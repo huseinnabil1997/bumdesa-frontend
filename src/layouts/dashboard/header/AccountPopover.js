@@ -103,6 +103,8 @@ export default function AccountPopover() {
     };
   }, [unitRefetch, bumdesaRefetch]);
 
+  const isKanpus = userData?.role === 1;
+
   const data = userData?.unit_id === 0 ? bumdesaData : unitData;
 
   const handleOpen = (event) => {
@@ -168,7 +170,8 @@ export default function AccountPopover() {
         {/* <MyAvatar /> */}
         <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
           <Typography color='#292929' fontSize='18px' fontWeight={600}>
-            {data?.name ? data?.name : '...'}, {bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+            {isKanpus ? userData?.name : data?.name ? `${data?.name}, ` : '...'}
+            {!isKanpus && bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </Typography>
           <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
         </Stack>

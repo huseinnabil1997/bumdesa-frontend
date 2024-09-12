@@ -69,8 +69,9 @@ export default function LoginForm() {
       setLoading(true);
       const res = await login(data.email, data.password);
       if (res?.data) {
+        const isKanpus = res?.data?.unit_id === 0 && res?.data?.bumdesa_id === 0;
         dispatch(setUser(res.data));
-        if (res?.data?.full_register === 0) {
+        if (res?.data?.full_register === 0 && !isKanpus) {
           await setRegisSession(res?.metadata?.token ?? '');
           enqueueSnackbar(res.message, { variant: 'success' });
           window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
