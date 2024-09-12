@@ -117,7 +117,7 @@ export default function UserList() {
   useEffect(() => {
     setPage(1);
     refetch();
-  }, [watch('search')]);
+  }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa ')]);
 
   const handleResendRow = async (id) => {
     try {

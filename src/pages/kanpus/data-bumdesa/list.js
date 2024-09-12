@@ -118,7 +118,7 @@ export default function BumdesaList() {
   useEffect(() => {
     setPage(1);
     refetch();
-  }, [watch('search')]);
+  }, [watch('search'), watch('status_active'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa')]);
 
   const handleResendRow = async (id) => {
     try {
