@@ -1,32 +1,11 @@
-import axiosInstance from 'src/utils/axiosCoreService';
-import axios, { getSessionToken } from 'src/utils/axios';
+import axiosReport from 'src/utils/axiosReportService';
 
 export function getListBumdesa(params) {
-  return axiosInstance.get('/business-units', { params });
-}
-
-export function getBumdesaById(id) {
-  return axiosInstance.get(`/business-units/${id}`);
-}
-
-export function getSectors() {
-  return axios.get('/sector', {
-    headers: {
-      Authorization: getSessionToken(),
-    }
-  });
-}
-
-export function deactivateUnit(id) {
-  return axiosInstance.patch(`/business-units/${id}/deactivate`);
-}
-
-export function activateUnit(id) {
-  return axiosInstance.patch(`/business-units/${id}/activate`);
+  return axiosReport.get('/report/summary-bumdesa', { params });
 }
 
 export function downloadBumdesa(param) {
-  return axios.get(`/bumdesa/report-generate`, {
+  return axiosReport.get(`/report/generate/summary-bumdesa`, {
     params: param,
     responseType: 'blob',
   });

@@ -1,22 +1,41 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableRow, TableCell, Chip } from '@mui/material';
+import { TableRow, TableCell, styled } from '@mui/material';
 // components
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import Label from 'src/components/Label';
+import { fCurrencyNoSpace } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-// const DeleteTooltip = styled(({ className, ...props }) => (
-//   <Tooltip {...props} arrow classes={{ popper: className }} />
-// ))(() => ({
-//   [`& .${tooltipClasses.arrow}`]: {
-//     color: '#0E69B1',
-//   },
-//   [`& .${tooltipClasses.tooltip}`]: {
-//     backgroundColor: '#0E69B1',
-//   },
-// }));
+const FixedTableCell = styled(TableCell)(() => ({
+  position: 'sticky',
+  left: 0,
+  backgroundColor: 'white',
+  zIndex: 1,
+  color: '#1078CA',
+  fontWeight: 600,
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: '2px',
+    backgroundColor: '#eee', // Right border color
+    zIndex: 2, // Ensure the border is on top
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:hover': {
+    backgroundColor: theme.palette.grey[100],
+    '& td': {
+      backgroundColor: theme.palette.grey[100],
+    },
+  },
+}));
 
 // ----------------------------------------------------------------------
 
@@ -36,72 +55,32 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({
-  // id,
   row,
-  index,
-  selected,
-  // onEditRow,
   onViewRow,
-  // onResendRow,
-  // onDeactivateRow,
-  // onActivateRow,
 }) {
-  // const theme = useTheme();
-  const { name, unit_count, founded_at, full_registered, profitabilitas, luquiditas, solvabilitas, total_omset, laba_rugi, kas_tunai } = row;
-  
-  const formatRupiah = (angka) => angka ? new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(angka) : '-';
-
-  const getYear = (tanggal) => tanggal ? tanggal.slice(0, 4) : '-';
+  const { bumdesa_name, count_unit, year_registered, status_active, status_report, profitability, liquidity, solvability, omset, profit_loss, cash } = row;
 
   return (
-    <TableRow
-      hover
-      selected={selected}
-      sx={{
-        border: 1,
-        borderRadius: 8,
-        borderColor: '#EAEBEB',
-        backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
-      }}>
-
-      <TableCell sx={{ fontWeight: 600, color: '#1078CA', position: 'sticky', left: 0, backgroundColor: 'inherit', zIndex: 1 }}>
-        {name ?? '-'}
-      </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{unit_count ?? '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{getYear(founded_at)}</TableCell>
+    <StyledTableRow hover>
+      <FixedTableCell>{bumdesa_name ?? '-'}</FixedTableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{count_unit ?? '-'}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_registered ?? '-'}</TableCell>
       <TableCell align="center">
-        {full_registered === 1 && (
-          <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
-        )}
-        {full_registered === 0 && (
-          <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
-        )}
-        {!full_registered && (
-          <Chip label="Tidak Ada Data" sx={{ backgroundColor: '#EAEBEB', color: '#292929' }} />
-        )}
+        <Label color={status_active === '1' ? 'success' : 'error'}>
+          {row?.status_active === '1' ? 'Aktif' : 'Belum Aktif'}
+        </Label>
       </TableCell>
       <TableCell align="center">
-        {full_registered === 1 && (
-          <Chip label="Aktif" sx={{ backgroundColor: '#C2F1D6', color: '#1D8348' }} />
-        )}
-        {full_registered === 0 && (
-          <Chip label="Belum Aktif" sx={{ backgroundColor: '#F9CFCF', color: '#E41F1F' }} />
-        )}
-        {!full_registered && (
-          <Chip label="Tidak Ada Data" sx={{ backgroundColor: '#EAEBEB', color: '#292929' }} />
-        )}
+        <Label color={status_report === '1' ? 'success' : 'error'}>
+          {status_report === '1' ? 'Aktif' : 'Belum Aktif'}
+        </Label>
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitabilitas ? `${profitabilitas}%` : '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{luquiditas ? `${luquiditas}%` : '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvabilitas ? `${solvabilitas}%` : '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(total_omset)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(laba_rugi)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{formatRupiah(kas_tunai)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitability}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{liquidity}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvability}%</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(omset ?? 0)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(profit_loss ?? 0)}</TableCell>
+      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(cash ?? 0)}</TableCell>
 
       <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
         <StyledLoadingButton
@@ -113,6 +92,6 @@ export default function UserTableRow({
           Detail
         </StyledLoadingButton>
       </TableCell>
-    </TableRow>
+    </StyledTableRow>
   );
 }

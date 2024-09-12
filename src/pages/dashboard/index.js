@@ -4,7 +4,7 @@ import { Container, Grid } from '@mui/material';
 import {
   DashboardWelcome,
   DashboardUnit,
-  DashboardEducation,
+  // DashboardEducation,
   DashboardSales,
   DashboardFinances,
   DashboardProfitLoss,

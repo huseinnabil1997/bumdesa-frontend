@@ -68,7 +68,7 @@ export default function DetailSummaryPage() {
   });
 
   const handleViewRow = (row) => {
-    router.push(`/unit/detail?id=${row.bumdesa_id}`);
+    router.push(`/kanpus/data-bumdesa/${row.bumdesa_id}`);
   };
 
   return (

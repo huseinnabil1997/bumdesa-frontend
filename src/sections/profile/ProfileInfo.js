@@ -168,7 +168,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
             />
           </IconButtonAnimate>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} display="flex" flexDirection="column">
           <Typography variant="caption" fontWeight={600}>
             Logo BUM Desa
           </Typography>

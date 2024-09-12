@@ -29,7 +29,7 @@ const TABLE_HEAD = [
   // { id: 'status', label: 'Action', align: 'center' },
 ];
 
-export default function DashboardUnitManagerList() {
+export default function DashboardUnitManagerList({ unit, id }) {
   const {
     page,
     rowsPerPage,
@@ -43,6 +43,7 @@ export default function DashboardUnitManagerList() {
   const { data: managers, isLoading, refetch } = useGetManagers({
     page: page,
     limit: rowsPerPage,
+    unit: id,
   });
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function DashboardUnitManagerList() {
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
       <CardHeader
         sx={{ p: 3, pb: 0 }}
-        title="Data Pengurus BUM Desa"
+        title={unit ? "Data Pengurus Unit Usaha" : "Data Pengurus BUM Desa"}
       />
 
       <CardContent>

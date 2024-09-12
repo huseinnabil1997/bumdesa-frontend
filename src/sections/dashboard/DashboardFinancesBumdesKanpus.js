@@ -20,6 +20,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import ModalProfitInfo from 'src/components/modal/DProf';
 import ModalSolvabilitasInfo from 'src/components/modal/DSolv';
 import ModalLikuiditasInfo from 'src/components/modal/DLiq';
+import { fCurrencyNoSpace } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -29,25 +30,16 @@ const DEFAULT_SHOW = {
   l: false,
 };
 
-export default function DashboardFinancesBumdesKanpus({ unit }) {
+export default function DashboardFinancesBumdesKanpus({ id, unit = false }) {
   const theme = useTheme();
 
   const [seriesData, setSeriesData] = useState(new Date());
-
-  const temp = 400000000;
-
-  const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(angka);
 
   const [show, setShow] = useState(DEFAULT_SHOW);
 
   const { data, isLoading } = useGetFinances({
     date: moment(seriesData).format('yyyy'),
-    unit,
+    ...(unit ? { unit: id } : { bumdesa_id: id }),
   });
 
   return (
@@ -114,7 +106,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Rasio Lancar
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {data.luquiditas}
+                  {data.luquiditas}%
                 </Typography>
               </Stack>
             </Grid>
@@ -160,7 +152,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Total Omset
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(temp)}
+                  {fCurrencyNoSpace(data.totalomset)}
                 </Typography>
               </Stack>
             </Grid>
@@ -183,7 +175,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Laba Rugi
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(temp)}
+                  {fCurrencyNoSpace(data.labarugi)}
                 </Typography>
               </Stack>
             </Grid>
@@ -206,7 +198,7 @@ export default function DashboardFinancesBumdesKanpus({ unit }) {
                   Total Kas Tunai
                 </Typography>
                 <Typography variant="h5" fontWeight="bold">
-                  {formatRupiah(temp)}
+                  {fCurrencyNoSpace(data.cash)}
                 </Typography>
               </Stack>
             </Grid>

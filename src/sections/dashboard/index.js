@@ -16,3 +16,7 @@ export { default as DashboardFinancesBumdesKanpus } from './DashboardFinancesBum
 export { default as DashboardBumdesaManagerList } from './DashboardBumdesaManagerList';
 export { default as DashboardUnitList } from './DashboardUnitList';
 export { default as DashboardUnitManagerList } from './DashboardUnitManagerList';
+export { default as DashboardProfitLossKanpus } from './DashboardProfitLossKanpus';
+export { default as DashboardSalesKanpus } from './DashboardSalesKanpus';
+
+
