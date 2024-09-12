@@ -23,6 +23,9 @@ import Iconify from 'src/components/Iconify';
 import usePost from 'src/query/hooks/mutation/usePost';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
+import { useSelector } from 'react-redux';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
+import moment from 'moment';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -31,6 +34,12 @@ AddUnitUsaha.getLayout = function getLayout(page) {
 export default function AddUnitUsaha() {
   const { themeStretch } = useSettings();
   const router = useRouter();
+
+  const userData = useSelector(state => state.user.userData);
+
+  const { data: dataBumdesa } = useGetProfile(userData?.bumdesa_id);
+
+  const founded_at = dataBumdesa?.founded_at?.split('T')[0]
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -278,6 +287,7 @@ export default function AddUnitUsaha() {
                   name="year_founded"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
+                  minDate={moment(founded_at).format('yyyy-MM-DD')}
                   format="yyyy"
                   views={['year']}
                   openTo="year"
