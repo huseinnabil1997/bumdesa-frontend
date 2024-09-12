@@ -9,6 +9,7 @@ import Page from '../../components/Page';
 import useSettings from 'src/hooks/useSettings';
 import { useState } from 'react';
 import { StyledButton } from 'src/theme/custom/Button';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,8 @@ export default function LinkUmkm() {
   const { themeStretch } = useSettings();
   const [activeStep, setActiveStep] = useState(0);
   const [slideDirection, setSlideDirection] = useState('left');
-  const [key, setKey] = useState(0); // Tambahkan state untuk memicu re-render
+  const [key, setKey] = useState(0);
+  const router = useRouter();
 
   const steps = [
     {
@@ -127,7 +129,7 @@ export default function LinkUmkm() {
           </Button>
         </Box>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <StyledButton variant="contained" color="primary" sx={{ width: '240px', height: '48px' }}>
+          <StyledButton onClick={() => router.push('/link-umkm/link')} variant="contained" color="primary" sx={{ width: '240px', height: '48px' }}>
             Lanjutkan
           </StyledButton>
         </Box>
