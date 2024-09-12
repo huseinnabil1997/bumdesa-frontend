@@ -13,9 +13,9 @@ export const RegisterSchema = Yup.object().shape({
     .test('no-html', 'Nama tidak boleh mengandung tag HTML', (value) => !htmlTagRegex.test(value)),
   email: Yup.string().email('Format email tidak sesuai').required('Email wajib diisi'),
   password: Yup.string()
+    .required('Kata sandi wajib diisi')
     .min(12, 'Minimal 12 Karakter')
-    .matches(passRegex, 'Format tidak sesuai')
-    .required('Kata sandi wajib diisi'),
+    .matches(passRegex, 'Format tidak sesuai'),
   're-password': Yup.string()
     .oneOf([Yup.ref('password'), null], 'Kata sandi tidak sama')
     .required('Konfirmasi kata sandi wajib diisi'),

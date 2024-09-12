@@ -97,6 +97,7 @@ export default function StepOneForm() {
 
   useEffect(() => {
     if (postalCode) setValue('postal_code', postalCode?.label);
+    else setValue('postal_code', '');
   }, [postalCode]);
 
   useEffect(() => {
@@ -117,7 +118,7 @@ export default function StepOneForm() {
   useEffect(() => {
     if (data?.district.value !== district?.value) {
       setValue('subdistrict', null);
-      setValue('postal_code', null);
+      setValue('postal_code', '');
     } else {
       setValue('subdistrict', data?.subdistrict);
       setValue('postal_code', data?.postal_code?.label);

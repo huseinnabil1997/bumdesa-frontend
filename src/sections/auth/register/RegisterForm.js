@@ -112,11 +112,11 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
         )}
         {!!errors.privacyPolicy && <Alert severity="error">{errors.privacyPolicy.message}</Alert>}
 
-        <RHFTextField name="name" label="Nama BUM Desa" required />
-        <RHFTextField name="email" label="Email Aktif" required />
+        <RHFTextField name="name" label="Nama BUM Desa" require />
+        <RHFTextField name="email" label="Email Aktif" require />
 
         <RHFTextField
-          required
+          require
           name="password"
           label="Buat Kata Sandi"
           type={showPassword ? 'text' : 'password'}
@@ -187,7 +187,7 @@ export default function RegisterForm({ setSuccess, setEmail, setId, startCountdo
         )}
 
         <RHFTextField
-          required
+          require
           name="re-password"
           label="Konfirmasi Kata Sandi"
           type={showRePassword ? 'text' : 'password'}
