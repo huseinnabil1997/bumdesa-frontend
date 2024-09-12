@@ -29,7 +29,7 @@ const TABLE_HEAD = [
   // { id: 'status', label: 'Action', align: 'center' },
 ];
 
-export default function DashboardBumdesaManagerList() {
+export default function DashboardBumdesaManagerList({ id }) {
   const {
     page,
     rowsPerPage,
@@ -43,6 +43,7 @@ export default function DashboardBumdesaManagerList() {
   const { data: managers, isLoading, refetch } = useGetManagers({
     page: page,
     limit: rowsPerPage,
+    bumdesa_id: id,
   });
 
   useEffect(() => {

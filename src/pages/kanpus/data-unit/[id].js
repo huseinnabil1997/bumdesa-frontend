@@ -11,65 +11,39 @@ import {
 } from '@mui/material';
 // hooks
 import {
-  DashboardSales,
-  DashboardProfitLoss,
   DashboardFinancesBumdesKanpus,
   DashboardUnitManagerList,
+  DashboardProfitLossKanpus,
+  DashboardSalesKanpus,
 } from 'src/sections/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
-import { getSessionToken } from 'src/utils/axiosReportService';
-import jwtDecode from 'jwt-decode';
-import { useEffect, useState } from 'react';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-// import { useSelector } from 'react-redux';
 import { ProfileInfoUnitKanpus } from 'src/sections/profile';
 import { useTheme } from '@emotion/react';
 import { useGetUnitById } from 'src/query/hooks/data-unit/useGetUnitById';
 
 // ----------------------------------------------------------------------
 
-// DetailBumdesa.getLayout = function getLayout(page) {
-//   return (
-//     <Layout title={`Ringkasan ${typeof window !== 'undefined' ? localStorage?.getItem('bumdesaName') : ''}`}>
-//       {page}
-//     </Layout>
-//   );
-// };
-
-DetailBumdesa.getLayout = function getLayout(page) {
-  return <Layout title="Detail BUMDesa">{page}</Layout>;
+DetailUnit.getLayout = function getLayout(page) {
+  return <Layout title="Detail Unit Usaha">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function DetailBumdesa() {
+export default function DetailUnit() {
   const theme = useTheme();
-  // const userData = useSelector(state => state.user.userData);
   const { themeStretch } = useSettings();
   const router = useRouter();
-  const token = getSessionToken();
-  const [decoded, setDecoded] = useState(jwtDecode(token));
   const { id } = router.query;
 
   const { data } = useGetUnitById(id);
 
-  // useEffect(() => {
-  //   if (data?.name && typeof window !== 'undefined') {
-  //     localStorage.setItem('bumdesaName', data.name);
-  //   }
-  // }, [data]);
-
-  useEffect(() => {
-    if (token) setDecoded(jwtDecode(token));
-    else setDecoded(null);
-  }, [token]);
-
   return (
-    <Page title="Detail BUMDesa">
+    <Page title="Detail Unit Usaha">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -95,25 +69,25 @@ export default function DetailBumdesa() {
               <Link
                 underline="hover"
                 color="inherit"
-                onClick={() => router.push('kanpus/data-bumdesa/list')}
+                onClick={() => router.push('list')}
                 sx={{ cursor: 'pointer' }}
               >
-                Semua BUMDesa
+                Semua Unit Usaha
               </Link>
               <Typography color="text.primary">{data?.name ?? '-'}</Typography>
             </Breadcrumbs>
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus unit={decoded.sub.businessid} />
+            <DashboardFinancesBumdesKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardSales unit={decoded.sub.businessid} />
+            <DashboardSalesKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardProfitLoss unit={decoded.sub.businessid} />
+            <DashboardProfitLossKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
@@ -126,7 +100,7 @@ export default function DetailBumdesa() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardUnitManagerList />
+            <DashboardUnitManagerList unit={true} id={id} />
           </Grid>
 
           {/* <Grid item xs={12}>

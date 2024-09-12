@@ -60,7 +60,7 @@ export default function TableHeadCustom({
             sx={{
               width: headCell.width,
               minWidth: headCell.minWidth,
-              ...(headCell.id === 'name' && {
+              ...(headCell.id.includes('sticky') && {
                 position: 'sticky',
                 left: 0,
                 backgroundColor: '#F4F6F8',

@@ -25,7 +25,7 @@ export const PROFIT_HEAD = [
 ];
 
 export const BUMDES_HEAD = [
-  { id: 'name', label: 'Nama Daerah', align: 'left', minWidth: 200 },
+  { id: 'name_sticky', label: 'Nama Daerah', align: 'left', minWidth: 200 },
   { id: 'jumlah_bumdesa', label: 'Total BUMDesa', align: 'left', minWidth: 150 },
   { id: 'jumlah_unit', label: 'Total Unit Usaha', align: 'left', minWidth: 150 },
   { id: 'total_registered', label: 'BUM Desa Registrasi', align: 'left', minWidth: 150 },
@@ -38,7 +38,7 @@ export const BUMDES_HEAD = [
 ];
 
 export const BUMDES_DETAIL_HEAD = [
-  { id: 'name', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
+  { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
   { id: 'jumlah_unit', label: 'Total Unit Usaha', align: 'left', minWidth: 150 },
   { id: 'created_year', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
   { id: 'status', label: 'Status Aktivasi BUM Desa', align: 'center', minWidth: 175 },
@@ -50,11 +50,10 @@ export const BUMDES_DETAIL_HEAD = [
 ];
 
 export const LOG_HEAD = [
-  { id: 'activity', label: 'Aktivitas', align: 'left', width: 280 },
-  { id: 'time', label: 'Waktu', align: 'left', width: 50 },
+  { id: 'activity', label: 'Aktivitas', align: 'left', width: 200 },
+  { id: 'time', label: 'Waktu', align: 'left', width: 100 },
   { id: 'place', label: 'Modul', align: 'left', width: 100 },
   { id: 'device', label: 'User Agent', align: 'left', width: 200 },
-  { id: 'detail', label: '', align: 'right', width: 50 },
 ];
 
 export const DEFAULT_FILTER = {

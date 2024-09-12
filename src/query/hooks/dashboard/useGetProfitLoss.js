@@ -12,7 +12,7 @@ const fetchData = async (param) => {
 };
 
 export const useGetProfileLoss = (param) => {
-  const getQuery = useQuery(['GET_PROFIT_LOSS', param.unit, param.start_date, param.end_date], () =>
+  const getQuery = useQuery(['GET_PROFIT_LOSS', param.unit, param.bumdesa_id, param.start_date, param.end_date], () =>
     fetchData(param)
   );
 
