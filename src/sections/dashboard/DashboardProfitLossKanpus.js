@@ -12,14 +12,12 @@ import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-const currentDate = new Date();
-
 export default function DashboardProfitLossKanpus({ id, unit = false }) {
   const theme = useTheme();
 
   const [chartData, setChartData] = useState([]);
   const [startDate, setStartDate] = useState(
-    new Date(currentDate.setFullYear(currentDate.getFullYear() - 2))
+    new Date(moment().subtract(2, 'years').format('yyyy-MM-DD'))
   );
   const [endDate, setEndDate] = useState(new Date());
 
@@ -78,6 +76,7 @@ export default function DashboardProfitLossKanpus({ id, unit = false }) {
               views={['year']}
               label="Tahun Akhir"
               minDate={startDate}
+              maxDate={new Date(new Date().getFullYear(), 11, 31)}
               value={endDate}
               onChange={(newValue) => {
                 setEndDate(newValue);
