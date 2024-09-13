@@ -35,3 +35,10 @@ export function getDetailSummary(params) {
 
   return axiosInstance.get(`report/summary-bumdesa`, { params });
 }
+
+export function downloadAreaSummary(param) {
+  return axiosInstance.get(`/dashboard/generate/demografi/summary`, {
+    params: param,
+    responseType: 'blob',
+  });
+}
