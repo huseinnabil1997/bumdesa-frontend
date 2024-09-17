@@ -118,10 +118,10 @@ export default function RHFDatePicker({
                     ...other.sx,
                   }}
                   label=""
-                  onClick={handlePickerOpen} // Open DatePicker on TextField click
+                  onClick={disabled ? null : handlePickerOpen}
                   InputProps={{
                     endAdornment: (
-                      <IconButton onClick={handlePickerOpen}>
+                      <IconButton disabled={disabled} onClick={disabled ? null : handlePickerOpen}>
                         <CalendarTodayRoundedIcon sx={{ fontSize: '16.25px' }} />
                       </IconButton>
                     ),
