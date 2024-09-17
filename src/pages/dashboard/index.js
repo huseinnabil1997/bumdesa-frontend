@@ -15,6 +15,7 @@ import Layout from 'src/layouts';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import { useEffect, useState } from 'react';
+import LinkUMKMDialogDashboard from 'src/sections/link-umkm/dialogDashboard';
 
 // ----------------------------------------------------------------------
 
@@ -27,10 +28,16 @@ export default function Dashboard() {
   const { themeStretch } = useSettings();
   const token = getSessionToken();
   const [decoded, setDecoded] = useState(jwtDecode(token));
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
+    setOpen(true);
   }, [token]);
 
   return (
@@ -64,6 +71,7 @@ export default function Dashboard() {
           </Grid> */}
         </Grid>
       </Container>
+      <LinkUMKMDialogDashboard open={open} onClose={onClose} />
     </Page>
   );
 }

@@ -87,7 +87,7 @@ export default function LinkUmkm() {
           <Button onClick={handleBack} disabled={activeStep === 0} variant="outlined" sx={{ width: '48px', height: '48px', borderRadius: 2, pt: 3.5, pb: 3.5 }}>
             <ChevronLeft sx={{ fontSize: 48 }} />
           </Button>
-          <Box display="flex" justifyContent="space-between" alignItems="center" flexDirection="column" width="50%" margin={5} minHeight="62vh">
+          <Box display="flex" justifyContent="space-between" alignItems="center" flexDirection="column" width="50%" margin={5} height="69vh">
             <Slide key={key} direction={slideDirection} in={true} mountOnEnter unmountOnExit timeout={300}>
               <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
                 <CardMedia
