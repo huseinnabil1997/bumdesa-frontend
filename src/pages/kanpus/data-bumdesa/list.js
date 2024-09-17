@@ -182,6 +182,7 @@ export default function BumdesaList() {
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
               status_active: watch('status_active') ?? null,
+              search: watch('search') ?? null,
             }}
             setValue={setValue}
           />

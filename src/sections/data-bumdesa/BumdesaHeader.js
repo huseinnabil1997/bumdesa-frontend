@@ -102,6 +102,8 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const handleMenuItemClick = (event, index) => {
     const payload = {
       ...filter,
+      search: filter?.search,
+      status_active: filter?.status_active?.value,
       province_id: filter?.provinsi?.value,
       city_id: filter?.kota?.value,
       district_id: filter?.kecamatan?.value,

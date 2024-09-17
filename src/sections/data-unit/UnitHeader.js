@@ -76,6 +76,7 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
   const handleMenuItemClick = (event, index) => {
     const payload = {
       ...filter,
+      status_report: filter?.status_report?.value,
       province_id: filter?.provinsi?.value,
       city_id: filter?.kota?.value,
       district_id: filter?.kecamatan?.value,

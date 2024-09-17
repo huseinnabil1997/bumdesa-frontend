@@ -81,7 +81,7 @@ export default function UserList() {
   const { data: units, isLoading, isError, refetch } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
-    search: watch('search'),
+    unit: watch('search'),
     // province: watch('provinsi')?.value,
     // city: watch('kota')?.value,
     // district: watch('kecamatan')?.value,
@@ -117,7 +117,8 @@ export default function UserList() {
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
-              report: watch('report') ?? null,
+              status_report: watch('report') ?? null,
+              unit: watch('search') ?? null,
             }}
             setValue={setValue}
           />
