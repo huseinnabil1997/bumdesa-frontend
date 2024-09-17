@@ -31,7 +31,7 @@ export default function LinkUMKMDialogDashboard({ open, onClose }) {
       <DialogContent>
         <CardMedia
           component="img"
-          image="/image/komunitas.png"
+          image="/image/ilustrasi_link_umkm.png"
           alt="Integrasi LinkUMKM"
           sx={{ width: '100%', maxWidth: 480, maxHeight: 480 }}
         />

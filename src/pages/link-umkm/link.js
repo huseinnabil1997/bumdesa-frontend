@@ -42,7 +42,7 @@ export default function Link() {
             Menyambung Akun
           </Typography>
           <Typography fontSize="16px" variant="body1" align="justify" fontWeight={400} color="#666666" paragraph>
-            Untuk dapat menggunakan layanan LinkUMKM di SenyuM, kami membutuhkan persetujuan Anda untuk mengirimkan data atau informasi pribadi Anda kepada BRI Research Institute ("BRIIRINS"):
+          Untuk dapat menggunakan layanan LinkUMKM di BUM Desa, kami membutuhkan persetujuan Anda untuk mengirimkan data atau informasi pribadi Anda kepada BRI Research Institute ("BRIRINS"):
           </Typography>
           <Accordion sx={{ mb: 2, width: '100%', border: '1.5px solid #D3D4D4', borderRadius: '8px' }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
