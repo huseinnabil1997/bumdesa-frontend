@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
-import { Box, Chip, Grid, Modal, Stack } from "@mui/material";
+import { Box, Grid, Modal, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
@@ -9,7 +9,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useEffect, useState } from "react";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
-import { useTheme } from '@mui/material/styles';
 import { checkUrlImage } from "src/utils/helperFunction";
 import { IconButtonAnimate } from "src/components/animate";
 
@@ -74,8 +73,6 @@ export default function ProfileInfoUnitKanpus({ data, setIsEdit, from = '' }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
-
-  const theme = useTheme();
 
   const defaultValues = {
     id: data?.id ?? '',
@@ -144,17 +141,6 @@ export default function ProfileInfoUnitKanpus({ data, setIsEdit, from = '' }) {
               sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
             />
           </IconButtonAnimate>
-        </Grid>
-        <Grid item xs={1}>
-          {data?.status === 1 && (
-            <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-          )}
-          {data?.status === 0 && (
-            <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
-          )}
-          {data?.status === 3 && (
-            <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
-          )}
         </Grid>
         <Grid item xs={4}>
           <RHFTextField

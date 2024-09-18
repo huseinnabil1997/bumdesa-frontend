@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, CardMedia } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 
-export default function LinkUMKMDialogDashboard({ open, onClose }) {
+const LinkUMKMDialogDashboard = ({ open, onClose }) => {
   const router = useRouter();
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     router.push('/link-umkm');
     onClose();
-  };
+  }, [router, onClose]);
 
   return (
     <Dialog open={open} onClose={onClose} sx={{ maxWidth: '480px', maxHeight: '608px', margin: 'auto' }} fullWidth>
@@ -43,4 +43,6 @@ export default function LinkUMKMDialogDashboard({ open, onClose }) {
       </DialogActions>
     </Dialog>
   );
-}
+};
+
+export default React.memo(LinkUMKMDialogDashboard);
