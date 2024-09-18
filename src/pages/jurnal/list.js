@@ -53,7 +53,7 @@ export default function JurnalList() {
   const router = useRouter();
 
   const methods = useForm({
-    defaultValues: { date: [start_date, end_date], search: '' },
+    defaultValues: { start_date: start_date, end_date: end_date, search: '' },
     mode: 'onChange',
   });
 
@@ -64,8 +64,8 @@ export default function JurnalList() {
   const { data, isLoading, isError, refetch } = useGetJurnals({
     limit: 10,
     page,
-    start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
-    end_date: moment(watch('date')[1] || watch('date')[0]).format('yyyy-MM-DD') ?? null,
+    start_date: moment(watch('start_date')).format('yyyy-MM-DD') ?? null,
+    end_date: moment(watch('end_date')).format('yyyy-MM-DD') ?? null,
     search,
   });
 
@@ -96,14 +96,15 @@ export default function JurnalList() {
     setPage(1);
     refetch();
     defaultRangeDate(
-      moment(watch('date')[0]).format('yyyy-MM-DD'),
-      moment(watch('date')[1] || watch('date')[0]).format('yyyy-MM-DD')
+      moment(watch('start_date')).format('yyyy-MM-DD'),
+      moment(watch('end_date')).format('yyyy-MM-DD')
     );
 
-    if (!watch('date')[1]) {
-      setValue('date', [watch('date')[0], watch('date')[0]]);
+    if (!watch('start_date') && !watch('end_date')) {
+      setValue('start_date', start_date);
+      setValue('end_date', end_date);
     }
-  }, [watch('date')]);
+  }, [watch('start_date'), watch('end_date')]);
 
   useEffect(() => {
     onChangePage(null, 1);
@@ -119,8 +120,8 @@ export default function JurnalList() {
             isEmpty={data?.journals?.length === 0}
             filter={{
               page,
-              start_date: moment(watch('date')[0]).format('yyyy-MM-DD') ?? null,
-              end_date: moment(watch('date')[1]).format('yyyy-MM-DD') ?? null,
+              start_date: moment(watch('start_date')).format('yyyy-MM-DD') ?? null,
+              end_date: moment(watch('end_date')).format('yyyy-MM-DD') ?? null,
             }}
           />
         </FormProvider>

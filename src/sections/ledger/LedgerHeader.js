@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-import { RHFAutocomplete, RHFDateRangePicker } from 'src/components/hook-form';
+import { RHFAutocomplete } from 'src/components/hook-form';
 import { useDownloadLedger } from 'src/query/hooks/ledger/useDownloadLedger';
 import { useGetAccount } from 'src/query/hooks/options/useGetAccount';
 import { StyledButton } from 'src/theme/custom/Button';
@@ -20,6 +20,7 @@ import onDownload from 'src/utils/onDownload';
 import onPreview from 'src/utils/onPreview';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
+import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -92,7 +93,21 @@ export default function LedgerHeader({ filter, isEmpty }) {
             </li>
           )}
         />
-        <RHFDateRangePicker name="year" />
+        <RHFRangeDatePicker
+          name={{ start: 'start_date', end: 'end_date' }}
+          value={{ start: filter?.start_date, end: filter?.end_date }}
+          disableFuture
+          format="dd-MM-yyyy"
+          size="small"
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '8px',
+            },
+            '& .MuiInputAdornment-root': {
+              display: 'none',
+            },
+          }}
+        />
       </Stack>
       <Stack direction="row" spacing={1} sx={{ ml: 1 }}>
         <StyledButton
