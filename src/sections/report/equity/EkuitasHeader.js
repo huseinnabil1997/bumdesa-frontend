@@ -20,9 +20,10 @@ import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { getSessionToken } from 'src/utils/axios';
-import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
+// import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 import { useDownloadEquity } from 'src/query/hooks/report/equity/useDownloadEquity';
+import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -168,21 +169,32 @@ export default function EkuitasHeader({ onSubmit, loading }) {
             disabled={loading || downloading}
           />
         )}
-        <RHFMobileDateRangePicker
-          name="date"
+        <RHFRangeDatePicker
+          name={{ start: 'start_date', end: 'end_date' }}
+          value={{ start: start_date, end: end_date }}
+          disableFuture
           onChange={(newValue) => {
             setSelectedDate(newValue);
-            if (newValue[1] && newValue[0]) {
+            if (newValue.start && newValue.end) {
               onSubmit({
                 unit: selectedUnit?.id,
-                start_date: formatDate(newValue[0]),
-                end_date: formatDate(newValue[1]),
+                start_date: formatDate(newValue.start),
+                end_date: formatDate(newValue.end),
               });
-              defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
+              defaultRangeDate(formatDate(newValue.start), formatDate(newValue.end));
             }
           }}
-          value={selectedDate}
+          format="dd-MM-yyyy"
           disabled={downloading}
+          size="small"
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '8px',
+            },
+            '& .MuiInputAdornment-root': {
+              display: 'none',
+            },
+          }}
         />
       </Stack>
       <Stack direction="row" spacing={1}>

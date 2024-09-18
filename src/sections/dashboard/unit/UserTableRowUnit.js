@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { TableRow, TableCell, Chip, Tooltip, tooltipClasses, IconButton } from '@mui/material';
+import { TableRow, TableCell, Tooltip, tooltipClasses, IconButton } from '@mui/material';
 // components
 import Iconify from '../../../components/Iconify';
 import { CheckCircle, DoNotDisturb, Info } from '@mui/icons-material';
+import Label from 'src/components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -64,18 +65,12 @@ export default function UserTableRowUnit({
       }}>
 
       <TableCell>{name}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{email}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
-      <TableCell>
-        {status === 1 && (
-          <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-        )}
-        {status === 0 && (
-          <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
-        )}
-        {status === 3 && (
-          <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
-        )}
+      <TableCell align="center" sx={{ color: '#777777', height: 56 }}>{email}</TableCell>
+      <TableCell align="center" sx={{ color: '#777777', height: 56 }}>{year_founded}</TableCell>
+      <TableCell align="center">
+        <Label color={status === 1 ? 'success' : status === 0 ? 'error' : 'warning'}>
+          {status === 1 ? 'Aktif' : status === 0 ? 'Belum Aktif' : 'Nonaktif'}
+        </Label>
       </TableCell>
 
       <TableCell align="left" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
