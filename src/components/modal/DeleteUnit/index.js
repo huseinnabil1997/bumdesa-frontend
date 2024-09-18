@@ -12,42 +12,23 @@ AlertDeleteUnit.propTypes = {
   status: PropTypes.number,
 };
 
-const titleStyle = {
-  fontWeight: 700,
-  fontSize: '24px',
-  textAlign: 'center',
-}
-
-const titleActiveStyle = {
-  fontWeight: 700,
-  fontSize: '20px',
-  textAlign: 'center',
-}
-
-const subtitleStyle = {
-  color: '#666666',
-  fontWeight: 500,
-  fontSize: '16px',
-}
-
-const subtitleActiveStyle = {
-  color: '#666666',
-  fontWeight: 500,
-  fontSize: '14px',
-  textAlign: 'center',
-}
-
-const buttonStyle = {
-  width: '212px',
-  height: '48px'
-}
-
-const buttonActiveStyle = {
-  width: '432px',
-  height: '48px'
-}
+const styles = {
+  title: {
+    fontWeight: 700,
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#666666',
+    fontWeight: 500,
+  },
+  button: {
+    height: '48px',
+  },
+};
 
 export default function AlertDeleteUnit({ open, onClose, action, status = 0 }) {
+  const isStatusZero = status === 0;
+
   return (
     <Dialog
       open={open}
@@ -57,7 +38,7 @@ export default function AlertDeleteUnit({ open, onClose, action, status = 0 }) {
       PaperProps={{
         sx: {
           width: '480px',
-          height: status === 0 ? '486px' : '506px',
+          height: isStatusZero ? '486px' : '506px',
           borderRadius: '16px',
           justifyContent: 'center',
           alignItems: 'center',
@@ -69,51 +50,46 @@ export default function AlertDeleteUnit({ open, onClose, action, status = 0 }) {
         <Image
           visibleByDefault
           disabledEffect
-          src={status === 0 ? "/image/delete_unit.svg" : "/image/delete_active_unit.svg"}
+          src={isStatusZero ? "/image/delete_unit.svg" : "/image/delete_active_unit.svg"}
           alt="Delete Unit"
           sx={{ width: '216px', height: '216px' }}
         />
-        {status === 0 ? (
-          <Stack>
-            <Typography sx={titleStyle}>Apakah Anda yakin</Typography>
-            <Typography sx={titleStyle}>ingin menghapus unit usaha ini?</Typography>
-          </Stack>
-        ) : (
-          <Stack>
-            <Typography sx={titleActiveStyle}>Unit Usaha BUM Desa yang Sudah Memiliki</Typography>
-            <Typography sx={titleActiveStyle}>Pencatatan Jurnal Tidak Bisa Dihapus</Typography>
-          </Stack>
-        )}
-        {status === 0 ? (
-          <Stack alignItems="center">
-            <Typography sx={subtitleStyle}>Tindakan ini tidak dapat diubah. Data dan semua</Typography>
-            <Typography sx={subtitleStyle}>informasi terkait unit usaha ini akan dihapus permanen.</Typography>
-          </Stack>
-        ) : (
-          <Stack alignItems="center">
-            <Typography sx={subtitleActiveStyle}>Demi menjaga integrasi data, unit usaha dengan laporan</Typography>
-            <Typography sx={subtitleActiveStyle}>keuangan tidak dapat dihapus. Penghapusan unit usaha akan</Typography>
-            <Typography sx={subtitleActiveStyle}>berdampak pada data keuangan BUM Desa yang terhubung</Typography>
-            <Typography sx={subtitleActiveStyle}>dengannya.</Typography>
-          </Stack>
-        )}
-        {status === 0 ? (
-          <Stack direction="row" spacing={1}>
-            <StyledLoadingButton sx={buttonStyle} onClick={onClose} variant="outlined">
-              Tidak
-            </StyledLoadingButton>
-            <StyledLoadingButton sx={buttonStyle} onClick={action} variant="contained">
+        <Stack>
+          <Typography sx={{ ...styles.title, fontSize: isStatusZero ? '24px' : '20px' }}>
+            {isStatusZero ? 'Apakah Anda yakin' : 'Unit Usaha BUM Desa yang Sudah Memiliki'}
+          </Typography>
+          <Typography sx={{ ...styles.title, fontSize: isStatusZero ? '24px' : '20px' }}>
+            {isStatusZero ? 'ingin menghapus unit usaha ini?' : 'Pencatatan Jurnal Tidak Bisa Dihapus'}
+          </Typography>
+        </Stack>
+        <Stack alignItems="center">
+          <Typography sx={{ ...styles.subtitle, fontSize: isStatusZero ? '16px' : '14px', textAlign: 'center' }}>
+            {isStatusZero ? 'Tindakan ini tidak dapat diubah. Data dan semua' : 'Demi menjaga integrasi data, unit usaha dengan laporan'}
+          </Typography>
+          <Typography sx={{ ...styles.subtitle, fontSize: isStatusZero ? '16px' : '14px', textAlign: 'center' }}>
+            {isStatusZero ? 'informasi terkait unit usaha ini akan dihapus permanen.' : 'keuangan tidak dapat dihapus. Penghapusan unit usaha akan'}
+          </Typography>
+          {!isStatusZero && (
+            <>
+              <Typography sx={{ ...styles.subtitle, fontSize: '14px', textAlign: 'center' }}>
+                berdampak pada data keuangan BUM Desa yang terhubung
+              </Typography>
+              <Typography sx={{ ...styles.subtitle, fontSize: '14px', textAlign: 'center' }}>
+                dengannya.
+              </Typography>
+            </>
+          )}
+        </Stack>
+        <Stack direction="row" spacing={1}>
+          <StyledLoadingButton sx={{ ...styles.button, width: isStatusZero ? '212px' : '432px' }} onClick={onClose} variant={isStatusZero ? 'outlined' : 'contained'}>
+            {isStatusZero ? 'Tidak' : 'Kembali ke Daftar Unit Usaha'}
+          </StyledLoadingButton>
+          {isStatusZero && (
+            <StyledLoadingButton sx={{ ...styles.button, width: '212px' }} onClick={action} variant="contained">
               Ya, Hapus
             </StyledLoadingButton>
-          </Stack>
-        ) : (
-          <Stack direction="row" spacing={1}>
-            <StyledLoadingButton sx={buttonActiveStyle} onClick={onClose} variant="contained">
-              Kembali ke Daftar Unit Usaha
-            </StyledLoadingButton>
-          </Stack>
-        )}
-
+          )}
+        </Stack>
       </Stack>
     </Dialog>
   );
