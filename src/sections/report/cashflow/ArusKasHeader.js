@@ -24,6 +24,7 @@ import { getSessionToken } from 'src/utils/axios';
 import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
+import moment from 'moment';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -61,8 +62,8 @@ export default function ArusKasHeader({ onSubmit, loading }) {
     const payload = {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
-      start_date: formatDate(selectedDate[0]),
-      end_date: formatDate(selectedDate[1]),
+      start_date: moment(selectedDate[0]).format('YYYY-MM-DD'),
+      end_date: moment(selectedDate[1]).format('YYYY-MM-DD'),
     };
     onDownload(payload, {
       onSuccess: (res) => {
