@@ -61,8 +61,8 @@ export default function ArusKasHeader({ onSubmit, loading }) {
     const payload = {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
-      start_date: formatDate(selectedDate[0]),
-      end_date: formatDate(selectedDate[1]),
+        start_date: formatDate(selectedDate[0]),
+        end_date: formatDate(selectedDate[1]),
     };
     onDownload(payload, {
       onSuccess: (res) => {
