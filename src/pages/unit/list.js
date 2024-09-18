@@ -39,10 +39,10 @@ import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Unit Usaha', align: 'left' },
-  { id: 'tdr', label: 'Alamat Email', align: 'left' },
-  { id: 'tdr_start_date', label: 'Tahun Berdiri', align: 'left' },
-  { id: 'tdr_end_date', label: 'Status', align: 'left' },
-  { id: 'status', label: 'Action', align: 'center' },
+  { id: 'email', label: 'Alamat Email', align: 'center' },
+  { id: 'year_founded', label: 'Tahun Berdiri', align: 'center' },
+  { id: 'status', label: 'Status', align: 'center' },
+  { id: 'action', label: 'Aksi', align: 'center' },
 ];
 
 // ----------------------------------------------------------------------

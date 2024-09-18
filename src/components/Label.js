@@ -26,7 +26,7 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
 
   return {
     height: 22,
-    minWidth: 22,
+    minWidth: 85,
     lineHeight: 0,
     borderRadius: 8,
     cursor: 'default',
