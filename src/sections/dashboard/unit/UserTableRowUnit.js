@@ -6,10 +6,11 @@ import { TableRow, TableCell, Tooltip, tooltipClasses, IconButton } from '@mui/m
 import Iconify from '../../../components/Iconify';
 import { CheckCircle, DoNotDisturb, Info } from '@mui/icons-material';
 import Label from 'src/components/Label';
+import { memo, useCallback } from 'react';
 
 // ----------------------------------------------------------------------
 
-const DeleteTooltip = styled(({ className, ...props }) => (
+const DeleteTooltip = memo(styled(({ className, ...props }) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(() => ({
   [`& .${tooltipClasses.arrow}`]: {
@@ -18,7 +19,7 @@ const DeleteTooltip = styled(({ className, ...props }) => (
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#0E69B1',
   },
-}));
+})));
 
 // ----------------------------------------------------------------------
 
@@ -37,8 +38,7 @@ UserTableRowUnit.propTypes = {
   onViewRow: PropTypes.func,
 };
 
-export default function UserTableRowUnit({
-  // id,
+function UserTableRowUnit({
   row,
   index,
   selected,
@@ -53,6 +53,12 @@ export default function UserTableRowUnit({
   const theme = useTheme();
   const { name, email, year_founded, status, is_resend } = row;
 
+  const handleDeleteRow = useCallback(() => {
+    if (!disableDelete) {
+      onDeleteRow();
+    }
+  }, [disableDelete, onDeleteRow]);
+
   return (
     <TableRow
       hover
@@ -61,7 +67,7 @@ export default function UserTableRowUnit({
         border: 1,
         borderRadius: 8,
         borderColor: '#EAEBEB',
-        backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
+        backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
       }}>
 
       <TableCell>{name}</TableCell>
@@ -93,23 +99,14 @@ export default function UserTableRowUnit({
             sx={{ color: theme.palette.primary.main, fontSize: 16 }}
           />
         </IconButton>
-        {disableDelete ? (
-          <DeleteTooltip title="Setidaknya harus ada 1 unit usaha aktif di BUM Desa.">
-            <IconButton onClick={disableDelete ? null : onDeleteRow}>
-              <Iconify
-                icon={'lucide:trash'}
-                sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
-              />
-            </IconButton>
-          </DeleteTooltip>
-        ) : (
-          <IconButton onClick={disableDelete ? null : onDeleteRow}>
+        <DeleteTooltip title={disableDelete ? "Setidaknya harus ada 1 unit usaha aktif di BUM Desa." : "Hapus Unit"}>
+          <IconButton onClick={handleDeleteRow}>
             <Iconify
               icon={'lucide:trash'}
               sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
             />
           </IconButton>
-        )}
+        </DeleteTooltip>
         {status !== 3 && status !== 0 &&
           <DeleteTooltip title="Nonaktifkan Unit">
             <IconButton onClick={onDeactivateRow}>
@@ -128,3 +125,5 @@ export default function UserTableRowUnit({
     </TableRow>
   );
 }
+
+export default memo(UserTableRowUnit);

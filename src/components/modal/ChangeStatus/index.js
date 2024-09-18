@@ -12,25 +12,35 @@ ChangeStatusModal.propTypes = {
   status: PropTypes.number,
 };
 
-const titleStyle = {
-  fontWeight: 700,
-  fontSize: '24px',
-  textAlign: 'center',
-}
-
-const subtitleStyle = {
-  color: '#666666',
-  fontWeight: 500,
-  fontSize: '16px',
-  textAlign: 'center'
-}
-
-const buttonStyle = {
-  width: '212px',
-  height: '48px'
-}
-
 export default function ChangeStatusModal({ open, onClose, action, status }) {
+  const titleStyle = React.useMemo(() => ({
+    fontWeight: 700,
+    fontSize: '24px',
+    textAlign: 'center',
+  }), []);
+
+  const subtitleStyle = React.useMemo(() => ({
+    color: '#666666',
+    fontWeight: 500,
+    fontSize: '16px',
+    textAlign: 'center',
+  }), []);
+
+  const buttonStyle = React.useMemo(() => ({
+    width: '212px',
+    height: '48px',
+  }), []);
+
+  const imageMemo = React.useMemo(() => (
+    <Image
+      visibleByDefault
+      disabledEffect
+      src="/image/delete_unit.svg"
+      alt="Change status"
+      sx={{ width: '216px', height: '216px' }}
+    />
+  ), []);
+
   return (
     <Dialog
       open={open}
@@ -49,13 +59,7 @@ export default function ChangeStatusModal({ open, onClose, action, status }) {
       }}
     >
       <Stack spacing={2} alignItems="center">
-        <Image
-          visibleByDefault
-          disabledEffect
-          src="/image/delete_unit.svg"
-          alt="Change status"
-          sx={{ width: '216px', height: '216px' }}
-        />
+        {imageMemo}
         <Stack>
           <Typography sx={titleStyle}>Apakah Anda yakin ingin</Typography>
           <Typography sx={titleStyle}>{status !== 3 ? 'menonaktifkan' : 'mengaktifkan'} unit usaha ini?</Typography>
