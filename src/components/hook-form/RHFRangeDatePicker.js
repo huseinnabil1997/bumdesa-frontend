@@ -227,6 +227,7 @@ export default function RHFRangeDatePicker({
               orientation="portrait"
               disableFuture={disableFuture}
               renderDay={renderDay}
+              minDate={new Date(value?.start)}
             />
           </ThemeProvider>
         )}
