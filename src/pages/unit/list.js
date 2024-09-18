@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import {
@@ -34,6 +34,7 @@ import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
+import debounce from 'lodash.debounce';
 
 // ----------------------------------------------------------------------
 
@@ -67,8 +68,6 @@ export default function UserList() {
 
   const mutationDelete = useDelete();
 
-  // const [units, setUnits] = useState({});
-  // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [alertChangeStatus, setAlertChangeStatus] = useState(null);
@@ -84,10 +83,6 @@ export default function UserList() {
   });
 
   const units = data;
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   useEffect(() => {
     refetch();
@@ -129,11 +124,14 @@ export default function UserList() {
     }
   };
 
-  const handleInputChange = (event) => {
-    if (event.key === 'Enter') {
-      refetch();
-    }
-  };
+  const handleInputChange = useCallback(
+    debounce((event) => {
+      if (event.key === 'Enter') {
+        refetch();
+      }
+    }, 0),
+    []
+  );
 
   const handleChangeStatus = async (id, status) => {
     setAlertChangeStatus({ id: id, status: status });

@@ -90,6 +90,8 @@ export default function UserList() {
     status_report: watch('report')?.value,
   });
 
+  console.log('search', watch('search'));
+
   useEffect(() => {
     refetch();
   }, []);
@@ -100,7 +102,6 @@ export default function UserList() {
 
   useEffect(() => {
     setPage(1);
-    refetch();
   }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa ')]);
 
   return (

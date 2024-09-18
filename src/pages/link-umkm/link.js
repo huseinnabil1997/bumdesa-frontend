@@ -9,29 +9,24 @@ import Page from '../../components/Page';
 import useSettings from 'src/hooks/useSettings';
 import { StyledButton } from 'src/theme/custom/Button';
 import Image from 'src/components/Image';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import LinkUMKMDialog from 'src/sections/link-umkm/dialog';
 import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
-Link.getLayout = function getLayout(page) {
-  return <Layout title="BUM Desa X LinkUMKM">{page}</Layout>;
+const handleClickOpen = (setOpen) => () => {
+  setOpen(true);
 };
-// ----------------------------------------------------------------------
 
-export default function Link() {
+const handleClose = (setOpen) => () => {
+  setOpen(false);
+};
+
+const Link = memo(() => {
   const { themeStretch } = useSettings();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <Page>
@@ -42,7 +37,7 @@ export default function Link() {
             Menyambung Akun
           </Typography>
           <Typography fontSize="16px" variant="body1" align="justify" fontWeight={400} color="#666666" paragraph>
-          Untuk dapat menggunakan layanan LinkUMKM di BUM Desa, kami membutuhkan persetujuan Anda untuk mengirimkan data atau informasi pribadi Anda kepada BRI Research Institute ("BRIRINS"):
+            Untuk dapat menggunakan layanan LinkUMKM di BUM Desa, kami membutuhkan persetujuan Anda untuk mengirimkan data atau informasi pribadi Anda kepada BRI Research Institute ("BRIRINS"):
           </Typography>
           <Accordion sx={{ mb: 2, width: '100%', border: '1.5px solid #D3D4D4', borderRadius: '8px' }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -80,14 +75,20 @@ export default function Link() {
             <StyledButton variant="outlined" color="primary" sx={{ mr: 2, minWidth: '308px', height: '48px' }} onClick={() => router.back()}>
               Batal
             </StyledButton>
-            <StyledButton variant="contained" color="primary" sx={{ minWidth: '308px', height: '48px' }} onClick={handleClickOpen}>
+            <StyledButton variant="contained" color="primary" sx={{ minWidth: '308px', height: '48px' }} onClick={handleClickOpen(setOpen)}>
               Sambungkan
             </StyledButton>
           </Box>
         </Box>
       </Container>
 
-      <LinkUMKMDialog open={open} onClose={handleClose} />
+      <LinkUMKMDialog open={open} onClose={handleClose(setOpen)} />
     </Page>
   );
-}
+});
+
+Link.getLayout = function getLayout(page) {
+  return <Layout title="BUM Desa X LinkUMKM">{page}</Layout>;
+};
+
+export default Link;
