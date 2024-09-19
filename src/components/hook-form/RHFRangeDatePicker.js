@@ -11,6 +11,7 @@ import {
 import DatePicker from '@mui/lab/DatePicker';
 import moment from 'moment';
 import { PickersDay } from '@mui/lab';
+import { useEffect } from 'react';
 
 RHFRangeDatePicker.propTypes = {
   name: PropTypes.shape({
@@ -63,6 +64,11 @@ export default function RHFRangeDatePicker({
   const { control } = useFormContext();
 
   const [openPicker, setOpenPicker] = useState({ start: false, end: false });
+  const [currentView, setCurrentView] = useState(null);
+
+  useEffect(() => {
+    console.log('Current view:', currentView);
+  }, [currentView]);
 
   const handlePickerOpen = (picker) => {
     setOpenPicker((prev) => ({ ...prev, [picker]: true }));
@@ -137,7 +143,9 @@ export default function RHFRangeDatePicker({
                 } else {
                   startField.onChange(date ?? startField.value);
                 }
-                handlePickerClose('start');
+                if (currentView === 'day') {
+                  handlePickerClose('start');
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -170,6 +178,8 @@ export default function RHFRangeDatePicker({
               maxDate={new Date(value?.end)}
               disableFuture={disableFuture}
               renderDay={renderDay}
+              onViewChange={(view) => setCurrentView(view)}
+              allowSameDateSelection={true}
             />
           </ThemeProvider>
         )}
@@ -195,7 +205,9 @@ export default function RHFRangeDatePicker({
                 } else {
                   endField.onChange(date ?? endField.value);
                 }
-                handlePickerClose('end');
+                if (currentView === 'day') {
+                  handlePickerClose('end');
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -228,6 +240,8 @@ export default function RHFRangeDatePicker({
               disableFuture={disableFuture}
               renderDay={renderDay}
               minDate={new Date(value?.start)}
+              onViewChange={(view) => setCurrentView(view)}
+              allowSameDateSelection={true}
             />
           </ThemeProvider>
         )}
