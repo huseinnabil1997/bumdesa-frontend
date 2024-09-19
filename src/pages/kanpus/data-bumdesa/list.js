@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import {
@@ -21,13 +21,7 @@ import Layout from '../../../layouts';
 // components
 import Page from '../../../components/Page';
 import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
-import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 // sections
-import { useSnackbar } from 'notistack';
-import useDelete from 'src/query/hooks/mutation/useDelete';
-import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
-import { useActivate } from 'src/query/hooks/units/useActivate';
-import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 import { UserTableRow } from 'src/sections/data-bumdesa';
 import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdesa';
 import { FormProvider } from 'src/components/hook-form';
@@ -71,18 +65,7 @@ export default function BumdesaList() {
 
   const { themeStretch } = useSettings();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const theme = useTheme();
-
-  const mutationDelete = useDelete();
-
-  const [alertDelete, setAlertDelete] = useState(null);
-  const [alertChangeStatus, setAlertChangeStatus] = useState(null);
-
-  const { mutate: onDeactivate } = useDeactivate();
-
-  const { mutate: onActivate } = useActivate();
 
   const methods = useForm({
     defaultValues: {
@@ -97,75 +80,17 @@ export default function BumdesaList() {
 
   const { watch, setValue } = methods;
 
-  const { data: bumdesas, isLoading, refetch, isError } = useGetListBumdesa({
+  const { data: bumdesas, isLoading, isError } = useGetListBumdesa({
     page: page,
     limit: rowsPerPage,
     search: watch('search'),
-    // province: watch('provinsi')?.value,
-    // city: watch('kota')?.value,
-    // district: watch('kecamatan')?.value,
-    // subdistrict: watch('desa')?.value,
     area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_active: watch('status_active')?.value,
   });
 
   useEffect(() => {
-    refetch();
-  }, []);
-
-  useEffect(() => {
-    refetch();
-  }, [page, rowsPerPage]);
-
-  useEffect(() => {
     setPage(1);
-    refetch();
   }, [watch('search'), watch('status_active'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa')]);
-
-  const onDelete = async () => {
-    try {
-      const response = await mutationDelete.mutateAsync({
-        endpoint: `/business-units/${alertDelete?.id}`,
-      });
-      enqueueSnackbar(response.message ?? 'Sukses menghapus data', { variant: 'success' });
-      refetch();
-      setAlertDelete(null);
-    } catch (error) {
-      enqueueSnackbar(error.message, { variant: 'error' });
-      if (error.code === 412) {
-        setAlertDelete({ id: alertDelete?.id, status: 1 });
-      }
-      console.log('error delete', error);
-    }
-  };
-
-  const onChangeStatus = async () => {
-    if (alertChangeStatus?.status !== 3) {
-      onDeactivate(alertChangeStatus?.id, {
-        onSuccess: (res) => {
-          enqueueSnackbar(res.message ?? 'Sukses menonaktifkan unit usaha', { variant: 'success' });
-          refetch();
-          setAlertChangeStatus(null);
-        },
-        onError: (err) => {
-          enqueueSnackbar(err.message ?? 'Gagal menonaktifkan unit usaha', { variant: 'error' });
-          console.log('error handleDeactivateRow', err);
-        },
-      });
-    } else {
-      onActivate(alertChangeStatus?.id, {
-        onSuccess: (res) => {
-          enqueueSnackbar(res.message ?? 'Sukses mengaktifkan unit usaha', { variant: 'success' });
-          refetch();
-          setAlertChangeStatus(null);
-        },
-        onError: (err) => {
-          enqueueSnackbar(err.message ?? 'Gagal mengaktifkan unit usaha', { variant: 'error' });
-          console.log('error handleActivateRow', err);
-        },
-      });
-    }
-  };
 
   return (
     <Page title="Data BUM Desa: List">
@@ -280,18 +205,6 @@ export default function BumdesaList() {
             }}
           />
         </Box>
-        <ChangeStatusModal
-          open={!!alertChangeStatus}
-          onClose={() => setAlertChangeStatus(null)}
-          action={onChangeStatus}
-          status={alertChangeStatus?.status}
-        />
-        <AlertDeleteUnit
-          open={!!alertDelete}
-          onClose={() => setAlertDelete(null)}
-          action={onDelete}
-          status={alertDelete?.status}
-        />
       </Container>
     </Page>
   );
