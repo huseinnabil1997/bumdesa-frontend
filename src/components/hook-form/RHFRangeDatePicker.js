@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import {
   Typography,
@@ -11,7 +11,6 @@ import {
 import DatePicker from '@mui/lab/DatePicker';
 import moment from 'moment';
 import { PickersDay } from '@mui/lab';
-import { useEffect } from 'react';
 
 RHFRangeDatePicker.propTypes = {
   name: PropTypes.shape({
@@ -58,27 +57,30 @@ export default function RHFRangeDatePicker({
   value,
   disabled,
   disableFuture = false,
-  // minDate,
   ...other
 }) {
   const { control } = useFormContext();
 
-  const [openPicker, setOpenPicker] = useState({ start: false, end: false });
-  const [currentView, setCurrentView] = useState(null);
+  const [state, setState] = useState({
+    openPicker: { start: false, end: false },
+    currentView: null,
+  });
 
-  useEffect(() => {
-    console.log('Current view:', currentView);
-  }, [currentView]);
+  const handlePickerOpen = useCallback((picker) => {
+    setState((prev) => ({
+      ...prev,
+      openPicker: { ...prev.openPicker, [picker]: true },
+    }));
+  }, []);
 
-  const handlePickerOpen = (picker) => {
-    setOpenPicker((prev) => ({ ...prev, [picker]: true }));
-  };
+  const handlePickerClose = useCallback((picker) => {
+    setState((prev) => ({
+      ...prev,
+      openPicker: { ...prev.openPicker, [picker]: false },
+    }));
+  }, []);
 
-  const handlePickerClose = (picker) => {
-    setOpenPicker((prev) => ({ ...prev, [picker]: false }));
-  };
-
-  const renderDay = (date, selectedDates, pickersDayProps) => {
+  const renderDay = useMemo(() => (date, selectedDates, pickersDayProps) => {
     const startDate = moment(value?.start);
     const endDate = moment(value?.end);
     const currentDate = moment(date);
@@ -115,7 +117,7 @@ export default function RHFRangeDatePicker({
         }}
       />
     );
-  };
+  }, [value]);
 
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
@@ -133,7 +135,7 @@ export default function RHFRangeDatePicker({
           <ThemeProvider theme={theme}>
             <DatePicker
               {...startField}
-              open={openPicker.start}
+              open={state.openPicker.start}
               disabled={disabled}
               label=""
               value={value?.start || startField.value}
@@ -143,7 +145,7 @@ export default function RHFRangeDatePicker({
                 } else {
                   startField.onChange(date ?? startField.value);
                 }
-                if (currentView === 'day') {
+                if (state.currentView === 'day') {
                   handlePickerClose('start');
                 }
               }}
@@ -178,7 +180,7 @@ export default function RHFRangeDatePicker({
               maxDate={new Date(value?.end)}
               disableFuture={disableFuture}
               renderDay={renderDay}
-              onViewChange={(view) => setCurrentView(view)}
+              onViewChange={(view) => setState((prev) => ({ ...prev, currentView: view }))}
               allowSameDateSelection={true}
             />
           </ThemeProvider>
@@ -195,7 +197,7 @@ export default function RHFRangeDatePicker({
           <ThemeProvider theme={theme}>
             <DatePicker
               {...endField}
-              open={openPicker.end}
+              open={state.openPicker.end}
               disabled={disabled}
               label=""
               value={value?.end || endField.value}
@@ -205,7 +207,7 @@ export default function RHFRangeDatePicker({
                 } else {
                   endField.onChange(date ?? endField.value);
                 }
-                if (currentView === 'day') {
+                if (state.currentView === 'day') {
                   handlePickerClose('end');
                 }
               }}
@@ -240,7 +242,7 @@ export default function RHFRangeDatePicker({
               disableFuture={disableFuture}
               renderDay={renderDay}
               minDate={new Date(value?.start)}
-              onViewChange={(view) => setCurrentView(view)}
+              onViewChange={(view) => setState((prev) => ({ ...prev, currentView: view }))}
               allowSameDateSelection={true}
             />
           </ThemeProvider>
