@@ -110,7 +110,7 @@ export default function DetailUnit() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardUnitManagerList unit={true} id={id} />
+            <DashboardUnitManagerList unit={id} id={data?.bumdesa_id} />
           </Grid>
 
           {/* <Grid item xs={12}>
