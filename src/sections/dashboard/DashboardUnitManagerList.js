@@ -84,7 +84,7 @@ export default function DashboardUnitManagerList({ unit, id }) {
                     ))}
                   <TableNoData
                     isNotFound={(managers?.data?.length === 0 || managers?.data?.length === undefined) && !isLoading}
-                    title="Pengurus BUM Desa belum tersedia."
+                    title={unit ? "Pengurus Unit Usaha belum tersedia." : "Pengurus BUM Desa belum tersedia."}
                   />
                   {isLoading && (<TableSkeleton />)}
                 </TableBody>

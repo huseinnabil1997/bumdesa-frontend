@@ -39,7 +39,8 @@ export default function JurnalList() {
   const methods = useForm({
     defaultValues: {
       account: { value: '1.1.01.01', label: 'Kas Tunai' },
-      year: [start_date, end_date],
+      start_date: start_date,
+      end_date: end_date,
     },
   });
 
@@ -48,8 +49,8 @@ export default function JurnalList() {
   const { data, isLoading, isError, refetch } = useGetLedgers({
     ...filter,
     account_code: watch('account')?.value ?? null,
-    start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
-    end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
+    start_date: moment(watch('start_date')).format('yyyy-MM-DD') ?? null,
+    end_date: moment(watch('end_date')).format('yyyy-MM-DD') ?? null,
   });
 
   const handleChangeFilter = () => {
@@ -58,22 +59,22 @@ export default function JurnalList() {
     setFilter((prevState) => ({
       ...prevState,
       account_code: watch('account')?.value ?? null,
-      start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
-      end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
+      start_date: moment(watch('start_date')).format('yyyy-MM-DD') ?? null,
+      end_date: moment(watch('end_date')).format('yyyy-MM-DD') ?? null,
       page: 1,
     }));
     defaultRangeDate(
-      moment(watch('year')[0]).format('yyyy-MM-DD'),
-      moment(watch('year')[1]).format('yyyy-MM-DD')
+      moment(watch('start_date')).format('yyyy-MM-DD'),
+      moment(watch('end_date')).format('yyyy-MM-DD')
     );
   };
 
   useEffect(() => {
-    if (watch('year')[0] && watch('year')[1]) {
+    if (watch('start_date') && watch('end_date')) {
       handleChangeFilter();
       refetch();
     }
-  }, [watch('year'), watch('account_code')]);
+  }, [watch('start_date'), watch('end_date'), watch('account_code')]);
 
   return (
     <Page>
@@ -84,8 +85,8 @@ export default function JurnalList() {
             filter={{
               page,
               account_code: watch('account')?.value ?? null,
-              start_date: moment(watch('year')[0]).format('yyyy-MM-DD') ?? null,
-              end_date: moment(watch('year')[1]).format('yyyy-MM-DD') ?? null,
+              start_date: moment(watch('start_date')).format('yyyy-MM-DD') ?? null,
+              end_date: moment(watch('end_date')).format('yyyy-MM-DD') ?? null,
             }}
           />
         </FormProvider>

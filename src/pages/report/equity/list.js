@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 
 // @mui
 import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
@@ -41,12 +41,17 @@ export default function LaporanEkuitas() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = useCallback(async (data) => {
     setSubmitValue(data);
-    await refetch()
-  };
+  }, []);
 
-  function convertToMonthYear(start_date, end_date) {
+  useEffect(() => {
+    if (submitValue.unit || submitValue.start_date || submitValue.end_date) {
+      refetch();
+    }
+  }, [submitValue, refetch]);
+
+  const convertToMonthYear = useMemo(() => (start_date, end_date) => {
     let startDateText = '...';
     let endDateText = '...';
     const monthNames = [
@@ -70,7 +75,7 @@ export default function LaporanEkuitas() {
       endDateText = `${dayNumber} ${monthName} ${year}`;
     }
     return `${startDateText == 'NaN undefined NaN' ? '...' : startDateText} - ${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
-  }
+  }, []);
 
   return (
     <Page title="Laporan: Perubahan Ekuitas">

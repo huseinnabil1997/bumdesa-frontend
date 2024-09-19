@@ -125,6 +125,7 @@ function EditModal({ open, onClose, id, positions, from }) {
     handleSubmit,
     isSubmitting,
     watch,
+    clearErrors,
   } = methods;
 
   useEffect(() => {
@@ -136,6 +137,7 @@ function EditModal({ open, onClose, id, positions, from }) {
     setValue('position', manager?.position ? { value: manager?.position, label: manager?.position_name } : null);
     setValue('phone', manager?.phone);
     setValue('image', manager?.photo);
+    clearErrors();
   };
 
   const onSubmit = (data) => {

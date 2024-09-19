@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 // @mui
 import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
@@ -42,12 +42,12 @@ export default function LaporanLabaRugi() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = useCallback(async (data) => {
     setSubmitValue(data);
-    await refetch()
-  };
+    await refetch();
+  }, [refetch]);
 
-  function convertToMonthYear(start_date, end_date) {
+  const convertToMonthYear = useMemo(() => (start_date, end_date) => {
     let startDateText = '...';
     let endDateText = '...';
     const monthNames = [
@@ -71,7 +71,7 @@ export default function LaporanLabaRugi() {
       endDateText = `${dayNumber} ${monthName} ${year}`;
     }
     return `${startDateText == 'NaN undefined NaN' ? '...' : startDateText} - ${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
-  }
+  }, []);
 
   return (
     <Page title="Laporan: Laba Rugi">

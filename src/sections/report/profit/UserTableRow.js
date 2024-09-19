@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -86,14 +86,14 @@ export default function UserTableRow({ row, selected }) {
 
   const { level, title, saldo, child } = row;
 
-  const generateColor = (i, j) => {
+  const generateColor = useCallback((i, j) => {
     const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
     const b = j % 2 !== 1 ? theme.palette.grey[100] : 'white';
 
     return i % 2 !== 0 ? a : b;
-  };
+  }, [theme.palette.grey]);
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = useCallback((amount) => {
     if (amount === 0 || amount === '0') {
       return 'Rp. -';
     }
@@ -114,26 +114,25 @@ export default function UserTableRow({ row, selected }) {
     }
   
     return formattedAmount;
-  };
+  }, []);
 
-
-  const bgColor = () => {
+  const bgColor = useMemo(() => {
     if (level === '1' && !child) {
-      return '#DDEFFC'
+      return '#DDEFFC';
     }
     if (level === '1' && child) {
-      return 'white'
+      return 'white';
     }
-  }
+  }, [level, child]);
 
-  const bgColorHover = () => {
+  const bgColorHover = useMemo(() => {
     if (level === '1' && !child) {
-      return '#A6D6FF'
+      return '#A6D6FF';
     }
     if (level === '1' && child) {
-      return '#EAEBEB'
+      return '#EAEBEB';
     }
-  }
+  }, [level, child]);
 
   return (
     <>
@@ -141,10 +140,10 @@ export default function UserTableRow({ row, selected }) {
         hover
         selected={selected}
         sx={{
-          backgroundColor: bgColor(),
+          backgroundColor: bgColor,
           height: '56px',
           "&:hover": {
-            backgroundColor: `${bgColorHover()} !important`
+            backgroundColor: `${bgColorHover} !important`
           },
           borderLeft: level === '1' && child ? '6px solid #F87304' : null
         }}
@@ -168,4 +167,3 @@ export default function UserTableRow({ row, selected }) {
     </>
   );
 }
-

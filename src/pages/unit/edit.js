@@ -1,6 +1,6 @@
 import { Box, Button, Card, Container, Divider, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import Layout from 'src/layouts';
@@ -30,20 +30,13 @@ EditUnitUsaha.getLayout = function getLayout(page) {
 
 export default function EditUnitUsaha() {
   const userData = useSelector(state => state.user.userData);
-
   const { data: dataBumdesa } = useGetProfile(userData?.bumdesa_id);
-
-  const founded_at = dataBumdesa?.founded_at?.split('T')[0]
-
+  const founded_at = dataBumdesa?.founded_at?.split('T')[0];
   const { themeStretch } = useSettings();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const router = useRouter();
-
   const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
   const { data, isLoading } = useGetUnitById(router.query.id);
-
   const mutation = usePatch();
 
   const NewUnitFormSchema = Yup.object().shape({
@@ -74,7 +67,7 @@ export default function EditUnitUsaha() {
       .max(13, 'Nomor telepon maksimal diisi 13 digit'),
   });
 
-  const defaultValues = {
+  const defaultValues = useMemo(() => ({
     id: router.query.id ?? '',
     image: data?.photo ?? null,
     name: data?.name ?? '',
@@ -84,7 +77,7 @@ export default function EditUnitUsaha() {
     sector: { value: data?.id_sector, label: data?.sector } ?? null,
     manager_name: data?.organization?.name ?? '',
     manager_phone: data?.organization?.phone ?? '',
-  };
+  }), [data, router.query.id]);
 
   const methods = useForm({
     resolver: yupResolver(NewUnitFormSchema),
@@ -96,10 +89,9 @@ export default function EditUnitUsaha() {
     setValue,
     handleSubmit,
     isSubmitting,
-    // reset,
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = useCallback(async (data) => {
     const formData = new FormData();
     formData.append('image', data?.image);
     formData.append('name', data?.name);
@@ -172,11 +164,13 @@ export default function EditUnitUsaha() {
       enqueueSnackbar(error?.message, { variant: 'error' });
       console.log('error Edit Units', error);
     }
-  };
+  }, [defaultValues.email, enqueueSnackbar, mutation, router]);
 
   useEffect(() => {
-    methods.reset(defaultValues);
-  }, [data]);
+    if (data) {
+      methods.reset(defaultValues);
+    }
+  }, [data, defaultValues, methods]);
 
   return (
     <Page title="Unit Usaha: Edit">
@@ -247,10 +241,8 @@ export default function EditUnitUsaha() {
         <Card
           elevation={3}
           sx={{
-            // maxWidth: '960px',
             maxHeight: 'auto',
             minHeight: '556px',
-            // p: '24px',
             mt: '36px',
             borderRadius: '16px',
           }}
@@ -263,7 +255,7 @@ export default function EditUnitUsaha() {
               <RHFUploadPhoto
                 name="image"
                 label="Foto Unit Usaha"
-                accept="image/*"
+                accept="image/png, image/jpg, image/jpeg"
                 maxSize={10000000}
                 imageFrom={'unit'}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
@@ -421,38 +413,6 @@ export default function EditUnitUsaha() {
               </Stack>
             </Stack>
             <Divider />
-            {/* <Stack
-              direction="row"
-              p="16px 24px 16px 24px"
-              width="100%"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Stack spacing={0.5}>
-                <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
-                  <InfoIcon fontSize="13.33px" sx={{ color: '#1078CA' }} />
-                  <Typography fontWeight={600} color="#1078CA" fontSize="14px">
-                    Informasi
-                  </Typography>
-                </Stack>
-                <Typography variant="caption" fontSize="12px" fontWeight={500} color="#929393">
-                  Username dan password akan dikirimkan melalui email unit usaha.
-                  <span style={{ fontSize: '12px', fontWeight: 700 }}>
-                    {' '}
-                    Pastikan email yang dimasukkan benar dan aktif.
-                  </span>
-                </Typography>
-              </Stack>
-              <StyledLoadingButton
-                variant="contained"
-                sx={{ width: '160px', height: '48px' }}
-                onClick={handleSubmit(onSubmit)}
-                loading={isSubmitting}
-              >
-                Simpan
-              </StyledLoadingButton>
-            </Stack> */}
           </FormProvider>
         </Card>
       </Container>
@@ -480,7 +440,6 @@ function SnackbarIcon({ icon, color }) {
         alignItems: 'center',
         justifyContent: 'center',
         color: color === 'success' ? '#27AE60' : `${color}.main`,
-        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
       }}
     >
       <Iconify icon={icon} width={24} height={24} />

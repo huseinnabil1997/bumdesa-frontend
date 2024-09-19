@@ -1,6 +1,6 @@
-import { Box, Button, Card, Chip, Container, Divider, Modal, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Divider, Modal, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import Layout from 'src/layouts';
@@ -18,9 +18,9 @@ import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 import Image from "src/components/Image";
 import AlertDeleteUnit from 'src/components/modal/DeleteUnit';
 import useDelete from 'src/query/hooks/mutation/useDelete';
-import { useTheme } from '@mui/material/styles';
 import { checkUrlImage } from 'src/utils/helperFunction';
 import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
+import Label from 'src/components/Label';
 
 const styles = {
   textfield: {
@@ -57,17 +57,10 @@ export default function DetailUnitUsaha() {
   const [isValidImage, setIsValidImage] = useState(false);
 
   const { themeStretch } = useSettings();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const router = useRouter();
-
-  const theme = useTheme();
-
   const { data } = useGetUnitById(router.query.id);
-
   const mutation = usePatch();
-
   const mutationDelete = useDelete();
 
   const NewUnitFormSchema = Yup.object().shape({
@@ -96,7 +89,7 @@ export default function DetailUnitUsaha() {
       .max(13, 'Nomor telepon maksimal diisi 13 digit'),
   });
 
-  const defaultValues = {
+  const defaultValues = useMemo(() => ({
     id: router.query.id ?? '',
     image: data?.photo ?? null,
     name: data?.name ?? '',
@@ -106,7 +99,7 @@ export default function DetailUnitUsaha() {
     sector: { value: data?.id_sector, label: data?.sector } ?? null,
     manager_name: data?.organization?.name ?? '',
     manager_phone: data?.organization?.phone ?? '',
-  };
+  }), [data, router.query.id]);
 
   const methods = useForm({
     resolver: yupResolver(NewUnitFormSchema),
@@ -117,7 +110,6 @@ export default function DetailUnitUsaha() {
   const {
     handleSubmit,
     isSubmitting,
-    // reset,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -227,17 +219,12 @@ export default function DetailUnitUsaha() {
 
   useEffect(() => {
     methods.reset(defaultValues);
-  }, [data]);
-
-  useEffect(() => {
     const checkImage = async () => {
       const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
       setIsValidImage(isValid);
-      return isValid;
     };
-
     checkImage();
-  }, [defaultValues?.image]);
+  }, [data, defaultValues, methods]);
 
   return (
     <Page title="Unit Usaha: Detail">
@@ -300,15 +287,12 @@ export default function DetailUnitUsaha() {
                 <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
                   Informasi Unit Usaha
                 </Typography>
-                {data?.status === 1 && (
-                  <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-                )}
-                {data?.status === 0 && (
-                  <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
-                )}
-                {data?.status === 3 && (
-                  <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
-                )}
+                <Label
+                  color={data?.status === 1 ? 'success' : data?.status === 0 ? 'error' : 'warning'}
+                  sx={{ textTransform: 'capitalize' }}
+                >
+                  {data?.status === 1 ? 'Aktif' : data?.status === 0 ? 'Belum Aktif' : 'Nonaktif'}
+                </Label>
               </Stack>
 
               <Image
@@ -439,7 +423,6 @@ function SnackbarIcon({ icon, color }) {
         alignItems: 'center',
         justifyContent: 'center',
         color: color === 'success' ? '#27AE60' : `${color}.main`,
-        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
       }}
     >
       <Iconify icon={icon} width={24} height={24} />

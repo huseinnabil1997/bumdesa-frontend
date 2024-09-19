@@ -14,7 +14,7 @@ const fetchData = async (param) => {
 export const useGetListUnit = (param) => {
   const getQuery = useQuery([
     'GET_LIST_UNIT',
-    param.search,
+    param.unit,
     param.province,
     param.city,
     param.district,
