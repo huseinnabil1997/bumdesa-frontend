@@ -65,7 +65,7 @@ export default function LaporanNeraca() {
     return `${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
   }, []);
 
-  const getIndicatorBalance = useCallback(() => {
+  const getIndicatorBalance = useMemo(() => {
     const totalAset = data?.find(item => item.title === "ASET").child?.find(childItem => childItem.nama === "Total ASET").saldo;
 
     const totalKewajibanDanEkuitas = data?.find(item => item.title === "TOTAL KEWAJIBAN DAN EKUITAS").saldo;
@@ -86,7 +86,7 @@ export default function LaporanNeraca() {
     <Page title="Laporan: Posisi Keuangan">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance()} loading={isLoading} />
+          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance} loading={isLoading} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
