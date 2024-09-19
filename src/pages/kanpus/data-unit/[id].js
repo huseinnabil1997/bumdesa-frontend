@@ -1,5 +1,6 @@
 // @mui
 import {
+  Box,
   Breadcrumbs,
   Card,
   CardContent,
@@ -26,6 +27,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { ProfileInfoUnitKanpus } from 'src/sections/profile';
 import { useTheme } from '@emotion/react';
 import { useGetUnitById } from 'src/query/hooks/data-unit/useGetUnitById';
+import Label from 'src/components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -92,7 +94,15 @@ export default function DetailUnit() {
 
           <Grid item xs={12}>
             <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
-              <CardHeader title="Informasi Unit Usaha" sx={{ p: 3, pb: 0 }} />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <CardHeader title="Informasi Unit Usaha" sx={{ p: 3, pb: 0 }} />
+                <Label
+                  color={data?.status === 1 ? 'success' : data?.status === 0 ? 'error' : 'warning'}
+                  sx={{ textTransform: 'capitalize', mr: 3, mt: 3 }}
+                >
+                  {data?.status === 1 ? 'Aktif' : data?.status === 0 ? 'Belum Aktif' : 'Nonaktif'}
+                </Label>
+              </Box>
               <CardContent>
                 <ProfileInfoUnitKanpus data={data} from="kanpus" />
               </CardContent>

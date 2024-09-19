@@ -81,7 +81,7 @@ export default function UserList() {
   const { data: units, isLoading, isError, refetch } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
-    search: watch('search'),
+    unit: watch('search'),
     // province: watch('provinsi')?.value,
     // city: watch('kota')?.value,
     // district: watch('kecamatan')?.value,
@@ -89,6 +89,8 @@ export default function UserList() {
     area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_report: watch('report')?.value,
   });
+
+  console.log('search', watch('search'));
 
   useEffect(() => {
     refetch();
@@ -100,7 +102,6 @@ export default function UserList() {
 
   useEffect(() => {
     setPage(1);
-    refetch();
   }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa ')]);
 
   return (
@@ -117,7 +118,8 @@ export default function UserList() {
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
-              report: watch('report') ?? null,
+              status_report: watch('report') ?? null,
+              unit: watch('search') ?? null,
             }}
             setValue={setValue}
           />

@@ -182,6 +182,8 @@ export default function BumdesaList() {
               kecamatan: watch('kecamatan') ?? null,
               desa: watch('desa') ?? null,
               status_active: watch('status_active') ?? null,
+              search: watch('search') ?? null,
+              area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
             }}
             setValue={setValue}
           />

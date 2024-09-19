@@ -14,15 +14,16 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { getSessionToken } from 'src/utils/axios';
-import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 import { useDownloadEquity } from 'src/query/hooks/report/equity/useDownloadEquity';
+import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
+import moment from 'moment';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -38,12 +39,7 @@ export default function EkuitasHeader({ onSubmit, loading }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
-  let decoded = {};
-  if (token) {
-    decoded = jwtDecode(token);
-  } else {
-    console.error('Token not available');
-  }
+  const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
 
   const { data, isLoading } = useGetBusinessUnits();
   const { mutate: onDownload, isLoading: downloading } = useDownloadEquity();
@@ -54,14 +50,14 @@ export default function EkuitasHeader({ onSubmit, loading }) {
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
   const [selectedDate, setSelectedDate] = useState([start_date, end_date]);
 
-  const handleMenuItemClick = async (type) => {
+  const handleMenuItemClick = useCallback(async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
     setSelectedType(type);
     const payload = {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
-      start_date: formatDate(selectedDate[0]),
-      end_date: formatDate(selectedDate[1]),
+      start_date: moment(selectedDate[0]).format('YYYY-MM-DD'),
+      end_date: moment(selectedDate[1]).format('YYYY-MM-DD'),
     };
     onDownload(payload, {
       onSuccess: (res) => {
@@ -111,19 +107,18 @@ export default function EkuitasHeader({ onSubmit, loading }) {
       },
     });
     setOpen(false);
-  };
+  }, [enqueueSnackbar, onDownload, selectedDate, selectedUnit, decoded]);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
-  };
+  }, []);
 
-  const handleClose = (event) => {
+  const handleClose = useCallback((event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
-  };
+  }, []);
 
   useEffect(() => {
     setSelectedDate([start_date, end_date]);
@@ -132,10 +127,12 @@ export default function EkuitasHeader({ onSubmit, loading }) {
       start_date: formatDate(start_date),
       end_date: formatDate(end_date),
     });
-  }, []);
+  }, [decoded, onSubmit, selectedUnit]);
 
-  useEffect(async () => {
-    await setSelectedUnit(data?.[0]);
+  useEffect(() => {
+    if (data?.length) {
+      setSelectedUnit(data[0]);
+    }
   }, [data]);
 
   return (
@@ -168,21 +165,32 @@ export default function EkuitasHeader({ onSubmit, loading }) {
             disabled={loading || downloading}
           />
         )}
-        <RHFMobileDateRangePicker
-          name="date"
+        <RHFRangeDatePicker
+          name={{ start: 'start_date', end: 'end_date' }}
+          value={{ start: start_date, end: end_date }}
+          disableFuture
           onChange={(newValue) => {
-            setSelectedDate(newValue);
-            if (newValue[1] && newValue[0]) {
+            setSelectedDate([newValue.start, newValue.end]);
+            if (newValue.start && newValue.end) {
               onSubmit({
                 unit: selectedUnit?.id,
-                start_date: formatDate(newValue[0]),
-                end_date: formatDate(newValue[1]),
+                start_date: moment(newValue.start).format('YYYY-MM-DD'),
+                end_date: moment(newValue.end).format('YYYY-MM-DD'),
               });
-              defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
+              defaultRangeDate(formatDate(newValue.start), formatDate(newValue.end));
             }
           }}
-          value={selectedDate}
+          format="dd-MM-yyyy"
           disabled={downloading}
+          size="small"
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '8px',
+            },
+            '& .MuiInputAdornment-root': {
+              display: 'none',
+            },
+          }}
         />
       </Stack>
       <Stack direction="row" spacing={1}>

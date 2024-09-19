@@ -88,7 +88,7 @@ export default function UserTableRow({
       <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(profit_loss)}</TableCell>
       <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(cash)}</TableCell>
 
-      <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
+      <TableCell align="center">
         <StyledLoadingButton
           variant="outlined"
           onClick={onViewRow}

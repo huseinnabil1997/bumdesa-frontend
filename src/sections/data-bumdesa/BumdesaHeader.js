@@ -102,6 +102,8 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const handleMenuItemClick = (event, index) => {
     const payload = {
       ...filter,
+      search: filter?.search,
+      status_active: filter?.status_active?.value,
       province_id: filter?.provinsi?.value,
       city_id: filter?.kota?.value,
       district_id: filter?.kecamatan?.value,
@@ -115,14 +117,10 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         onDownload({
           file: res,
           title: 'BUMDesa_Report_' +
-            filter?.provinsi?.label +
-            '_' +
-            filter?.kota?.label +
-            '_' +
-            filter?.kecamatan?.label +
-            '_' +
-            filter?.desa?.label +
-            '_' +
+            `${filter?.provinsi?.label ? filter?.provinsi?.label + '_' : ''}` +
+            `${filter?.kota?.label ? filter?.kota?.label + '_' : ''}` +
+            `${filter?.kecamatan?.label ? filter?.kecamatan?.label + '_' : ''}` +
+            `${filter?.desa?.label ? filter?.desa?.label + '_' : ''}` +
             new Date().toLocaleDateString('id-ID', {
               year: 'numeric',
               month: 'long',

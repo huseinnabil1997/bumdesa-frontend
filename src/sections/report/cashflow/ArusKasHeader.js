@@ -20,9 +20,11 @@ import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { getSessionToken } from 'src/utils/axios';
-import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
+// import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { useDownloadCashflow } from 'src/query/hooks/report/cashflow/useDownloadCashflow';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
+import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
+import moment from 'moment';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -60,8 +62,8 @@ export default function ArusKasHeader({ onSubmit, loading }) {
     const payload = {
       type: type === 'preview' ? 1 : type,
       unit: selectedUnit?.id,
-      start_date: formatDate(selectedDate[0]),
-      end_date: formatDate(selectedDate[1]),
+      start_date: moment(selectedDate[0]).format('YYYY-MM-DD'),
+      end_date: moment(selectedDate[1]).format('YYYY-MM-DD'),
     };
     onDownload(payload, {
       onSuccess: (res) => {
@@ -168,21 +170,32 @@ export default function ArusKasHeader({ onSubmit, loading }) {
             disabled={loading || downloading}
           />
         )}
-        <RHFMobileDateRangePicker
-          name="date"
+        <RHFRangeDatePicker
+          name={{ start: 'start_date', end: 'end_date' }}
+          value={{ start: start_date, end: end_date }}
+          disableFuture
           onChange={(newValue) => {
-            setSelectedDate(newValue);
-            if (newValue[1] && newValue[0]) {
+            setSelectedDate([newValue.start, newValue.end]);
+            if (newValue.start && newValue.end) {
               onSubmit({
                 unit: selectedUnit?.id,
-                start_date: formatDate(newValue[0]),
-                end_date: formatDate(newValue[1]),
+                start_date: formatDate(newValue.start),
+                end_date: formatDate(newValue.end),
               });
-              defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
+              defaultRangeDate(formatDate(newValue.start), formatDate(newValue.end));
             }
           }}
-          value={selectedDate}
+          format="dd-MM-yyyy"
           disabled={downloading}
+          size="small"
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '8px',
+            },
+            '& .MuiInputAdornment-root': {
+              display: 'none',
+            },
+          }}
         />
       </Stack>
       <Stack direction="row" spacing={1}>

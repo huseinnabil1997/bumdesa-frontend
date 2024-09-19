@@ -13,13 +13,14 @@ import {
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
-import { RHFDateRangePicker, RHFTextField } from 'src/components/hook-form';
+import { RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { useDownloadJurnal } from 'src/query/hooks/jurnals/useDownloadJurnal';
 import { searchRegex } from 'src/utils/regex';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
+import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -86,7 +87,21 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
     <>
       <Stack direction="row">
         <Stack direction="row" sx={{ width: '100%' }} spacing={1}>
-          <RHFDateRangePicker name="date" />
+          <RHFRangeDatePicker
+            name={{ start: 'start_date', end: 'end_date' }}
+            value={{ start: filter?.start_date, end: filter?.end_date }}
+            disableFuture
+            format="dd-MM-yyyy"
+            size="small"
+            sx={{
+              '& .MuiInputBase-root': {
+                borderRadius: '8px',
+              },
+              '& .MuiInputAdornment-root': {
+                display: 'none',
+              },
+            }}
+          />
         </Stack>
         <Stack direction="row" spacing={1}>
           <StyledButton

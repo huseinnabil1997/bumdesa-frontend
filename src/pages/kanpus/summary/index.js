@@ -71,7 +71,7 @@ export default function SummaryPage() {
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods}>
-          <Header value={watch('search')} />
+          <Header isEmpty={!summary?.data?.length} />
         </FormProvider>
 
         <Card sx={{ mt: 3 }} elevation={3}>
