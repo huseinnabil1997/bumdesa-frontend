@@ -35,7 +35,7 @@ export default function LaporanNeraca() {
   const [alertDelete, setAlertDelete] = useState(null);
   const [submitValue, setSubmitValue] = useState({});
 
-  const { data, isLoading, refetch } = useGetBalance(submitValue);
+  const { data, isLoading } = useGetBalance(submitValue);
 
   const methods = useForm({
     defaultValues: { unit: null, start_date: null, end_date: null },
@@ -43,10 +43,9 @@ export default function LaporanNeraca() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = useCallback(async (data) => {
+  const onSubmit = useCallback((data) => {
     setSubmitValue(data);
-    await refetch();
-  }, [refetch]);
+  }, []);
 
   const convertToMonthYear = useCallback((start_date, end_date) => {
     let endDateText = '...';

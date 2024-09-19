@@ -34,7 +34,7 @@ export default function LaporanArusKas() {
   const [alertDelete, setAlertDelete] = useState(null);
   const [submitValue, setSubmitValue] = useState({});
 
-  const { data, isLoading, refetch } = useGetCashFlow(submitValue);
+  const { data, isLoading } = useGetCashFlow(submitValue);
 
   const methods = useForm({
     defaultValues: { unit: null, start_date: null, end_date: null },
@@ -42,9 +42,8 @@ export default function LaporanArusKas() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     setSubmitValue(data);
-    await refetch()
   };
 
   const convertToMonthYear = useMemo(() => (start_date, end_date) => {
