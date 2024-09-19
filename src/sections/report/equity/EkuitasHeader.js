@@ -14,13 +14,12 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { getSessionToken } from 'src/utils/axios';
-// import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 import { useDownloadEquity } from 'src/query/hooks/report/equity/useDownloadEquity';
 import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
@@ -40,12 +39,7 @@ export default function EkuitasHeader({ onSubmit, loading }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
-  let decoded = {};
-  if (token) {
-    decoded = jwtDecode(token);
-  } else {
-    console.error('Token not available');
-  }
+  const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
 
   const { data, isLoading } = useGetBusinessUnits();
   const { mutate: onDownload, isLoading: downloading } = useDownloadEquity();
@@ -56,7 +50,7 @@ export default function EkuitasHeader({ onSubmit, loading }) {
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
   const [selectedDate, setSelectedDate] = useState([start_date, end_date]);
 
-  const handleMenuItemClick = async (type) => {
+  const handleMenuItemClick = useCallback(async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
     setSelectedType(type);
     const payload = {
@@ -113,19 +107,18 @@ export default function EkuitasHeader({ onSubmit, loading }) {
       },
     });
     setOpen(false);
-  };
+  }, [enqueueSnackbar, onDownload, selectedDate, selectedUnit, decoded]);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
-  };
+  }, []);
 
-  const handleClose = (event) => {
+  const handleClose = useCallback((event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
-  };
+  }, []);
 
   useEffect(() => {
     setSelectedDate([start_date, end_date]);
@@ -134,10 +127,12 @@ export default function EkuitasHeader({ onSubmit, loading }) {
       start_date: formatDate(start_date),
       end_date: formatDate(end_date),
     });
-  }, []);
+  }, [decoded, onSubmit, selectedUnit]);
 
-  useEffect(async () => {
-    await setSelectedUnit(data?.[0]);
+  useEffect(() => {
+    if (data?.length) {
+      setSelectedUnit(data[0]);
+    }
   }, [data]);
 
   return (
@@ -175,12 +170,12 @@ export default function EkuitasHeader({ onSubmit, loading }) {
           value={{ start: start_date, end: end_date }}
           disableFuture
           onChange={(newValue) => {
-            setSelectedDate(newValue);
+            setSelectedDate([newValue.start, newValue.end]);
             if (newValue.start && newValue.end) {
               onSubmit({
                 unit: selectedUnit?.id,
-                start_date: formatDate(newValue.start),
-                end_date: formatDate(newValue.end),
+                start_date: moment(newValue.start).format('YYYY-MM-DD'),
+                end_date: moment(newValue.end).format('YYYY-MM-DD'),
               });
               defaultRangeDate(formatDate(newValue.start), formatDate(newValue.end));
             }

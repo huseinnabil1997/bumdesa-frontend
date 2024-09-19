@@ -175,7 +175,7 @@ export default function ArusKasHeader({ onSubmit, loading }) {
           value={{ start: start_date, end: end_date }}
           disableFuture
           onChange={(newValue) => {
-            setSelectedDate(newValue);
+            setSelectedDate([newValue.start, newValue.end]);
             if (newValue.start && newValue.end) {
               onSubmit({
                 unit: selectedUnit?.id,

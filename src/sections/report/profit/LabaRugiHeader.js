@@ -176,7 +176,7 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
           value={{ start: start_date, end: end_date }}
           disableFuture
           onChange={(newValue) => {
-            setState((prevState) => ({ ...prevState, selectedDate: newValue }));
+            setState((prevState) => ({ ...prevState, selectedDate: [newValue.start, newValue.end] }));
             if (newValue.start && newValue.end) {
               onSubmit({
                 unit: state.selectedUnit?.id,
