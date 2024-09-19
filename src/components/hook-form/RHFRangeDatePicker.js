@@ -63,7 +63,7 @@ export default function RHFRangeDatePicker({
 
   const [state, setState] = useState({
     openPicker: { start: false, end: false },
-    currentView: null,
+    currentView: 'day',
   });
 
   const handlePickerOpen = useCallback((picker) => {

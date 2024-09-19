@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 // @mui
 import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
@@ -43,26 +43,17 @@ export default function LaporanNeraca() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = useCallback(async (data) => {
     setSubmitValue(data);
-    await refetch()
-  };
+    await refetch();
+  }, [refetch]);
 
-  function convertToMonthYear(start_date, end_date) {
-    // let startDateText = '...';
+  const convertToMonthYear = useCallback((start_date, end_date) => {
     let endDateText = '...';
     const monthNames = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
       'Agustus', 'September', 'Oktober', 'November', 'Desember'
     ];
-    // if (start_date) {
-    //   const [year, month, day] = start_date.split('-');
-    //   const monthIndex = parseInt(month, 10) - 1;
-    //   const monthName = monthNames[monthIndex];
-    //   const dayNumber = parseInt(day, 10);
-
-    //   startDateText = `${dayNumber} ${monthName} ${year}`;
-    // }
     if (end_date) {
       const [year, month, day] = end_date.split('-');
       const monthIndex = parseInt(month, 10) - 1;
@@ -71,12 +62,10 @@ export default function LaporanNeraca() {
 
       endDateText = `${dayNumber} ${monthName} ${year}`;
     }
-    // return `${startDateText == 'NaN undefined NaN' ? '...' : startDateText} - ${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
     return `${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
-  }
+  }, []);
 
-  const getIndicatorBalance = () => {
-
+  const getIndicatorBalance = useMemo(() => {
     const totalAset = data?.find(item => item.title === "ASET").child?.find(childItem => childItem.nama === "Total ASET").saldo;
 
     const totalKewajibanDanEkuitas = data?.find(item => item.title === "TOTAL KEWAJIBAN DAN EKUITAS").saldo;
@@ -85,24 +74,26 @@ export default function LaporanNeraca() {
 
     if (selisih === 0) return 'Seimbang';
     if (selisih !== 0 || !data) return 'Tidak seimbang';
-  }
+  }, [data]);
+
+  const tableHeadLabel = useMemo(() => [
+    { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
+    { id: 'saldo', label: convertToMonthYear(submitValue?.start_date, submitValue?.end_date), align: 'left', width: 480 },
+    { id: 'saldo_tahun_lalu', label: new Date(end_date).getFullYear() - 1, align: 'left', width: 480 },
+  ], [convertToMonthYear, submitValue?.end_date]);
 
   return (
     <Page title="Laporan: Posisi Keuangan">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance()} loading={isLoading} />
+          <NeracaHeader onSubmit={onSubmit} indicatorBalance={getIndicatorBalance} loading={isLoading} />
         </FormProvider>
         <Card sx={{ mt: 3 }} elevation={3}>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={[
-                    { id: 'nama_akun', label: 'Nama Akun', align: 'left', width: 480 },
-                    { id: 'saldo', label: convertToMonthYear(submitValue?.start_date, submitValue?.end_date), align: 'left', width: 480 },
-                    { id: 'saldo_tahun_lalu', label: new Date(end_date).getFullYear() - 1, align: 'left', width: 480 },
-                  ]}
+                  headLabel={tableHeadLabel}
                   rowCount={data?.length}
                   sx={{ background: theme.palette.grey[200], height: '56px' }}
                 />
