@@ -14,11 +14,9 @@ const fetchData = async (param) => {
 export const useGetListBumdesa = (param) => {
   const getQuery = useQuery([
     'GET_LIST_BUMDESA',
+    param.page,
+    param.limit,
     param.search,
-    param.province,
-    param.city,
-    param.district,
-    param.subdistrict,
     param.area_code,
     param.status_active,
   ], () => fetchData(param));

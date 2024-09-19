@@ -49,12 +49,12 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-UserList.getLayout = function getLayout(page) {
+UnitList.getLayout = function getLayout(page) {
   return <Layout title="Data Unit Usaha">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
-export default function UserList() {
+export default function UnitList() {
   const { page, rowsPerPage, onChangeRowsPerPage, onChangePage, setPage } = useTable({
     defaultCurrentPage: 1,
   });
@@ -78,27 +78,13 @@ export default function UserList() {
 
   const { watch, setValue } = methods;
 
-  const { data: units, isLoading, isError, refetch } = useGetListUnit({
+  const { data: units, isLoading, isError } = useGetListUnit({
     page: page,
     limit: rowsPerPage,
     unit: watch('search'),
-    // province: watch('provinsi')?.value,
-    // city: watch('kota')?.value,
-    // district: watch('kecamatan')?.value,
-    // subdistrict: watch('desa')?.value,
     area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_report: watch('report')?.value,
   });
-
-  console.log('search', watch('search'));
-
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  useEffect(() => {
-    refetch();
-  }, [page, rowsPerPage]);
 
   useEffect(() => {
     setPage(1);
