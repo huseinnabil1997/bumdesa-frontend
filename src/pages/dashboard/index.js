@@ -16,6 +16,7 @@ import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import LinkUMKMDialogDashboard from 'src/sections/link-umkm/dialogDashboard';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ Dashboard.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function Dashboard() {
+  const userData = useSelector((state) => state.user.userData);
   const { themeStretch } = useSettings();
   const token = getSessionToken();
   const [decoded, setDecoded] = useState(jwtDecode(token));
@@ -37,8 +39,8 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
-    setOpen(true);
-  }, [token]);
+    if (userData?.linkumkm_integrated === 0) setOpen(true);
+  }, [token, userData]);
 
   return (
     <Page title="Dashboard">
