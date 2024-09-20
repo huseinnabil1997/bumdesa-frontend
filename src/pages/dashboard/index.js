@@ -39,8 +39,17 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
-    if (userData?.role === 2 && userData?.linkumkm_integrated === 0) setOpen(true);
-  }, [token, userData]);
+  }, [token]);
+
+  useEffect(() => {
+    if (userData?.role === 2 && userData?.linkumkm_integrated === 0) {
+      const hasShownDialog = sessionStorage.getItem('hasShownDialog');
+      if (!hasShownDialog) {
+        setOpen(true);
+        sessionStorage.setItem('hasShownDialog', 'true');
+      }
+    }
+  }, []);
 
   return (
     <Page title="Dashboard">
