@@ -39,7 +39,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
-    if (userData?.linkumkm_integrated === 0) setOpen(true);
+    if (userData?.role === 2 && userData?.linkumkm_integrated === 0) setOpen(true);
   }, [token, userData]);
 
   return (

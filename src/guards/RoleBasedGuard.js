@@ -19,41 +19,31 @@ const useCurrentRole = () => {
   else return 'pengawas';
 };
 
+const isAccessDenied = (path, role) => {
+  const accessRules = {
+    unit: ['unit'],
+    dashboard: ['kanpus'],
+    manager: ['unit'],
+    employee: ['bumdesa'],
+    'link-umkm': ['unit', 'kanpus'],
+    kanpus: ['bumdesa', 'unit'],
+  };
+
+  return accessRules[path]?.includes(role);
+};
+
 export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
   const currentRole = useCurrentRole();
 
-  // if (!accessibleRoles.includes(currentRole)) {
-  //   return (
-  //     <Container>
-  //       <Alert severity="error">
-  //         <AlertTitle>Izin Ditolak</AlertTitle>
-  //         Anda tidak memiliki izin untuk mengakses halaman ini
-  //       </Alert>
-  //     </Container>
-  //   );
-  // }
-
   useEffect(() => {
-    if (
-      (path === 'unit' && currentRole === 'unit') ||
-      (path === 'dashboard' && currentRole === 'kanpus') ||
-      (path === 'manager' && currentRole === 'unit') ||
-      (path === 'employee' && currentRole === 'bumdesa') ||
-      (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
-    ) {
+    if (isAccessDenied(path, currentRole)) {
       router.push('/403');
     }
   }, [path, currentRole, router]);
 
-  if (
-    (path === 'unit' && currentRole === 'unit') ||
-    (path === 'dashboard' && currentRole === 'kanpus') ||
-    (path === 'manager' && currentRole === 'unit') ||
-    (path === 'employee' && currentRole === 'bumdesa') ||
-    (path === 'kanpus' && (currentRole === 'bumdesa' || currentRole === 'unit'))
-  ) {
+  if (isAccessDenied(path, currentRole)) {
     return (
       <Container>
         <Alert severity="error">
