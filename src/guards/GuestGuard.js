@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import useAuth from '../hooks/useAuth';
 // routes
 import { PATH_DASHBOARD } from '../routes/paths';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -14,13 +15,18 @@ GuestGuard.propTypes = {
 };
 
 export default function GuestGuard({ children }) {
+  const userData = useSelector((state) => state.user.userData);
   const { push } = useRouter();
 
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
-      push(PATH_DASHBOARD.root);
+      if (userData.role === 1) {
+        push(PATH_DASHBOARD.kanpus.dashboard);
+      } else {
+        push(PATH_DASHBOARD.root);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);

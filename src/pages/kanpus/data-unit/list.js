@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-// @mui
 import {
   Box,
   Card,
@@ -14,15 +13,11 @@ import {
   MenuItem,
   useTheme,
 } from '@mui/material';
-// hooks
 import useSettings from '../../../hooks/useSettings';
 import useTable from '../../../hooks/useTable';
-// layouts
 import Layout from '../../../layouts';
-// components
 import Page from '../../../components/Page';
 import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
-// sections
 import { UserTableRow } from 'src/sections/data-unit';
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
@@ -30,8 +25,6 @@ import { useGetListUnit } from 'src/query/hooks/data-unit/useGetListUnit';
 import UnitHeader from 'src/sections/data-unit/UnitHeader';
 import TableError from 'src/components/table/TableError';
 import Scrollbar from 'src/components/Scrollbar';
-
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name_sticky', label: 'Nama Unit Usaha', align: 'left', minWidth: 200 },
@@ -47,22 +40,17 @@ const TABLE_HEAD = [
   { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
 ];
 
-// ----------------------------------------------------------------------
-
-UserList.getLayout = function getLayout(page) {
+UnitList.getLayout = function getLayout(page) {
   return <Layout title="Data Unit Usaha">{page}</Layout>;
 };
-// ----------------------------------------------------------------------
 
-export default function UserList() {
+export default function UnitList() {
   const { page, rowsPerPage, onChangeRowsPerPage, onChangePage, setPage } = useTable({
     defaultCurrentPage: 1,
   });
 
   const router = useRouter();
-
   const { themeStretch } = useSettings();
-
   const theme = useTheme();
 
   const methods = useForm({
@@ -71,38 +59,23 @@ export default function UserList() {
       provinsi: null,
       kota: null,
       kecamatan: null,
-      desa: null,
     },
     mode: 'onChange',
   });
 
   const { watch, setValue } = methods;
 
-  const { data: units, isLoading, isError, refetch } = useGetListUnit({
-    page: page,
+  const { data: units, isLoading, isError } = useGetListUnit({
+    page,
     limit: rowsPerPage,
     unit: watch('search'),
-    // province: watch('provinsi')?.value,
-    // city: watch('kota')?.value,
-    // district: watch('kecamatan')?.value,
-    // subdistrict: watch('desa')?.value,
-    area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_report: watch('report')?.value,
   });
 
-  console.log('search', watch('search'));
-
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  useEffect(() => {
-    refetch();
-  }, [page, rowsPerPage]);
-
   useEffect(() => {
     setPage(1);
-  }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa ')]);
+  }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan')]);
 
   return (
     <Page title="Data Unit Usaha: List">
@@ -117,7 +90,6 @@ export default function UserList() {
               provinsi: watch('provinsi') ?? null,
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
-              desa: watch('desa') ?? null,
               status_report: watch('report') ?? null,
               unit: watch('search') ?? null,
             }}
@@ -134,29 +106,23 @@ export default function UserList() {
                   rowCount={units?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
-
                 <TableBody>
-                  {!isLoading &&
-                    units?.data?.length > 0 &&
-                    units?.data?.map((row, i) => (
-                      <UserTableRow
-                        key={row.unit_id}
-                        index={i}
-                        row={row}
-                        onViewRow={() => router.push(`${row.unit_id}`)}
-                      />
-                    ))}
-
+                  {!isLoading && units?.data?.length > 0 && units?.data?.map((row, i) => (
+                    <UserTableRow
+                      key={row.unit_id}
+                      index={i}
+                      row={row}
+                      onViewRow={() => router.push(`${row.unit_id}`)}
+                    />
+                  ))}
                   {isLoading && <TableSkeleton />}
-
-                  {!units?.data?.length > 0 && !isError && !isLoading && (
+                  {!units?.data?.length && !isError && !isLoading && (
                     <TableNoData
                       isNotFound
                       title="Unit Usaha belum tersedia."
                       description="Silakan cek koneksi Anda dan muat ulang halaman."
                     />
                   )}
-
                   {!isLoading && isError && (
                     <TableError
                       title="Koneksi Error"
@@ -181,13 +147,11 @@ export default function UserList() {
               onChange={onChangeRowsPerPage}
               displayEmpty
               inputProps={{ 'aria-label': 'Rows per page' }}
-              aria-controls=""
               sx={{ height: 32, width: 70 }}
             >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
+              {[5, 10, 15, 20].map((value) => (
+                <MenuItem key={value} value={value}>{value}</MenuItem>
+              ))}
             </Select>
           </FormControl>
           <Pagination
@@ -201,18 +165,10 @@ export default function UserList() {
             page={page}
             onChange={onChangePage}
             sx={{
-              '& .MuiPaginationItem-page': {
-                border: 'none !important',
-              },
-              '& .MuiPaginationItem-icon': {
-                color: '#1078CA',
-              },
-              '& .MuiPaginationItem-previousNext': {
-                borderColor: '#1078CA',
-              },
-              '& .MuiPaginationItem-firstLast': {
-                borderColor: '#1078CA',
-              },
+              '& .MuiPaginationItem-page': { border: 'none !important' },
+              '& .MuiPaginationItem-icon': { color: '#1078CA' },
+              '& .MuiPaginationItem-previousNext': { borderColor: '#1078CA' },
+              '& .MuiPaginationItem-firstLast': { borderColor: '#1078CA' },
             }}
           />
         </Box>

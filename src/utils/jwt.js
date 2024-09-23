@@ -47,6 +47,7 @@ const setSession = async (accessToken, remember) => {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
     localStorage.removeItem('@menu');
+    sessionStorage.removeItem('hasShownDialog');
     delete axios.defaults.headers.common.Authorization;
     delete axiosCoreService.defaults.headers.common.Authorization;
     delete axiosReportService.defaults.headers.common.Authorization;

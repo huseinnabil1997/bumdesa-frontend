@@ -14,17 +14,15 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete } from 'src/components/hook-form';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBalance';
 import { getSessionToken } from 'src/utils/axios';
-// import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
-// import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -37,16 +35,10 @@ NeracaHeader.propTypes = {
 };
 
 export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
-  // const datePickerRef = useRef(null);
   const anchorRef = useRef(null);
 
   const token = getSessionToken();
-  let decoded = {};
-  if (token) {
-    decoded = jwtDecode(token);
-  } else {
-    console.error('Token not available');
-  }
+  const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
 
   const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading } = useGetBusinessUnits();
@@ -57,7 +49,7 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
   const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
   const [selectedDate, setSelectedDate] = useState([start_date, end_date]);
 
-  const handleMenuItemClick = async (type) => {
+  const handleMenuItemClick = useCallback(async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
     setSelectedType(type);
     const payload = {
@@ -114,27 +106,18 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
       },
     });
     setOpen(false);
-  };
+  }, [enqueueSnackbar, onDownload, selectedDate, selectedUnit, decoded]);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
-  };
+  }, []);
 
-  const handleClose = (event) => {
+  const handleClose = useCallback((event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
-  };
-
-  // const getMaxDateForMonthInput = () => {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear();
-  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  //   const day = String(currentDate.getDate()).padStart(2, '0');
-  //   return `${year}-${month}-${day}`;
-  // };
+  }, []);
 
   useEffect(() => {
     setSelectedDate([start_date, end_date]);
@@ -143,10 +126,12 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
       start_date: formatDate(start_date),
       end_date: formatDate(end_date),
     });
-  }, []);
+  }, [decoded, onSubmit, selectedUnit]);
 
-  useEffect(async () => {
-    await setSelectedUnit(data?.[0]);
+  useEffect(() => {
+    if (data?.length) {
+      setSelectedUnit(data[0]);
+    }
   }, [data]);
 
   return (
@@ -242,40 +227,6 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
             disableFuture
             disabled={downloading}
           />
-          {/* <RHFTextField
-            inputRef={datePickerRef}
-            size="small"
-            sx={{ width: 165 }}
-            name="date"
-            type="date"
-            onClick={() => {
-              datePickerRef.current.showPicker()
-            }}
-            InputProps={{
-              inputProps: {
-                max: getMaxDateForMonthInput(),
-              }
-            }}
-            onChange={(event) => {
-              setSelectedDate([selectedDate[0], event.target.value]);
-              onSubmit({ unit: selectedUnit?.id, start_date: formatDate(selectedDate[0]), end_date: event.target.value })
-              defaultRangeDate(formatDate(selectedDate[0]), formatDate(event.target.value));
-            }}
-            value={formatDate(selectedDate[1])}
-          /> */}
-          {/* <RHFMobileDateRangePicker
-            name="date"
-            onChange={(newValue) => {
-              setSelectedDate(newValue);
-              onSubmit({
-                unit: selectedUnit?.id,
-                start_date: formatDate(newValue[0]),
-                end_date: formatDate(newValue[1]),
-              });
-              defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
-            }}
-            value={selectedDate}
-          /> */}
         </Stack>
         <Stack direction="row" spacing={1}>
           <StyledLoadingButton

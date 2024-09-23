@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 // @mui
 import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
@@ -34,7 +34,7 @@ export default function LaporanArusKas() {
   const [alertDelete, setAlertDelete] = useState(null);
   const [submitValue, setSubmitValue] = useState({});
 
-  const { data, isLoading, refetch } = useGetCashFlow(submitValue);
+  const { data, isLoading } = useGetCashFlow(submitValue);
 
   const methods = useForm({
     defaultValues: { unit: null, start_date: null, end_date: null },
@@ -42,12 +42,11 @@ export default function LaporanArusKas() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     setSubmitValue(data);
-    await refetch()
   };
 
-  function convertToMonthYear(start_date, end_date) {
+  const convertToMonthYear = useMemo(() => (start_date, end_date) => {
     let startDateText = '...';
     let endDateText = '...';
     const monthNames = [
@@ -71,7 +70,7 @@ export default function LaporanArusKas() {
       endDateText = `${dayNumber} ${monthName} ${year}`;
     }
     return `${startDateText == 'NaN undefined NaN' ? '...' : startDateText} - ${endDateText == 'NaN undefined NaN' ? '...' : endDateText}`;
-  }
+  }, []);
 
   return (
     <Page title="Laporan: Arus Kas">

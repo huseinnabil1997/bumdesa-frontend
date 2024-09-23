@@ -17,28 +17,20 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { searchRegex } from 'src/utils/regex';
+import { styled } from '@mui/material';
+import { useDownloadUnit } from 'src/query/hooks/data-unit/useDownloadUnit';
 import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
 import { useGetCities } from 'src/query/hooks/options/useGetCities';
 import { useGetDistricts } from 'src/query/hooks/options/useGetDistricts';
-import { useGetSubdistricts } from 'src/query/hooks/options/useGetSubdistricts';
-import { styled } from '@mui/material';
-import { useDownloadUnit } from 'src/query/hooks/data-unit/useDownloadUnit';
 
 const styles = {
   textfield: {
-    '& .MuiInputBase-root': {
-      height: '35px',
-    },
-    '& .MuiInputBase-input': {
-      height: '1px',
-      fontSize: '12px',
-    },
+    '& .MuiInputBase-root': { height: '35px' },
+    '& .MuiInputBase-input': { height: '1px', fontSize: '12px' },
   },
 };
 
-const StyledNoOptionsText = styled('div')({
-  fontSize: '12px',
-});
+const StyledNoOptionsText = styled('div')({ fontSize: '12px' });
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -46,32 +38,19 @@ UnitHeader.propTypes = {
   filter: PropTypes.object,
   isEmpty: PropTypes.bool,
   value: PropTypes.string,
+  setValue: PropTypes.func,
 };
 
 export default function UnitHeader({ filter, isEmpty, value, setValue }) {
-
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
-
   const { enqueueSnackbar } = useSnackbar();
-
   const { mutate: download, isLoading } = useDownloadUnit();
-
   const { data: provincies, isLoading: isLoadingProvincies } = useGetProvincies();
-  const { data: cities, isLoading: isLoadingCities } = useGetCities({
-    prov_id: filter?.provinsi?.value,
-  });
-  const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({
-    city_id: filter?.kota?.value,
-  });
-  const { data: subdistricts, isLoading: isLoadingSubdistricts } = useGetSubdistricts({
-    dis_id: filter?.kecamatan?.value,
-  });
-  const reports = [
-    { value: 0, label: 'Belum Aktif' },
-    { value: 1, label: 'Aktif' },
-  ];
+  const { data: cities, isLoading: isLoadingCities } = useGetCities({ prov_id: filter?.provinsi?.value });
+  const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({ city_id: filter?.kota?.value });
+  const reports = [{ value: 0, label: 'Belum Aktif' }, { value: 1, label: 'Aktif' }];
 
   const handleMenuItemClick = (event, index) => {
     const payload = {
@@ -80,7 +59,6 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
       province_id: filter?.provinsi?.value,
       city_id: filter?.kota?.value,
       district_id: filter?.kecamatan?.value,
-      subdistrict_id: filter?.desa?.value,
       type: index === 99 ? 1 : index,
     };
 
@@ -89,16 +67,7 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: 'Business_Unit_Report_' +
-            `${filter?.provinsi?.label ? filter?.provinsi?.label + '_' : ''}` +
-            `${filter?.kota?.label ? filter?.kota?.label + '_' : ''}` +
-            `${filter?.kecamatan?.label ? filter?.kecamatan?.label + '_' : ''}` +
-            `${filter?.desa?.label ? filter?.desa?.label + '_' : ''}` +
-            new Date().toLocaleDateString('id-ID', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            }),
+          title: `Business_Unit_Report_${filter?.provinsi?.label ? filter?.provinsi?.label + '_' : ''}${filter?.kota?.label ? filter?.kota?.label + '_' : ''}${filter?.kecamatan?.label ? filter?.kecamatan?.label + '_' : ''}${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}`,
           type: index,
         });
         setSelectedIndex(index);
@@ -110,131 +79,51 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
     });
   };
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
+  const handleToggle = () => setOpen((prevOpen) => !prevOpen);
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
+    if (anchorRef.current && anchorRef.current.contains(event.target)) return;
     setOpen(false);
   };
 
-  const handleProvinsi = (value) => {
-    setValue('kota', null);
-    setValue('kecamatan', null);
-    setValue('desa', null);
-    setValue('provinsi', value);
-  };
-
-  const handleKota = (value) => {
-    setValue('kecamatan', null);
-    setValue('desa', null);
-    setValue('kota', value);
-  };
-
-  const handleKecamatan = (value) => {
-    setValue('desa', null);
-    setValue('kecamatan', value);
+  const handleChange = (name, value) => {
+    if (name === 'provinsi') {
+      setValue('kota', null);
+      setValue('kecamatan', null);
+    } else if (name === 'kota') {
+      setValue('kecamatan', null);
+    }
+    setValue(name, value);
   };
 
   return (
     <>
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={1}
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container spacing={1}>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <RHFAutocomplete
-              name="provinsi"
-              placeholder="Semua Provinsi"
-              loading={isLoadingProvincies}
-              disabled={isLoadingProvincies}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={provincies?.map((option) => option) ?? []}
-              onChange={(e, value) => handleProvinsi(value)}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <RHFAutocomplete
-              name="kota"
-              placeholder="Semua Kabupaten"
-              loading={isLoadingCities}
-              disabled={isLoadingCities}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={cities?.map((option) => option) ?? []}
-              onChange={(e, value) => handleKota(value)}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <RHFAutocomplete
-              name="kecamatan"
-              placeholder="Semua Kecamatan"
-              loading={isLoadingDistricts}
-              disabled={isLoadingDistricts}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={districts?.map((option) => option) ?? []}
-              onChange={(e, value) => handleKecamatan(value)}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <RHFAutocomplete
-              name="desa"
-              dependentField="kecamatan"
-              placeholder="Semua Desa"
-              loading={isLoadingSubdistricts}
-              disabled={isLoadingSubdistricts}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={subdistricts?.map((option) => option) ?? []}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <RHFAutocomplete
-              name="report"
-              placeholder="Semua Status Laporan Keuangan"
-              loading={false}
-              sx={styles.textfield}
-              options={reports?.map((option) => option) ?? []}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
+          {[
+            { name: 'provinsi', placeholder: 'Semua Provinsi', loading: isLoadingProvincies, options: provincies },
+            { name: 'kota', placeholder: 'Semua Kabupaten', loading: isLoadingCities, options: cities },
+            { name: 'kecamatan', placeholder: 'Semua Kecamatan', loading: isLoadingDistricts, options: districts },
+            { name: 'report', placeholder: 'Semua Status Laporan Keuangan', loading: false, options: reports },
+          ].map(({ name, placeholder, loading, options }) => (
+            <Grid item xs={12} sm={6} md={3} key={name}>
+              <RHFAutocomplete
+                name={name}
+                placeholder={placeholder}
+                loading={loading}
+                disabled={loading}
+                sx={styles.textfield}
+                noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
+                options={options?.map((option) => option) ?? []}
+                onChange={(e, value) => handleChange(name, value)}
+                getOptionLabel={(option) => option.label}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value} style={{ fontSize: '12px' }}>
+                    {option.label}
+                  </li>
+                )}
+              />
+            </Grid>
+          ))}
         </Grid>
         <StyledButton
           ref={anchorRef}
@@ -251,30 +140,14 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
         >
           Unduh Dokumen
         </StyledButton>
-
-        <Popper
-          sx={{ zIndex: 99 }}
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-        >
+        <Popper sx={{ zIndex: 99 }} open={open} anchorEl={anchorRef.current} role={undefined} transition>
           {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
+            <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList id="split-button-menu" autoFocusItem>
                     {options.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
+                      <MenuItem key={option} selected={index === selectedIndex} onClick={(event) => handleMenuItemClick(event, index)}>
                         {option}
                       </MenuItem>
                     ))}
@@ -293,9 +166,7 @@ export default function UnitHeader({ filter, isEmpty, value, setValue }) {
         helperText={!searchRegex.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
         placeholder="Cari Unit Usaha"
         name="search"
-        InputProps={{
-          startAdornment: <Search sx={{ color: '#777', mr: 1 }} />,
-        }}
+        InputProps={{ startAdornment: <Search sx={{ color: '#777', mr: 1 }} /> }}
       />
     </>
   );
