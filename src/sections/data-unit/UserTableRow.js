@@ -54,10 +54,7 @@ UserTableRow.propTypes = {
   onViewRow: PropTypes.func,
 };
 
-export default function UserTableRow({
-  row,
-  onViewRow,
-}) {
+export default function UserTableRow({ row, onViewRow }) {
   const {
     year_registered,
     status_report,
@@ -71,23 +68,24 @@ export default function UserTableRow({
     bumdesa_name,
   } = row;
 
+  const cellStyle = { color: '#777777', height: 56 };
+
   return (
     <StyledTableRow hover>
       <FixedTableCell>{unit_name ?? '-'}</FixedTableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{bumdesa_name}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_registered}</TableCell>
+      <TableCell align="left" sx={cellStyle}>{bumdesa_name}</TableCell>
+      <TableCell align="left" sx={cellStyle}>{year_registered}</TableCell>
       <TableCell align="center">
         <Label color={status_report === '1' ? 'success' : 'error'}>
           {status_report === '1' ? 'Aktif' : 'Belum Aktif'}
         </Label>
       </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitability}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{liquidity}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvability}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(omset)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(profit_loss)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(cash)}</TableCell>
-
+      <TableCell align="left" sx={cellStyle}>{profitability}%</TableCell>
+      <TableCell align="left" sx={cellStyle}>{liquidity}%</TableCell>
+      <TableCell align="left" sx={cellStyle}>{solvability}%</TableCell>
+      <TableCell align="left" sx={cellStyle}>{fCurrencyNoSpace(omset)}</TableCell>
+      <TableCell align="left" sx={cellStyle}>{fCurrencyNoSpace(profit_loss)}</TableCell>
+      <TableCell align="left" sx={cellStyle}>{fCurrencyNoSpace(cash)}</TableCell>
       <TableCell align="center">
         <StyledLoadingButton
           variant="outlined"
