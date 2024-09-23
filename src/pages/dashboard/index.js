@@ -37,7 +37,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
-    setOpen(true);
+    // setOpen(true);
   }, [token]);
 
   return (
