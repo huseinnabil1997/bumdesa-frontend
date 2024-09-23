@@ -39,13 +39,14 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
+    // setOpen(true);
   }, [token]);
 
   useEffect(() => {
     if (userData?.role === 2 && userData?.linkumkm_integrated === 0) {
       const hasShownDialog = sessionStorage.getItem('hasShownDialog');
       if (!hasShownDialog) {
-        setOpen(true);
+        // setOpen(true);
         sessionStorage.setItem('hasShownDialog', 'true');
       }
     }

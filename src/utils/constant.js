@@ -54,6 +54,7 @@ export const LOG_HEAD = [
   { id: 'time', label: 'Waktu', align: 'left', width: 100 },
   { id: 'place', label: 'Modul', align: 'left', width: 100 },
   { id: 'device', label: 'User Agent', align: 'left', width: 200 },
+  { id: '', label: '', align: 'left', width: 50 },
 ];
 
 export const DEFAULT_FILTER = {
