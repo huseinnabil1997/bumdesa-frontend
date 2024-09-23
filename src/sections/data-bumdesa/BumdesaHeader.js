@@ -11,7 +11,6 @@ import {
   CircularProgress,
   Grid,
 } from '@mui/material';
-// import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
@@ -19,12 +18,10 @@ import { StyledButton } from 'src/theme/custom/Button';
 import onDownload from '../../utils/onDownload';
 import { searchRegex } from 'src/utils/regex';
 import { useDownloadBumdesa } from 'src/query/hooks/data-bumdesa/useDownloadBumdesa';
-// import { IconButtonAnimate } from 'src/components/animate';
-// import TuneIcon from '@mui/icons-material/Tune';
+import { styled } from '@mui/material';
 import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
 import { useGetCities } from 'src/query/hooks/options/useGetCities';
 import { useGetDistricts } from 'src/query/hooks/options/useGetDistricts';
-import { styled } from '@mui/material';
 
 const styles = {
   textfield: {
@@ -34,30 +31,7 @@ const styles = {
     '& .MuiInputBase-input': {
       height: '1px',
       fontSize: '12px',
-      // '&::placeholder': {
-      //   color: '#1078CA',
-      // },
     },
-    // '& .MuiOutlinedInput-root': {
-    //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: '#1078CA',
-    //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: '#1078CA',
-    //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiInputBase-input::placeholder': {
-    //     color: '#1078CA',
-    //   },
-    //   '&.MuiInputBase-root:not(.Mui-disabled) .MuiSvgIcon-root': {
-    //     color: '#1078CA',
-    //   },
-    //   '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: 'initial',
-    //   },
-    //   '&.Mui-disabled:hover .MuiOutlinedInput-notchedOutline': {
-    //     borderColor: 'initial',
-    //   },
-    // },
   },
 };
 
@@ -71,25 +45,19 @@ BumdesaHeader.propTypes = {
   filter: PropTypes.object,
   isEmpty: PropTypes.bool,
   value: PropTypes.string,
+  setValue: PropTypes.func,
 };
 
 export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
-
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
-
   const { enqueueSnackbar } = useSnackbar();
-
   const { mutate: download, isLoading } = useDownloadBumdesa();
-
   const { data: provincies, isLoading: isLoadingProvincies } = useGetProvincies();
-  const { data: cities, isLoading: isLoadingCities } = useGetCities({
-    prov_id: filter?.provinsi?.value,
-  });
-  const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({
-    city_id: filter?.kota?.value,
-  });
+  const { data: cities, isLoading: isLoadingCities } = useGetCities({ prov_id: filter?.provinsi?.value });
+  const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({ city_id: filter?.kota?.value });
+
   const activeStatus = [
     { value: 1, label: 'Aktif' },
     { value: 0, label: 'Belum Aktif' },
@@ -111,15 +79,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: 'BUMDesa_Report_' +
-            `${filter?.provinsi?.label ? filter?.provinsi?.label + '_' : ''}` +
-            `${filter?.kota?.label ? filter?.kota?.label + '_' : ''}` +
-            `${filter?.kecamatan?.label ? filter?.kecamatan?.label + '_' : ''}` +
-            new Date().toLocaleDateString('id-ID', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            }),
+          title: `BUMDesa_Report_${filter?.provinsi?.label ? filter?.provinsi?.label + '_' : ''}${filter?.kota?.label ? filter?.kota?.label + '_' : ''}${filter?.kecamatan?.label ? filter?.kecamatan?.label + '_' : ''}${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}`,
           type: index,
         });
         setSelectedIndex(index);
@@ -131,15 +91,9 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
     });
   };
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
+  const handleToggle = () => setOpen((prevOpen) => !prevOpen);
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
+    if (anchorRef.current && anchorRef.current.contains(event.target)) return;
     setOpen(false);
   };
 
@@ -154,9 +108,8 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
     setValue('kota', value);
   };
 
-  const handleKecamatan = (value) => {
-    setValue('kecamatan', value);
-  };
+  const handleKecamatan = (value) => setValue('kecamatan', value);
+  const handleStatusActive = (value) => setValue('status_active', value);
 
   return (
     <>
@@ -166,75 +119,31 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
         <Grid container spacing={1}>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFAutocomplete
-              name="provinsi"
-              placeholder="Semua Provinsi"
-              loading={isLoadingProvincies}
-              disabled={isLoadingProvincies}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={provincies?.map((option) => option) ?? []}
-              onChange={(e, value) => handleProvinsi(value)}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFAutocomplete
-              name="kota"
-              placeholder="Semua Kabupaten"
-              loading={isLoadingCities}
-              disabled={isLoadingCities}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={cities?.map((option) => option) ?? []}
-              onChange={(e, value) => handleKota(value)}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFAutocomplete
-              name="kecamatan"
-              placeholder="Semua Kecamatan"
-              loading={isLoadingDistricts}
-              disabled={isLoadingDistricts}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={districts?.map((option) => option) ?? []}
-              onChange={(e, value) => handleKecamatan(value)}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFAutocomplete
-              name="status_active"
-              placeholder="Semua Status"
-              loading={false}
-              sx={styles.textfield}
-              options={activeStatus?.map((option) => option) ?? []}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
+          {[
+            { name: 'provinsi', placeholder: 'Semua Provinsi', loading: isLoadingProvincies, options: provincies, onChange: handleProvinsi },
+            { name: 'kota', placeholder: 'Semua Kabupaten', loading: isLoadingCities, options: cities, onChange: handleKota },
+            { name: 'kecamatan', placeholder: 'Semua Kecamatan', loading: isLoadingDistricts, options: districts, onChange: handleKecamatan },
+            { name: 'status_active', placeholder: 'Semua Status', loading: false, options: activeStatus, onChange: handleStatusActive },
+          ].map(({ name, placeholder, loading, options, onChange }) => (
+            <Grid item xs={12} sm={6} md={3} key={name}>
+              <RHFAutocomplete
+                name={name}
+                placeholder={placeholder}
+                loading={loading}
+                disabled={loading}
+                sx={styles.textfield}
+                noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
+                options={options?.map((option) => option) ?? []}
+                onChange={(e, value) => onChange && onChange(value)}
+                getOptionLabel={(option) => option.label}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value} style={{ fontSize: '12px' }}>
+                    {option.label}
+                  </li>
+                )}
+              />
+            </Grid>
+          ))}
         </Grid>
         <StyledButton
           ref={anchorRef}
@@ -252,19 +161,11 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
           Unduh Dokumen
         </StyledButton>
 
-        <Popper
-          sx={{ zIndex: 99 }}
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-        >
+        <Popper sx={{ zIndex: 99 }} open={open} anchorEl={anchorRef.current} role={undefined} transition>
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
+              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>

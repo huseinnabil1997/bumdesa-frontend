@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-// @mui
 import {
   Box,
   Card,
@@ -13,25 +12,18 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-// hooks
+import { useTheme } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
 import useSettings from '../../../hooks/useSettings';
 import useTable from '../../../hooks/useTable';
-// layouts
 import Layout from '../../../layouts';
-// components
 import Page from '../../../components/Page';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
-// sections
+import { TableHeadCustom, TableNoData, TableSkeleton, TableError } from '../../../components/table';
 import { UserTableRow } from 'src/sections/data-bumdesa';
 import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdesa';
 import { FormProvider } from 'src/components/hook-form';
 import BumdesaHeader from 'src/sections/data-bumdesa/BumdesaHeader';
-import { useForm } from 'react-hook-form';
 import Scrollbar from 'src/components/Scrollbar';
-import { useTheme } from '@mui/material/styles';
-import TableError from 'src/components/table/TableError';
-
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
@@ -48,12 +40,9 @@ const TABLE_HEAD = [
   { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
 ];
 
-// ----------------------------------------------------------------------
-
 BumdesaList.getLayout = function getLayout(page) {
   return <Layout title="Data BUMDesa">{page}</Layout>;
 };
-// ----------------------------------------------------------------------
 
 export default function BumdesaList() {
   const { page, rowsPerPage, onChangeRowsPerPage, onChangePage, setPage } = useTable({
@@ -62,9 +51,7 @@ export default function BumdesaList() {
   });
 
   const router = useRouter();
-
   const { themeStretch } = useSettings();
-
   const theme = useTheme();
 
   const methods = useForm({
@@ -80,7 +67,7 @@ export default function BumdesaList() {
   const { watch, setValue } = methods;
 
   const { data: bumdesas, isLoading, isError } = useGetListBumdesa({
-    page: page,
+    page,
     limit: rowsPerPage,
     search: watch('search'),
     area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
@@ -121,29 +108,23 @@ export default function BumdesaList() {
                   rowCount={bumdesas?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
-
                 <TableBody>
-                  {!isLoading &&
-                    bumdesas?.data?.length > 0 &&
-                    bumdesas?.data?.map((row, i) => (
-                      <UserTableRow
-                        key={row.bumdesa_id}
-                        index={i}
-                        row={row}
-                        onViewRow={() => router.push(`${row.bumdesa_id}`)}
-                      />
-                    ))}
-
+                  {!isLoading && bumdesas?.data?.length > 0 && bumdesas?.data?.map((row, i) => (
+                    <UserTableRow
+                      key={row.bumdesa_id}
+                      index={i}
+                      row={row}
+                      onViewRow={() => router.push(`${row.bumdesa_id}`)}
+                    />
+                  ))}
                   {isLoading && <TableSkeleton />}
-
-                  {!bumdesas?.data?.length > 0 && !isError && !isLoading && (
+                  {!bumdesas?.data?.length && !isError && !isLoading && (
                     <TableNoData
                       isNotFound
                       title="BUMDesa belum tersedia."
                       description="Silakan cek koneksi Anda dan muat ulang halaman."
                     />
                   )}
-
                   {!isLoading && isError && (
                     <TableError
                       title="Koneksi Error"
@@ -160,7 +141,7 @@ export default function BumdesaList() {
           display="flex"
           justifyContent="space-between"
           sx={{ p: 3 }}
-          flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}
+          flexDirection={{ xs: 'column', sm: 'row' }}
         >
           <FormControl>
             <Select
@@ -168,13 +149,11 @@ export default function BumdesaList() {
               onChange={onChangeRowsPerPage}
               displayEmpty
               inputProps={{ 'aria-label': 'Rows per page' }}
-              aria-controls=""
               sx={{ height: 32, width: 70 }}
             >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
+              {[5, 10, 15, 20].map(value => (
+                <MenuItem key={value} value={value}>{value}</MenuItem>
+              ))}
             </Select>
           </FormControl>
           <Pagination
@@ -184,22 +163,13 @@ export default function BumdesaList() {
             shape="rounded"
             color="primary"
             count={bumdesas?.metadata?.paging?.total_page}
-            rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
             sx={{
-              '& .MuiPaginationItem-page': {
-                border: 'none !important',
-              },
-              '& .MuiPaginationItem-icon': {
-                color: '#1078CA',
-              },
-              '& .MuiPaginationItem-previousNext': {
-                borderColor: '#1078CA',
-              },
-              '& .MuiPaginationItem-firstLast': {
-                borderColor: '#1078CA',
-              },
+              '& .MuiPaginationItem-page': { border: 'none !important' },
+              '& .MuiPaginationItem-icon': { color: '#1078CA' },
+              '& .MuiPaginationItem-previousNext': { borderColor: '#1078CA' },
+              '& .MuiPaginationItem-firstLast': { borderColor: '#1078CA' },
             }}
           />
         </Box>
