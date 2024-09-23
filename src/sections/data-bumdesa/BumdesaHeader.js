@@ -24,7 +24,6 @@ import { useDownloadBumdesa } from 'src/query/hooks/data-bumdesa/useDownloadBumd
 import { useGetProvincies } from 'src/query/hooks/options/useGetProvincies';
 import { useGetCities } from 'src/query/hooks/options/useGetCities';
 import { useGetDistricts } from 'src/query/hooks/options/useGetDistricts';
-import { useGetSubdistricts } from 'src/query/hooks/options/useGetSubdistricts';
 import { styled } from '@mui/material';
 
 const styles = {
@@ -91,9 +90,6 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const { data: districts, isLoading: isLoadingDistricts } = useGetDistricts({
     city_id: filter?.kota?.value,
   });
-  const { data: subdistricts, isLoading: isLoadingSubdistricts } = useGetSubdistricts({
-    dis_id: filter?.kecamatan?.value,
-  });
   const activeStatus = [
     { value: 1, label: 'Aktif' },
     { value: 0, label: 'Belum Aktif' },
@@ -107,7 +103,6 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
       province_id: filter?.provinsi?.value,
       city_id: filter?.kota?.value,
       district_id: filter?.kecamatan?.value,
-      subdistrict_id: filter?.desa?.value,
       type: index === 99 ? 1 : index,
     };
 
@@ -120,7 +115,6 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
             `${filter?.provinsi?.label ? filter?.provinsi?.label + '_' : ''}` +
             `${filter?.kota?.label ? filter?.kota?.label + '_' : ''}` +
             `${filter?.kecamatan?.label ? filter?.kecamatan?.label + '_' : ''}` +
-            `${filter?.desa?.label ? filter?.desa?.label + '_' : ''}` +
             new Date().toLocaleDateString('id-ID', {
               year: 'numeric',
               month: 'long',
@@ -152,18 +146,15 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
   const handleProvinsi = (value) => {
     setValue('kota', null);
     setValue('kecamatan', null);
-    setValue('desa', null);
     setValue('provinsi', value);
   };
 
   const handleKota = (value) => {
     setValue('kecamatan', null);
-    setValue('desa', null);
     setValue('kota', value);
   };
 
   const handleKecamatan = (value) => {
-    setValue('desa', null);
     setValue('kecamatan', value);
   };
 
@@ -175,7 +166,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
         <Grid container spacing={1}>
-          <Grid item xs={12} sm={6} md={2.4}>
+          <Grid item xs={12} sm={6} md={3}>
             <RHFAutocomplete
               name="provinsi"
               placeholder="Semua Provinsi"
@@ -193,7 +184,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
+          <Grid item xs={12} sm={6} md={3}>
             <RHFAutocomplete
               name="kota"
               placeholder="Semua Kabupaten"
@@ -211,7 +202,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
+          <Grid item xs={12} sm={6} md={3}>
             <RHFAutocomplete
               name="kecamatan"
               placeholder="Semua Kecamatan"
@@ -229,25 +220,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <RHFAutocomplete
-              name="desa"
-              dependentField="kecamatan"
-              placeholder="Semua Desa"
-              loading={isLoadingSubdistricts}
-              disabled={isLoadingSubdistricts}
-              sx={styles.textfield}
-              noOptionsText={<StyledNoOptionsText>Tidak ada opsi</StyledNoOptionsText>}
-              options={subdistricts?.map((option) => option) ?? []}
-              getOptionLabel={(option) => option.label}
-              renderOption={(props, option) => (
-                <li {...props} key={option.value} style={{ fontSize: '12px' }}>
-                  {option.label}
-                </li>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
+          <Grid item xs={12} sm={6} md={3}>
             <RHFAutocomplete
               name="status_active"
               placeholder="Semua Status"
