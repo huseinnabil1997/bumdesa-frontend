@@ -27,6 +27,8 @@ const isAccessDenied = (path, role) => {
     employee: ['bumdesa'],
     'link-umkm': ['unit', 'kanpus'],
     kanpus: ['bumdesa', 'unit'],
+    setting: ['kanpus'],
+    profile: ['kanpus'],
   };
 
   return accessRules[path]?.includes(role);
