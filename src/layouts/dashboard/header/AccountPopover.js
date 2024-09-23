@@ -56,7 +56,7 @@ const styles = {
 // ----------------------------------------------------------------------
 
 // export const GetDataBumdesa = (userData) => {
-  
+
 //   // useEffect(() => {
 //   //   refetch();
 //   // }, [userData?.bumdesa_id]);
@@ -64,7 +64,7 @@ const styles = {
 // }
 
 // export const GetDataUnit = (userData) => {
-  
+
 //   // useEffect(() => {
 //   //   refetch();
 //   // }, [userData?.unit_id]);
@@ -196,14 +196,18 @@ export default function AccountPopover() {
           mt: '25px'
         }}
       >
-        <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
-          <Person sx={styles.icon} />
-          <Typography sx={styles.text}>Profil</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
-          <Settings sx={styles.icon} />
-          <Typography sx={styles.text}>Pengaturan Akun</Typography>
-        </MenuItem>
+        {userData?.role !== 1 &&
+          <>
+            <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
+              <Person sx={styles.icon} />
+              <Typography sx={styles.text}>Profil</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
+              <Settings sx={styles.icon} />
+              <Typography sx={styles.text}>Pengaturan Akun</Typography>
+            </MenuItem>
+          </>
+        }
         <MenuItem onClick={handleLogout} sx={{ my: 1, ...styles.box }}>
           <Logout sx={styles.icon} />
           <Typography sx={styles.text}>Log Out</Typography>

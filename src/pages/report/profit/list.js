@@ -34,7 +34,7 @@ export default function LaporanLabaRugi() {
   const [alertDelete, setAlertDelete] = useState(null);
   const [submitValue, setSubmitValue] = useState({});
 
-  const { data, isLoading, refetch } = useGetProfit(submitValue);
+  const { data, isLoading } = useGetProfit(submitValue);
 
   const methods = useForm({
     defaultValues: { unit: null, date: null },
@@ -42,10 +42,9 @@ export default function LaporanLabaRugi() {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = useCallback(async (data) => {
+  const onSubmit = useCallback((data) => {
     setSubmitValue(data);
-    await refetch();
-  }, [refetch]);
+  }, []);
 
   const convertToMonthYear = useMemo(() => (start_date, end_date) => {
     let startDateText = '...';

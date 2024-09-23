@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import {
   Typography,
@@ -57,22 +57,30 @@ export default function RHFRangeDatePicker({
   value,
   disabled,
   disableFuture = false,
-  // minDate,
   ...other
 }) {
   const { control } = useFormContext();
 
-  const [openPicker, setOpenPicker] = useState({ start: false, end: false });
+  const [state, setState] = useState({
+    openPicker: { start: false, end: false },
+    currentView: 'day',
+  });
 
-  const handlePickerOpen = (picker) => {
-    setOpenPicker((prev) => ({ ...prev, [picker]: true }));
-  };
+  const handlePickerOpen = useCallback((picker) => {
+    setState((prev) => ({
+      ...prev,
+      openPicker: { ...prev.openPicker, [picker]: true },
+    }));
+  }, []);
 
-  const handlePickerClose = (picker) => {
-    setOpenPicker((prev) => ({ ...prev, [picker]: false }));
-  };
+  const handlePickerClose = useCallback((picker) => {
+    setState((prev) => ({
+      ...prev,
+      openPicker: { ...prev.openPicker, [picker]: false },
+    }));
+  }, []);
 
-  const renderDay = (date, selectedDates, pickersDayProps) => {
+  const renderDay = useMemo(() => (date, selectedDates, pickersDayProps) => {
     const startDate = moment(value?.start);
     const endDate = moment(value?.end);
     const currentDate = moment(date);
@@ -109,7 +117,7 @@ export default function RHFRangeDatePicker({
         }}
       />
     );
-  };
+  }, [value]);
 
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
@@ -127,7 +135,7 @@ export default function RHFRangeDatePicker({
           <ThemeProvider theme={theme}>
             <DatePicker
               {...startField}
-              open={openPicker.start}
+              open={state.openPicker.start}
               disabled={disabled}
               label=""
               value={value?.start || startField.value}
@@ -137,7 +145,9 @@ export default function RHFRangeDatePicker({
                 } else {
                   startField.onChange(date ?? startField.value);
                 }
-                handlePickerClose('start');
+                if (state.currentView === 'day') {
+                  handlePickerClose('start');
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -170,6 +180,8 @@ export default function RHFRangeDatePicker({
               maxDate={new Date(value?.end)}
               disableFuture={disableFuture}
               renderDay={renderDay}
+              onViewChange={(view) => setState((prev) => ({ ...prev, currentView: view }))}
+              allowSameDateSelection={true}
             />
           </ThemeProvider>
         )}
@@ -185,7 +197,7 @@ export default function RHFRangeDatePicker({
           <ThemeProvider theme={theme}>
             <DatePicker
               {...endField}
-              open={openPicker.end}
+              open={state.openPicker.end}
               disabled={disabled}
               label=""
               value={value?.end || endField.value}
@@ -195,7 +207,9 @@ export default function RHFRangeDatePicker({
                 } else {
                   endField.onChange(date ?? endField.value);
                 }
-                handlePickerClose('end');
+                if (state.currentView === 'day') {
+                  handlePickerClose('end');
+                }
               }}
               renderInput={(params) => (
                 <TextField
@@ -228,6 +242,8 @@ export default function RHFRangeDatePicker({
               disableFuture={disableFuture}
               renderDay={renderDay}
               minDate={new Date(value?.start)}
+              onViewChange={(view) => setState((prev) => ({ ...prev, currentView: view }))}
+              allowSameDateSelection={true}
             />
           </ThemeProvider>
         )}

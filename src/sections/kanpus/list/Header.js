@@ -23,6 +23,7 @@ import { getSessionToken } from 'src/utils/axios';
 import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 import { capitalCase } from 'change-case';
+import { useDownloadBumdesa } from 'src/query/hooks/data-bumdesa/useDownloadBumdesa';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -48,7 +49,8 @@ export default function Header({ isEmpty }) {
   const [open, setOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
-  const { mutate: download, isLoading: downloading } = useDownloadSummary();
+  const { mutate: downloadArea, isLoading: downloadingArea } = useDownloadSummary();
+  const { mutate: downloadBumdesa, isLoading: downloading } = useDownloadBumdesa();
 
   const anchorRef = useRef(null);
 
@@ -65,20 +67,23 @@ export default function Header({ isEmpty }) {
   };
 
   const handleMenuItemClick = (event, index) => {
+    const download = district ? downloadBumdesa : downloadArea;
+
     const payload = {
       type: index,
       area,
     };
 
-    if (payload.module === '0') delete payload.module;
-    if (payload.action === '0') delete payload.action;
+    if (district) {
+      payload['area_code'] = area;
+    }
 
     download(payload, {
       onSuccess: (res) => {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
-          title: decoded?.bumdesid + '_Log_Activity',
+          title: decoded?.bumdesid + '_Summary_Area',
           type: index,
         });
         setSelectedIndex(index);
@@ -186,7 +191,7 @@ export default function Header({ isEmpty }) {
         aria-label="select merge strategy"
         aria-haspopup="menu"
         onClick={handleToggle}
-        startIcon={downloading ? <CircularProgress size="1rem" /> : <Download />}
+        startIcon={downloading || downloadingArea ? <CircularProgress size="1rem" /> : <Download />}
         endIcon={<ArrowDropDown />}
         variant="outlined"
         disabled={isEmpty}
