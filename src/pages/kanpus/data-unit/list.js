@@ -71,7 +71,6 @@ export default function UnitList() {
       provinsi: null,
       kota: null,
       kecamatan: null,
-      desa: null,
     },
     mode: 'onChange',
   });
@@ -82,13 +81,13 @@ export default function UnitList() {
     page: page,
     limit: rowsPerPage,
     unit: watch('search'),
-    area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_report: watch('report')?.value,
   });
 
   useEffect(() => {
     setPage(1);
-  }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa ')]);
+  }, [watch('search'), watch('report'), watch('provinsi'), watch('kota'), watch('kecamatan')]);
 
   return (
     <Page title="Data Unit Usaha: List">
@@ -103,7 +102,6 @@ export default function UnitList() {
               provinsi: watch('provinsi') ?? null,
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
-              desa: watch('desa') ?? null,
               status_report: watch('report') ?? null,
               unit: watch('search') ?? null,
             }}

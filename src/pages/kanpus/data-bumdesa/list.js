@@ -73,7 +73,6 @@ export default function BumdesaList() {
       provinsi: null,
       kota: null,
       kecamatan: null,
-      desa: null,
     },
     mode: 'onChange',
   });
@@ -84,13 +83,13 @@ export default function BumdesaList() {
     page: page,
     limit: rowsPerPage,
     search: watch('search'),
-    area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_active: watch('status_active')?.value,
   });
 
   useEffect(() => {
     setPage(1);
-  }, [watch('search'), watch('status_active'), watch('provinsi'), watch('kota'), watch('kecamatan'), watch('desa')]);
+  }, [watch('search'), watch('status_active'), watch('provinsi'), watch('kota'), watch('kecamatan')]);
 
   return (
     <Page title="Data BUM Desa: List">
@@ -105,10 +104,9 @@ export default function BumdesaList() {
               provinsi: watch('provinsi') ?? null,
               kota: watch('kota') ?? null,
               kecamatan: watch('kecamatan') ?? null,
-              desa: watch('desa') ?? null,
               status_active: watch('status_active') ?? null,
               search: watch('search') ?? null,
-              area_code: watch('desa')?.value ?? watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+              area: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
             }}
             setValue={setValue}
           />
