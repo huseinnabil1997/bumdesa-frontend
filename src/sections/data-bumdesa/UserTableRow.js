@@ -41,7 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 UserTableRow.propTypes = {
   id: PropTypes.string,
-  row: PropTypes.object,
+  row: PropTypes.object.isRequired,
   index: PropTypes.number,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -51,44 +51,51 @@ UserTableRow.propTypes = {
   onDeactivateRow: PropTypes.func,
   onActivateRow: PropTypes.func,
   disableDelete: PropTypes.bool,
-  onViewRow: PropTypes.func,
+  onViewRow: PropTypes.func.isRequired,
 };
 
-export default function UserTableRow({
-  row,
-  onViewRow,
-}) {
-  const { bumdesa_name, count_unit, year_registered, status_active, status_report, profitability, liquidity, solvability, omset, profit_loss, cash } = row;
+export default function UserTableRow({ row, onViewRow }) {
+  const {
+    bumdesa_name = '-',
+    count_unit = '-',
+    year_registered = '-',
+    status_active,
+    status_report,
+    profitability,
+    liquidity,
+    solvability,
+    omset = 0,
+    profit_loss = 0,
+    cash = 0,
+  } = row;
+
+  const renderLabel = (status, activeText = 'Aktif', inactiveText = 'Belum Aktif') => (
+    <Label color={status === '1' ? 'success' : 'error'}>
+      {status === '1' ? activeText : inactiveText}
+    </Label>
+  );
+
+  const renderTableCell = (value, align = 'left', sx = { color: '#777777', height: 56 }) => (
+    <TableCell align={align} sx={sx}>
+      {value}
+    </TableCell>
+  );
 
   return (
     <StyledTableRow hover>
-      <FixedTableCell>{bumdesa_name ?? '-'}</FixedTableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{count_unit ?? '-'}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{year_registered ?? '-'}</TableCell>
-      <TableCell align="center">
-        <Label color={status_active === '1' ? 'success' : 'error'}>
-          {row?.status_active === '1' ? 'Aktif' : 'Belum Aktif'}
-        </Label>
-      </TableCell>
-      <TableCell align="center">
-        <Label color={status_report === '1' ? 'success' : 'error'}>
-          {status_report === '1' ? 'Aktif' : 'Belum Aktif'}
-        </Label>
-      </TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{profitability}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{liquidity}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{solvability}%</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(omset ?? 0)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(profit_loss ?? 0)}</TableCell>
-      <TableCell align="left" sx={{ color: '#777777', height: 56 }}>{fCurrencyNoSpace(cash ?? 0)}</TableCell>
-
+      <FixedTableCell>{bumdesa_name}</FixedTableCell>
+      {renderTableCell(count_unit)}
+      {renderTableCell(year_registered)}
+      <TableCell align="center">{renderLabel(status_active)}</TableCell>
+      <TableCell align="center">{renderLabel(status_report)}</TableCell>
+      {renderTableCell(`${profitability}%`)}
+      {renderTableCell(`${liquidity}%`)}
+      {renderTableCell(`${solvability}%`)}
+      {renderTableCell(fCurrencyNoSpace(omset))}
+      {renderTableCell(fCurrencyNoSpace(profit_loss))}
+      {renderTableCell(fCurrencyNoSpace(cash))}
       <TableCell align="center" sx={{ display: 'flex', justifyContent: 'center' }}>
-        <StyledLoadingButton
-          // size="small"
-          variant="outlined"
-          onClick={onViewRow}
-          startIcon={<InfoOutlinedIcon />}
-        >
+        <StyledLoadingButton variant="outlined" onClick={onViewRow} startIcon={<InfoOutlinedIcon />}>
           Detail
         </StyledLoadingButton>
       </TableCell>
