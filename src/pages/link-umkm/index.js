@@ -1,15 +1,15 @@
 // @mui
 import { Container, Typography, CardMedia, Box, Button, MobileStepper, Slide } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material'; // Ganti import
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 // hooks
+import { useState, useCallback, useMemo } from 'react';
+import { useRouter } from 'next/router';
 // layouts
 import Layout from '../../layouts';
 // components
 import Page from '../../components/Page';
 import useSettings from 'src/hooks/useSettings';
-import { useState, useCallback, useMemo } from 'react';
 import { StyledButton } from 'src/theme/custom/Button';
-import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +50,6 @@ const steps = [
     title: "Coaching Clinic dengan Expert",
     description: "Temukan Solusi Cerdas untuk meningkatkan keberhasilan Bisnis UMKM Anda. Jadilah pemilik Bisnis yang cerdas dengan Link UMKM"
   },
-  // Tambahkan langkah lainnya di sini
 ];
 
 const maxSteps = steps.length;
@@ -62,16 +61,10 @@ export default function LinkUmkm() {
   const [key, setKey] = useState(0);
   const router = useRouter();
 
-  const handleNext = useCallback(() => {
-    setSlideDirection('left');
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setKey((prevKey) => prevKey + 1); // Ubah key untuk memicu re-render
-  }, []);
-
-  const handleBack = useCallback(() => {
-    setSlideDirection('right');
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setKey((prevKey) => prevKey + 1); // Ubah key untuk memicu re-render
+  const handleStepChange = useCallback((direction) => {
+    setSlideDirection(direction);
+    setActiveStep((prevActiveStep) => prevActiveStep + (direction === 'left' ? 1 : -1));
+    setKey((prevKey) => prevKey + 1);
   }, []);
 
   const currentStep = useMemo(() => steps[activeStep], [activeStep]);
@@ -79,32 +72,16 @@ export default function LinkUmkm() {
   return (
     <Page>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflowX: 'hidden',
-          }}
-        >
-          <Button onClick={handleBack} disabled={activeStep === 0} variant="outlined" sx={{ width: '48px', height: '48px', borderRadius: 2, pt: 3.5, pb: 3.5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', overflowX: 'hidden' }}>
+          <Button onClick={() => handleStepChange('right')} disabled={activeStep === 0} variant="outlined" sx={{ width: 48, height: 48, borderRadius: 2, pt: 3.5, pb: 3.5 }}>
             <ChevronLeft sx={{ fontSize: 48 }} />
           </Button>
           <Box display="flex" justifyContent="space-between" alignItems="center" flexDirection="column" width="50%" margin={5} height="69vh">
-            <Slide key={key} direction={slideDirection} in={true} mountOnEnter unmountOnExit timeout={300}>
+            <Slide key={key} direction={slideDirection} in mountOnEnter unmountOnExit timeout={300}>
               <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-                <CardMedia
-                  component="img"
-                  image={currentStep.image}
-                  alt={currentStep.alt}
-                  sx={{ width: '100%', maxWidth: 300, maxHeight: 260, marginBottom: 5 }}
-                />
-                <Typography variant="h6" align="center" gutterBottom>
-                  {currentStep.title}
-                </Typography>
-                <Typography variant="body2" align="center">
-                  {currentStep.description}
-                </Typography>
+                <CardMedia component="img" image={currentStep.image} alt={currentStep.alt} sx={{ width: '100%', maxWidth: 300, maxHeight: 260, marginBottom: 5 }} />
+                <Typography variant="h6" align="center" gutterBottom>{currentStep.title}</Typography>
+                <Typography variant="body2" align="center">{currentStep.description}</Typography>
               </Box>
             </Slide>
             <Box display="flex" justifyContent="center" sx={{ width: '100%', maxWidth: 400, mt: 2 }}>
@@ -114,25 +91,18 @@ export default function LinkUmkm() {
                 position="static"
                 activeStep={activeStep}
                 sx={{
-                  '& .MuiMobileStepper-dot': {
-                    borderRadius: '4px',
-                    width: '16px',
-                    height: '8px',
-                    margin: '0 4px',
-                  },
-                  '& .MuiMobileStepper-dotActive': {
-                    backgroundColor: 'primary.main',
-                  },
+                  '& .MuiMobileStepper-dot': { borderRadius: 4, width: 16, height: 8, margin: '0 4px' },
+                  '& .MuiMobileStepper-dotActive': { backgroundColor: 'primary.main' },
                 }}
               />
             </Box>
           </Box>
-          <Button onClick={handleNext} disabled={activeStep === maxSteps - 1} variant="outlined" sx={{ width: '48px', height: '48px', borderRadius: 2, pt: 3.5, pb: 3.5 }}>
+          <Button onClick={() => handleStepChange('left')} disabled={activeStep === maxSteps - 1} variant="outlined" sx={{ width: 48, height: 48, borderRadius: 2, pt: 3.5, pb: 3.5 }}>
             <ChevronRight sx={{ fontSize: 48 }} />
           </Button>
         </Box>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <StyledButton onClick={() => router.push('/link-umkm/link')} variant="contained" color="primary" sx={{ width: '240px', height: '48px' }}>
+          <StyledButton onClick={() => router.push('/link-umkm/link')} variant="contained" color="primary" sx={{ width: 240, height: 48 }}>
             Lanjutkan
           </StyledButton>
         </Box>
