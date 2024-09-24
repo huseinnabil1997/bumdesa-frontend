@@ -1,17 +1,17 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from 'prop-types';
-import { Box, Chip, Grid, Modal, Stack, Typography } from "@mui/material";
+import { Box, Grid, Modal, Stack, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
-import { useTheme } from '@mui/material/styles';
 import { checkUrlImage } from "src/utils/helperFunction";
 import { IconButtonAnimate } from "src/components/animate";
+import Label from "src/components/Label";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -67,6 +67,26 @@ const styles = {
       borderRadius: '8px',
       borderColor: '#1078CA'
     }
+  },
+  image: {
+    zIndex: 8,
+    maxWidth: 132,
+    height: 132,
+    borderRadius: '16px'
+  },
+  modalBox: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 'auto',
+    bgcolor: 'background.paper',
+    boxShadow: 24
+  },
+  title: {
+    fontSize: '18px',
+    fontWeight: 600,
+    lineHeight: '28px'
   }
 }
 
@@ -74,8 +94,6 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
-
-  const theme = useTheme();
 
   const defaultValues = {
     id: data?.id ?? '',
@@ -106,27 +124,26 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
   useEffect(() => {
     if (postalCode) setValue('kode_pos', postalCode?.label);
     else setValue('kode_pos', '');
-  }, [postalCode]);
+  }, [postalCode, setValue]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setModalImage(null);
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleModalImage = (image) => {
+  const handleModalImage = useCallback((image) => {
     setModalImage(image);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = useCallback((data) => {
     console.log('onSubmit', data);
-  };
+  }, []);
 
   useEffect(() => {
     const checkImage = async () => {
       const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
       setIsValidImage(isValid);
-      return isValid;
     };
 
     checkImage();
@@ -141,20 +158,17 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
               alt="image"
               src={isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png'}
               onClick={() => handleModalImage(isValidImage ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}` : '/image/default_image.png')}
-              sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
+              sx={styles.image}
             />
           </IconButtonAnimate>
         </Grid>
-        <Grid item xs={1}>
-          {data?.status === 1 && (
-            <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-          )}
-          {data?.status === 0 && (
-            <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
-          )}
-          {data?.status === 3 && (
-            <Chip label="Nonaktif" sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }} />
-          )}
+        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Label
+            color={data?.status === 1 ? 'success' : data?.status === 0 ? 'error' : 'warning'}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {data?.status === 1 ? 'Aktif' : data?.status === 0 ? 'Belum Aktif' : 'Nonaktif'}
+          </Label>
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
@@ -196,7 +210,7 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
+          <Typography sx={styles.title}>
             Data Pengurus Unit Usaha
           </Typography>
         </Grid>
@@ -258,7 +272,7 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24 }}>
+        <Box sx={styles.modalBox}>
           {modalImage && <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
         </Box>
       </Modal>
