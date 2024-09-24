@@ -30,10 +30,10 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   disableDelete: PropTypes.bool,
   role: PropTypes.string,
+  from: PropTypes.string,
 };
 
 export default function UserTableRow({
-  // id,
   row,
   index,
   selected,
@@ -46,6 +46,18 @@ export default function UserTableRow({
   const theme = useTheme();
   const { name, position_name, phone } = row;
 
+  const renderDeleteButton = () => (
+    <IconButton onClick={disableDelete ? null : onDeleteRow}>
+      <Iconify
+        icon={'lucide:trash'}
+        sx={{
+          color: disableDelete ? theme.palette.grey : theme.palette.error.main,
+          fontSize: 16,
+        }}
+      />
+    </IconButton>
+  );
+
   return (
     <TableRow
       hover
@@ -54,7 +66,7 @@ export default function UserTableRow({
         border: 1,
         borderRadius: 8,
         borderColor: '#EAEBEB',
-        backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
+        backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
       }}
     >
       <TableCell>{name}</TableCell>
@@ -75,26 +87,10 @@ export default function UserTableRow({
                 role === 'unit' ? 'Unit Usaha' : 'BUM Desa'
               }.`}
             >
-              <IconButton onClick={disableDelete ? null : onDeleteRow}>
-                <Iconify
-                  icon={'lucide:trash'}
-                  sx={{
-                    color: disableDelete ? theme.palette.grey : theme.palette.error.main,
-                    fontSize: 16,
-                  }}
-                />
-              </IconButton>
+              {renderDeleteButton()}
             </DeleteTooltip>
           ) : (
-            <IconButton onClick={disableDelete ? null : onDeleteRow}>
-              <Iconify
-                icon={'lucide:trash'}
-                sx={{
-                  color: disableDelete ? theme.palette.grey : theme.palette.error.main,
-                  fontSize: 16,
-                }}
-              />
-            </IconButton>
+            renderDeleteButton()
           )}
         </TableCell>
       )}
