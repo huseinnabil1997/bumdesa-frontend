@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { debounce } from 'lodash';
 // @mui
 import {
   Box,
@@ -60,6 +61,49 @@ const styles = {
     height: '16px',
     color: '#27AE60',
   },
+  loadingButton: {
+    width: '100%',
+    maxWidth: 164,
+    height: '48px',
+    backgroundColor: '#1078CA',
+    mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
+    fontSize: '13px',
+    fontWeight: 700,
+  },
+  tableHead: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  tableRow: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  pagination: {
+    '& .MuiPaginationItem-page': {
+      border: 'none !important',
+    },
+    '& .MuiPaginationItem-icon': {
+      color: '#1078CA',
+    },
+    '& .MuiPaginationItem-previousNext': {
+      borderColor: '#1078CA',
+    },
+    '& .MuiPaginationItem-firstLast': {
+      borderColor: '#1078CA',
+    },
+  },
+  select: {
+    height: 32,
+    width: 70,
+  },
+  addButton: {
+    mt: 2,
+    width: 200,
+  },
 };
 
 // ----------------------------------------------------------------------
@@ -99,11 +143,7 @@ export default function ManagerList() {
 
   useEffect(() => {
     refetch();
-  }, []);
-
-  useEffect(() => {
-    refetch();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, filterName]);
 
   const handleDeleteRow = (id) => {
     setAlertDelete({ id: id });
@@ -130,11 +170,12 @@ export default function ManagerList() {
     });
   };
 
-  const handleInputChange = (event) => {
-    if (event.key === 'Enter') {
-      refetch();
-    }
-  };
+  const handleInputChange = useCallback(
+    debounce((event) => {
+      setFilterName(event.target.value);
+    }, 300),
+    []
+  );
 
   return (
     <Page title="Pengurus: List">
@@ -152,15 +193,7 @@ export default function ManagerList() {
           </Box>
 
           <StyledLoadingButton
-            sx={{
-              width: '100%',
-              maxWidth: 164,
-              height: '48px',
-              backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
-              fontSize: '13px',
-              fontWeight: 700,
-            }}
+            sx={styles.loadingButton}
             variant="contained"
             startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => setOpenNewModal(true)}
@@ -176,12 +209,7 @@ export default function ManagerList() {
                 headLabel={TABLE_HEAD}
                 rowCount={managers?.data?.length}
                 numSelected={selected.length}
-                sx={{
-                  backgroundColor: '#F8F9F9',
-                  border: 1,
-                  borderRadius: 8,
-                  borderColor: '#EAEBEB',
-                }}
+                sx={styles.tableHead}
               />
 
               <TableBody>
@@ -198,12 +226,7 @@ export default function ManagerList() {
                       onDeleteRow={() => handleDeleteRow(row.id)}
                       disableDelete={managers?.data.length <= 3 && page === 1}
                       onEditRow={() => setOpenEditModal(row.id)}
-                      sx={{
-                        backgroundColor: '#F8F9F9',
-                        border: 1,
-                        borderRadius: 8,
-                        borderColor: '#EAEBEB',
-                      }}
+                      sx={styles.tableRow}
                     />
                   ))}
                 <TableNoData
@@ -215,7 +238,7 @@ export default function ManagerList() {
                   description="Silakan tambah Pengurus BUM Desa dengan klik tombol di bawah ini."
                   action={
                     <StyledButton
-                      sx={{ mt: 2, width: 200 }}
+                      sx={styles.addButton}
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
                       onClick={() => setOpenNewModal(true)}
@@ -243,7 +266,7 @@ export default function ManagerList() {
               displayEmpty
               inputProps={{ 'aria-label': 'Rows per page' }}
               aria-controls=""
-              sx={{ height: 32, width: 70 }}
+              sx={styles.select}
             >
               <MenuItem value={5}>5</MenuItem>
               <MenuItem value={10}>10</MenuItem>
@@ -261,20 +284,7 @@ export default function ManagerList() {
             rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
-            sx={{
-              '& .MuiPaginationItem-page': {
-                border: 'none !important',
-              },
-              '& .MuiPaginationItem-icon': {
-                color: '#1078CA',
-              },
-              '& .MuiPaginationItem-previousNext': {
-                borderColor: '#1078CA',
-              },
-              '& .MuiPaginationItem-firstLast': {
-                borderColor: '#1078CA',
-              },
-            }}
+            sx={styles.pagination}
           />
         </Box>
         <DeleteModal

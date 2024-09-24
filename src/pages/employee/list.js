@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -43,21 +43,6 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Action', align: 'center' },
 ];
 
-const styles = {
-  snackbar: {
-    width: '344px',
-    height: '48px',
-    backgroundColor: '#E1F8EB',
-    gap: '8px',
-    padding: '8px',
-    borderRadius: '4px',
-  },
-  snackbarIcon: {
-    width: '16px',
-    height: '16px',
-    color: '#27AE60',
-  },
-};
 
 ManagerList.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -90,13 +75,13 @@ export default function ManagerList() {
 
   useEffect(() => {
     refetch();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, refetch]);
 
-  const handleDeleteRow = (id) => {
+  const handleDeleteRow = useCallback((id) => {
     setAlertDelete({ id });
-  };
+  }, []);
 
-  const onDelete = async () => {
+  const onDelete = useCallback(async () => {
     onDeleteManager(alertDelete?.id, {
       onSuccess: () => {
         enqueueSnackbar('', {
@@ -115,13 +100,15 @@ export default function ManagerList() {
         enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
-  };
+  }, [alertDelete, enqueueSnackbar, onDeleteManager, refetch]);
 
-  const handleInputChange = (event) => {
+  const handleInputChange = useCallback((event) => {
     if (event.key === 'Enter') {
       refetch();
     }
-  };
+  }, [refetch]);
+
+  const memoizedManagers = useMemo(() => managers?.data || [], [managers]);
 
   return (
     <Page title="Pengurus: List">
@@ -135,15 +122,7 @@ export default function ManagerList() {
             />
           </Box>
           <StyledLoadingButton
-            sx={{
-              width: '100%',
-              maxWidth: 164,
-              height: '48px',
-              backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0 },
-              fontSize: '13px',
-              fontWeight: 700,
-            }}
+            sx={styles.addButton}
             variant="contained"
             startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => setOpenNewModal(true)}
@@ -157,12 +136,12 @@ export default function ManagerList() {
             <Table>
               <TableHeadCustom
                 headLabel={TABLE_HEAD}
-                rowCount={managers?.data?.length}
+                rowCount={memoizedManagers.length}
                 numSelected={selected.length}
-                sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                sx={styles.tableHead}
               />
               <TableBody>
-                {!isLoading && managers?.data?.map((row, index) => (
+                {!isLoading && memoizedManagers.map((row, index) => (
                   <UserTableRow
                     key={row.id}
                     id={row.id}
@@ -171,14 +150,14 @@ export default function ManagerList() {
                     selected={selected.includes(row.id)}
                     onSelectRow={() => onSelectRow(row.id)}
                     onDeleteRow={() => handleDeleteRow(row.id)}
-                    disableDelete={managers?.data.length <= 1 && page === 1}
+                    disableDelete={memoizedManagers.length <= 1 && page === 1}
                     onEditRow={() => setOpenEditModal(row.id)}
                     role="unit"
-                    sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                    sx={styles.tableRow}
                   />
                 ))}
                 <TableNoData
-                  isNotFound={(managers?.data?.length === 0 || managers?.data?.length === undefined) && !isLoading}
+                  isNotFound={(memoizedManagers.length === 0) && !isLoading}
                   title="Pengurus BUM Desa belum tersedia."
                   description="Silakan tambah Pengurus BUM Desa dengan klik tombol di bawah ini."
                   action={
@@ -221,11 +200,7 @@ export default function ManagerList() {
             count={managers?.metadata?.paging?.total_page}
             page={page}
             onChange={onChangePage}
-            sx={{
-              '& .MuiPaginationItem-page': { border: 'none !important' },
-              '& .MuiPaginationItem-icon': { color: '#1078CA' },
-              '& .MuiPaginationItem-previousNext, & .MuiPaginationItem-firstLast': { borderColor: '#1078CA' },
-            }}
+            sx={styles.pagination}
           />
         </Box>
 
@@ -261,3 +236,45 @@ export default function ManagerList() {
     </Page>
   );
 }
+
+const styles = {
+  snackbar: {
+    width: '344px',
+    height: '48px',
+    backgroundColor: '#E1F8EB',
+    gap: '8px',
+    padding: '8px',
+    borderRadius: '4px',
+  },
+  snackbarIcon: {
+    width: '16px',
+    height: '16px',
+    color: '#27AE60',
+  },
+  addButton: {
+    width: '100%',
+    maxWidth: 164,
+    height: '48px',
+    backgroundColor: '#1078CA',
+    mb: { xs: 2.5, sm: 0 },
+    fontSize: '13px',
+    fontWeight: 700,
+  },
+  tableHead: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  tableRow: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  pagination: {
+    '& .MuiPaginationItem-page': { border: 'none !important' },
+    '& .MuiPaginationItem-icon': { color: '#1078CA' },
+    '& .MuiPaginationItem-previousNext, & .MuiPaginationItem-firstLast': { borderColor: '#1078CA' },
+  },
+};

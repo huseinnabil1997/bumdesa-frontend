@@ -18,6 +18,27 @@ const DeleteTooltip = styled(({ className, ...props }) => (
   },
 }));
 
+const styles = {
+  tableRow: (index) => ({
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+    backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
+  }),
+  tableCell: {
+    color: '#777777',
+    height: 56,
+  },
+  iconButton: (theme, disableDelete) => ({
+    color: disableDelete ? theme.palette.grey : theme.palette.error.main,
+    fontSize: 16,
+  }),
+  editIcon: (theme) => ({
+    color: theme.palette.primary.main,
+    fontSize: 16,
+  }),
+};
+
 // ----------------------------------------------------------------------
 
 UserTableRow.propTypes = {
@@ -50,10 +71,7 @@ export default function UserTableRow({
     <IconButton onClick={disableDelete ? null : onDeleteRow}>
       <Iconify
         icon={'lucide:trash'}
-        sx={{
-          color: disableDelete ? theme.palette.grey : theme.palette.error.main,
-          fontSize: 16,
-        }}
+        sx={styles.iconButton(theme, disableDelete)}
       />
     </IconButton>
   );
@@ -62,23 +80,18 @@ export default function UserTableRow({
     <TableRow
       hover
       selected={selected}
-      sx={{
-        border: 1,
-        borderRadius: 8,
-        borderColor: '#EAEBEB',
-        backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
-      }}
+      sx={styles.tableRow(index)}
     >
       <TableCell>{name}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{position_name}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{phone}</TableCell>
+      <TableCell sx={styles.tableCell}>{position_name}</TableCell>
+      <TableCell sx={styles.tableCell}>{phone}</TableCell>
 
       {from !== 'kanpus' && (
         <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
           <IconButton onClick={onEditRow}>
             <Iconify
               icon={'lucide:edit'}
-              sx={{ color: theme.palette.primary.main, fontSize: 16 }}
+              sx={styles.editIcon(theme)}
             />
           </IconButton>
           {disableDelete ? (
