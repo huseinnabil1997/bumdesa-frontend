@@ -13,41 +13,44 @@ DeleteModal.propTypes = {
   from: PropTypes.string,
 };
 
-const titleStyle = {
-  fontWeight: 700,
-  fontSize: '24px',
-  textAlign: 'center',
-}
+const styles = {
+  title: {
+    fontWeight: 700,
+    fontSize: '24px',
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#666666',
+    fontWeight: 500,
+    fontSize: '16px',
+    textAlign: 'center',
+  },
+  button: {
+    width: '212px',
+    height: '48px',
+  },
+  dialogPaper: (status) => ({
+    width: '480px',
+    height: status === 0 ? '486px' : '506px',
+    borderRadius: '16px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+  }),
+  image: {
+    width: '216px',
+    height: '216px',
+  },
+};
 
-const subtitleStyle = {
-  color: '#666666',
-  fontWeight: 500,
-  fontSize: '16px',
-  textAlign: 'center'
-}
-
-const buttonStyle = {
-  width: '212px',
-  height: '48px'
-}
-
-export default function DeleteModal({ open, onClose, action, from }) {
+export default function DeleteModal({ open, onClose, action, status, from }) {
   return (
     <Dialog
       open={open}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      PaperProps={{
-        sx: {
-          width: '480px',
-          height: status === 0 ? '486px' : '506px',
-          borderRadius: '16px',
-          justifyContent: 'center',
-          alignItems: 'center',
-          display: 'flex',
-        },
-      }}
+      PaperProps={{ sx: styles.dialogPaper(status) }}
     >
       <Stack spacing={2} alignItems="center">
         <Image
@@ -55,23 +58,23 @@ export default function DeleteModal({ open, onClose, action, from }) {
           disabledEffect
           src="/image/delete_unit.svg"
           alt="Delete Unit"
-          sx={{ width: '216px', height: '216px' }}
+          sx={styles.image}
         />
         <Stack>
-          <Typography sx={titleStyle}>Apakah Anda yakin ingin</Typography>
-          <Typography sx={titleStyle}>menghapus pengurus ini?</Typography>
+          <Typography sx={styles.title}>Apakah Anda yakin ingin</Typography>
+          <Typography sx={styles.title}>menghapus pengurus ini?</Typography>
         </Stack>
         <Stack alignItems="center">
-          <Typography sx={subtitleStyle}>Tindakan ini tidak dapat diubah. Data dan semua</Typography>
-          <Typography sx={subtitleStyle}>
+          <Typography sx={styles.subtitle}>Tindakan ini tidak dapat diubah. Data dan semua</Typography>
+          <Typography sx={styles.subtitle}>
             informasi terkait pengurus {from === 'employee' ? "Unit Usaha" : "BUM Desa"} ini akan dihapus permanen.
           </Typography>
         </Stack>
         <Stack direction="row" spacing={1}>
-          <StyledLoadingButton sx={buttonStyle} onClick={onClose} variant="outlined">
+          <StyledLoadingButton sx={styles.button} onClick={onClose} variant="outlined">
             Tidak
           </StyledLoadingButton>
-          <StyledLoadingButton sx={buttonStyle} onClick={action} variant="contained">
+          <StyledLoadingButton sx={styles.button} onClick={action} variant="contained">
             Ya, Hapus
           </StyledLoadingButton>
         </Stack>
