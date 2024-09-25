@@ -1,6 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Checkbox, FormControlLabel } from '@mui/material';
-import { StyledButton } from 'src/theme/custom/Button';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
+import SuccessDialog from './successDialog';
+import FailedDialog from './failedDialog';
+import { useCreateLink } from 'src/query/hooks/link-umkm/useCreateLink';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 const dialogStyles = {
   dialog: { maxWidth: '800px', maxHeight: '768px', margin: 'auto' },
@@ -19,6 +24,13 @@ const termsText = [
 
 export default function LinkUMKMDialog({ open, onClose }) {
   const [checked, setChecked] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFailed, setOpenFailed] = useState(false);
+  const [responseLink, setResponseLink] = useState({});
+
+  const { enqueueSnackbar } = useSnackbar();
+  const { mutate: onCreate, isLoading: creating } = useCreateLink();
+  const router = useRouter();
 
   const handleCheckboxChange = (event) => {
     setChecked(event.target.checked);
@@ -32,29 +44,65 @@ export default function LinkUMKMDialog({ open, onClose }) {
     ))
   ), []);
 
+  const handleAgree = async () => {
+    onCreate({
+      onSuccess: (res) => {
+        setResponseLink(res?.data);
+        enqueueSnackbar(res?.message);
+        setOpenSuccess(true);
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+        setOpenFailed(true);
+      },
+    });
+    onClose();
+  };
+
+  const handleSuccess = () => {
+    setOpenSuccess(false);
+    const { hotLink, token, userFullname, userEmail } = responseLink;
+    const url = new URL(hotLink);
+    url.searchParams.append('token', token);
+    url.searchParams.append('userFullname', userFullname);
+    url.searchParams.append('userEmail', userEmail);
+    window.open(url.toString(), '_blank');
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} sx={dialogStyles.dialog} fullWidth>
-      <DialogTitle sx={dialogStyles.title}>Syarat dan Ketentuan LinkUMKM</DialogTitle>
-      <DialogContent sx={dialogStyles.content}>
-        {termsContent}
-        <FormControlLabel
-          control={<Checkbox name="checkedLinkUMKM" checked={checked} onChange={handleCheckboxChange} />}
-          label={
-            <Typography fontSize="14px" fontWeight={400}>
-              Saya telah menyetujui <span style={{ color: '#1078CA', fontWeight: 600 }}>Syarat & Ketentuan</span> dan <span style={{ color: '#1078CA', fontWeight: 600 }}>Pemberitahuan Privasi</span> LinkUMKM
-            </Typography>
-          }
-          sx={dialogStyles.checkboxLabel}
-        />
-      </DialogContent>
-      <DialogActions sx={dialogStyles.actions}>
-        <StyledButton onClick={onClose} variant="outlined" color="primary" sx={dialogStyles.button}>
-          Batal
-        </StyledButton>
-        <StyledButton onClick={onClose} variant="contained" color="primary" disabled={!checked} sx={dialogStyles.button}>
-          Setuju
-        </StyledButton>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={onClose} sx={dialogStyles.dialog} fullWidth>
+        <DialogTitle sx={dialogStyles.title}>Syarat dan Ketentuan LinkUMKM</DialogTitle>
+        <DialogContent sx={dialogStyles.content}>
+          {termsContent}
+          <FormControlLabel
+            control={<Checkbox name="checkedLinkUMKM" checked={checked} onChange={handleCheckboxChange} />}
+            label={
+              <Typography fontSize="14px" fontWeight={400}>
+                Saya telah menyetujui <span style={{ color: '#1078CA', fontWeight: 600 }}>Syarat & Ketentuan</span> dan <span style={{ color: '#1078CA', fontWeight: 600 }}>Pemberitahuan Privasi</span> LinkUMKM
+              </Typography>
+            }
+            sx={dialogStyles.checkboxLabel}
+          />
+        </DialogContent>
+        <DialogActions sx={dialogStyles.actions}>
+          <StyledLoadingButton onClick={onClose} variant="outlined" color="primary" sx={dialogStyles.button}>
+            Batal
+          </StyledLoadingButton>
+          <StyledLoadingButton onClick={handleAgree} variant="contained" color="primary" disabled={!checked} sx={dialogStyles.button} loading={creating}>
+            Setuju
+          </StyledLoadingButton>
+        </DialogActions>
+      </Dialog>
+      <SuccessDialog
+        open={openSuccess}
+        onClose={() => {
+          setOpenSuccess(false);
+          router.push('/dashboard');
+        }}
+        handleSuccess={handleSuccess}
+      />
+      <FailedDialog open={openFailed} onRetry={handleAgree} onClose={() => setOpenFailed(false)} loading={creating} />
+    </>
   );
 }
