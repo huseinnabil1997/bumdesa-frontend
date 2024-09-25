@@ -21,6 +21,7 @@ import { searchRegex } from 'src/utils/regex';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
+import { useSelector } from 'react-redux';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -31,6 +32,7 @@ JurnalHeader.propTypes = {
 };
 
 export default function JurnalHeader({ filter, isEmpty, value }) {
+  const userData = useSelector((state) => state.user.userData);
   const router = useRouter();
   const token = getSessionToken();
   const user = jwtDecode(token);
@@ -119,14 +121,16 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
           >
             Unduh Dokumen
           </StyledButton>
-          <StyledButton
-            sx={{ width: 200 }}
-            startIcon={<Add />}
-            variant="contained"
-            onClick={handleClick}
-          >
-            Buat Jurnal
-          </StyledButton>
+          {userData?.role !== 4 && (
+            <StyledButton
+              sx={{ width: 200 }}
+              startIcon={<Add />}
+              variant="contained"
+              onClick={handleClick}
+            >
+              Buat Jurnal
+            </StyledButton>
+          )}
 
           <Popper
             sx={{ zIndex: 99 }}
