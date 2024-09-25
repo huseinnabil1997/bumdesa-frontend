@@ -10,8 +10,8 @@ import GuestGuard from '../../../guards/GuestGuard';
 import Page from '../../../components/Page';
 import Image from '../../../components/Image';
 // sections
-import { LoginForm } from '../../../sections/auth/login';
 import { useEffect } from 'react';
+import { LoginFormKanpus } from 'src/sections/auth/login';
 
 // ----------------------------------------------------------------------
 
@@ -124,7 +124,7 @@ export default function Login() {
                   </Box>
                 </Stack>
 
-                <LoginForm />
+                <LoginFormKanpus />
 
               </Card>
             </ContentStyle>
