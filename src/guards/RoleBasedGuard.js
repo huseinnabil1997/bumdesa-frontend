@@ -16,17 +16,18 @@ const useCurrentRole = () => {
   if (userData.role === 1) return 'kanpus';
   if (userData.role === 2) return 'bumdesa';
   if (userData.role === 3) return 'unit';
+  if (userData.role === 4) return 'pengawas';
   else return 'pengawas';
 };
 
 const isAccessDenied = (path, role) => {
   const accessRules = {
-    unit: ['unit'],
+    unit: ['unit', 'pengawas'],
     dashboard: ['kanpus'],
-    manager: ['unit'],
-    employee: ['bumdesa'],
-    'link-umkm': ['unit', 'kanpus'],
-    kanpus: ['bumdesa', 'unit'],
+    manager: ['unit', 'pengawas'],
+    employee: ['bumdesa', 'pengawas'],
+    'link-umkm': ['unit', 'kanpus', 'pengawas'],
+    kanpus: ['bumdesa', 'unit', 'pengawas'],
     setting: ['kanpus'],
     profile: ['kanpus'],
   };

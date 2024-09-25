@@ -12,7 +12,7 @@ const fetchData = async (param) => {
 };
 
 export const useGetManagers = (param) => {
-  const getQuery = useQuery(['GET_MANAGERS', param.bumdesa_id, param.page, param.limit], () => fetchData(param));
+  const getQuery = useQuery(['GET_MANAGERS', param.bumdesa_id, param.page, param.limit, param.search], () => fetchData(param));
 
   return getQuery;
 };

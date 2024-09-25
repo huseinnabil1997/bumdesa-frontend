@@ -9,6 +9,16 @@ export const JURNAL_HEAD = [
   { id: 'action', label: 'Action', align: 'center', width: 100 },
 ];
 
+export const JURNAL_HEAD_PENGAWAS = [
+  { id: 'col', label: '' },
+  { id: 'nomor_bukti', label: 'Nomor Bukti', align: 'left', width: 300 },
+  { id: 'tanggal', label: 'Tanggal', align: 'left', width: 150 },
+  { id: 'keterangan', label: 'Keterangan', align: 'left', width: 300 },
+  { id: 'unit', label: 'Unit Usaha', align: 'left', width: 300 },
+  { id: 'debit', label: 'Debit', align: 'left', width: 300 },
+  { id: 'kredit', label: 'Kredit', align: 'left', width: 300 },
+];
+
 export const LEDGER_HEAD = [
   { id: 'tanggal', label: 'Tanggal', align: 'left', width: 150 },
   { id: 'nomor_bukti', label: 'Nomor Bukti', align: 'left', width: 300 },

@@ -18,6 +18,27 @@ const DeleteTooltip = styled(({ className, ...props }) => (
   },
 }));
 
+const styles = {
+  tableRow: (index) => ({
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+    backgroundColor: index % 2 !== 0 ? '#F8F9F9' : 'white',
+  }),
+  tableCell: {
+    color: '#777777',
+    height: 56,
+  },
+  iconButton: (theme, disableDelete) => ({
+    color: disableDelete ? theme.palette.grey : theme.palette.error.main,
+    fontSize: 16,
+  }),
+  editIcon: (theme) => ({
+    color: theme.palette.primary.main,
+    fontSize: 16,
+  }),
+};
+
 // ----------------------------------------------------------------------
 
 UserTableRow.propTypes = {
@@ -30,10 +51,10 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   disableDelete: PropTypes.bool,
   role: PropTypes.string,
+  from: PropTypes.string,
 };
 
 export default function UserTableRow({
-  // id,
   row,
   index,
   selected,
@@ -46,27 +67,31 @@ export default function UserTableRow({
   const theme = useTheme();
   const { name, position_name, phone } = row;
 
+  const renderDeleteButton = () => (
+    <IconButton onClick={disableDelete ? null : onDeleteRow}>
+      <Iconify
+        icon={'lucide:trash'}
+        sx={styles.iconButton(theme, disableDelete)}
+      />
+    </IconButton>
+  );
+
   return (
     <TableRow
       hover
       selected={selected}
-      sx={{
-        border: 1,
-        borderRadius: 8,
-        borderColor: '#EAEBEB',
-        backgroundColor: index % 2 != 0 ? '#F8F9F9' : 'white',
-      }}
+      sx={styles.tableRow(index)}
     >
       <TableCell>{name}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{position_name}</TableCell>
-      <TableCell sx={{ color: '#777777', height: 56 }}>{phone}</TableCell>
+      <TableCell sx={styles.tableCell}>{position_name}</TableCell>
+      <TableCell sx={styles.tableCell}>{phone}</TableCell>
 
       {from !== 'kanpus' && (
         <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
           <IconButton onClick={onEditRow}>
             <Iconify
               icon={'lucide:edit'}
-              sx={{ color: theme.palette.primary.main, fontSize: 16 }}
+              sx={styles.editIcon(theme)}
             />
           </IconButton>
           {disableDelete ? (
@@ -75,26 +100,10 @@ export default function UserTableRow({
                 role === 'unit' ? 'Unit Usaha' : 'BUM Desa'
               }.`}
             >
-              <IconButton onClick={disableDelete ? null : onDeleteRow}>
-                <Iconify
-                  icon={'lucide:trash'}
-                  sx={{
-                    color: disableDelete ? theme.palette.grey : theme.palette.error.main,
-                    fontSize: 16,
-                  }}
-                />
-              </IconButton>
+              {renderDeleteButton()}
             </DeleteTooltip>
           ) : (
-            <IconButton onClick={disableDelete ? null : onDeleteRow}>
-              <Iconify
-                icon={'lucide:trash'}
-                sx={{
-                  color: disableDelete ? theme.palette.grey : theme.palette.error.main,
-                  fontSize: 16,
-                }}
-              />
-            </IconButton>
+            renderDeleteButton()
           )}
         </TableCell>
       )}
