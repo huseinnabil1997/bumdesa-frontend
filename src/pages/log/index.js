@@ -74,7 +74,7 @@ export default function JurnalList() {
                     }}
                   >
                     <Typography variant="caption" sx={{ color: '#777' }}>
-                      {moment(item?.timestamp).format('DD/MM/yyyy HH.mm')}
+                      {moment(item?.timestamp).utc().format('DD/MM/yyyy HH.mm')}
                     </Typography>
                     <Chip
                       label={item?.modul}
