@@ -89,14 +89,20 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
   const handlePrevious = () => {
     if (view === 'year') {
       setStartYear(startYear - 9);
+    } else if (view === 'month') {
+      setStartYear(startYear - 1);
+      onSelectDate({ ...selectedDate, year: startYear - 1 });
     } else if (view === 'day' && currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  
   const handleNext = () => {
     if (view === 'year') {
       setStartYear(startYear + 9);
+    } else if (view === 'month') {
+      setStartYear(startYear + 1); 
+      onSelectDate({ ...selectedDate, year: startYear + 1 }); 
     } else if (view === 'day' && (currentPage + 1) * itemsPerPage < days.length) {
       setCurrentPage(currentPage + 1);
     }
@@ -251,7 +257,10 @@ export default function RHFCustomDatePicker({ name, require, isLoading, type = '
             helperText={error?.message}
             {...other}
             value={formatDateForDisplay(selectedDate, type)} 
-            onChange={() => field.onChange(formatDateForValue(selectedDate, type))} 
+            onChange={() => field.onChange(formatDateForValue(selectedDate, type))}
+            ref={anchorRef} 
+            onClick={() => setShowDatePicker(!showDatePicker)}
+            autoComplete="off"
             sx={{
               '.MuiFormLabel-asterisk': { color: 'red' },
               'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
@@ -281,7 +290,7 @@ export default function RHFCustomDatePicker({ name, require, isLoading, type = '
                 ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton ref={anchorRef} onClick={() => setShowDatePicker(!showDatePicker)}>
+                  <IconButton>
                     <DateRangeIcon />
                   </IconButton>
                 </InputAdornment>
