@@ -58,32 +58,27 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
   const [startYear, setStartYear] = useState(new Date().getFullYear());
   const [view, setView] = useState('year'); // 'year', 'month', 'day'
   const [currentPage, setCurrentPage] = useState(0);
+  const [fromMonthView, setFromMonthView] = useState(false); // Tambahkan state ini
   const itemsPerPage = 9;
 
   const handleYearClick = (year) => {
-    if (type === 'year') {
-      onSelectDate({ year, month: null, day: null });
-      onClose();
+    onSelectDate({ year, month: null, day: null });
+    if (fromMonthView) {
+      setView('month'); // Kembali ke tampilan bulan jika dari tampilan bulan
     } else {
-      setView('month');
-      onSelectDate({ year, month: null, day: null });
+      setView('year');
     }
+    setFromMonthView(false); // Reset state ini
   };
 
   const handleMonthClick = (month) => {
-    if (type === 'month') {
-      onSelectDate({ ...selectedDate, month, day: null });
-      onClose();
-    } else {
-      setView('day');
-      onSelectDate({ ...selectedDate, month, day: null });
-    }
+    onSelectDate({ ...selectedDate, month, day: null });
+    // setView('day');
   };
 
   const handleDayClick = (day) => {
     const newSelectedDate = { ...selectedDate, day };
     onSelectDate(newSelectedDate);
-    onClose();
   };
 
   const handlePrevious = () => {
@@ -96,13 +91,13 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
       setCurrentPage(currentPage - 1);
     }
   };
-  
+
   const handleNext = () => {
     if (view === 'year') {
       setStartYear(startYear + 9);
     } else if (view === 'month') {
-      setStartYear(startYear + 1); 
-      onSelectDate({ ...selectedDate, year: startYear + 1 }); 
+      setStartYear(startYear + 1);
+      onSelectDate({ ...selectedDate, year: startYear + 1 });
     } else if (view === 'day' && (currentPage + 1) * itemsPerPage < days.length) {
       setCurrentPage(currentPage + 1);
     }
@@ -122,8 +117,19 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
           </IconButton>
         </Grid>
         <Grid item>
-          <Typography fontWeight="bold" align="center" gutterBottom>
-            {selectedDate.year ? `${selectedDate.day ? selectedDate.day + ' ' : ''}${selectedDate.month ? selectedDate.month + ' ' : ''}${selectedDate.year}` : 'Pilih Tanggal'}
+          <Typography
+            fontWeight="bold"
+            align="center"
+            gutterBottom
+            onClick={() => {
+              if (view === 'month') {
+                setView('year');
+                setFromMonthView(true); // Set state ini ketika dari tampilan bulan
+              }
+            }}
+            sx={{ cursor: view === 'month' ? 'pointer' : 'default' }}
+          >
+            {view === 'year' ? 'Pilih Tahun' : view === 'month' ? selectedDate.year : view === 'day' ? `${selectedDate.month} ${selectedDate.year}` : ''}
           </Typography>
         </Grid>
         <Grid item>
@@ -133,22 +139,21 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
         </Grid>
       </Grid>
       <Grid container spacing={1} justifyContent="space-between">
-        {type === 'day' && (
-          <Grid item xs={4}>
-            <StyledButton variant={view === 'day' ? 'contained' : 'outlined'} fullWidth onClick={() => setView('day')}>
-              Hari
-            </StyledButton>
-          </Grid>
-        )}
-        {(type === 'day' || type === 'month') && (
-          <Grid item xs={type === 'month' ? 6 : 4}>
-            <StyledButton variant={view === 'month' ? 'contained' : 'outlined'} fullWidth onClick={() => setView('month')}>
-              Bulan
-            </StyledButton>
-          </Grid>
-        )}
-        <Grid item xs={type === 'year' ? 12 : type === 'month' ? 6 : 4}>
-          <StyledButton variant={view === 'year' ? 'contained' : 'outlined'} fullWidth onClick={() => setView('year')}>
+        <Grid item xs={4}>
+          <StyledButton variant={view === 'day' ? 'contained' : 'outlined'} fullWidth onClick={() => setView('day')}>
+            Hari
+          </StyledButton>
+        </Grid>
+        <Grid item xs={4}>
+          <StyledButton variant={view === 'month' || fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => setView('month')}>
+            Bulan
+          </StyledButton>
+        </Grid>
+        <Grid item xs={4}>
+          <StyledButton variant={view === 'year' && !fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
+            setView('year');
+            setFromMonthView(false); // Reset state ini ketika dari tombol "Tahun"
+          }}>
             Tahun
           </StyledButton>
         </Grid>
@@ -192,15 +197,15 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
   );
 };
 
-const formatDateForDisplay = (date, type) => {
-  if (type === 'year' && date.year) {
-    return `${date.year}`;
+const formatDateForDisplay = (date) => {
+  if (date.year && date.month && date.day) {
+    return `${date.day} ${date.month} ${date.year}`;
   }
-  if (type === 'month' && date.year && date.month) {
+  if (date.year && date.month) {
     return `${date.month} ${date.year}`;
   }
-  if (type === 'day' && date.year && date.month && date.day) {
-    return `${date.day} ${date.month} ${date.year}`;
+  if (date.year) {
+    return `${date.year}`;
   }
   return '';
 };
@@ -256,9 +261,9 @@ export default function RHFCustomDatePicker({ name, require, isLoading, type = '
             error={!!error}
             helperText={error?.message}
             {...other}
-            value={formatDateForDisplay(selectedDate, type)} 
+            value={formatDateForDisplay(selectedDate)}
             onChange={() => field.onChange(formatDateForValue(selectedDate, type))}
-            ref={anchorRef} 
+            ref={anchorRef}
             onClick={() => setShowDatePicker(!showDatePicker)}
             autoComplete="off"
             sx={{
