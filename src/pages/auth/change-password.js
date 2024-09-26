@@ -62,8 +62,7 @@ ResetPassword.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function ResetPassword() {
-
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   return (
     <GuestGuard>
@@ -76,9 +75,16 @@ export default function ResetPassword() {
                 <Image
                   visibleByDefault
                   disabledEffect
-                  src="/image/bri-square.svg"
+                  src="/image/bri_square.svg"
                   alt="bri"
-                  sx={{ width: 160, m: 'auto', mb: 1 }}
+                  sx={{ width: 98, m: 'auto', mb: 2.3 }}
+                />
+                <Image
+                  visibleByDefault
+                  disabledEffect
+                  src="/image/bumdesa_digital.png"
+                  alt="bri"
+                  sx={{ width: 160, m: 'auto', mb: 2 }}
                 />
                 <Typography sx={{ mt: '100px', maxWidth: '420px', mx: 'auto' }}>
                   Nikmati layanan BUM Desa Digital, Mudah untuk membuat Laporan keuangan Kamu
@@ -92,11 +98,11 @@ export default function ResetPassword() {
             <ContentStyle>
               <Card sx={{ p: 5 }}>
                 <>
-                  <Typography variant="h3" paragraph align='center'>
+                  <Typography variant="h3" paragraph align="center">
                     Buat Kata Sandi Baru
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', mb: 5 }} align='center'>
-                    Silahkan buat kata sandi demi keamanan akun anda.
+                  <Typography sx={{ color: 'text.secondary', mb: 5 }} align="center">
+                    Silakan buat kata sandi demi keamanan akun Anda.
                   </Typography>
 
                   <AccountChangePassword />

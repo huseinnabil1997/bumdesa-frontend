@@ -23,7 +23,7 @@ export const useGetLedgers = (param) => {
     ],
     () => fetchData(param),
     {
-      enabled: !!(param?.account_code && param?.start_date && param?.end_date),
+      enabled: param?.account_code && param?.start_date !== 'Invalid date' && param?.end_date !== 'Invalid date',
     }
   );
 

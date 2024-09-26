@@ -14,15 +14,16 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import Iconify from 'src/components/Iconify';
 import { RHFAutocomplete } from 'src/components/hook-form';
 import { useGetBusinessUnits } from 'src/query/hooks/report/useGetBusinessUnit';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useDownloadProfit } from 'src/query/hooks/report/profit/useDownloadProfit';
 import { getSessionToken } from 'src/utils/axios';
-import RHFMobileDateRangePicker from 'src/components/hook-form/RHFMobileDateRangePicker';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
+import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
+import moment from 'moment';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -38,30 +39,28 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
-  let decoded = {};
-  if (token) {
-    decoded = jwtDecode(token);
-  } else {
-    console.error('Token not available');
-  }
+  const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
 
   const { data, isLoading } = useGetBusinessUnits();
   const { mutate: onDownload, isLoading: downloading } = useDownloadProfit();
 
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({
+    open: false,
+    selectedType: 1,
+    selectedUnit: { name: 'Semua Unit', id: '' },
+    selectedDate: [start_date, end_date],
+  });
+
   const anchorRef = useRef(null);
-  const [selectedType, setSelectedType] = useState(1);
-  const [selectedUnit, setSelectedUnit] = useState({ name: 'Semua Unit', id: '' });
-  const [selectedDate, setSelectedDate] = useState([start_date, end_date]);
 
   const handleMenuItemClick = async (type) => {
     enqueueSnackbar('Sedang memproses...', { variant: 'warning' });
-    setSelectedType(type);
+    setState((prevState) => ({ ...prevState, selectedType: type }));
     const payload = {
       type: type === 'preview' ? 1 : type,
-      unit: selectedUnit?.id,
-      start_date: formatDate(selectedDate[0]),
-      end_date: formatDate(selectedDate[1]),
+      unit: state.selectedUnit?.id,
+      start_date: moment(state.selectedDate[0]).format('YYYY-MM-DD'),
+      end_date: moment(state.selectedDate[1]).format('YYYY-MM-DD'),
     };
     onDownload(payload, {
       onSuccess: (res) => {
@@ -75,9 +74,9 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
           link.href = url;
           link.setAttribute(
             'download',
-            `${decoded?.bumdesid}_Laporan_Laba_Rugi_${selectedUnit?.id}_${formatDate(
-              selectedDate[0]
-            )}_${formatDate(selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`
+            `${decoded?.bumdesid}_Laporan_Laba_Rugi_${state.selectedUnit?.id}_${formatDate(
+              state.selectedDate[0]
+            )}_${formatDate(state.selectedDate[1])}.${type === 1 ? 'pdf' : 'xlsx'}`
           );
           document.body.appendChild(link);
           link.click();
@@ -110,32 +109,36 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
         enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
-    setOpen(false);
+    setState((prevState) => ({ ...prevState, open: false }));
   };
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setState((prevState) => ({ ...prevState, open: !prevState.open }));
   };
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
-    setOpen(false);
+    setState((prevState) => ({ ...prevState, open: false }));
   };
 
   useEffect(() => {
-    setSelectedDate([start_date, end_date]);
+    setState((prevState) => ({
+      ...prevState,
+      selectedDate: [start_date, end_date],
+    }));
     onSubmit({
-      unit: decoded?.sub?.businessid ?? selectedUnit?.id,
+      unit: decoded?.sub?.businessid ?? state.selectedUnit?.id,
       start_date: formatDate(start_date),
       end_date: formatDate(end_date),
     });
   }, []);
 
-  useEffect(async () => {
-    await setSelectedUnit(data?.[0]);
+  useEffect(() => {
+    if (data?.length) {
+      setState((prevState) => ({ ...prevState, selectedUnit: data[0] }));
+    }
   }, [data]);
 
   return (
@@ -156,31 +159,44 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
               </li>
             )}
             onChange={(event, newValue) => {
-              setSelectedUnit(newValue);
+              setState((prevState) => ({ ...prevState, selectedUnit: newValue }));
               onSubmit({
                 unit: newValue?.id,
-                start_date: formatDate(selectedDate[0]),
-                end_date: formatDate(selectedDate[1]),
+                start_date: formatDate(state.selectedDate[0]),
+                end_date: formatDate(state.selectedDate[1]),
               });
-              defaultRangeDate(formatDate(selectedDate[0]), formatDate(selectedDate[1]));
+              defaultRangeDate(formatDate(state.selectedDate[0]), formatDate(state.selectedDate[1]));
             }}
-            value={selectedUnit}
+            value={state.selectedUnit}
             disabled={loading || downloading}
           />
         )}
-        <RHFMobileDateRangePicker
-          name="date"
+        <RHFRangeDatePicker
+          name={{ start: 'start_date', end: 'end_date' }}
+          value={{ start: start_date, end: end_date }}
+          disableFuture
           onChange={(newValue) => {
-            setSelectedDate(newValue);
-            onSubmit({
-              unit: selectedUnit?.id,
-              start_date: formatDate(newValue[0]),
-              end_date: formatDate(newValue[1]),
-            });
-            defaultRangeDate(formatDate(newValue[0]), formatDate(newValue[1]));
+            setState((prevState) => ({ ...prevState, selectedDate: [newValue.start, newValue.end] }));
+            if (newValue.start && newValue.end) {
+              onSubmit({
+                unit: state.selectedUnit?.id,
+                start_date: formatDate(newValue.start),
+                end_date: formatDate(newValue.end),
+              });
+              defaultRangeDate(formatDate(newValue.start), formatDate(newValue.end));
+            }
           }}
-          value={selectedDate}
+          format="dd-MM-yyyy"
           disabled={downloading}
+          size="small"
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '8px',
+            },
+            '& .MuiInputAdornment-root': {
+              display: 'none',
+            },
+          }}
         />
       </Stack>
       <Stack direction="row" spacing={1}>
@@ -196,8 +212,8 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
         <StyledLoadingButton
           ref={anchorRef}
           sx={{ width: 210, justifyContent: 'space-around' }}
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
+          aria-controls={state.open ? 'split-button-menu' : undefined}
+          aria-expanded={state.open ? 'true' : undefined}
           aria-label="select merge strategy"
           aria-haspopup="menu"
           onClick={handleToggle}
@@ -217,7 +233,7 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
 
         <Popper
           sx={{ zIndex: 99 }}
-          open={open}
+          open={state.open}
           anchorEl={anchorRef.current}
           role={undefined}
           transition
@@ -235,7 +251,7 @@ export default function LabaRugiHeader({ onSubmit, loading }) {
                     {options.map((option) => (
                       <MenuItem
                         key={option.type}
-                        selected={option.type === selectedType}
+                        selected={option.type === state.selectedType}
                         onClick={() => handleMenuItemClick(option.type)}
                       >
                         {option.name}

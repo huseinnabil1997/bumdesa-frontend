@@ -11,7 +11,9 @@ const fetchData = async (param) => {
 };
 
 export const useGetCashFlow = (param) => {
-  const getQuery = useQuery(['GET_CASH_FLOW', param], () => fetchData(param));
+  const getQuery = useQuery(['GET_CASH_FLOW', param], () => fetchData(param), {
+    enabled: !!param,
+  });
 
   return getQuery;
 };

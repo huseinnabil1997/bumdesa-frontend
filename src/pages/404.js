@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { PageNotFoundIllustration } from '../assets';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,7 @@ const ContentStyle = styled('div')(() => ({
 // ----------------------------------------------------------------------
 
 export default function PageNotFound() {
+  const userData = useSelector((state) => state.user.userData);
   const router = useRouter();
 
   const isLogin = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -63,7 +65,7 @@ export default function PageNotFound() {
               <StyledLoadingButton
                 sx={{ width: 432, height: 48, fontSize: '16px', fontWeight: 700 }}
                 variant="contained"
-                onClick={() => router.push(isLogin ? PATH_DASHBOARD.root : '/auth/login')}>
+                onClick={() => router.push(isLogin ? userData.role === 1 ? PATH_DASHBOARD.kanpus.dashboard : PATH_DASHBOARD.root : '/auth/login')}>
                 Kembali ke Halaman Utama
               </StyledLoadingButton>
             </Box>

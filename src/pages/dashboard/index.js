@@ -4,7 +4,7 @@ import { Container, Grid } from '@mui/material';
 import {
   DashboardWelcome,
   DashboardUnit,
-  DashboardEducation,
+  // DashboardEducation,
   DashboardSales,
   DashboardFinances,
   DashboardProfitLoss,
@@ -15,6 +15,8 @@ import Layout from 'src/layouts';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import { useEffect, useState } from 'react';
+import LinkUMKMDialogDashboard from 'src/sections/link-umkm/dialogDashboard';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -24,14 +26,31 @@ Dashboard.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function Dashboard() {
+  const userData = useSelector((state) => state.user.userData);
   const { themeStretch } = useSettings();
   const token = getSessionToken();
   const [decoded, setDecoded] = useState(jwtDecode(token));
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
+    // setOpen(true);
   }, [token]);
+
+  useEffect(() => {
+    if (userData?.role === 2 && userData?.linkumkm_integrated === 0) {
+      const hasShownDialog = sessionStorage.getItem('hasShownDialog');
+      if (!hasShownDialog) {
+        // setOpen(true);
+        sessionStorage.setItem('hasShownDialog', 'true');
+      }
+    }
+  }, []);
 
   return (
     <Page title="Dashboard">
@@ -64,6 +83,7 @@ export default function Dashboard() {
           </Grid> */}
         </Grid>
       </Container>
+      <LinkUMKMDialogDashboard open={open} onClose={onClose} />
     </Page>
   );
 }

@@ -57,7 +57,27 @@ export default function TableHeadCustom({
             key={headCell.id}
             align={headCell.align || 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+            sx={{
+              width: headCell.width,
+              minWidth: headCell.minWidth,
+              ...(headCell.id.includes('sticky') && {
+                position: 'sticky',
+                left: 0,
+                backgroundColor: '#F4F6F8',
+                zIndex: 1,
+                fontWeight: 'bold',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: '2px',
+                  backgroundColor: '#eee', // Right border color
+                  zIndex: 2, // Ensure the border is on top
+                },
+              }),
+            }}
           >
             {onSort ? (
               <TableSortLabel
@@ -70,7 +90,9 @@ export default function TableHeadCustom({
                 {headCell.label}
 
                 {orderBy === headCell.id ? (
-                  <Box sx={{ ...visuallyHidden }}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>
+                  <Box sx={{ ...visuallyHidden }}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </Box>
                 ) : null}
               </TableSortLabel>
             ) : (

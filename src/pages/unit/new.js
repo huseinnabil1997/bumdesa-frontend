@@ -23,6 +23,10 @@ import Iconify from 'src/components/Iconify';
 import usePost from 'src/query/hooks/mutation/usePost';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
+import { useSelector } from 'react-redux';
+import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
+import moment from 'moment';
+import { useMemo, useCallback } from 'react';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -32,13 +36,19 @@ export default function AddUnitUsaha() {
   const { themeStretch } = useSettings();
   const router = useRouter();
 
+  const userData = useSelector(state => state.user.userData);
+
+  const { data: dataBumdesa } = useGetProfile(userData?.bumdesa_id);
+
+  const founded_at = useMemo(() => dataBumdesa?.founded_at?.split('T')[0], [dataBumdesa]);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const mutation = usePost();
 
   const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
 
-  const defaultValues = {
+  const defaultValues = useMemo(() => ({
     image: null,
     name: '',
     position: 'Manager',
@@ -47,10 +57,11 @@ export default function AddUnitUsaha() {
     sector: null,
     manager_name: '',
     manager_phone: '',
-  };
+  }), []);
 
-  const NewUnitFormSchema = Yup.object().shape({
-    image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
+  const NewUnitFormSchema = useMemo(() => Yup.object().shape({
+    image: Yup.mixed()
+      .required('Foto Unit Usaha wajib diisi'),
     name: Yup.string()
       .required('Nama Unit Usaha wajib diisi')
       .matches(alphabetRegex, 'Nama Unit Usaha harus mengandung huruf dan hanya boleh mengandung angka, spasi, serta simbol petik')
@@ -75,7 +86,7 @@ export default function AddUnitUsaha() {
       .matches(numberRegex, 'Nomor telepon harus diawali dengan 08 dan minimal 10 digit')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(13, 'Nomor telepon maksimal diisi 13 digit'),
-  });
+  }), []);
 
   const methods = useForm({
     resolver: yupResolver(NewUnitFormSchema),
@@ -86,16 +97,11 @@ export default function AddUnitUsaha() {
   const {
     reset,
     setValue,
-    // setError,
     handleSubmit,
-    // watch,
-    formState: {
-      // errors, 
-      isSubmitting
-    },
+    formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = useCallback(async (data) => {
     const formData = new FormData();
     formData.append('image', data?.image);
     formData.append('name', data?.name);
@@ -138,7 +144,7 @@ export default function AddUnitUsaha() {
       enqueueSnackbar(error?.message, { variant: 'error' });
       console.log('error addUnits', error);
     }
-  };
+  }, [enqueueSnackbar, mutation, reset, router]);
 
   return (
     <Page title="Unit Usaha: New">
@@ -209,7 +215,6 @@ export default function AddUnitUsaha() {
         <Card
           elevation={3}
           sx={{
-            // maxWidth: '960px',
             maxHeight: 'auto',
             minHeight: '556px',
             borderRadius: '16px',
@@ -223,7 +228,7 @@ export default function AddUnitUsaha() {
               <RHFUploadPhoto
                 name="image"
                 label="Foto Unit Usaha"
-                accept="image/*"
+                accept="image/png, image/jpg, image/jpeg"
                 maxSize={10000000}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
                 errorTextAlign="left"
@@ -278,6 +283,7 @@ export default function AddUnitUsaha() {
                   name="year_founded"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
+                  minDate={moment(founded_at).format('yyyy-MM-DD')}
                   format="yyyy"
                   views={['year']}
                   openTo="year"
@@ -378,38 +384,6 @@ export default function AddUnitUsaha() {
               </Stack>
             </Stack>
             <Divider />
-            {/* <Stack
-              direction="row"
-              p="16px 24px 16px 24px"
-              width="100%"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Stack spacing={0.5}>
-                <Stack direction="row" display="flex" alignItems="center" spacing={0.5}>
-                  <InfoIcon fontSize="13.33px" sx={{ color: '#1078CA' }} />
-                  <Typography fontWeight={600} color="#1078CA" fontSize="14px">
-                    Informasi
-                  </Typography>
-                </Stack>
-                <Typography variant="caption" fontSize="12px" fontWeight={500} color="#929393">
-                  Username dan password akan dikirimkan melalui email unit usaha.
-                  <span style={{ fontSize: '12px', fontWeight: 700 }}>
-                    {' '}
-                    Pastikan email yang dimasukkan benar dan aktif.
-                  </span>
-                </Typography>
-              </Stack>
-              <StyledLoadingButton
-                variant="contained"
-                sx={{ width: '160px', height: '48px' }}
-                onClick={handleSubmit(onSubmit)}
-                loading={isSubmitting}
-              >
-                Simpan
-              </StyledLoadingButton>
-            </Stack> */}
           </FormProvider>
         </Card>
       </Container>
@@ -437,7 +411,6 @@ function SnackbarIcon({ icon, color }) {
         alignItems: 'center',
         justifyContent: 'center',
         color: color === 'success' ? '#27AE60' : `${color}.main`,
-        // bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
       }}
     >
       <Iconify icon={icon} width={24} height={24} />

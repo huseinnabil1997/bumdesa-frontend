@@ -17,14 +17,20 @@ async function listFilesInDirectory(directoryPath, basePath, fileList = [], work
       const firstFolder = relativePath.split(path.sep)[0];
       const remark = firstFolder === 'pages' ? 'view' : firstFolder;
 
-      fileList.push({
-        no: fileList.length + 1,
-        libraryObject: relativePath,
-        type: fileType,
-        compileDate: compileDate,
-        size: fileSize,
-        remark: remark,
-      });
+      // Tambahkan logika untuk memeriksa created date
+      const createdDate = new Date(stat.birthtime);
+      const august2024 = new Date('2024-08-01');
+
+      if (createdDate >= august2024) {
+        fileList.push({
+          no: fileList.length + 1,
+          libraryObject: relativePath,
+          type: fileType,
+          compileDate: compileDate,
+          size: fileSize,
+          remark: remark,
+        });
+      }
     } else if (stat.isDirectory()) {
       await listFilesInDirectory(filePath, basePath, fileList, workbook, worksheet);
     }
@@ -42,7 +48,7 @@ async function listFilesInDirectory(directoryPath, basePath, fileList = [], work
       });
     });
 
-    await workbook.xlsx.writeFile('fileList.xlsx');
+    await workbook.xlsx.writeFile('fileList_v2_1.xlsx');
   }
 }
 

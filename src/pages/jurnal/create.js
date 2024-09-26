@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
+import Joyride, { STATUS } from 'react-joyride';
 
 // @mui
 import {
@@ -46,6 +47,104 @@ JurnalCreate.getLayout = function getLayout(page) {
 };
 // ----------------------------------------------------------------------
 
+const tutorialStyle = {
+  options: {
+    primaryColor: '#1078CA',
+  },
+  buttonNext: {
+    borderRadius: '8px',
+    fontSize: '12px',
+  },
+  buttonBack: {
+    borderRadius: '8px',
+    fontSize: '12px',
+  },
+  buttonSkip: {
+    fontSize: '12px',
+  },
+  buttonClose: {
+    color: 'white',
+  },
+  tooltip: {
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    padding: '10px',
+    width: '250px',
+    fontSize: '12px',
+  },
+  tooltipContainer: {
+    textAlign: 'left',
+  },
+}
+
+const stepperTutorial = [
+  {
+    target: '.transaction-information',
+    content: 'Masukkan keterangan transaksi di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.date-picker',
+    content: 'Pilih tanggal transaksi di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.number-of-evidence',
+    content: 'Nomor bukti akan otomatis terbuat.',
+    disableBeacon: true,
+  },
+  {
+    target: '.first-balance',
+    content: 'Tanda ini menandakan bahwa transaksi ini adalah saldo awal.',
+    disableBeacon: true,
+  },
+  {
+    target: '.account-code',
+    content: 'Pilih akun di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.debit',
+    content: 'Masukkan jumlah debit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.credit',
+    content: 'Masukkan jumlah kredit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.cash-flow-code',
+    content: 'Pilih jenis arus kas di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.btn-add-account',
+    content: 'Tambahkan akun di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.balance-indicator',
+    content: 'Lihat indikator keseimbangan di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.total-debit',
+    content: 'Lihat total debit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.total-credit',
+    content: 'Lihat total kredit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.btn-save',
+    content: 'Simpan jurnal di sini.',
+    disableBeacon: true,
+  },
+]
+
 export default function JurnalCreate() {
   const { themeStretch } = useSettings();
 
@@ -57,6 +156,8 @@ export default function JurnalCreate() {
 
   const [open, setOpen] = useState();
   const [choosen, setChoosen] = useState(false);
+  const [run, setRun] = useState(true);
+  const [steps] = useState(stepperTutorial);
 
   const { data: accOpt, isLoading: loadingAcc } = useGetAccount();
   const { mutate: onCreate, isLoading: creating } = useCreateJurnal();
@@ -125,7 +226,7 @@ export default function JurnalCreate() {
     append({ account_code: null, debit: null, credit: null, cash_flow_code: null });
   };
 
-  const handleBack = () => router.push('/jurnal/list');
+  const handleBack = () => router.back();
 
   const generateTotalDebt = () => {
     setValue(
@@ -188,8 +289,36 @@ export default function JurnalCreate() {
   const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
   const hasEmptyAccount = !watch('accounts').every((row) => !!row.account_code);
 
+  const handleJoyrideCallback = (data) => {
+    const { status } = data;
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      setRun(false);
+    }
+  };
+
+  useEffect(() => {
+    if (evidenceNumber?.count === 0) {
+      setRun(true);
+    }
+  }, []);
+
   return (
     <Page>
+      <Joyride
+        steps={steps}
+        run={false}
+        continuous
+        showSkipButton
+        callback={handleJoyrideCallback}
+        styles={tutorialStyle}
+        locale={{
+          back: 'Kembali',
+          close: 'Tutup',
+          last: 'Selesai',
+          next: 'Berikutnya',
+          skip: 'Lewati',
+        }}
+      />
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <BtnLightPrimary
@@ -200,64 +329,73 @@ export default function JurnalCreate() {
             Kembali
           </BtnLightPrimary>
           {isFirstBalance && (
-            <Chip
-              variant="contained"
-              color="success"
-              label="Saldo Awal"
-              sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
-            />
+            <Box className='first-balance'>
+              <Chip
+                variant="contained"
+                color="success"
+                label="Saldo Awal"
+                sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
+              />
+            </Box>
           )}
           <Card elevation={0} sx={{ mt: 3, border: `1px solid ${theme.palette.grey[300]}` }}>
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={4}>
-                  <RHFTextField
-                    size="small"
-                    label="Keterangan Transaksi"
-                    require
-                    name="transaction_information"
-                    isLoading={loadingEvidence}
-                  />
+                  <Box className='transaction-information'>
+                    <RHFTextField
+                      size="small"
+                      label="Keterangan Transaksi"
+                      require
+                      name="transaction_information"
+                      isLoading={loadingEvidence}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <RHFDatePicker
-                    size="small"
-                    label="Pilih Tanggal"
-                    require
-                    format="dd MMM yyyy"
-                    name="date"
-                    disableFuture
-                    minDate={evidenceNumber?.first_balance_date}
-                    disabled={!watch('transaction_information') || isFirstBalance}
-                    sx={{
-                      '& .MuiInputBase-root': {
-                        height: '40px',
-                        borderRadius: '8px',
-                      },
-                      '& .MuiInputBase-input': {
-                        height: '11px',
-                      },
-                    }}
-                  />
+                  <Box className='date-picker'>
+                    <RHFDatePicker
+                      size="small"
+                      label="Pilih Tanggal"
+                      className="date-picker"
+                      require
+                      format="dd MMM yyyy"
+                      name="date"
+                      disableFuture
+                      minDate={evidenceNumber?.first_balance_date}
+                      disabled={!watch('transaction_information') || isFirstBalance}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          height: '40px',
+                          borderRadius: '8px',
+                        },
+                        '& .MuiInputBase-input': {
+                          height: '11px',
+                        },
+                      }}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <RHFTextField
-                    size="small"
-                    label="Nomor Bukti (Dibuat Otomatis)"
-                    disabled
-                    name="number_of_evidence"
-                    InputProps={{
-                      style: { backgroundColor: '#DDEFFC' },
-                    }}
-                    sx={{
-                      '.MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#DDEFFC !important',
-                      },
-                      input: {
-                        '-webkit-text-fill-color': `#1078CA !important`,
-                      },
-                    }}
-                  />
+                  <Box className='number-of-evidence'>
+                    <RHFTextField
+                      size="small"
+                      label="Nomor Bukti (Dibuat Otomatis)"
+                      disabled
+                      name="number_of_evidence"
+                      InputProps={{
+                        style: { backgroundColor: '#DDEFFC' },
+                      }}
+                      sx={{
+                        '.MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#DDEFFC !important',
+                        },
+                        input: {
+                          '-webkit-text-fill-color': `#1078CA !important`,
+                        },
+                      }}
+                    />
+                  </Box>
                 </Grid>
               </Grid>
               <Divider sx={{ my: 3 }} />
@@ -265,59 +403,70 @@ export default function JurnalCreate() {
                 {fields.map((row, i) => (
                   <Fragment key={row.id}>
                     <Grid item xs={4}>
-                      <RHFAutocomplete
-                        require
-                        size="small"
-                        name={`accounts.${i}.account_code`}
-                        label={i === 0 ? 'Nama Akun' : ''}
-                        loading={false}
-                        options={accOpt?.map((option) => option) ?? []}
-                        // getOptionLabel={(option) => option.label}
-                        isLoading={loadingAcc}
-                        disabled={loadingAcc || !watch('transaction_information')}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option.value}>
-                            {option.label}
-                          </li>
-                        )}
-                      />
+                      <Box className='account-code'>
+                        <RHFAutocomplete
+                          require
+                          size="small"
+                          name={`accounts.${i}.account_code`}
+                          className="account-code"
+                          label={i === 0 ? 'Nama Akun' : ''}
+                          loading={false}
+                          options={accOpt?.map((option) => option) ?? []}
+                          // getOptionLabel={(option) => option.label}
+                          isLoading={loadingAcc}
+                          disabled={loadingAcc || !watch('transaction_information')}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option.value}>
+                              {option.label}
+                            </li>
+                          )}
+                        />
+                      </Box>
                     </Grid>
                     <Grid item xs={isFirstBalance ? 3 : 2}>
-                      <RHFTextField
-                        size="small"
-                        label={i === 0 ? 'Debit' : ''}
-                        require
-                        name={`accounts.${i}.debit`}
-                        onKeyUp={generateTotalDebt}
-                        type="currency"
-                        disabled={
-                          +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
-                        }
-                      />
+                      <Box className='debit'>
+                        <RHFTextField
+                          size="small"
+                          label={i === 0 ? 'Debit' : ''}
+                          require
+                          name={`accounts.${i}.debit`}
+                          onKeyUp={generateTotalDebt}
+                          className="debit"
+                          type="currency"
+                          disabled={
+                            +watch(`accounts.${i}.credit`) > 0 || !watch('transaction_information')
+                          }
+                        />
+                      </Box>
                     </Grid>
                     <Grid item xs={isFirstBalance ? 3 : 2}>
-                      <RHFTextField
-                        size="small"
-                        label={i === 0 ? 'Kredit' : ''}
-                        require
-                        name={`accounts.${i}.credit`}
-                        onKeyUp={generateTotalCred}
-                        type="currency"
-                        disabled={
-                          +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
-                        }
-                      />
+                      <Box className='credit'>
+                        <RHFTextField
+                          size="small"
+                          label={i === 0 ? 'Kredit' : ''}
+                          require
+                          name={`accounts.${i}.credit`}
+                          onKeyUp={generateTotalCred}
+                          type="currency"
+                          className="credit"
+                          disabled={
+                            +watch(`accounts.${i}.debit`) > 0 || !watch('transaction_information')
+                          }
+                        />
+                      </Box>
                     </Grid>
                     {!isFirstBalance && (
                       <Grid item xs={fields.length > 2 ? 3 : 4}>
-                        <CreateCashFlow
-                          formChecking={formChecking}
-                          i={i}
-                          isFirstBalance={isFirstBalance}
-                          type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
-                          account={watch(`accounts.${i}.account_code`)?.value ?? ''}
-                          disabled={!isHasKas}
-                        />
+                        <Box className='cash-flow-code'>
+                          <CreateCashFlow
+                            formChecking={formChecking}
+                            i={i}
+                            isFirstBalance={isFirstBalance}
+                            type={watch(`accounts.${i}.debit`) > 0 ? 'D' : 'C'}
+                            account={watch(`accounts.${i}.account_code`)?.value ?? ''}
+                            disabled={!isHasKas}
+                          />
+                        </Box>
                       </Grid>
                     )}
                     {fields.length > 2 && (
@@ -345,6 +494,7 @@ export default function JurnalCreate() {
                     startIcon={<Add fontSize="small" />}
                     onClick={handleAppend}
                     disabled={hasEmptyAccount || !watch('transaction_information')}
+                    className="btn-add-account"
                   >
                     Tambah Akun
                   </StyledButton>
@@ -358,6 +508,7 @@ export default function JurnalCreate() {
                   </Typography>
                   <Chip
                     variant="contained"
+                    className="balance-indicator"
                     color={generateBalance('color')}
                     label={generateBalance('label')}
                     sx={{ color: 'white', fontWeight: 'bold' }}
@@ -369,6 +520,7 @@ export default function JurnalCreate() {
                   <RHFTextField
                     require
                     name="debit"
+                    className="total-debit"
                     variant="standard"
                     sx={{ width: 240 }}
                     disabled
@@ -377,6 +529,7 @@ export default function JurnalCreate() {
                     require
                     name="credit"
                     variant="standard"
+                    className="total-credit"
                     sx={{ width: 240 }}
                     disabled
                   />
@@ -424,12 +577,14 @@ export default function JurnalCreate() {
                 sx={{ width: 200, height: 42 }}
                 disabled={watch('credit') !== watch('debit') || !watch('transaction_information')}
                 type="submit"
+                className="btn-save"
               >
                 Simpan
               </StyledLoadingButton>
             </Stack>
           </Card>
           <FirstBalance
+            className='first-balance-modal'
             open={open}
             onClose={() => {
               setOpen(false);

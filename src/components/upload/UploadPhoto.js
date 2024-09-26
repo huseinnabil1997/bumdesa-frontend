@@ -96,6 +96,7 @@ export default function UploadPhoto({
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     multiple: false,
     ...other,
+    accept: 'image/png, image/jpg, image/jpeg',
     onDropAccepted: () => {
       setFileRejections([]); // Tambahkan ini untuk menghapus fileRejections
     },

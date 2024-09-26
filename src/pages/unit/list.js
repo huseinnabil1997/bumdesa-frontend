@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 // @mui
 import {
@@ -34,15 +34,16 @@ import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
+import debounce from 'lodash.debounce';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Unit Usaha', align: 'left' },
-  { id: 'tdr', label: 'Alamat Email', align: 'left' },
-  { id: 'tdr_start_date', label: 'Tahun Berdiri', align: 'left' },
-  { id: 'tdr_end_date', label: 'Status', align: 'left' },
-  { id: 'status', label: 'Action', align: 'center' },
+  { id: 'email', label: 'Alamat Email', align: 'center' },
+  { id: 'year_founded', label: 'Tahun Berdiri', align: 'center' },
+  { id: 'status', label: 'Status', align: 'center' },
+  { id: 'action', label: 'Aksi', align: 'center' },
 ];
 
 // ----------------------------------------------------------------------
@@ -67,8 +68,6 @@ export default function UserList() {
 
   const mutationDelete = useDelete();
 
-  // const [units, setUnits] = useState({});
-  // const [isLoading, setIsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [alertChangeStatus, setAlertChangeStatus] = useState(null);
@@ -84,10 +83,6 @@ export default function UserList() {
   });
 
   const units = data;
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   useEffect(() => {
     refetch();
@@ -129,11 +124,14 @@ export default function UserList() {
     }
   };
 
-  const handleInputChange = (event) => {
-    if (event.key === 'Enter') {
-      refetch();
-    }
-  };
+  const handleInputChange = useCallback(
+    debounce((event) => {
+      if (event.key === 'Enter') {
+        refetch();
+      }
+    }, 0),
+    []
+  );
 
   const handleChangeStatus = async (id, status) => {
     setAlertChangeStatus({ id: id, status: status });

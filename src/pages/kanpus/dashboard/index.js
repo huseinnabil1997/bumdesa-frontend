@@ -2,24 +2,23 @@
 import { Container, Grid } from '@mui/material';
 // hooks
 import {
-  DashboardWelcome,
-  DashboardUnit,
-  DashboardEducation,
-  DashboardSales,
-  DashboardFinances,
+  KanpusHeader,
+  KanpusDemographic,
   DashboardProfitLoss,
-} from 'src/sections/dashboard';
+  DashboardSales,
+} from 'src/sections/kanpus/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import { useEffect, useState } from 'react';
+import { useGetDemographics } from 'src/query/hooks/dashboard/useGetDemographics';
 
 // ----------------------------------------------------------------------
 
 Dashboard.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <Layout title="Dashboard Kantor Pusat">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
@@ -27,6 +26,8 @@ export default function Dashboard() {
   const { themeStretch } = useSettings();
   const token = getSessionToken();
   const [decoded, setDecoded] = useState(jwtDecode(token));
+
+  const { data: demo } = useGetDemographics();
 
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
@@ -38,11 +39,11 @@ export default function Dashboard() {
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <DashboardWelcome isUnit={decoded.sub.businessid} />
+            <KanpusHeader unit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardFinances unit={decoded.sub.businessid} />
+            {demo?.length > 0 && <KanpusDemographic demo={demo} unit={decoded.sub.businessid} />}
           </Grid>
 
           <Grid item xs={12}>
@@ -50,16 +51,8 @@ export default function Dashboard() {
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardProfitLoss unit={decoded.sub.businessid} />
+            <DashboardProfitLoss />
           </Grid>
-
-          <Grid item xs={12}>
-            <DashboardUnit />
-          </Grid>
-
-          {/* <Grid item xs={12}>
-            <DashboardEducation />
-          </Grid> */}
         </Grid>
       </Container>
     </Page>

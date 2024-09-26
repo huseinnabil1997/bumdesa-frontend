@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles'; // Import useMediaQuery
 import {
   Stack,
   TableRow,
@@ -13,7 +13,7 @@ import {
   Skeleton,
   Tooltip,
   Typography,
-  Chip,
+  useMediaQuery,
 } from '@mui/material';
 // components
 import moment from 'moment';
@@ -141,50 +141,51 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
           </Stack>
         </TableCell>
       </TableRow>
-      <TableRow>
-        <TableCell sx={{ p: 0 }} colSpan={8}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            {isFetched && details && (
-              <Table aria-label="purchases">
-                <TableBody>
-                  {details.accounts.length > 0 ? (
-                    details.accounts.map((account, idx) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{
-                          backgroundColor: generateColor(index, idx),
-                        }}
-                      >
-                        <TableCell colSpan={5} sx={{ pl: 5, display: 'flex' }}>
-                          <DotIcon /> {account?.account_code?.label ?? '-'}
-                        </TableCell>
-                        <TableCell width={134.5}>
-                          {account.debit ? fCurrency(account.debit) : '-'}
-                        </TableCell>
-                        <TableCell width={134.5}>
-                          {account.credit ? fCurrency(account.credit) : '-'}
-                        </TableCell>
-                        <TableCell width={100} />
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell align="center">Data Kosong</TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            )}
+      {isFetched &&
+        details &&
+        details.accounts.length > 0 &&
+        details.accounts.map((account, idx) => (
+          <TableRow
+            key={row.id}
+            sx={{
+              backgroundColor: generateColor(index, idx),
+            }}
+          >
+            <TableCell>{isLoading ? <Skeleton height={40} /> : <DotIcon />}</TableCell>
+            <TableCell>
+              {isLoading ? <Skeleton height={40} /> : account?.account_code?.label ?? '-'}
+            </TableCell>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell>
+              {isLoading ? (
+                <Skeleton height={40} />
+              ) : account.debit ? (
+                fCurrency(account.debit)
+              ) : (
+                '-'
+              )}
+            </TableCell>
+            <TableCell>
+              {isLoading ? (
+                <Skeleton height={40} />
+              ) : account.credit ? (
+                fCurrency(account.credit)
+              ) : (
+                '-'
+              )}
+            </TableCell>
+            <TableCell />
+          </TableRow>
+        ))}
 
-            {isLoading && (
-              <Stack sx={{ p: 3 }}>
-                <Skeleton height={40} />
-                <Skeleton height={40} />
-              </Stack>
-            )}
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      {/* {isLoading && (
+        <Stack sx={{ p: 3 }}>
+          <Skeleton height={40} />
+          <Skeleton height={40} />
+        </Stack>
+      )} */}
 
       <DeleteConfirmation
         open={showDelete}

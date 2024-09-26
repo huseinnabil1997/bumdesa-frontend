@@ -50,6 +50,7 @@ export default function DashboardFinances({ unit }) {
           <DatePicker
             views={['year']}
             label="Tahun"
+            maxDate={new Date(new Date().getFullYear(), 11, 31)}
             value={seriesData}
             onChange={(newValue) => {
               setSeriesData(newValue);

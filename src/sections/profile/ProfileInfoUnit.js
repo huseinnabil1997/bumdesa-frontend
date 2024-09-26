@@ -70,7 +70,7 @@ const styles = {
   }
 }
 
-export default function ProfileInfoUnit({ data, setIsEdit }) {
+export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
@@ -240,16 +240,18 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
           />
         </Grid>
       </Grid>
-      <Stack sx={styles.action}>
-        <StyledLoadingButton
-          onClick={setIsEdit}
-          sx={styles.action.button}
-          startIcon={<EditIcon />}
-          variant='outlined'
-        >
-          Ubah
-        </StyledLoadingButton>
-      </Stack>
+      {from !== 'kanpus' && (
+        <Stack sx={styles.action}>
+          <StyledLoadingButton
+            onClick={setIsEdit}
+            sx={styles.action.button}
+            startIcon={<EditIcon />}
+            variant='outlined'
+          >
+            Ubah
+          </StyledLoadingButton>
+        </Stack>
+      )}
       <Modal
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -268,5 +270,6 @@ ProfileInfoUnit.propTypes = {
   isEdit: PropTypes.bool,
   setIsEdit: PropTypes.func,
   data: PropTypes.object,
+  from: PropTypes.string,
 };
 

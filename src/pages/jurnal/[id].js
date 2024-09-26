@@ -120,7 +120,7 @@ export default function JurnalCreate() {
   const handleAppend = () =>
     append({ account_code: null, debit: null, credit: null, cash_flow_code: null });
 
-  const handleBack = () => router.push('/jurnal/list');
+  const handleBack = () => router.back();
 
   const generateTotalDebt = () => {
     setValue(

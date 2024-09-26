@@ -18,7 +18,7 @@ import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import Image from 'src/components/Image';
-import { checkUrlImage, logo } from 'src/utils/helperFunction';
+import { checkUrlImage } from 'src/utils/helperFunction';
 import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
@@ -42,7 +42,7 @@ NavbarVertical.propTypes = {
 export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   const [isValidImage, setIsValidImage] = useState(false);
 
-  const userData = useSelector(state => state.user.userData);
+  const userData = useSelector((state) => state.user.userData);
 
   const theme = useTheme();
 
@@ -62,13 +62,21 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   useEffect(() => {
     const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${userData?.logo}`);
+      const isValid = await checkUrlImage(
+        `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${userData?.logo}`
+      );
       setIsValidImage(isValid);
       return isValid;
     };
 
     checkImage();
-  }, [logo]);
+  }, [userData?.logo]);
+
+  const generateUrl = () => {
+    if (userData?.role === 1)
+      return 'https://buatlogoonline.com/wp-content/uploads/2022/10/Logo-Bank-BRI.png';
+    else return `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${userData?.logo}`;
+  };
 
   const renderContent = (
     <Scrollbar
@@ -90,11 +98,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <Image
           visibleByDefault
           disabledEffect
-          src={
-            isValidImage
-              ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${userData?.logo}`
-              : '/image/default_image.png'
-          }
+          src={isValidImage ? generateUrl() : '/image/default_image.png'}
           alt="bri"
           sx={{ width: 84, mx: 'auto', mb: 1, mt: 5 }}
         />

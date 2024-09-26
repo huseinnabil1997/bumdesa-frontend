@@ -41,9 +41,10 @@ const MainStyle = styled('main', {
 
 DashboardLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  title: PropTypes.string,
 };
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({ children, title }) {
   const { collapseClick, isCollapse } = useCollapseDrawer();
 
   const { themeLayout } = useSettings();
@@ -57,7 +58,11 @@ export default function DashboardLayout({ children }) {
   if (verticalLayout) {
     return (
       <>
-        <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout} />
+        <DashboardHeader
+          header={title}
+          onOpenSidebar={() => setOpen(true)}
+          verticalLayout={verticalLayout}
+        />
 
         {isDesktop ? (
           <NavbarHorizontal />
@@ -92,7 +97,7 @@ export default function DashboardLayout({ children }) {
         minHeight: { lg: 1 },
       }}
     >
-      <DashboardHeader isCollapse={true} onOpenSidebar={() => setOpen(true)} />
+      <DashboardHeader header={title} isCollapse={true} onOpenSidebar={() => setOpen(true)} />
 
       <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
 

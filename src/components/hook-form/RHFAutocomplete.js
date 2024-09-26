@@ -53,6 +53,7 @@ export default function RHFAutocomplete({
                 }}
                 InputProps={{
                   ...params.InputProps,
+                  disabled: other.disabled,
                   startAdornment: (
                     <>
                       {isLoading && <CircularProgress size={12} color="primary" sx={{ ml: 1 }} />}

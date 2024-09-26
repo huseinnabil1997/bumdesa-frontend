@@ -56,7 +56,7 @@ const styles = {
 // ----------------------------------------------------------------------
 
 // export const GetDataBumdesa = (userData) => {
-  
+
 //   // useEffect(() => {
 //   //   refetch();
 //   // }, [userData?.bumdesa_id]);
@@ -64,7 +64,7 @@ const styles = {
 // }
 
 // export const GetDataUnit = (userData) => {
-  
+
 //   // useEffect(() => {
 //   //   refetch();
 //   // }, [userData?.unit_id]);
@@ -102,6 +102,8 @@ export default function AccountPopover() {
       eventBus.off('refetchBumdesa', refetchHandler);
     };
   }, [unitRefetch, bumdesaRefetch]);
+
+  const isKanpus = userData?.role === 1;
 
   const data = userData?.unit_id === 0 ? bumdesaData : unitData;
 
@@ -168,7 +170,8 @@ export default function AccountPopover() {
         {/* <MyAvatar /> */}
         <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
           <Typography color='#292929' fontSize='18px' fontWeight={600}>
-            {data?.name ? data?.name : '...'}, {bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+            {isKanpus ? userData?.name : data?.name ? `${data?.name}, ` : '...'}
+            {!isKanpus && bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </Typography>
           <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
         </Stack>
@@ -193,14 +196,18 @@ export default function AccountPopover() {
           mt: '25px'
         }}
       >
-        <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
-          <Person sx={styles.icon} />
-          <Typography sx={styles.text}>Profil</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
-          <Settings sx={styles.icon} />
-          <Typography sx={styles.text}>Pengaturan Akun</Typography>
-        </MenuItem>
+        {userData?.role !== 1 &&
+          <>
+            <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
+              <Person sx={styles.icon} />
+              <Typography sx={styles.text}>Profil</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
+              <Settings sx={styles.icon} />
+              <Typography sx={styles.text}>Pengaturan Akun</Typography>
+            </MenuItem>
+          </>
+        }
         <MenuItem onClick={handleLogout} sx={{ my: 1, ...styles.box }}>
           <Logout sx={styles.icon} />
           <Typography sx={styles.text}>Log Out</Typography>

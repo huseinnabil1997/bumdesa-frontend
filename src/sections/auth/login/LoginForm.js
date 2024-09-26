@@ -50,7 +50,7 @@ export default function LoginForm() {
   const defaultValues = {
     email: '',
     password: '',
-    remember: true,
+    remember: false,
   };
 
   const methods = useForm({
@@ -69,8 +69,9 @@ export default function LoginForm() {
       setLoading(true);
       const res = await login(data.email, data.password);
       if (res?.data) {
+        const isKanpus = res?.data?.unit_id === 0 && res?.data?.bumdesa_id === 0;
         dispatch(setUser(res.data));
-        if (res?.data?.full_register === 0) {
+        if (res?.data?.full_register === 0 && !isKanpus) {
           await setRegisSession(res?.metadata?.token ?? '');
           enqueueSnackbar(res.message, { variant: 'success' });
           window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
@@ -78,7 +79,9 @@ export default function LoginForm() {
           await setSession(res?.metadata?.token ?? '', data.remember);
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
-          router.push(PATH_DASHBOARD.root);
+          router.push(
+            res?.data?.role === 1 ? PATH_DASHBOARD.kanpus.dashboard : PATH_DASHBOARD.root
+          );
         }
       }
     } catch (error) {
@@ -101,9 +104,10 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email" />
+        <RHFTextField name="email" label="Email" require={true} />
 
         <RHFTextField
+          require={true}
           name="password"
           label="Kata Sandi"
           type={showPassword ? 'text' : 'password'}

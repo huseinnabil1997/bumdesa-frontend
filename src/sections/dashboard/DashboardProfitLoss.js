@@ -12,14 +12,12 @@ import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-const currentDate = new Date();
-
 export default function DashboardProfitLoss({ unit }) {
   const theme = useTheme();
 
   const [chartData, setChartData] = useState([]);
   const [startDate, setStartDate] = useState(
-    new Date(currentDate.setFullYear(currentDate.getFullYear() - 2))
+    new Date(moment().subtract(2, 'years').format('yyyy-MM-DD'))
   );
   const [endDate, setEndDate] = useState(new Date());
 
@@ -54,6 +52,8 @@ export default function DashboardProfitLoss({ unit }) {
       ]);
   }, [data]);
 
+  console.log(startDate);
+
   return (
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
       <CardHeader
@@ -78,6 +78,7 @@ export default function DashboardProfitLoss({ unit }) {
               views={['year']}
               label="Tahun Akhir"
               minDate={startDate}
+              maxDate={new Date(new Date().getFullYear(), 11, 31)}
               value={endDate}
               onChange={(newValue) => {
                 setEndDate(newValue);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -10,16 +10,18 @@ import { isTotalName } from 'src/utils/helperFunction';
 
 // ----------------------------------------------------------------------
 
-function NestedTableRow({ row, index, generateColor, formatCurrency }) {
+const NestedTableRow = ({ row, index, generateColor, formatCurrency }) => {
   const [open, setOpen] = useState(false);
   const { nama, saldo } = row;
+
+  const handleToggle = useCallback(() => setOpen(prev => !prev), []);
 
   return (
     <>
       <TableRow
         key={row.nama}
         hover
-        onClick={() => setOpen(!open)}
+        onClick={handleToggle}
         sx={{
           backgroundColor: isTotalName(nama) ? '#E1F8EB' : 'white',
           height: '56px',
@@ -30,10 +32,10 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
       >
         <TableCell sx={{ color: isTotalName(nama) ? '#292929' : '#1078CA', fontWeight: 600, fontSize: '14px' }}>
           {row?.child2 && (
-            <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
-              {open ?
-                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-up-box'} />
-                :
+            <IconButton sx={{ mr: 1 }} size="small" onClick={handleToggle}>
+              {open ? 
+                <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-up-box'} /> 
+                : 
                 <Iconify color="#1078CA" width={15} height={15} icon={'mdi:chevron-down-box'} />
               }
             </IconButton>
@@ -61,7 +63,7 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
       ))}
     </>
   );
-}
+};
 
 // Prop types for the nested row component
 NestedTableRow.propTypes = {
@@ -71,29 +73,19 @@ NestedTableRow.propTypes = {
   formatCurrency: PropTypes.func.isRequired,
 };
 
-UserTableRow.propTypes = {
-  row: PropTypes.object,
-  index: PropTypes.number,
-  selected: PropTypes.bool,
-  onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
-  onViewRow: PropTypes.func,
-};
-
 export default function UserTableRow({ row, selected }) {
   const theme = useTheme();
 
   const { level, title, saldo, child } = row;
 
-  const generateColor = (i, j) => {
+  const generateColor = useCallback((i, j) => {
     const a = j % 2 !== 0 ? theme.palette.grey[100] : 'white';
     const b = j % 2 !== 1 ? theme.palette.grey[100] : 'white';
 
     return i % 2 !== 0 ? a : b;
-  };
+  }, [theme.palette.grey]);
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = useCallback((amount) => {
     if (amount === 0 || amount === '0') {
       return 'Rp. -';
     }
@@ -106,7 +98,7 @@ export default function UserTableRow({ row, selected }) {
     }).format(Math.abs(amount));
 
     if (amount < 0) {
-      return `(${formattedAmount.replace('Rp', 'Rp.')})`;
+      return `Rp. (${formattedAmount.replace('Rp', '').trim()})`;
     }
 
     if (!formattedAmount.includes(',')) {
@@ -114,26 +106,25 @@ export default function UserTableRow({ row, selected }) {
     }
 
     return formattedAmount;
-  };
+  }, []);
 
-
-  const bgColor = () => {
+  const bgColor = useMemo(() => {
     if (level === '1' && !child) {
-      return '#DDEFFC'
+      return '#DDEFFC';
     }
     if (level === '1' && child) {
-      return 'white'
+      return 'white';
     }
-  }
+  }, [level, child]);
 
-  const bgColorHover = () => {
+  const bgColorHover = useMemo(() => {
     if (level === '1' && !child) {
-      return '#A6D6FF'
+      return '#A6D6FF';
     }
     if (level === '1' && child) {
-      return '#EAEBEB'
+      return '#EAEBEB';
     }
-  }
+  }, [level, child]);
 
   return (
     <>
@@ -141,10 +132,10 @@ export default function UserTableRow({ row, selected }) {
         hover
         selected={selected}
         sx={{
-          backgroundColor: bgColor(),
+          backgroundColor: bgColor,
           height: '56px',
           "&:hover": {
-            backgroundColor: `${bgColorHover()} !important`
+            backgroundColor: `${bgColorHover} !important`
           },
           borderLeft: level === '1' && child ? '6px solid #F87304' : null
         }}
@@ -168,4 +159,3 @@ export default function UserTableRow({ row, selected }) {
     </>
   );
 }
-

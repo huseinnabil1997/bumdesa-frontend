@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -14,17 +14,17 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
   const [open, setOpen] = useState(false);
   const { nama, saldo, saldo_lalu } = row;
 
-  const generateBgColor = (nama) => {
+  const bgColor = useMemo(() => {
     if (nama.toLowerCase() === 'total aset') return '#DDEFFC';
     else if (isTotalName(nama)) return '#E1F8EB';
     else return 'white';
-  };
+  }, [nama]);
 
-  const generateHoverColor = (nama, index) => {
+  const hoverColor = useMemo(() => {
     if (nama.toLowerCase() === 'total aset') return '#A6D6FF !important';
     else if (isTotalName(nama)) return '#A4EBC2 !important';
     else return `${generateColor(index, index)} !important`;
-  };
+  }, [nama, index, generateColor]);
 
   return (
     <>
@@ -33,10 +33,10 @@ function NestedTableRow({ row, index, generateColor, formatCurrency }) {
         hover
         onClick={() => setOpen(!open)}
         sx={{
-          backgroundColor: generateBgColor(nama),
+          backgroundColor: bgColor,
           height: '56px',
           '&:hover': {
-            backgroundColor: generateHoverColor(nama, index),
+            backgroundColor: hoverColor,
           },
         }}
       >
@@ -145,42 +145,42 @@ export default function UserTableRow({ row, selected }) {
     if (amount === 0 || amount === '0') {
       return 'Rp. -';
     }
-
+  
     const formattedAmount = new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(Math.abs(amount));
-
+  
     if (amount < 0) {
-      return `(${formattedAmount.replace('Rp', 'Rp.')})`;
+      return `Rp. (${formattedAmount.replace('Rp', '').trim()})`;
     }
-
+  
     if (!formattedAmount.includes(',')) {
       return formattedAmount.replace('Rp', 'Rp.');
     }
-
+  
     return formattedAmount;
   };
 
-  const bgColor = () => {
+  const bgColor = useMemo(() => {
     if (level === '1' && !child) {
       return '#DDEFFC';
     }
     if (level === '1' && child) {
       return 'white';
     }
-  };
+  }, [level, child]);
 
-  const bgColorHover = () => {
+  const bgColorHover = useMemo(() => {
     if (level === '1' && !child) {
       return '#A6D6FF';
     }
     if (level === '1' && child) {
       return '#EAEBEB';
     }
-  };
+  }, [level, child]);
 
   return (
     <>
@@ -188,10 +188,10 @@ export default function UserTableRow({ row, selected }) {
         hover
         selected={selected}
         sx={{
-          backgroundColor: bgColor(),
+          backgroundColor: bgColor,
           height: '56px',
           '&:hover': {
-            backgroundColor: `${bgColorHover()} !important`,
+            backgroundColor: `${bgColorHover} !important`,
           },
           borderLeft: level === '1' && child ? '6px solid #F87304' : null,
         }}

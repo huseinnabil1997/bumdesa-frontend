@@ -71,7 +71,7 @@ const styles = {
   }
 }
 
-export default function ProfileInfo({ data, isEdit, setIsEdit }) {
+export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImageKantor, setIsValidImageKantor] = useState(false);
@@ -168,7 +168,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
             />
           </IconButtonAnimate>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3} display="flex" flexDirection="column">
           <Typography variant="caption" fontWeight={600}>
             Logo BUM Desa
           </Typography>
@@ -302,7 +302,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
           />
         </Grid>
       </Grid>
-      {userData?.unit_id === 0 &&
+      {(userData?.unit_id === 0 && from !== 'kanpus') &&
         <Stack sx={styles.action}>
           <StyledLoadingButton
             onClick={setIsEdit}
@@ -332,5 +332,6 @@ ProfileInfo.propTypes = {
   isEdit: PropTypes.bool,
   setIsEdit: PropTypes.func,
   data: PropTypes.object,
+  from: PropTypes.string,
 };
 

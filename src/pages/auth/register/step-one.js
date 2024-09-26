@@ -67,7 +67,7 @@ const SideContent = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive('up', 'lg');
 
   const [isSuccess, setSuccess] = useState(false);
 
@@ -117,7 +117,7 @@ export default function Register() {
                         Informasi BUM Desa
                       </Typography>
                       <Typography sx={{ color: 'text.secondary' }}>
-                        Silahkan masukkan informasi BUM Desa kamu.
+                        Silakan masukkan informasi BUM Desa kamu.
                       </Typography>
                     </Box>
                   </Stack>
