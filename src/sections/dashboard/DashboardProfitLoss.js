@@ -52,8 +52,6 @@ export default function DashboardProfitLoss({ unit }) {
       ]);
   }, [data]);
 
-  console.log(startDate);
-
   return (
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
       <CardHeader

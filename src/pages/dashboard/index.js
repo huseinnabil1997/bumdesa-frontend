@@ -60,16 +60,16 @@ export default function Dashboard() {
             <DashboardWelcome isUnit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12}>
-            <DashboardFinances unit={decoded.sub.businessid} />
-          </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardSales unit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardProfitLoss unit={decoded.sub.businessid} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardFinances unit={decoded.sub.businessid} />
           </Grid>
 
           {!decoded?.sub?.businessid && (
