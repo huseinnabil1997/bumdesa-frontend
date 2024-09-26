@@ -13,7 +13,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFCheckbox, RHFCustomDatePicker, RHFCustomDateRangePicker, RHFTextField } from '../../../components/hook-form';
+import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
 import { setRegisSession, setSession } from 'src/utils/jwt';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
@@ -60,12 +60,9 @@ export default function LoginForm() {
 
   const {
     setError,
-    watch,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
-  
-  console.log('date', watch('date'));
 
   const onSubmit = async (data) => {
     try {
@@ -124,9 +121,6 @@ export default function LoginForm() {
             ),
           }}
         />
-
-        {/* <RHFCustomDatePicker name="date" type="day" /> */}
-        <RHFCustomDateRangePicker name="date"/>
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>

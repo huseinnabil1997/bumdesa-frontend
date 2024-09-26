@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
-import { TextField, Typography, Stack, CircularProgress, InputAdornment, IconButton, Grid, Box, Popper, Paper, ClickAwayListener } from '@mui/material';
+import {
+  TextField, Typography, Stack, CircularProgress, InputAdornment, IconButton, Grid, Box, Popper, Paper, ClickAwayListener
+} from '@mui/material';
 import { NumericFormat } from 'react-number-format';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -16,6 +18,7 @@ RHFCustomDatePicker.propTypes = {
   isLoading: PropTypes.bool,
   type: PropTypes.oneOf(['year', 'month', 'day']),
 };
+
 
 const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
   <NumericFormat
@@ -36,34 +39,31 @@ const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
   />
 );
 
-const generateYears = (startYear, count) => {
-  const years = [];
-  for (let i = 0; i < count; i++) {
-    years.push(startYear + i);
-  }
-  return years;
-};
+const generateYears = (startYear, count) => Array.from({ length: count }, (_, i) => startYear + i);
 
 const generateMonths = () => [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
 ];
 
-
-const generateDays = (year, month) => {
-  const daysInMonth = new Date(year, month, 0).getDate();
-  return Array.from({ length: daysInMonth }, (_, i) => i + 1);
-};
+const generateDays = (year, month) => Array.from({ length: new Date(year, month, 0).getDate() }, (_, i) => i + 1);
 
 const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type }) => {
-  const [startYear, setStartYear] = useState(new Date().getFullYear());
-  const [endYear, setEndYear] = useState(new Date().getFullYear());
-  const [view, setView] = useState('year'); // 'year', 'month', 'day'
+  const [startYear, setStartYear] = useState(selectedDate[0].year || new Date().getFullYear());
+  const [endYear, setEndYear] = useState(selectedDate[1].year || new Date().getFullYear());
+  const [view, setView] = useState('year');
   const [currentPage, setCurrentPage] = useState(0);
   const [fromMonthView, setFromMonthView] = useState(false);
   const [startMonth, setStartMonth] = useState(selectedDate[0].month);
   const [endMonth, setEndMonth] = useState(selectedDate[1].month);
   const itemsPerPage = 9;
+  const [paginationStartYear, setPaginationStartYear] = useState(Math.floor((selectedDate[0].year || new Date().getFullYear()) / 9) * 9);
+
+  useEffect(() => {
+    if (startYear) {
+      setPaginationStartYear(Math.floor(startYear / 9) * 9);
+    }
+  }, [startYear]);
 
   const handleYearClick = (year) => {
     if (fromMonthView) {
@@ -72,7 +72,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
       onClose();
       return;
     }
-  
+
     if (startYear === null) {
       setStartYear(year);
       onSelectDate([{ ...selectedDate[0], year }, selectedDate[1]]);
@@ -101,7 +101,6 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
       onSelectDate([{ ...selectedDate[0], month, year }, selectedDate[1]]);
     } else if (endMonth === null) {
       if (months.indexOf(month) < months.indexOf(startMonth)) {
-        // If end month is before start month, reset start month
         setStartMonth(month);
         setEndMonth(null);
         onSelectDate([{ ...selectedDate[0], month, year }, selectedDate[1]]);
@@ -124,7 +123,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
 
   const handlePrevious = () => {
     if (view === 'year') {
-      setStartYear(startYear - 9);
+      setPaginationStartYear(paginationStartYear - 9);
     } else if (view === 'month') {
       const newYear = startYear - 1;
       setStartYear(newYear);
@@ -136,7 +135,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
 
   const handleNext = () => {
     if (view === 'year') {
-      setStartYear(startYear + 9);
+      setPaginationStartYear(paginationStartYear + 9);
     } else if (view === 'month') {
       const newYear = startYear + 1;
       setStartYear(newYear);
@@ -146,7 +145,8 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
     }
   };
 
-  const years = generateYears(startYear, 9);
+
+  const years = generateYears(paginationStartYear, 9);
   const months = generateMonths();
   const days = selectedDate[0].year && selectedDate[0].month ? generateDays(selectedDate[0].year, months.indexOf(selectedDate[0].month) + 1) : [];
   const paginatedDays = days.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
@@ -167,16 +167,6 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
     }
     if (endMonth && !startMonth) {
       return months.indexOf(month) > months.indexOf(endMonth);
-    }
-    return false;
-  };
-
-  const isYearDisabled = (year) => {
-    if (startYear && !endYear) {
-      return year < startYear;
-    }
-    if (endYear && !startYear) {
-      return year > endYear;
     }
     return false;
   };
@@ -212,12 +202,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
         </Grid>
       </Grid>
       <Grid container spacing={1} justifyContent="space-between">
-        <Grid item xs={4}>
-          <StyledButton variant={view === 'day' ? 'contained' : 'outlined'} fullWidth onClick={() => setView('day')}>
-            Hari
-          </StyledButton>
-        </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <StyledButton variant={view === 'month' || fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
             setView('month');
             type('month');
@@ -225,7 +210,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
             Bulan
           </StyledButton>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <StyledButton variant={view === 'year' && !fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
             setView('year');
             setFromMonthView(false);
@@ -242,7 +227,6 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
               variant={selectedDate[0].year === year || selectedDate[1].year === year ? 'contained' : 'text'}
               onClick={() => handleYearClick(year)}
               fullWidth
-              disabled={isYearDisabled(year)}
               sx={
                 selectedDate[0].year === year || selectedDate[1].year === year
                   ? { backgroundColor: '#1078CA', color: 'white' }
@@ -291,7 +275,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
 };
 
 const formatDateForDisplay = (date, type) => {
-  if (type === 'month') {
+  if (type === 'month' && date[0].year && date[0].month && date[1].year && date[1].month) {
     return `${date[0].month} ${date[0].year} - ${date[1].month} ${date[1].year}`;
   }
   if (type === 'year') {
@@ -309,32 +293,30 @@ const formatDateForValue = (date, type) => {
   if (type === 'year' && date[0].year && date[1].year) {
     return [`${date[0].year}`, `${date[1].year}`];
   }
-  // if (date[0].year && date[0].month) {
-  //   const monthIndex = generateMonths().indexOf(date[0].month) + 1;
-  //   return `${date[0].year}-${String(monthIndex).padStart(2, '0')}`;
-  // }
-  // if (date[0].year) {
-  //   return `${date[0].year}`;
-  // }
   return '';
 };
 
 export default function RHFCustomDatePicker({ name, require, isLoading, ...other }) {
   const { control, setValue } = useFormContext();
-  const [type, setType] = useState('month');
+  const [type, setType] = useState('year');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState([{ year: new Date().getFullYear(), month: null, day: null }, { year: new Date().getFullYear(), month: null, day: null }]);
-  const anchorRef = React.useRef(null);
+  const anchorRef = useRef(null);
 
   const handleSelectDate = (date) => {
-    setSelectedDate(date);
+    if (date[0].year > date[1].year) {
+      setSelectedDate([{ year: date[1].year, month: date[1].month, day: date[1].day }, { year: date[0].year, month: date[0].month, day: date[0].day }]);
+    } else {
+      setSelectedDate(date);
+    }
   };
 
   const handleClickAway = () => {
     setShowDatePicker(false);
   };
 
-  React.useEffect(() => {
+
+  useEffect(() => {
     setValue(name, formatDateForValue(selectedDate, type));
   }, [selectedDate, setValue, name, type]);
 
