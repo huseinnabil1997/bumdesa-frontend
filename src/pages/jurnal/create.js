@@ -306,7 +306,7 @@ export default function JurnalCreate() {
     <Page>
       <Joyride
         steps={steps}
-        run={run}
+        run={false}
         continuous
         showSkipButton
         callback={handleJoyrideCallback}
