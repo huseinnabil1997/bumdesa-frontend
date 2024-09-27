@@ -9,6 +9,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { StyledButton } from 'src/theme/custom/Button';
+import RHFAutocomplete from './RHFAutocomplete';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +19,6 @@ RHFCustomDatePicker.propTypes = {
   isLoading: PropTypes.bool,
   type: PropTypes.oneOf(['year', 'month', 'day']),
 };
-
 
 const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
   <NumericFormat
@@ -41,23 +41,42 @@ const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
 
 const generateYears = (startYear, count) => Array.from({ length: count }, (_, i) => startYear + i);
 
+const generateListYears = (selectedYear) => {
+  const startYear = 2000;
+  const endYear = selectedYear;
+  const years = [];
+  for (let year = startYear; year <= endYear; year++) {
+    years.push({ label: year, value: year });
+  }
+  return years;
+};
+
 const generateMonths = () => [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
 ];
 
+const generateMonthsToText = (month) => {
+  if (month?.length < 3) {
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    return months[parseInt(month) - 1];
+  }
+  return month;
+};
+
 const generateDays = (year, month) => Array.from({ length: new Date(year, month, 0).getDate() }, (_, i) => i + 1);
 
-const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type }) => {
+const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, type }) => {
   const [startYear, setStartYear] = useState(selectedDate[0].year || new Date().getFullYear());
   const [endYear, setEndYear] = useState(selectedDate[1].year || new Date().getFullYear());
-  const [view, setView] = useState('year');
+  const [view, setView] = useState(type);
   const [currentPage, setCurrentPage] = useState(0);
   const [fromMonthView, setFromMonthView] = useState(false);
-  const [startMonth, setStartMonth] = useState(selectedDate[0].month);
-  const [endMonth, setEndMonth] = useState(selectedDate[1].month);
+  const [startMonth, setStartMonth] = useState(generateMonthsToText(selectedDate[0].month) || null);
+  const [endMonth, setEndMonth] = useState(generateMonthsToText(selectedDate[1].month) || null);
   const itemsPerPage = 9;
   const [paginationStartYear, setPaginationStartYear] = useState(Math.floor((selectedDate[0].year || new Date().getFullYear()) / 9) * 9);
+  const yearsForMonth = generateListYears(selectedDate[0].year || new Date().getFullYear());
 
   useEffect(() => {
     if (startYear) {
@@ -68,8 +87,9 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
   const handleYearClick = (year) => {
     if (fromMonthView) {
       onSelectDate([{ ...selectedDate[0], year }, { ...selectedDate[1], year }]);
-      setFromMonthView(false);
-      onClose();
+      setFromMonthView(true);
+      setView('month');
+      // onClose();
       return;
     }
 
@@ -106,7 +126,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
         onSelectDate([{ ...selectedDate[0], month, year }, selectedDate[1]]);
       } else {
         setEndMonth(month);
-        onClose();
+        // onClose();
         onSelectDate([{ ...selectedDate[0], month: startMonth, year }, { ...selectedDate[1], month, year }]);
       }
     } else {
@@ -145,7 +165,6 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
     }
   };
 
-
   const years = generateYears(paginationStartYear, 9);
   const months = generateMonths();
   const days = selectedDate[0].year && selectedDate[0].month ? generateDays(selectedDate[0].year, months.indexOf(selectedDate[0].month) + 1) : [];
@@ -180,20 +199,46 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
           </IconButton>
         </Grid>
         <Grid item>
-          <Typography
-            fontWeight="bold"
-            align="center"
-            gutterBottom
-            onClick={() => {
-              if (view === 'month') {
-                setView('year');
-                setFromMonthView(true);
-              }
-            }}
-            sx={{ cursor: view === 'month' ? 'pointer' : 'default' }}
-          >
-            {view === 'year' ? 'Pilih Tahun' : view === 'month' ? selectedDate[0].year : view === 'day' ? `${selectedDate[0].month} ${selectedDate[0].year}` : ''}
-          </Typography>
+          {view === 'month' ? (
+            <Box>
+              <RHFAutocomplete
+                placeholder="Pilih Tahun"
+                require
+                name="yearForMonth"
+                loading={false}
+                size="small"
+                options={yearsForMonth?.map((option) => option) ?? []}
+                getOptionLabel={(option) => option.label}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    {option.label}
+                  </li>
+                )}
+                onChange={(event, newValue) => {
+                  onSelectDate([{ ...selectedDate[0], year: newValue?.value }, { ...selectedDate[1], year: newValue?.value }]);
+                }}
+                sx={{ minWidth: 150 }}
+                clearOnEscape={false}
+                clearIcon={null}
+                defaultValue={selectedDate[0].year ? { label: selectedDate[0].year, value: selectedDate[0].year } : { label: new Date().getFullYear(), value: new Date().getFullYear() }}
+              />
+            </Box>
+          ) : (
+            <Typography
+              fontWeight="bold"
+              align="center"
+              gutterBottom
+              onClick={() => {
+                if (view === 'month') {
+                  setView('year');
+                  setFromMonthView(true);
+                }
+              }}
+              sx={{ cursor: view === 'month' ? 'pointer' : 'default' }}
+            >
+              {view === 'year' ? 'Pilih Tahun' : view === 'month' ? selectedDate[0].year : view === 'day' ? `${selectedDate[0].month} ${selectedDate[0].year}` : ''}
+            </Typography>
+          )}
         </Grid>
         <Grid item>
           <IconButton onClick={handleNext} sx={{ color: '#777777' }}>
@@ -205,7 +250,6 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
         <Grid item xs={6}>
           <StyledButton variant={view === 'month' || fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
             setView('month');
-            type('month');
           }}>
             Bulan
           </StyledButton>
@@ -214,7 +258,6 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
           <StyledButton variant={view === 'year' && !fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
             setView('year');
             setFromMonthView(false);
-            type('year');
           }}>
             Tahun
           </StyledButton>
@@ -228,7 +271,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
               onClick={() => handleYearClick(year)}
               fullWidth
               sx={
-                selectedDate[0].year === year || selectedDate[1].year === year
+                parseInt(selectedDate[0].year) === year || parseInt(selectedDate[1].year) === year
                   ? { backgroundColor: '#1078CA', color: 'white' }
                   : selectedDate[0].year && selectedDate[1].year && year >= selectedDate[0].year && year <= selectedDate[1].year
                     ? { backgroundColor: '#DDEFFC', color: '#1078CA' }
@@ -274,11 +317,11 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, onClose, type })
   );
 };
 
-const formatDateForDisplay = (date, type) => {
-  if (type === 'month' && date[0].year && date[0].month && date[1].year && date[1].month) {
-    return `${date[0].month} ${date[0].year} - ${date[1].month} ${date[1].year}`;
+const formatDateForDisplay = (date) => {
+  if (date[0].year && date[0].month && date[1].year && date[1].month) {
+    return `${generateMonthsToText(date[0].month)} ${date[0].year} - ${generateMonthsToText(date[1].month)} ${date[1].year}`;
   }
-  if (type === 'year') {
+  if (date[0].year && date[1].year) {
     return `${date[0].year} - ${date[1].year}`;
   }
   return '';
@@ -296,11 +339,26 @@ const formatDateForValue = (date, type) => {
   return '';
 };
 
-export default function RHFCustomDatePicker({ name, require, isLoading, ...other }) {
-  const { control, setValue } = useFormContext();
-  const [type, setType] = useState('year');
+const formatDefaultDate = (defaultDate) => {
+  const startYear = defaultDate[0].split('-')[0];
+  const endYear = defaultDate[1].split('-')[0];
+  const startMonth = defaultDate[0].split('-')[1];
+  const endMonth = defaultDate[1].split('-')[1];
+  return [{ year: startYear, month: startMonth, day: null }, { year: endYear, month: endMonth, day: null }];
+};
+
+const autoGenerateType = (date) => {
+  if (date[0].year && date[0].month && date[1].year && date[1].month) {
+    return 'month';
+  }
+  return 'year';
+}
+
+export default function RHFCustomDatePicker({ name, require, isLoading, type, ...other }) {
+  const { control, setValue, getValues } = useFormContext();
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState([{ year: new Date().getFullYear(), month: null, day: null }, { year: new Date().getFullYear(), month: null, day: null }]);
+  const defaultDate = getValues(name);
+  const [selectedDate, setSelectedDate] = useState(formatDefaultDate(defaultDate) || [{ year: new Date().getFullYear(), month: null, day: null }, { year: new Date().getFullYear(), month: null, day: null }]);
   const anchorRef = useRef(null);
 
   const handleSelectDate = (date) => {
@@ -314,11 +372,6 @@ export default function RHFCustomDatePicker({ name, require, isLoading, ...other
   const handleClickAway = () => {
     setShowDatePicker(false);
   };
-
-
-  useEffect(() => {
-    setValue(name, formatDateForValue(selectedDate, type));
-  }, [selectedDate, setValue, name, type]);
 
   return (
     <Stack>
@@ -338,8 +391,11 @@ export default function RHFCustomDatePicker({ name, require, isLoading, ...other
             error={!!error}
             helperText={error?.message}
             {...other}
-            value={formatDateForDisplay(selectedDate, type)}
-            onChange={() => field.onChange(formatDateForValue(selectedDate, type))}
+            value={formatDateForDisplay(selectedDate)}
+            onChange={() => {
+              field.onChange(formatDateForValue(selectedDate, type))
+              setValue(name, formatDateForValue(selectedDate, type))
+            }}
             ref={anchorRef}
             onClick={() => setShowDatePicker(!showDatePicker)}
             autoComplete="off"
@@ -388,7 +444,7 @@ export default function RHFCustomDatePicker({ name, require, isLoading, ...other
               onSelectDate={handleSelectDate}
               selectedDate={selectedDate}
               onClose={() => setShowDatePicker(false)}
-              type={(type) => setType(type)}
+              type={type || autoGenerateType(selectedDate)}
             />
           </Paper>
         </ClickAwayListener>
