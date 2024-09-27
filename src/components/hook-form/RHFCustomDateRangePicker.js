@@ -41,9 +41,9 @@ const CurrencyFormatCustom = ({ inputRef, onChange, ...other }) => (
 
 const generateYears = (startYear, count) => Array.from({ length: count }, (_, i) => startYear + i);
 
-const generateListYears = (selectedYear) => {
+const generateListYears = () => {
   const startYear = 2000;
-  const endYear = selectedYear;
+  const endYear = new Date().getFullYear();
   const years = [];
   for (let year = startYear; year <= endYear; year++) {
     years.push({ label: year, value: year });
@@ -329,28 +329,28 @@ const formatDateForDisplay = (date) => {
   return '';
 };
 
-const formatDateForValue = (date, type) => {
-  if (type === 'month' && date[0].year && date[0].month && date[1].year && date[1].month) {
+const formatDateForValue = (date) => {
+  if (date[0]?.year && date[0]?.month && date[1]?.year && date[1]?.month) {
     const monthIndexStart = generateMonths().indexOf(date[0].month) + 1;
     const monthIndexEnd = generateMonths().indexOf(date[1].month) + 1;
     return [`${date[0].year}-${String(monthIndexStart).padStart(2, '0')}`, `${date[1].year}-${String(monthIndexEnd).padStart(2, '0')}`];
   }
-  if (type === 'year' && date[0].year && date[1].year) {
+  if (date[0]?.year && date[1]?.year) {
     return [`${date[0].year}`, `${date[1].year}`];
   }
   return '';
 };
 
 const formatDefaultDate = (defaultDate) => {
-  const startYear = defaultDate[0].split('-')[0];
-  const endYear = defaultDate[1].split('-')[0];
-  const startMonth = defaultDate[0].split('-')[1];
-  const endMonth = defaultDate[1].split('-')[1];
+  const startYear = defaultDate[0]?.split('-')[0];
+  const endYear = defaultDate[1]?.split('-')[0];
+  const startMonth = defaultDate[0]?.split('-')[1];
+  const endMonth = defaultDate[1]?.split('-')[1];
   return [{ year: startYear, month: startMonth, day: null }, { year: endYear, month: endMonth, day: null }];
 };
 
 const autoGenerateType = (date) => {
-  if (date[0].year && date[0].month && date[1].year && date[1].month) {
+  if (date[0]?.year && date[0]?.month && date[1]?.year && date[1]?.month) {
     return 'month';
   }
   return 'year';
@@ -366,8 +366,10 @@ export default function RHFCustomDatePicker({ name, require, isLoading, type, ..
   const handleSelectDate = (date) => {
     if (date[0].year > date[1].year) {
       setSelectedDate([{ year: date[1].year, month: date[1].month, day: date[1].day }, { year: date[0].year, month: date[0].month, day: date[0].day }]);
+      setValue(name, formatDateForValue([{ year: date[1].year, month: date[1].month, day: date[1].day }, { year: date[0].year, month: date[0].month, day: date[0].day }], type))
     } else {
       setSelectedDate(date);
+      setValue(name, formatDateForValue(date, type))
     }
   };
 
@@ -394,13 +396,10 @@ export default function RHFCustomDatePicker({ name, require, isLoading, type, ..
             helperText={error?.message}
             {...other}
             value={formatDateForDisplay(selectedDate)}
-            onChange={() => {
-              field.onChange(formatDateForValue(selectedDate, type))
-              setValue(name, formatDateForValue(selectedDate, type))
-            }}
             ref={anchorRef}
             onClick={() => setShowDatePicker(!showDatePicker)}
             autoComplete="off"
+            inputProps={{ readOnly: true }}
             sx={{
               '.MuiFormLabel-asterisk': { color: 'red' },
               'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
