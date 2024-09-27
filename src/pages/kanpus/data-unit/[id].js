@@ -80,16 +80,16 @@ export default function DetailUnit() {
             </Breadcrumbs>
           </Grid>
 
-          <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus unit={true} id={id} />
-          </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardSalesKanpus unit={true} id={id} />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardProfitLossKanpus unit={true} id={id} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardFinancesBumdesKanpus unit={true} id={id} />
           </Grid>
 
           <Grid item xs={12}>
