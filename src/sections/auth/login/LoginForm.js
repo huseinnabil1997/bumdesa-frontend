@@ -51,6 +51,7 @@ export default function LoginForm() {
     email: '',
     password: '',
     remember: false,
+    date: ['2022-01', '2024-12']
   };
 
   const methods = useForm({
