@@ -250,6 +250,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, type }) => {
         <Grid item xs={6}>
           <StyledButton variant={view === 'month' || fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
             setView('month');
+            onSelectDate([{ ...selectedDate[0], month: startMonth }, { ...selectedDate[1], month: endMonth }]);
           }}>
             Bulan
           </StyledButton>
@@ -258,6 +259,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, type }) => {
           <StyledButton variant={view === 'year' && !fromMonthView ? 'contained' : 'outlined'} fullWidth onClick={() => {
             setView('year');
             setFromMonthView(false);
+            onSelectDate([{ ...selectedDate[0], month: null }, { ...selectedDate[1], month: null }]);
           }}>
             Tahun
           </StyledButton>
