@@ -80,16 +80,16 @@ export default function DetailBumdesa() {
             </Breadcrumbs>
           </Grid>
 
-          <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus id={id} />
-          </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardSalesKanpus id={id} />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardProfitLossKanpus id={id} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardFinancesBumdesKanpus id={id} />
           </Grid>
 
           <Grid item xs={12}>

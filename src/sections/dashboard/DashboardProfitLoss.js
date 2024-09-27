@@ -43,8 +43,8 @@ export default function DashboardProfitLoss({ unit }) {
   }, [watch]);
 
   const { data, isLoading } = useGetProfileLoss({
-    start_date: moment(startDate).format('yyyy'),
-    end_date: moment(endDate).format('yyyy'),
+    start_date: startDate,
+    end_date: endDate,
     unit,
   });
 
@@ -81,7 +81,7 @@ export default function DashboardProfitLoss({ unit }) {
         action={
           <Box display="flex" alignItems="center">
             <FormProvider methods={methods}>
-              <RHFCustomDateRangePicker name="date" size="small"/>
+              <RHFCustomDateRangePicker name="date" size="small" sx={{ width: 200 }} />
             </FormProvider>
           </Box>
         }
