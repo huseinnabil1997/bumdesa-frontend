@@ -40,8 +40,9 @@ export const StepOneSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto BUM Desa wajib diisi'),
   image_logo: Yup.mixed().required('Logo BUM Desa wajib diisi'),
   employees: Yup.number()
+    .nullable()
+    .transform((value, originalValue) => (`${originalValue}`.trim() === '' ? null : value))
     .required('Jumlah pegawai tetap wajib diisi')
-    .transform((value) => (isNaN(value) ? 0 : value))
     .positive('Hanya dapat diisi angka positif')
     .integer('Hanya dapat diisi angka bulat')
     .min(3, 'Jumlah pegawai tetap minimal adalah 3')

@@ -39,13 +39,14 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) setDecoded(jwtDecode(token));
     else setDecoded(null);
+    // setOpen(true);
   }, [token]);
 
   useEffect(() => {
     if (userData?.role === 2 && userData?.linkumkm_integrated === 0) {
       const hasShownDialog = sessionStorage.getItem('hasShownDialog');
       if (!hasShownDialog) {
-        setOpen(true);
+        // setOpen(true);
         sessionStorage.setItem('hasShownDialog', 'true');
       }
     }
@@ -59,16 +60,16 @@ export default function Dashboard() {
             <DashboardWelcome isUnit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12}>
-            <DashboardFinances unit={decoded.sub.businessid} />
-          </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardSales unit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardProfitLoss unit={decoded.sub.businessid} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardFinances unit={decoded.sub.businessid} />
           </Grid>
 
           {!decoded?.sub?.businessid && (

@@ -59,11 +59,19 @@ export const BUMDES_DETAIL_HEAD = [
   { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
 ];
 
+export const SUPERVISOR_HEAD = [
+  { id: 'name', label: 'Nama', align: 'left' },
+  { id: 'title', label: 'Jabatan', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: '', label: '', align: 'right', width: 50 },
+];
+
 export const LOG_HEAD = [
   { id: 'activity', label: 'Aktivitas', align: 'left', width: 200 },
   { id: 'time', label: 'Waktu', align: 'left', width: 100 },
   { id: 'place', label: 'Modul', align: 'left', width: 100 },
   { id: 'device', label: 'User Agent', align: 'left', width: 200 },
+  { id: '', label: '', align: 'left', width: 50 },
 ];
 
 export const DEFAULT_FILTER = {
