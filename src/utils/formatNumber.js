@@ -7,6 +7,11 @@ export function fCurrency(number) {
   return 'Rp ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
+export function fCurrencyJuta(number) {
+  const value = Math.round(number);
+  return 'Rp ' + parseFloat((value / 1e6).toFixed(1)) + ' Juta';
+}
+
 export function fCurrencyNoSpace(number) {
   const value = Math.round(number);
   return 'Rp' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

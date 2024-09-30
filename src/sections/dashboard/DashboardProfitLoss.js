@@ -7,9 +7,9 @@ import ReactApexChart, { BaseOptionChart } from '../../components/chart';
 import { useTheme } from '@emotion/react';
 import moment from 'moment';
 import { useGetProfileLoss } from 'src/query/hooks/dashboard/useGetProfitLoss';
-import { fCurrency } from 'src/utils/formatNumber';
 import { FormProvider, RHFCustomDateRangePicker } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
+import { fCurrencyJuta } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -47,16 +47,21 @@ export default function DashboardProfitLoss({ unit }) {
     end_date: endDate,
     unit,
   });
-
+  
   const chartOptions = merge(BaseOptionChart(), {
     legend: { show: false },
     xaxis: {
       categories: data?.key ?? [],
     },
+    yaxis: {
+      labels: {
+        formatter: (val) => fCurrencyJuta(val),
+      },
+    },
     tooltip: {
       x: { show: true },
       y: {
-        formatter: (val) => `${fCurrency(val)}`,
+        formatter: (val) => fCurrencyJuta(val),
         title: { formatter: () => `Total: ` },
       },
     },
@@ -88,7 +93,7 @@ export default function DashboardProfitLoss({ unit }) {
       />
 
       {!isLoading && chartOptions && (
-        <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
+        <Box sx={{ mt: 3, mx: 3 }} dir="ltr" >
           <ReactApexChart type="bar" series={chartData} options={chartOptions} height={360} />
         </Box>
       )}

@@ -7,7 +7,7 @@ import ReactApexChart, { BaseOptionChart } from '../../components/chart';
 import { useTheme } from '@emotion/react';
 import moment from 'moment';
 import { useGetProfileLoss } from 'src/query/hooks/dashboard/useGetProfitLoss';
-import { fCurrency } from 'src/utils/formatNumber';
+import { fCurrencyJuta } from 'src/utils/formatNumber';
 import { FormProvider, RHFCustomDateRangePicker } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 
@@ -53,10 +53,15 @@ export default function DashboardProfitLossKanpus({ id, unit = false }) {
     xaxis: {
       categories: data?.key ?? [],
     },
+    yaxis: {
+      labels: {
+        formatter: (val) => fCurrencyJuta(val),
+      },
+    },
     tooltip: {
       x: { show: true },
       y: {
-        formatter: (val) => `${fCurrency(val)}`,
+        formatter: (val) => fCurrencyJuta(val),
         title: { formatter: () => `Total: ` },
       },
     },
