@@ -1,7 +1,7 @@
 import merge from 'lodash/merge';
 import { useEffect, useState } from 'react';
 // @mui
-import { Card, CardHeader, Box, Skeleton } from '@mui/material';
+import { Card, CardHeader, Box, Skeleton, Typography } from '@mui/material';
 // components
 import ReactApexChart, { BaseOptionChart } from '../../components/chart';
 import { useTheme } from '@emotion/react';
@@ -47,7 +47,7 @@ export default function DashboardProfitLoss({ unit }) {
     end_date: endDate,
     unit,
   });
-  
+
   const chartOptions = merge(BaseOptionChart(), {
     legend: { show: false },
     xaxis: {
@@ -93,8 +93,13 @@ export default function DashboardProfitLoss({ unit }) {
       />
 
       {!isLoading && chartOptions && (
-        <Box sx={{ mt: 3, mx: 3 }} dir="ltr" >
+        <Box sx={{ mt: 3, mx: 3 }}>
           <ReactApexChart type="bar" series={chartData} options={chartOptions} height={360} />
+          {startDate.length === 7 && (
+            <Box display="flex" alignItems="center" justifyContent="center" sx={{ mb: 3, mt: -2 }}>
+              <Typography fontSize="12px" fontWeight="bold">{startDate?.split('-')[0]}</Typography>
+            </Box>
+          )}
         </Box>
       )}
 
