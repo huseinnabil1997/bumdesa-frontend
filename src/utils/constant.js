@@ -87,3 +87,71 @@ export const fileType = [
 ];
 
 export const extType = ['', '.pdf', '.xlsx', '.csv'];
+
+export const stepperTutorial = [
+  {
+    target: '.transaction-information',
+    content: 'Masukkan keterangan transaksi di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.date-picker',
+    content: 'Pilih tanggal transaksi di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.number-of-evidence',
+    content: 'Nomor bukti akan otomatis terbuat.',
+    disableBeacon: true,
+  },
+  {
+    target: '.first-balance',
+    content: 'Tanda ini menandakan bahwa transaksi ini adalah saldo awal.',
+    disableBeacon: true,
+  },
+  {
+    target: '.account-code',
+    content: 'Pilih akun di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.debit',
+    content: 'Masukkan jumlah debit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.credit',
+    content: 'Masukkan jumlah kredit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.cash-flow-code',
+    content: 'Pilih jenis arus kas di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.btn-add-account',
+    content: 'Tambahkan akun di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.balance-indicator',
+    content: 'Lihat indikator keseimbangan di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.total-debit',
+    content: 'Lihat total debit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.total-credit',
+    content: 'Lihat total kredit di sini.',
+    disableBeacon: true,
+  },
+  {
+    target: '.btn-save',
+    content: 'Simpan jurnal di sini.',
+    disableBeacon: true,
+  },
+]
