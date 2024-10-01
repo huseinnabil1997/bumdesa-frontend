@@ -155,3 +155,32 @@ export const stepperTutorial = [
     disableBeacon: true,
   },
 ]
+
+export const TABLE_HEAD_DATA_BUMDESA = [
+  { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
+  { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left', minWidth: 150 },
+  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
+  { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center', minWidth: 150 },
+  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center', minWidth: 150 },
+  { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
+  { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
+  { id: 'solvency', label: 'Solvabilitas', align: 'left', minWidth: 150 },
+  { id: 'total_omset', label: 'Total Omset', align: 'left', minWidth: 150 },
+  { id: 'profit', label: 'Laba Rugi', align: 'left', minWidth: 150 },
+  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left', minWidth: 150 },
+  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
+];
+
+export const TABLE_HEAD_DATA_UNIT = [
+  { id: 'name_sticky', label: 'Nama Unit Usaha', align: 'left', minWidth: 200 },
+  { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left', minWidth: 200 },
+  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
+  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center', minWidth: 150 },
+  { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
+  { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
+  { id: 'solvency', label: 'Solvabilitas', align: 'left', minWidth: 150 },
+  { id: 'total_omset', label: 'Total Omset', align: 'left', minWidth: 150 },
+  { id: 'profit', label: 'Laba Rugi', align: 'left', minWidth: 150 },
+  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left', minWidth: 150 },
+  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
+];

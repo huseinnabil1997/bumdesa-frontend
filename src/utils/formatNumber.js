@@ -14,8 +14,10 @@ export function fCurrencyJuta(number) {
 
 export function fCurrencyNoSpace(number) {
   const value = Math.round(number);
-  const sign = value < 0 ? '-' : '';
-  return sign + 'Rp' + Math.abs(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (value < 0) {
+    return `Rp(${Math.abs(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')})`;
+  }
+  return 'Rp' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 export function fPercent(number) {
