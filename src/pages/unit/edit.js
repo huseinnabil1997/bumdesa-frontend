@@ -16,13 +16,13 @@ import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
-import usePatch from 'src/query/hooks/mutation/usePatch';
 import { useGetUnitById } from 'src/query/hooks/units/useGetUnitById';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
 import { useSelector } from 'react-redux';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 import moment from 'moment';
+import { useUpdateUnit } from 'src/query/hooks/units/useUpdateUnit';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -37,7 +37,7 @@ export default function EditUnitUsaha() {
   const router = useRouter();
   const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
   const { data, isLoading } = useGetUnitById(router.query.id);
-  const mutation = usePatch();
+  const { mutate: onUpdate, isLoading: updating } = useUpdateUnit();
 
   const NewUnitFormSchema = Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -102,69 +102,65 @@ export default function EditUnitUsaha() {
     formData.append('manager_name', data?.manager_name);
     formData.append('manager_phone', data?.manager_phone);
 
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-    };
-
-    try {
-      await mutation.mutateAsync({
-        endpoint: `/business-units/${data.id}`,
-        payload: formData,
-        headers: headers,
-      });
-      if (data?.email === defaultValues.email) {
-        await enqueueSnackbar(
-          '',
-          {
-            variant: 'success',
-            content: () => (
-              <Box
-                display="flex"
-                justifyContent="space-around"
-                alignItems="center"
-                sx={{ width: '280px', height: 48, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
-              >
-                <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-                <Typography mr="12px" fontSize="12px">Data Anda telah berhasil diperbarui.</Typography>
-              </Box>
-            )
+    onUpdate(
+      { id: data.id, payload: formData },
+      {
+        onSuccess: () => {
+          if (data?.email === defaultValues.email) {
+            enqueueSnackbar(
+              '',
+              {
+                variant: 'success',
+                content: () => (
+                  <Box
+                    display="flex"
+                    justifyContent="space-around"
+                    alignItems="center"
+                    sx={{ width: '280px', height: 48, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                  >
+                    <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                    <Typography mr="12px" fontSize="12px">Data Anda telah berhasil diperbarui.</Typography>
+                  </Box>
+                )
+              }
+            );
+            router.push('list');
+          } else {
+            enqueueSnackbar(
+              '',
+              {
+                variant: 'success',
+                content: () => (
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ width: 475, height: 96, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                  >
+                    <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      flexDirection="column"
+                    >
+                      <Typography fontSize="12px" mb="10px">
+                        Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{data?.email}</span>
+                      </Typography>
+                      <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>
+                    </Box>
+                  </Box>
+                )
+              }
+            );
+            router.push('list');
           }
-        );
-        router.push('list');
-      } else {
-        await enqueueSnackbar(
-          '',
-          {
-            variant: 'success',
-            content: () => (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ width: 475, height: 96, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
-              >
-                <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  flexDirection="column"
-                >
-                  <Typography fontSize="12px" mb="10px">
-                    Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{data?.email}</span>
-                  </Typography>
-                  <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>
-                </Box>
-              </Box>
-            )
-          }
-        );
-        router.push('list');
+        },
+        onError: (err) => {
+          enqueueSnackbar(err?.message, { variant: 'error' });
+        },
       }
-    } catch (error) {
-      enqueueSnackbar(error?.message, { variant: 'error' });
-      console.log('error Edit Units', error);
-    }
-  }, [defaultValues.email, enqueueSnackbar, mutation, router]);
+    );
+  }, [defaultValues.email, enqueueSnackbar, router]);
 
   useEffect(() => {
     if (data) {
@@ -194,7 +190,7 @@ export default function EditUnitUsaha() {
             variant="contained"
             sx={{ width: '106px', height: '48px' }}
             onClick={handleSubmit(onSubmit)}
-            loading={isSubmitting}
+            loading={isSubmitting || updating}
           >
             Simpan
           </StyledLoadingButton>

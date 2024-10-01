@@ -20,13 +20,13 @@ import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
-import usePost from 'src/query/hooks/mutation/usePost';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
 import { useSelector } from 'react-redux';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
 import moment from 'moment';
 import { useMemo, useCallback } from 'react';
+import { useCreateUnit } from 'src/query/hooks/units/useCreateUnit';
 
 AddUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -44,7 +44,7 @@ export default function AddUnitUsaha() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const mutation = usePost();
+  const { mutate: onCreate, isLoading: creating } = useCreateUnit();
 
   const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
 
@@ -98,7 +98,6 @@ export default function AddUnitUsaha() {
     reset,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = useCallback(async (data) => {
@@ -112,39 +111,31 @@ export default function AddUnitUsaha() {
     formData.append('manager_name', data?.manager_name);
     formData.append('manager_phone', data?.manager_phone);
 
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-    };
-
-    try {
-      await mutation.mutateAsync({
-        endpoint: '/business-units',
-        payload: formData,
-        headers: headers,
-      });
-
-      enqueueSnackbar('', {
-        variant: 'success',
-        content: () => (
-          <Box
-            display="flex"
-            justifyContent="space-around"
-            alignItems="center"
-            sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
-          >
-            <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-            <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
-          </Box>
-        )
-      });
-
-      router.push('list');
-      reset();
-    } catch (error) {
-      enqueueSnackbar(error?.message, { variant: 'error' });
-      console.log('error addUnits', error);
-    }
-  }, [enqueueSnackbar, mutation, reset, router]);
+    onCreate(formData, {
+      onSuccess: () => {
+        enqueueSnackbar('', {
+          variant: 'success',
+          content: () => (
+            <Box
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+            >
+              <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+              <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
+            </Box>
+          )
+        });
+  
+        router.push('list');
+        reset();
+      },
+      onError: (err) => {
+        enqueueSnackbar(err?.message, { variant: 'error' });
+      },
+    });
+  }, [enqueueSnackbar, reset, router]);
 
   return (
     <Page title="Unit Usaha: New">
@@ -168,7 +159,7 @@ export default function AddUnitUsaha() {
             variant="contained"
             sx={{ width: '106px', height: '48px' }}
             onClick={handleSubmit(onSubmit)}
-            loading={isSubmitting}
+            loading={creating}
           >
             Simpan
           </StyledLoadingButton>

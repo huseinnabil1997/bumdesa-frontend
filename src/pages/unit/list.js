@@ -29,12 +29,12 @@ import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
-import usePost from 'src/query/hooks/mutation/usePost';
-import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 import debounce from 'lodash.debounce';
+import { useDeleteUnit } from 'src/query/hooks/units/useDeleteJurnal';
+import { useResendUnit } from 'src/query/hooks/units/useResendUnit';
 
 // ----------------------------------------------------------------------
 
@@ -64,13 +64,13 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const mutationPost = usePost();
-
-  const mutationDelete = useDelete();
-
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [alertChangeStatus, setAlertChangeStatus] = useState(null);
+
+  const { mutate: onDelete } = useDeleteUnit();
+
+  const { mutate: onResend } = useResendUnit();
 
   const { mutate: onDeactivate } = useDeactivate();
 
@@ -89,39 +89,37 @@ export default function UserList() {
   }, [page, rowsPerPage]);
 
   const handleResendRow = async (id) => {
-    try {
-      const response = await mutationPost.mutateAsync({
-        endpoint: `/business-units/resend-verify/${id}`,
-      });
-      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', {
-        variant: 'success',
-      });
-      refetch();
-    } catch (error) {
-      await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
-      console.log('error handleResendRow', error);
-    }
+    onResend(id, {
+      onSuccess: (res) => {
+        enqueueSnackbar(res.messsage ?? 'Berhasil kirim ulang ke email!', {
+          variant: 'success',
+        });
+        refetch();
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
+      },
+    });
   };
 
   const handleDeleteRow = (id) => {
     setAlertDelete({ id: id });
   };
 
-  const onDelete = async () => {
-    try {
-      const response = await mutationDelete.mutateAsync({
-        endpoint: `/business-units/${alertDelete?.id}`,
-      });
-      enqueueSnackbar(response.message ?? 'Sukses menghapus data', { variant: 'success' });
-      refetch();
-      setAlertDelete(null);
-    } catch (error) {
-      enqueueSnackbar(error.message, { variant: 'error' });
-      if (error.code === 412) {
-        setAlertDelete({ id: alertDelete?.id, status: 1 });
-      }
-      console.log('error delete', error);
-    }
+  const handleDelete = async () => {
+    onDelete(alertDelete?.id, {
+      onSuccess: (res) => {
+        enqueueSnackbar(res.message ?? 'Sukses menghapus data', { variant: 'success' });
+        refetch();
+        setAlertDelete(null);
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+        if (err.code === 412) {
+          setAlertDelete({ id: alertDelete?.id, status: 1 });
+        }
+      },
+    });
   };
 
   const handleInputChange = useCallback(
@@ -313,7 +311,7 @@ export default function UserList() {
         <AlertDeleteUnit
           open={!!alertDelete}
           onClose={() => setAlertDelete(null)}
-          action={onDelete}
+          action={handleDelete}
           status={alertDelete?.status}
         />
       </Container>
