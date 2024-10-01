@@ -71,7 +71,7 @@ const styles = {
   }
 }
 
-export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
+export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImageKantor, setIsValidImageKantor] = useState(false);
@@ -300,7 +300,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
           />
         </Grid>
       </Grid>
-      {(userData?.unit_id === 0 && from !== 'kanpus') &&
+      {(userData?.role === 2) &&
         <Stack sx={styles.action}>
           <StyledLoadingButton
             onClick={setIsEdit}

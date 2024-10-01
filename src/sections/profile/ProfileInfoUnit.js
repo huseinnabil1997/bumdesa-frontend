@@ -12,6 +12,7 @@ import Image from "src/components/Image";
 import { checkUrlImage } from "src/utils/helperFunction";
 import { IconButtonAnimate } from "src/components/animate";
 import Label from "src/components/Label";
+import { useSelector } from "react-redux";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -90,7 +91,8 @@ const styles = {
   }
 }
 
-export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
+export default function ProfileInfoUnit({ data, setIsEdit }) {
+  const userData = useSelector(state => state.user.userData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
@@ -254,7 +256,7 @@ export default function ProfileInfoUnit({ data, setIsEdit, from = '' }) {
           />
         </Grid>
       </Grid>
-      {from !== 'kanpus' && (
+      {userData?.role === 3 && (
         <Stack sx={styles.action}>
           <StyledLoadingButton
             onClick={setIsEdit}

@@ -96,6 +96,12 @@ export default function DashboardHeader({
       }
       return setTitle('Unit Usaha BUM Desa');
     }
+    if (value === 'supervisor') {
+      if (router.query.id === 'create') {
+        return setTitle('Tambah Pengawas');
+      }
+      return setTitle('Ubah Pengawas');
+    }
     if (value === 'bumdesa') return setTitle('Kelola BUM Desa');
     if (value === 'education') return setTitle('Konten Edukasi');
     if (value === 'faqs') return setTitle('Frequently Asked Questions');

@@ -44,7 +44,7 @@ import { useDeleteSupervisor } from 'src/query/hooks/supervisor/useDeleteSupervi
 // ----------------------------------------------------------------------
 
 SupervisorList.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
+  return <Layout title="Pengawas BUM Desa">{page}</Layout>;
 };
 // ----------------------------------------------------------------------
 
