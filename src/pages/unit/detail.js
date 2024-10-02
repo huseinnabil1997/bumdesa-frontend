@@ -21,6 +21,7 @@ import useDelete from 'src/query/hooks/mutation/useDelete';
 import { checkUrlImage } from 'src/utils/helperFunction';
 import { alphabetRegex, htmlTagRegex } from 'src/utils/regex';
 import Label from 'src/components/Label';
+import { useSelector } from 'react-redux';
 
 const styles = {
   textfield: {
@@ -56,6 +57,7 @@ export default function DetailUnitUsaha() {
   const [alertDelete, setAlertDelete] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
 
+  const userData = useSelector((state) => state.user.userData);
   const { themeStretch } = useSettings();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
@@ -244,32 +246,34 @@ export default function DetailUnitUsaha() {
           >
             Kembali
           </Button>
-          <Stack direction="row" spacing={2}>
-            <StyledLoadingButton
-              variant="outlined"
-              sx={{ width: '106px', height: '48px' }}
-              onClick={() => router.push(`edit?id=${data?.id}`)}
-              loading={isSubmitting}
-            >
-              Edit
-            </StyledLoadingButton>
-            <StyledLoadingButton
-              variant="text"
-              sx={{
-                width: '106px',
-                height: '48px',
-                color: '#E84040',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  color: '#E84040'
-                }
-              }}
-              onClick={() => handleDeleteRow(data?.id)}
-              loading={isSubmitting}
-            >
-              Hapus
-            </StyledLoadingButton>
-          </Stack>
+          {userData.role !== 4 && (
+            <Stack direction="row" spacing={2}>
+              <StyledLoadingButton
+                variant="outlined"
+                sx={{ width: '106px', height: '48px' }}
+                onClick={() => router.push(`edit?id=${data?.id}`)}
+                loading={isSubmitting}
+              >
+                Edit
+              </StyledLoadingButton>
+              <StyledLoadingButton
+                variant="text"
+                sx={{
+                  width: '106px',
+                  height: '48px',
+                  color: '#E84040',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                    color: '#E84040'
+                  }
+                }}
+                onClick={() => handleDeleteRow(data?.id)}
+                loading={isSubmitting}
+              >
+                Hapus
+              </StyledLoadingButton>
+            </Stack>
+          )}
         </Stack>
 
         <Card

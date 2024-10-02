@@ -184,3 +184,10 @@ export const TABLE_HEAD_DATA_UNIT = [
   { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left', minWidth: 150 },
   { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
 ];
+
+export const TABLE_HEAD_MANAGER = (role) => [
+  { id: 'name', label: 'Nama', align: 'left' },
+  { id: 'position', label: 'Jabatan', align: 'left' },
+  { id: 'phone', label: 'Nomor Telepon', align: 'left' },
+  ...(role !== 4 ? [{ id: 'action', label: 'Action', align: 'center' }] : []),
+];

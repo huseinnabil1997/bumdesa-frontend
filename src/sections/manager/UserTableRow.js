@@ -4,6 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Tooltip, tooltipClasses, IconButton } from '@mui/material';
 // components
 import Iconify from 'src/components/Iconify';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +66,7 @@ export default function UserTableRow({
   from = '',
 }) {
   const theme = useTheme();
+  const userData = useSelector((state) => state.user.userData);
   const { name, position_name, phone } = row;
 
   const renderDeleteButton = () => (
@@ -86,7 +88,7 @@ export default function UserTableRow({
       <TableCell sx={styles.tableCell}>{position_name}</TableCell>
       <TableCell sx={styles.tableCell}>{phone}</TableCell>
 
-      {from !== 'kanpus' && (
+      {from !== 'kanpus' || userData.role !== 4 && (
         <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
           <IconButton onClick={onEditRow}>
             <Iconify

@@ -37,15 +37,10 @@ import {
 import { useGetManagers } from 'src/query/hooks/manager/useGetManagers';
 import { useDeleteManager } from 'src/query/hooks/manager/useDeleteManager';
 import { useGetPositions } from 'src/query/hooks/manager/useGetPositions';
+import { useSelector } from 'react-redux';
+import { TABLE_HEAD_MANAGER } from 'src/utils/constant';
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Nama', align: 'left' },
-  { id: 'position', label: 'Jabatan', align: 'left' },
-  { id: 'phone', label: 'Nomor Telepon', align: 'left' },
-  { id: 'status', label: 'Action', align: 'center' },
-];
 
 const styles = {
   snackbar: {
@@ -117,6 +112,8 @@ export default function ManagerList() {
   const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
     defaultCurrentPage: 1,
   });
+
+  const userData = useSelector((state) => state.user.userData);
 
   const { themeStretch } = useSettings();
 
@@ -192,21 +189,23 @@ export default function ManagerList() {
             />
           </Box>
 
-          <StyledLoadingButton
-            sx={styles.loadingButton}
-            variant="contained"
-            startIcon={<Iconify icon={'eva:plus-fill'} />}
-            onClick={() => setOpenNewModal(true)}
-          >
-            Tambah Anggota
-          </StyledLoadingButton>
+          {userData.role !== 4 && (
+            <StyledLoadingButton
+              sx={styles.loadingButton}
+              variant="contained"
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={() => setOpenNewModal(true)}
+            >
+              Tambah Anggota
+            </StyledLoadingButton>
+          )}
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
           <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
             <Table>
               <TableHeadCustom
-                headLabel={TABLE_HEAD}
+                headLabel={TABLE_HEAD_MANAGER(userData.role)}
                 rowCount={managers?.data?.length}
                 numSelected={selected.length}
                 sx={styles.tableHead}

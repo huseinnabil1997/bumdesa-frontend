@@ -35,6 +35,7 @@ import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 import debounce from 'lodash.debounce';
 import { useDeleteUnit } from 'src/query/hooks/units/useDeleteJurnal';
 import { useResendUnit } from 'src/query/hooks/units/useResendUnit';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +58,8 @@ export default function UserList() {
   const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
     defaultCurrentPage: 1,
   });
+
+  const userData = useSelector((state) => state.user.userData);
 
   const router = useRouter();
 
@@ -178,19 +181,21 @@ export default function UserList() {
             />
           </Box>
 
-          <StyledLoadingButton
-            sx={{
-              width: 210,
-              height: '48px',
-              backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
-            }}
-            variant="contained"
-            startIcon={<Iconify icon={'eva:plus-fill'} />}
-            onClick={() => router.push('new')}
-          >
-            Tambah Unit Usaha
-          </StyledLoadingButton>
+          {userData.role !== 4 && (
+            <StyledLoadingButton
+              sx={{
+                width: 210,
+                height: '48px',
+                backgroundColor: '#1078CA',
+                mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
+              }}
+              variant="contained"
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={() => router.push('new')}
+            >
+              Tambah Unit Usaha
+            </StyledLoadingButton>
+          )}
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
@@ -237,16 +242,21 @@ export default function UserList() {
                 <TableNoData
                   isNotFound={units?.data?.length === 0}
                   title="Unit usaha belum tersedia."
-                  description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
+                  description={
+                    userData.role !== 4 &&
+                    'Silakan tambah Unit usaha dengan klik tombol di bawah ini.'
+                  }
                   action={
-                    <StyledButton
-                      sx={{ mt: 2, width: 200 }}
-                      variant="outlined"
-                      startIcon={<Add fontSize="small" />}
-                      onClick={() => router.push('new')}
-                    >
-                      Tambah Unit usaha
-                    </StyledButton>
+                    userData.role !== 4 && (
+                      <StyledButton
+                        sx={{ mt: 2, width: 200 }}
+                        variant="outlined"
+                        startIcon={<Add fontSize="small" />}
+                        onClick={() => router.push('new')}
+                      >
+                        Tambah Unit usaha
+                      </StyledButton>
+                    )
                   }
                 />
                 {isLoading && <TableSkeleton />}
