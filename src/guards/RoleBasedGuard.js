@@ -24,16 +24,16 @@ const isAccessDenied = (path, role) => {
   const accessRules = {
     unit: ['unit'],
     dashboard: ['kanpus'],
-    manager: ['unit'],
+    manager: ['unit', 'pengawas'],
     employee: ['bumdesa', 'pengawas'],
     'link-umkm': ['unit', 'kanpus', 'pengawas'],
     kanpus: ['bumdesa', 'unit', 'pengawas'],
     setting: ['kanpus'],
     profile: ['kanpus'],
     log: ['kanpus', 'pengawas'],
-    faqs: ['kanpus'],
-    jurnal: ['kanpus'],
-    ledger: ['kanpus'],
+    faqs: ['kanpus', 'pengawas'],
+    jurnal: ['kanpus', 'pengawas'],
+    ledger: ['kanpus', 'pengawas'],
   };
 
   return accessRules[path]?.includes(role);

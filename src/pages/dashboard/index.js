@@ -46,7 +46,7 @@ export default function Dashboard() {
     if (userData?.role === 2 && userData?.linkumkm_integrated === 0) {
       const hasShownDialog = sessionStorage.getItem('hasShownDialog');
       if (!hasShownDialog) {
-        // setOpen(true);
+        setOpen(true);
         sessionStorage.setItem('hasShownDialog', 'true');
       }
     }
