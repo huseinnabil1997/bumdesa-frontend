@@ -62,6 +62,7 @@ export default function UserTableRow({ row, onViewRow }) {
       <TableCell>{fNumber(row?.count_registered ?? 0)}</TableCell>
       <TableCell>{fNumber(row?.count_active ?? 0)}</TableCell>
       <TableCell>{fNumber(row?.count_report ?? 0)}</TableCell>
+      <TableCell>{fNumber(row?.count_report_unit ?? 0)}</TableCell>
       <TableCell>{fCurrency(row?.omset ?? 0)}</TableCell>
       <TableCell>{fCurrency(row?.labarugi ?? 0)}</TableCell>
       <TableCell>{fCurrency(row?.cash ?? 0)}</TableCell>

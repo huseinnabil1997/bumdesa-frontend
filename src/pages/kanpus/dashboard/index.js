@@ -46,13 +46,13 @@ export default function Dashboard() {
             {demo?.length > 0 && <KanpusDemographic demo={demo} unit={decoded.sub.businessid} />}
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <DashboardSales unit={decoded.sub.businessid} />
           </Grid>
 
           <Grid item xs={12}>
             <DashboardProfitLoss />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>

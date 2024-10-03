@@ -1,4 +1,4 @@
-- node js 14.x (suggestion v14.17.3)
+<!-- - node js 14.x (suggestion v14.17.3)
 - npm 6+
 - MUI minimal template V3.3.0
 
@@ -46,4 +46,4 @@
 ![Create Vendor](/public/image/Screenshot_3.png)
 > Modal / Pop Up muncul saat penambahan, perubahan atau detail data.
 > Jika saat penambahan data / perubahan data terdapat respon kesalahan di backend, tampilkan kesalahan tersebut didalam form. misal duplikat inputan TDR
-> Jika saat submit terdapat pesan kesalahan dari backend, nilai dari inputan data tidak hilang
+> Jika saat submit terdapat pesan kesalahan dari backend, nilai dari inputan data tidak hilang -->

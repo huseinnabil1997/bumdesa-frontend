@@ -55,8 +55,13 @@ export default function UserTableRow({ row, onViewRow }) {
         </Label>
       </TableCell>
       <TableCell align="center">
-        <Label color={row?.status_active === '1' ? 'success' : 'error'}>
-          {row?.status_active === '1' ? 'Aktif' : 'Tidak Aktif'}
+        <Label color={row?.status_report === '1' ? 'success' : 'error'}>
+          {row?.status_report === '1' ? 'Aktif' : 'Tidak Aktif'}
+        </Label>
+      </TableCell>
+      <TableCell align="center">
+        <Label color={row?.status_report_unit === '1' ? 'success' : 'error'}>
+          {row?.status_report_unit === '1' ? 'Aktif' : 'Tidak Aktif'}
         </Label>
       </TableCell>
       <TableCell>{fCurrency(row?.omset ?? 0)}</TableCell>
