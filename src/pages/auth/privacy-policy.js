@@ -48,7 +48,9 @@ export default function TermsAndConditions() {
           <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>
             Kebijakan Privasi BUM Desa
           </Typography>
-          <div dangerouslySetInnerHTML={{ __html: html }} />
+          <Typography>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
+          </Typography>
           <Stack
             display='flex'
             direction='row'

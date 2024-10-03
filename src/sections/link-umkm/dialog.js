@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import SuccessDialog from './successDialog';
@@ -6,6 +6,7 @@ import FailedDialog from './failedDialog';
 import { useCreateLink } from 'src/query/hooks/link-umkm/useCreateLink';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const dialogStyles = {
   dialog: { maxWidth: '800px', maxHeight: '768px', margin: 'auto' },
@@ -16,17 +17,12 @@ const dialogStyles = {
   actions: { justifyContent: 'space-between', p: 2, gap: 2 }
 };
 
-const termsText = [
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.",
-  "Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque quam a convallis. Sed ut vulputate nisi. Integer in felis sed leo vestibulum venenatis. Suspendisse quis arcu sem. Aenean feugiat ex eu vestibulum vestibulum. Morbi a eleifend magna. Nam metus lacus, porttitor eu mauris a, blandit ultrices nibh. Mauris sit amet magna non ligula vestibulum eleifend. Nulla varius volutpat turpis sed lacinia. Nam eget mi in purus lobortis eleifend. Sed nec ante dictum sem condimentum ullamcorper quis venenatis nisi. Proin vitae facilisis nisi, ac posuere leo.",
-  "Nam pulvinar blandit velit, id condimentum diam faucibus at. Aliquam lacus nisi, s id mi ut arcu feugiat maximus. Mauris consequat tellus id tempus aliquet."
-];
-
 export default function LinkUMKMDialog({ open, onClose }) {
   const [checked, setChecked] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailed, setOpenFailed] = useState(false);
   const [responseLink, setResponseLink] = useState({});
+  const [html, setHtml] = useState('');
 
   const { enqueueSnackbar } = useSnackbar();
   const { mutate: onCreate, isLoading: creating } = useCreateLink();
@@ -36,13 +32,15 @@ export default function LinkUMKMDialog({ open, onClose }) {
     setChecked(event.target.checked);
   };
 
-  const termsContent = useMemo(() => (
-    termsText.map((text, index) => (
-      <Typography key={index} fontSize="16px" fontWeight={500} gutterBottom>
-        {text}
-      </Typography>
-    ))
-  ), []);
+  useEffect(() => {
+    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy.html`)
+      .then(res => {
+        setHtml(res.data)
+      })
+      .catch(err => {
+        console.log('err:', err);
+      });
+  }, [html]);
 
   const handleAgree = async () => {
     onCreate({
@@ -74,7 +72,10 @@ export default function LinkUMKMDialog({ open, onClose }) {
       <Dialog open={open} onClose={onClose} sx={dialogStyles.dialog} fullWidth>
         <DialogTitle sx={dialogStyles.title}>Syarat dan Ketentuan LinkUMKM</DialogTitle>
         <DialogContent sx={dialogStyles.content}>
-          {termsContent}
+          <Typography>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
+          </Typography>
+
           <FormControlLabel
             control={<Checkbox name="checkedLinkUMKM" checked={checked} onChange={handleCheckboxChange} />}
             label={
