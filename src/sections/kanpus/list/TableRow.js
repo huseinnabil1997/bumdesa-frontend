@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { TableRow, TableCell, IconButton, Tooltip, styled } from '@mui/material';
 // components
-import { fCurrency, fNumber } from 'src/utils/formatNumber';
+import { fCurrencyNoSpace, fNumber } from 'src/utils/formatNumber';
 import Iconify from 'src/components/Iconify';
 import { capitalCase } from 'change-case';
 
@@ -63,9 +63,9 @@ export default function UserTableRow({ row, onViewRow }) {
       <TableCell>{fNumber(row?.count_active ?? 0)}</TableCell>
       <TableCell>{fNumber(row?.count_report ?? 0)}</TableCell>
       <TableCell>{fNumber(row?.count_report_unit ?? 0)}</TableCell>
-      <TableCell>{fCurrency(row?.omset ?? 0)}</TableCell>
-      <TableCell>{fCurrency(row?.labarugi ?? 0)}</TableCell>
-      <TableCell>{fCurrency(row?.cash ?? 0)}</TableCell>
+      <TableCell>{fCurrencyNoSpace(row?.omset ?? 0)}</TableCell>
+      <TableCell>{fCurrencyNoSpace(row?.labarugi ?? 0)}</TableCell>
+      <TableCell>{fCurrencyNoSpace(row?.cash ?? 0)}</TableCell>
 
       <TableCell align="center">
         <Tooltip title="Lihat Detail BUMDesa">

@@ -4,8 +4,6 @@ import { Container, Grid } from '@mui/material';
 import {
   KanpusHeader,
   KanpusDemographic,
-  DashboardProfitLoss,
-  DashboardSales,
 } from 'src/sections/kanpus/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
