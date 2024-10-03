@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableRow, TableCell, IconButton, Tooltip, styled } from '@mui/material';
+import { TableRow, TableCell, styled } from '@mui/material';
 // components
 import { fCurrencyNoSpace, fNumber } from 'src/utils/formatNumber';
-import Iconify from 'src/components/Iconify';
 import { capitalCase } from 'change-case';
+import { StyledLoadingButton } from 'src/theme/custom/Button';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // ----------------------------------------------------------------------
 
@@ -68,12 +69,17 @@ export default function UserTableRow({ row, onViewRow }) {
       <TableCell>{fCurrencyNoSpace(row?.cash ?? 0)}</TableCell>
 
       <TableCell align="center">
+        <StyledLoadingButton variant="outlined" onClick={onViewRow} startIcon={<InfoOutlinedIcon />}>
+          Detail
+        </StyledLoadingButton>
+      </TableCell>
+      {/* <TableCell align="center">
         <Tooltip title="Lihat Detail BUMDesa">
           <IconButton onClick={onViewRow} color="primary">
             <Iconify icon={'lucide:info'} sx={{ fontSize: 16 }} />
           </IconButton>
         </Tooltip>
-      </TableCell>
+      </TableCell> */}
     </StyledTableRow>
   );
 }
