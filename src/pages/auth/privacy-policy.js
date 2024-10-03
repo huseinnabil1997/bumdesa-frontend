@@ -32,7 +32,7 @@ export default function TermsAndConditions() {
   const router = useRouter();
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy.html`)
+    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy-registration.html`)
       .then(res => {
         setHtml(res.data)
       })

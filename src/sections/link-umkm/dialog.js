@@ -33,7 +33,7 @@ export default function LinkUMKMDialog({ open, onClose }) {
   };
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy.html`)
+    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}terms-and-condition/terms-and-condition-link-umkm.html`)
       .then(res => {
         setHtml(res.data)
       })
