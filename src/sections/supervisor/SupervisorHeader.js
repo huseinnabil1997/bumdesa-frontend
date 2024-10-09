@@ -18,7 +18,7 @@ export default function SupervisorHeader({ value }) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/supervisor/create');
+    router.push('/management/supervisor/create');
   };
 
   return (

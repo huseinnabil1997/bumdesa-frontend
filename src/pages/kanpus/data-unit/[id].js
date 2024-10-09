@@ -104,7 +104,7 @@ export default function DetailUnit() {
                 </Label>
               </Box>
               <CardContent>
-                <ProfileInfoUnitKanpus data={data} from="kanpus" />
+                <ProfileInfoUnitKanpus data={data} />
               </CardContent>
             </Card>
           </Grid>

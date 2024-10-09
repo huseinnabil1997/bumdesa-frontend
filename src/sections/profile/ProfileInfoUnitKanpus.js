@@ -11,6 +11,7 @@ import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
 import { checkUrlImage } from "src/utils/helperFunction";
 import { IconButtonAnimate } from "src/components/animate";
+import { useSelector } from "react-redux";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
@@ -69,10 +70,11 @@ const styles = {
   }
 }
 
-export default function ProfileInfoUnitKanpus({ data, setIsEdit, from = '' }) {
+export default function ProfileInfoUnitKanpus({ data, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
+  const userData = useSelector((state) => state.user.userData);
 
   const defaultValues = {
     id: data?.id ?? '',
@@ -195,7 +197,7 @@ export default function ProfileInfoUnitKanpus({ data, setIsEdit, from = '' }) {
           />
         </Grid>
       </Grid>
-      {from !== 'kanpus' && (
+      {userData.role !== 1 && (
         <Stack sx={styles.action}>
           <StyledLoadingButton
             onClick={setIsEdit}

@@ -16,14 +16,14 @@ import {
   MenuItem,
 } from '@mui/material';
 // hooks
-import useSettings from '../../hooks/useSettings';
-import useTable from '../../hooks/useTable';
+import useSettings from '../../../hooks/useSettings';
+import useTable from '../../../hooks/useTable';
 // layouts
-import Layout from '../../layouts';
+import Layout from '../../../layouts';
 // components
-import Page from '../../components/Page';
-import Scrollbar from '../../components/Scrollbar';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
+import Page from '../../../components/Page';
+import Scrollbar from '../../../components/Scrollbar';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 // sections
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
@@ -94,7 +94,7 @@ export default function SupervisorList() {
   };
 
   const handleEditRow = (row) => {
-    router.push(`/supervisor/${row.id}`);
+    router.push(`/management/supervisor/${row.id}`);
   };
 
   useEffect(() => {
@@ -165,7 +165,7 @@ export default function SupervisorList() {
                             sx={{ mt: 2, width: 200 }}
                             variant="outlined"
                             startIcon={<Add fontSize="small" />}
-                            onClick={() => router.push('/supervisor/create')}
+                            onClick={() => router.push('/management/supervisor/create')}
                           >
                             Tambah Pengawas
                           </StyledButton>
