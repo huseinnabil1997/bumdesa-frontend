@@ -22,9 +22,9 @@ const useCurrentRole = () => {
 
 const isAccessDenied = (path, role) => {
   const accessRules = {
-    unit: ['unit'],
+    unit: ['unit', 'pengawas'],
     dashboard: ['kanpus'],
-    manager: ['unit', 'pengawas'],
+    manager: ['unit', 'pengawas', 'pengawas'],
     employee: ['bumdesa', 'pengawas'],
     'link-umkm': ['unit', 'kanpus', 'pengawas'],
     kanpus: ['bumdesa', 'unit', 'pengawas'],
