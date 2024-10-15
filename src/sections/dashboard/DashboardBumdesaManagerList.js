@@ -78,7 +78,6 @@ export default function DashboardBumdesaManagerList({ id }) {
                         key={row.id}
                         row={row}
                         index={index}
-                        from="kanpus"
                         sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
                       />
                     ))}

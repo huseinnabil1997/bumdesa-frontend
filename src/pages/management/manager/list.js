@@ -15,14 +15,14 @@ import {
   Typography,
 } from '@mui/material';
 // hooks
-import useSettings from '../../hooks/useSettings';
-import useTable from '../../hooks/useTable';
+import useSettings from '../../../hooks/useSettings';
+import useTable from '../../../hooks/useTable';
 // layouts
-import Layout from '../../layouts';
+import Layout from '../../../layouts';
 // components
-import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
+import Page from '../../../components/Page';
+import Iconify from '../../../components/Iconify';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { Add } from '@mui/icons-material';

@@ -8,6 +8,7 @@ import {
   DashboardSales,
   DashboardFinances,
   DashboardProfitLoss,
+  DashboardBumdesaManagerList,
 } from 'src/sections/dashboard';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
@@ -60,22 +61,32 @@ export default function Dashboard() {
             <DashboardWelcome isUnit={decoded.sub.businessid} />
           </Grid>
 
-          <Grid item xs={6}>
-            <DashboardSales unit={decoded.sub.businessid} />
-          </Grid>
-
-          <Grid item xs={6}>
-            <DashboardProfitLoss unit={decoded.sub.businessid} />
-          </Grid>
-
-          <Grid item xs={12}>
-            <DashboardFinances unit={decoded.sub.businessid} />
-          </Grid>
-
-          {!decoded?.sub?.businessid && (
+          {userData?.role === 4 && (
             <Grid item xs={12}>
-              <DashboardUnit />
+              <DashboardBumdesaManagerList id={userData?.bumdesa_id} />
             </Grid>
+          )}
+
+          {userData?.role !== 4 && (
+            <>
+              <Grid item xs={6}>
+                <DashboardSales unit={decoded.sub.businessid} />
+              </Grid>
+
+              <Grid item xs={6}>
+                <DashboardProfitLoss unit={decoded.sub.businessid} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <DashboardFinances unit={decoded.sub.businessid} />
+              </Grid>
+
+              {!decoded?.sub?.businessid && (
+                <Grid item xs={12}>
+                  <DashboardUnit />
+                </Grid>
+              )}
+            </>
           )}
 
           {/* <Grid item xs={12}>

@@ -52,7 +52,6 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   disableDelete: PropTypes.bool,
   role: PropTypes.string,
-  from: PropTypes.string,
 };
 
 export default function UserTableRow({
@@ -63,7 +62,6 @@ export default function UserTableRow({
   onDeleteRow,
   disableDelete = false,
   role,
-  from = '',
 }) {
   const theme = useTheme();
   const userData = useSelector((state) => state.user.userData);
@@ -88,7 +86,7 @@ export default function UserTableRow({
       <TableCell sx={styles.tableCell}>{position_name}</TableCell>
       <TableCell sx={styles.tableCell}>{phone}</TableCell>
 
-      {from !== 'kanpus' || userData.role !== 4 && (
+      {userData.role !== 1 && userData.role !== 4 && (
         <TableCell align="left" sx={{ display: 'flex', justifyContent: 'center' }}>
           <IconButton onClick={onEditRow}>
             <Iconify

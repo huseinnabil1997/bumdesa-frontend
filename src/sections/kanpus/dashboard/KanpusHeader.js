@@ -30,11 +30,15 @@ export default function DashboardFinances({ unit }) {
 
   const contents = useMemo(
     () => [
-      { title: 'Total BUMDesa', value: stat?.total_bumdesa },
-      { title: 'User Login', value: stat?.total_user_regis },
-      { title: 'BUMDesa Aktif', value: stat?.total_bumdesa_active },
-      { title: 'Unit Usaha Aktif', value: stat?.total_unit_active },
-      { title: 'Laporan Keuangan', value: stat?.total_report },
+      { title: 'User BUMDesa Registrasi', value: stat?.total_bumdesa },
+      { title: 'Unit Usaha Registrasi', value: stat?.total_user_regis },
+      { title: 'Jumlah BUMDes Mengisi Laporan Keuangan', value: stat?.total_bumdesa_active },
+      { title: 'Jumlah Unit Mengisi Laporan Keuangan', value: stat?.total_unit_active },
+      // { title: 'Total BUMDesa', value: stat?.total_bumdesa },
+      // { title: 'User Login', value: stat?.total_user_regis },
+      // { title: 'BUMDesa Aktif', value: stat?.total_bumdesa_active },
+      // { title: 'Unit Usaha Aktif', value: stat?.total_unit_active },
+      // { title: 'Laporan Keuangan', value: stat?.total_report },
     ],
     [stat]
   );
@@ -70,8 +74,8 @@ export default function DashboardFinances({ unit }) {
         {!isLoading && data && (
           <Grid container spacing={3}>
             {contents.map((row, i) => (
-              <Grid item xs={4} md={2.4} key={i}>
-                <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5 }}>
+              <Grid item xs={4} md={3} key={i}>
+                <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5, minHeight: 120, justifyContent: 'space-between' }}>
                   <Box display="flex" justifyContent="space-between">
                     <Typography variant="subtitle2" fontWeight={400}>
                       {row.title}

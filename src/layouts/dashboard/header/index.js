@@ -96,7 +96,7 @@ export default function DashboardHeader({
       }
       return setTitle('Unit Usaha BUM Desa');
     }
-    if (value === 'supervisor') {
+    if (value2 === 'supervisor') {
       if (router.query.id === 'create') {
         return setTitle('Tambah Pengawas');
       }
