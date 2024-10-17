@@ -37,7 +37,11 @@ const isAccessDenied = (path, subPath, role) => {
     profit: ['pengawas'],
   };
 
-  return accessRules[path]?.includes(role) || accessRules[subPath]?.includes(role);
+  if (subPath === 'profit') {
+    return accessRules[subPath]?.includes(role);
+  }
+
+  return accessRules[path]?.includes(role);
 };
 
 export default function RoleBasedGuard({ children }) {
