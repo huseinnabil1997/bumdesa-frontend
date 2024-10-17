@@ -20,11 +20,11 @@ const useCurrentRole = () => {
   else return 'pengawas';
 };
 
-const isAccessDenied = (path, role) => {
+const isAccessDenied = (path, subPath, role) => {
   const accessRules = {
     unit: ['unit', 'pengawas'],
     dashboard: ['kanpus'],
-    manager: ['unit', 'pengawas', 'pengawas'],
+    manager: ['unit', 'pengawas'],
     employee: ['bumdesa', 'pengawas'],
     'link-umkm': ['unit', 'kanpus', 'pengawas'],
     kanpus: ['bumdesa', 'unit', 'pengawas'],
@@ -34,23 +34,25 @@ const isAccessDenied = (path, role) => {
     faqs: ['kanpus', 'pengawas'],
     jurnal: ['kanpus', 'pengawas'],
     ledger: ['kanpus', 'pengawas'],
+    profit: ['pengawas'],
   };
 
-  return accessRules[path]?.includes(role);
+  return accessRules[path]?.includes(role) || accessRules[subPath]?.includes(role);
 };
 
 export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
+  const subPath = router.pathname.split('/')[2];
   const currentRole = useCurrentRole();
 
   useEffect(() => {
-    if (isAccessDenied(path, currentRole)) {
+    if (isAccessDenied(path, subPath, currentRole)) {
       router.push('/403');
     }
-  }, [path, currentRole, router]);
+  }, [path, subPath, currentRole, router]);
 
-  if (isAccessDenied(path, currentRole)) {
+  if (isAccessDenied(path, subPath, currentRole)) {
     return (
       <Container>
         <Alert severity="error">
