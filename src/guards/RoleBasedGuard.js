@@ -52,7 +52,7 @@ export default function RoleBasedGuard({ children }) {
 
   useEffect(() => {
     if (isAccessDenied(path, subPath, currentRole)) {
-      router.push('/403');
+      window.location.href = '/403'
     }
   }, [path, subPath, currentRole, router]);
 
