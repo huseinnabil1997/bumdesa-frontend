@@ -20,7 +20,9 @@ const checkAuth = (error) => {
   }
 
   if ([403].includes(error.response?.status ?? 0)) {
-    window.location.href = '/403';
+    setTimeout(() => {
+      window.location.href = '/403';
+    }, 3000);
   }
 
   return Promise.reject((error.response && error.response.data) || 'Something went wrong');

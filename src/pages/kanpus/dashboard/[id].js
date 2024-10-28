@@ -10,9 +10,10 @@ import {
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
 import Layout from 'src/layouts';
-import { getSessionToken } from 'src/utils/axiosReportService';
-import jwtDecode from 'jwt-decode';
-import { useEffect, useState } from 'react';
+// import { getSessionToken } from 'src/utils/axiosReportService';
+// import jwtDecode from 'jwt-decode';
+// import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -22,33 +23,34 @@ Dashboard.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function Dashboard() {
+  const userData = useSelector((state) => state.user.userData);
   const { themeStretch } = useSettings();
-  const token = getSessionToken();
-  const [decoded, setDecoded] = useState(jwtDecode(token));
+  // const token = getSessionToken();
+  // const [decoded, setDecoded] = useState(jwtDecode(token));
 
-  useEffect(() => {
-    if (token) setDecoded(jwtDecode(token));
-    else setDecoded(null);
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) setDecoded(jwtDecode(token));
+  //   else setDecoded(null);
+  // }, [token]);
 
   return (
     <Page title="Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <DashboardWelcome isUnit={decoded.sub.businessid} />
+            <DashboardWelcome isUnit={userData?.unit_id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardFinances unit={decoded.sub.businessid} />
+            <DashboardFinances unit={userData?.unit_id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardSales unit={decoded.sub.businessid} />
+            <DashboardSales unit={userData?.unit_id} />
           </Grid>
 
           <Grid item xs={12}>
-            <DashboardProfitLoss unit={decoded.sub.businessid} />
+            <DashboardProfitLoss unit={userData?.unit_id} />
           </Grid>
         </Grid>
       </Container>
