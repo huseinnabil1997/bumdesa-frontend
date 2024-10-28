@@ -41,7 +41,11 @@ const isAccessDenied = (path, subPath, role) => {
     return accessRules[subPath]?.includes(role);
   }
 
-  return accessRules[path]?.includes(role);
+  if (path) {
+    return accessRules[path]?.includes(role);
+  }
+
+  return false;
 };
 
 export default function RoleBasedGuard({ children }) {
@@ -52,7 +56,9 @@ export default function RoleBasedGuard({ children }) {
 
   useEffect(() => {
     if (isAccessDenied(path, subPath, currentRole)) {
-      window.location.href = '/403'
+      setTimeout(() => {
+        window.location.href = '/403';
+      }, 3000);
     }
   }, [path, subPath, currentRole, router]);
 

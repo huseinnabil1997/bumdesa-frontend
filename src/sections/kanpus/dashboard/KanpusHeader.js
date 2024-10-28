@@ -30,10 +30,10 @@ export default function DashboardFinances({ unit }) {
 
   const contents = useMemo(
     () => [
-      { title: 'User BUMDesa Registrasi', value: stat?.total_bumdesa },
-      { title: 'Unit Usaha Registrasi', value: stat?.total_user_regis },
-      { title: 'Jumlah BUMDes Mengisi Laporan Keuangan', value: stat?.total_bumdesa_active },
-      { title: 'Jumlah Unit Mengisi Laporan Keuangan', value: stat?.total_unit_active },
+      { title: 'User BUMDesa Registrasi', value: stat?.total_user_regis },
+      { title: 'Unit Usaha Registrasi', value: stat?.total_unit_active },
+      { title: 'Jumlah BUMDes Mengisi Laporan Keuangan', value: stat?.total_report },
+      { title: 'Jumlah Unit Mengisi Laporan Keuangan', value: stat?.total_report_unit },
       // { title: 'Total BUMDesa', value: stat?.total_bumdesa },
       // { title: 'User Login', value: stat?.total_user_regis },
       // { title: 'BUMDesa Aktif', value: stat?.total_bumdesa_active },
@@ -48,7 +48,7 @@ export default function DashboardFinances({ unit }) {
     unit,
   });
 
-  console.log(stat);
+  console.log('DashboardFinances useGetStatistics', stat);
 
   return (
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
