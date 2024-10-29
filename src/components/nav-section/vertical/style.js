@@ -1,5 +1,5 @@
 // @mui
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { ListItemText, ListItemButton, ListItemIcon } from '@mui/material';
 // config
 import { ICON, NAVBAR } from '../../../config';
