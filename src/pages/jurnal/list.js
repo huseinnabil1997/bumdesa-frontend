@@ -25,7 +25,7 @@ import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/ta
 import { FormProvider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import { JurnalHeader, TableRow } from 'src/sections/jurnal';
-import { JURNAL_HEAD } from 'src/utils/constant';
+import { JURNAL_HEAD, JURNAL_HEAD_PENGAWAS } from 'src/utils/constant';
 import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { useTheme } from '@mui/material/styles';
 import { StyledButton } from 'src/theme/custom/Button';
@@ -37,6 +37,7 @@ import TableError from 'src/components/table/TableError';
 import moment from 'moment';
 import { defaultRangeDate, end_date, start_date } from 'src/utils/helperFunction';
 import { debounce } from 'lodash';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +47,7 @@ JurnalList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function JurnalList() {
+  const userData = useSelector((state) => state.user.userData);
   const { page, onChangePage, setPage } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
@@ -140,7 +142,7 @@ export default function JurnalList() {
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={JURNAL_HEAD}
+                  headLabel={userData?.role !== 4 ? JURNAL_HEAD : JURNAL_HEAD_PENGAWAS}
                   rowCount={data?.journals?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
@@ -164,16 +166,22 @@ export default function JurnalList() {
                     <TableNoData
                       isNotFound
                       title="Jurnal belum tersedia."
-                      description="Silakan buat jurnal dengan klik tombol di bawah ini."
+                      description={
+                        userData?.role !== 4
+                          ? 'Silakan buat jurnal dengan klik tombol di bawah ini.'
+                          : 'Silahkan tunggu sampai jurnal tersedia.'
+                      }
                       action={
-                        <StyledButton
-                          sx={{ mt: 2, width: 200 }}
-                          variant="outlined"
-                          startIcon={<Add fontSize="small" />}
-                          onClick={() => router.push('/jurnal/create')}
-                        >
-                          Buat Jurnal
-                        </StyledButton>
+                        userData?.role !== 4 && (
+                          <StyledButton
+                            sx={{ mt: 2, width: 200 }}
+                            variant="outlined"
+                            startIcon={<Add fontSize="small" />}
+                            onClick={() => router.push('/jurnal/create')}
+                          >
+                            Buat Jurnal
+                          </StyledButton>
+                        )
                       }
                     />
                   )}

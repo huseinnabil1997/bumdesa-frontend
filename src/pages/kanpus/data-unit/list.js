@@ -25,20 +25,7 @@ import { useGetListUnit } from 'src/query/hooks/data-unit/useGetListUnit';
 import UnitHeader from 'src/sections/data-unit/UnitHeader';
 import TableError from 'src/components/table/TableError';
 import Scrollbar from 'src/components/Scrollbar';
-
-const TABLE_HEAD = [
-  { id: 'name_sticky', label: 'Nama Unit Usaha', align: 'left', minWidth: 200 },
-  { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left', minWidth: 200 },
-  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
-  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center', minWidth: 150 },
-  { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
-  { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
-  { id: 'solvency', label: 'Solvabilitas', align: 'left', minWidth: 150 },
-  { id: 'total_omset', label: 'Total Omset', align: 'left', minWidth: 150 },
-  { id: 'profit', label: 'Laba Rugi', align: 'left', minWidth: 150 },
-  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left', minWidth: 150 },
-  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
-];
+import { TABLE_HEAD_DATA_UNIT } from 'src/utils/constant';
 
 UnitList.getLayout = function getLayout(page) {
   return <Layout title="Data Unit Usaha">{page}</Layout>;
@@ -102,7 +89,7 @@ export default function UnitList() {
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={TABLE_HEAD}
+                  headLabel={TABLE_HEAD_DATA_UNIT}
                   rowCount={units?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />

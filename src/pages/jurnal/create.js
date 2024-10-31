@@ -39,6 +39,8 @@ import { fCurrency } from 'src/utils/formatNumber';
 import FirstBalance from 'src/components/modal/FirstBalance';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import moment from 'moment';
+import { stepperTutorial } from 'src/utils/constant';
+import { tutorialStyle } from 'src/utils/constantStyles';
 
 // ----------------------------------------------------------------------
 
@@ -46,104 +48,6 @@ JurnalCreate.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 // ----------------------------------------------------------------------
-
-const tutorialStyle = {
-  options: {
-    primaryColor: '#1078CA',
-  },
-  buttonNext: {
-    borderRadius: '8px',
-    fontSize: '12px',
-  },
-  buttonBack: {
-    borderRadius: '8px',
-    fontSize: '12px',
-  },
-  buttonSkip: {
-    fontSize: '12px',
-  },
-  buttonClose: {
-    color: 'white',
-  },
-  tooltip: {
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    padding: '10px',
-    width: '250px',
-    fontSize: '12px',
-  },
-  tooltipContainer: {
-    textAlign: 'left',
-  },
-}
-
-const stepperTutorial = [
-  {
-    target: '.transaction-information',
-    content: 'Masukkan keterangan transaksi di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.date-picker',
-    content: 'Pilih tanggal transaksi di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.number-of-evidence',
-    content: 'Nomor bukti akan otomatis terbuat.',
-    disableBeacon: true,
-  },
-  {
-    target: '.first-balance',
-    content: 'Tanda ini menandakan bahwa transaksi ini adalah saldo awal.',
-    disableBeacon: true,
-  },
-  {
-    target: '.account-code',
-    content: 'Pilih akun di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.debit',
-    content: 'Masukkan jumlah debit di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.credit',
-    content: 'Masukkan jumlah kredit di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.cash-flow-code',
-    content: 'Pilih jenis arus kas di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.btn-add-account',
-    content: 'Tambahkan akun di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.balance-indicator',
-    content: 'Lihat indikator keseimbangan di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.total-debit',
-    content: 'Lihat total debit di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.total-credit',
-    content: 'Lihat total kredit di sini.',
-    disableBeacon: true,
-  },
-  {
-    target: '.btn-save',
-    content: 'Simpan jurnal di sini.',
-    disableBeacon: true,
-  },
-]
 
 export default function JurnalCreate() {
   const { themeStretch } = useSettings();
@@ -321,23 +225,25 @@ export default function JurnalCreate() {
       />
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <BtnLightPrimary
-            variant="contained"
-            startIcon={<ArrowBackOutlined />}
-            onClick={handleBack}
-          >
-            Kembali
-          </BtnLightPrimary>
-          {isFirstBalance && (
-            <Box className='first-balance'>
-              <Chip
-                variant="contained"
-                color="success"
-                label="Saldo Awal"
-                sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
-              />
-            </Box>
-          )}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <BtnLightPrimary
+              variant="contained"
+              startIcon={<ArrowBackOutlined />}
+              onClick={handleBack}
+            >
+              Kembali
+            </BtnLightPrimary>
+            {isFirstBalance && (
+              <Box className='first-balance'>
+                <Chip
+                  variant="contained"
+                  color="success"
+                  label="Saldo Awal"
+                  sx={{ color: 'white', fontWeight: 'bold', float: 'right' }}
+                />
+              </Box>
+            )}
+          </Box>
           <Card elevation={0} sx={{ mt: 3, border: `1px solid ${theme.palette.grey[300]}` }}>
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>

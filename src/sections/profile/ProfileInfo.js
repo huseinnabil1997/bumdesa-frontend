@@ -6,7 +6,7 @@ import { FormProvider, RHFTextField } from "src/components/hook-form";
 import { StyledLoadingButton } from "src/theme/custom/Button";
 import * as Yup from 'yup';
 import EditIcon from '@mui/icons-material/Edit';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { formatISO } from "date-fns";
 import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import Image from "src/components/Image";
@@ -71,7 +71,7 @@ const styles = {
   }
 }
 
-export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
+export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const [isValidImageKantor, setIsValidImageKantor] = useState(false);
@@ -112,32 +112,30 @@ export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
   useEffect(() => {
     if (postalCode) setValue('kode_pos', postalCode?.label);
     else setValue('kode_pos', '');
-  }, [postalCode]);
+  }, [postalCode, setValue]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setModalImage(null);
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleModalImage = (image) => {
+  const handleModalImage = useCallback((image) => {
     setModalImage(image);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const onSubmit = (data) => {
+  const onSubmit = useCallback((data) => {
     console.log('onSubmit', data);
-  };
+  }, []);
 
   useEffect(() => {
     const checkImageKantor = async () => {
       const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`);
       setIsValidImageKantor(isValid);
-      return isValid;
     };
     const checkImageLogo = async () => {
       const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}`);
       setIsValidImageLogo(isValid);
-      return isValid;
     };
     checkImageKantor();
     checkImageLogo();
@@ -302,7 +300,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit, from = '' }) {
           />
         </Grid>
       </Grid>
-      {(userData?.unit_id === 0 && from !== 'kanpus') &&
+      {(userData?.role === 2) &&
         <Stack sx={styles.action}>
           <StyledLoadingButton
             onClick={setIsEdit}

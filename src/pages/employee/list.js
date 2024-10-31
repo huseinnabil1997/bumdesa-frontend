@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-// @mui
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -13,12 +12,11 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-// hooks
+import { Add } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
-// layouts
 import Layout from '../../layouts';
-// components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import {
@@ -27,16 +25,16 @@ import {
   TableSkeleton,
 } from '../../components/table';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
-// sections
-import { Add } from '@mui/icons-material';
-import { useSnackbar } from 'notistack';
-import { DeleteModal, EditModal, NewModal, UserTableRow, UserTableToolbar } from 'src/sections/manager';
+import {
+  DeleteModal,
+  EditModal,
+  NewModal,
+  UserTableRow,
+  UserTableToolbar,
+} from 'src/sections/manager';
 import { useGetManagers } from 'src/query/hooks/manager/useGetManagers';
 import { useDeleteManager } from 'src/query/hooks/manager/useDeleteManager';
 import { useGetPositions } from 'src/query/hooks/manager/useGetPositions';
-
-
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Nama', align: 'left' },
@@ -45,28 +43,10 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Action', align: 'center' },
 ];
 
-const styles = {
-  snackbar: {
-    width: '344px',
-    height: '48px',
-    backgroundColor: '#E1F8EB',
-    gap: '8px',
-    padding: '8px',
-    borderRadius: '4px'
-  },
-  snackbarIcon: {
-    width: '16px',
-    height: '16px',
-    color: '#27AE60'
-  }
-};
-
-// ----------------------------------------------------------------------
 
 ManagerList.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
-// ----------------------------------------------------------------------
 
 export default function ManagerList() {
   const {
@@ -79,51 +59,39 @@ export default function ManagerList() {
   } = useTable({ defaultCurrentPage: 1 });
 
   const { themeStretch } = useSettings();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const { mutate: onDeleteManager } = useDeleteManager();
-
   const { data: positions } = useGetPositions();
-
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [openNewModal, setOpenNewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(null);
 
   const { data: managers, isLoading, refetch } = useGetManagers({
-    page: page,
+    page,
     limit: rowsPerPage,
     search: filterName,
   });
 
   useEffect(() => {
     refetch();
+  }, [page, rowsPerPage, refetch]);
+
+  const handleDeleteRow = useCallback((id) => {
+    setAlertDelete({ id });
   }, []);
 
-  useEffect(() => {
-    refetch();
-  }, [page, rowsPerPage]);
-
-  const handleDeleteRow = (id) => {
-    setAlertDelete({ id: id });
-  };
-
-  const onDelete = async () => {
+  const onDelete = useCallback(async () => {
     onDeleteManager(alertDelete?.id, {
       onSuccess: () => {
         enqueueSnackbar('', {
           variant: 'success',
           content: () => (
-            <Box
-              display="flex"
-              alignItems="center"
-              sx={styles.snackbar}
-            >
+            <Box display="flex" alignItems="center" sx={styles.snackbar}>
               <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
               <Typography fontSize="12px">Hapus Data Pengurus Berhasil!</Typography>
             </Box>
-          )
+          ),
         });
         refetch();
         setAlertDelete(null);
@@ -132,37 +100,31 @@ export default function ManagerList() {
         enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
-  };
+  }, [alertDelete, enqueueSnackbar, onDeleteManager, refetch]);
 
-  const handleInputChange = (event) => {
+  const handleInputChange = useCallback((event) => {
     if (event.key === 'Enter') {
       refetch();
     }
-  };
+  }, [refetch]);
+
+  const memoizedManagers = useMemo(() => managers?.data || [], [managers]);
 
   return (
     <Page title="Pengurus: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Box flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }} sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ flexGrow: 1 }}>
+        <Box display="flex" alignItems="center" flexDirection={{ xs: 'column', sm: 'row' }}>
+          <Box flexGrow={1}>
             <UserTableToolbar
               filterName={filterName}
               onFilterName={setFilterName}
               handleInputChange={handleInputChange}
             />
           </Box>
-
           <StyledLoadingButton
-            sx={{
-              width: '100%',
-              maxWidth: 164,
-              height: '48px',
-              backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
-              fontSize: '13px',
-              fontWeight: 700,
-            }}
-            variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}
+            sx={styles.addButton}
+            variant="contained"
+            startIcon={<Iconify icon={'eva:plus-fill'} />}
             onClick={() => setOpenNewModal(true)}
           >
             Tambah Anggota
@@ -170,35 +132,32 @@ export default function ManagerList() {
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
-          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2, }}>
-
+          <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
             <Table>
               <TableHeadCustom
                 headLabel={TABLE_HEAD}
-                rowCount={managers?.data?.length}
+                rowCount={memoizedManagers.length}
                 numSelected={selected.length}
-                sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
+                sx={styles.tableHead}
               />
-
               <TableBody>
-                {!isLoading && managers &&
-                  managers?.data?.map((row, index) => (
-                    <UserTableRow
-                      id={row.id}
-                      key={row.id}
-                      row={row}
-                      index={index}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={managers?.data.length <= 1 && page === 1}
-                      onEditRow={() => setOpenEditModal(row.id)}
-                      role="unit"
-                      sx={{ backgroundColor: '#F8F9F9', border: 1, borderRadius: 8, borderColor: '#EAEBEB' }}
-                    />
-                  ))}
+                {!isLoading && memoizedManagers.map((row, index) => (
+                  <UserTableRow
+                    key={row.id}
+                    id={row.id}
+                    row={row}
+                    index={index}
+                    selected={selected.includes(row.id)}
+                    onSelectRow={() => onSelectRow(row.id)}
+                    onDeleteRow={() => handleDeleteRow(row.id)}
+                    disableDelete={memoizedManagers.length <= 1 && page === 1}
+                    onEditRow={() => setOpenEditModal(row.id)}
+                    role="unit"
+                    sx={styles.tableRow}
+                  />
+                ))}
                 <TableNoData
-                  isNotFound={(managers?.data?.length === 0 || managers?.data?.length === undefined) && !isLoading}
+                  isNotFound={(memoizedManagers.length === 0) && !isLoading}
                   title="Pengurus BUM Desa belum tersedia."
                   description="Silakan tambah Pengurus BUM Desa dengan klik tombol di bawah ini."
                   action={
@@ -212,25 +171,24 @@ export default function ManagerList() {
                     </StyledButton>
                   }
                 />
-                {isLoading && (<TableSkeleton />)}
+                {isLoading && <TableSkeleton />}
               </TableBody>
             </Table>
           </TableContainer>
         </Card>
 
-        <Box display="flex" justifyContent="space-between" sx={{ p: 3 }} flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row' }}>
+        <Box display="flex" justifyContent="space-between" sx={{ p: 3 }} flexDirection={{ xs: 'column', sm: 'row' }}>
           <FormControl>
             <Select
               value={rowsPerPage}
               onChange={onChangeRowsPerPage}
               displayEmpty
-              inputProps={{ 'aria-label': 'Rows per page' }} aria-controls=''
+              inputProps={{ 'aria-label': 'Rows per page' }}
               sx={{ height: 32, width: 70 }}
             >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
+              {[5, 10, 15, 20].map((value) => (
+                <MenuItem key={value} value={value}>{value}</MenuItem>
+              ))}
             </Select>
           </FormControl>
           <Pagination
@@ -240,27 +198,14 @@ export default function ManagerList() {
             shape="rounded"
             color="primary"
             count={managers?.metadata?.paging?.total_page}
-            rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
-            sx={{
-              '& .MuiPaginationItem-page': {
-                border: 'none !important',
-              },
-              '& .MuiPaginationItem-icon': {
-                color: '#1078CA',
-              },
-              '& .MuiPaginationItem-previousNext': {
-                borderColor: "#1078CA",
-              },
-              '& .MuiPaginationItem-firstLast': {
-                borderColor: "#1078CA",
-              },
-            }}
+            sx={styles.pagination}
           />
         </Box>
+
         <DeleteModal
-          from='employee'
+          from="employee"
           open={!!alertDelete}
           onClose={() => {
             setAlertDelete(null);
@@ -269,7 +214,7 @@ export default function ManagerList() {
           action={onDelete}
         />
         <NewModal
-          from='employee'
+          from="employee"
           open={openNewModal}
           positions={positions}
           onClose={() => {
@@ -278,7 +223,7 @@ export default function ManagerList() {
           }}
         />
         <EditModal
-          from='employee'
+          from="employee"
           open={!!openEditModal}
           positions={positions}
           onClose={() => {
@@ -291,3 +236,45 @@ export default function ManagerList() {
     </Page>
   );
 }
+
+const styles = {
+  snackbar: {
+    width: '344px',
+    height: '48px',
+    backgroundColor: '#E1F8EB',
+    gap: '8px',
+    padding: '8px',
+    borderRadius: '4px',
+  },
+  snackbarIcon: {
+    width: '16px',
+    height: '16px',
+    color: '#27AE60',
+  },
+  addButton: {
+    width: '100%',
+    maxWidth: 164,
+    height: '48px',
+    backgroundColor: '#1078CA',
+    mb: { xs: 2.5, sm: 0 },
+    fontSize: '13px',
+    fontWeight: 700,
+  },
+  tableHead: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  tableRow: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  pagination: {
+    '& .MuiPaginationItem-page': { border: 'none !important' },
+    '& .MuiPaginationItem-icon': { color: '#1078CA' },
+    '& .MuiPaginationItem-previousNext, & .MuiPaginationItem-firstLast': { borderColor: '#1078CA' },
+  },
+};

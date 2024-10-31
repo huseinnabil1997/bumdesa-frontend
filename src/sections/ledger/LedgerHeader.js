@@ -21,6 +21,7 @@ import onPreview from 'src/utils/onPreview';
 import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
+import { useSelector } from 'react-redux';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -34,6 +35,7 @@ export default function LedgerHeader({ filter, isEmpty }) {
 
   const token = getSessionToken();
   const user = jwtDecode(token);
+  const userData = useSelector((state) => state.user.userData);
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -109,65 +111,67 @@ export default function LedgerHeader({ filter, isEmpty }) {
           }}
         />
       </Stack>
-      <Stack direction="row" spacing={1} sx={{ ml: 1 }}>
-        <StyledButton
-          disabled={isLoading || isEmpty}
-          sx={{ width: 186 }}
-          startIcon={isLoading ? <CircularProgress size="1rem" /> : <Description />}
-          variant="outlined"
-          onClick={(event) => handleMenuItemClick(event, 99)}
-        >
-          Pratinjau Dokumen
-        </StyledButton>
-        <StyledButton
-          ref={anchorRef}
-          sx={{ width: 210 }}
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-          startIcon={isLoading ? <CircularProgress size="1rem" color="info" /> : <Download />}
-          endIcon={<ArrowDropDown />}
-          variant="contained"
-          disabled={isEmpty}
-        >
-          Unduh Dokumen
-        </StyledButton>
+      {userData?.role !== 4 && (
+        <Stack direction="row" spacing={1} sx={{ ml: 1 }}>
+          <StyledButton
+            disabled={isLoading || isEmpty}
+            sx={{ width: 186 }}
+            startIcon={isLoading ? <CircularProgress size="1rem" /> : <Description />}
+            variant="outlined"
+            onClick={(event) => handleMenuItemClick(event, 99)}
+          >
+            Pratinjau Dokumen
+          </StyledButton>
+          <StyledButton
+            ref={anchorRef}
+            sx={{ width: 210 }}
+            aria-controls={open ? 'split-button-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-label="select merge strategy"
+            aria-haspopup="menu"
+            onClick={handleToggle}
+            startIcon={isLoading ? <CircularProgress size="1rem" color="info" /> : <Download />}
+            endIcon={<ArrowDropDown />}
+            variant="contained"
+            disabled={isEmpty}
+          >
+            Unduh Dokumen
+          </StyledButton>
 
-        <Popper
-          sx={{ zIndex: 99 }}
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList id="split-button-menu" autoFocusItem>
-                    {options.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </Stack>
+          <Popper
+            sx={{ zIndex: 99 }}
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList id="split-button-menu" autoFocusItem>
+                      {options.map((option, index) => (
+                        <MenuItem
+                          key={option}
+                          selected={index === selectedIndex}
+                          onClick={(event) => handleMenuItemClick(event, index)}
+                        >
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+        </Stack>
+      )}
     </Stack>
   );
 }

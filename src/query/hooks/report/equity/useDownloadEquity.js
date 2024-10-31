@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query';
-import { getDownloadCashflows } from 'src/query/request/cashflow';
+// import { getDownloadCashflows } from 'src/query/request/cashflow';
 import { getDownloadEquities } from 'src/query/request/equity';
 
 const createData = async (payload) => {

@@ -32,7 +32,7 @@ export default function TermsAndConditions() {
   const router = useRouter();
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy.html`)
+    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}privacy-policy/privacy-policy-registration.html`)
       .then(res => {
         setHtml(res.data)
       })
@@ -48,7 +48,9 @@ export default function TermsAndConditions() {
           <Typography my={2} fontSize='22px' fontWeight={700} color='#1078CA'>
             Kebijakan Privasi BUM Desa
           </Typography>
-          <div dangerouslySetInnerHTML={{ __html: html }} />
+          <Typography>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
+          </Typography>
           <Stack
             display='flex'
             direction='row'

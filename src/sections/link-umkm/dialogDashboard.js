@@ -13,7 +13,7 @@ const LinkUMKMDialogDashboard = ({ open, onClose }) => {
   }, [router, onClose]);
 
   return (
-    <Dialog open={open} onClose={onClose} sx={{ maxWidth: '480px', maxHeight: '608px', margin: 'auto' }} fullWidth>
+    <Dialog open={open} onClose={onClose} sx={{ maxWidth: 350, maxHeight: '608px', margin: 'auto' }} fullWidth>
       <DialogTitle>
         <IconButton
           aria-label="close"
@@ -31,9 +31,9 @@ const LinkUMKMDialogDashboard = ({ open, onClose }) => {
       <DialogContent>
         <CardMedia
           component="img"
-          image="/image/ilustrasi_link_umkm.png"
+          image="/image/LINKUMKM.gif"
           alt="Integrasi LinkUMKM"
-          sx={{ width: '100%', maxWidth: 480, maxHeight: 480 }}
+          sx={{ width: '100%', maxWidth: 236, maxHeight: 480 }}
         />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center', px: 2, pb: 2 }}>

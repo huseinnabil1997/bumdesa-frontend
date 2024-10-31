@@ -23,6 +23,7 @@ import { useDownloadBalance } from 'src/query/hooks/report/balance/useDownloadBa
 import { getSessionToken } from 'src/utils/axios';
 import { defaultRangeDate, end_date, formatDate, start_date } from 'src/utils/helperFunction';
 import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
+import { useSelector } from 'react-redux';
 
 const options = [
   { type: 1, name: 'Unduh .PDF' },
@@ -36,6 +37,7 @@ NeracaHeader.propTypes = {
 
 export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
   const anchorRef = useRef(null);
+  const userData = useSelector((state) => state.user.userData);
 
   const token = getSessionToken();
   const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
@@ -228,71 +230,73 @@ export default function NeracaHeader({ onSubmit, indicatorBalance, loading }) {
             disabled={downloading}
           />
         </Stack>
-        <Stack direction="row" spacing={1}>
-          <StyledLoadingButton
-            sx={{ width: 186 }}
-            startIcon={downloading ? <CircularProgress size="1rem" /> : <Description />}
-            variant="outlined"
-            onClick={() => handleMenuItemClick('preview')}
-            disabled={downloading || loading}
-          >
-            Pratinjau Dokumen
-          </StyledLoadingButton>
-          <StyledLoadingButton
-            ref={anchorRef}
-            sx={{ width: 210, justifyContent: 'space-around' }}
-            aria-controls={open ? 'split-button-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
-            aria-label="select merge strategy"
-            aria-haspopup="menu"
-            onClick={handleToggle}
-            startIcon={
-              downloading ? (
-                <CircularProgress size="1rem" />
-              ) : (
-                <Iconify width={14} height={14} icon={'bi:download'} />
-              )
-            }
-            endIcon={<Iconify icon={'oui:arrow-down'} />}
-            variant="contained"
-            disabled={downloading || loading}
-          >
-            Unduh Dokumen
-          </StyledLoadingButton>
+        {userData?.role !== 4 && (
+          <Stack direction="row" spacing={1}>
+            <StyledLoadingButton
+              sx={{ width: 186 }}
+              startIcon={downloading ? <CircularProgress size="1rem" /> : <Description />}
+              variant="outlined"
+              onClick={() => handleMenuItemClick('preview')}
+              disabled={downloading || loading}
+            >
+              Pratinjau Dokumen
+            </StyledLoadingButton>
+            <StyledLoadingButton
+              ref={anchorRef}
+              sx={{ width: 210, justifyContent: 'space-around' }}
+              aria-controls={open ? 'split-button-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-label="select merge strategy"
+              aria-haspopup="menu"
+              onClick={handleToggle}
+              startIcon={
+                downloading ? (
+                  <CircularProgress size="1rem" />
+                ) : (
+                  <Iconify width={14} height={14} icon={'bi:download'} />
+                )
+              }
+              endIcon={<Iconify icon={'oui:arrow-down'} />}
+              variant="contained"
+              disabled={downloading || loading}
+            >
+              Unduh Dokumen
+            </StyledLoadingButton>
 
-          <Popper
-            sx={{ zIndex: 99 }}
-            open={open}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            transition
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                }}
-              >
-                <Paper sx={{ width: 210 }}>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList id="split-button-menu" autoFocusItem>
-                      {options.map((option) => (
-                        <MenuItem
-                          key={option.type}
-                          selected={option.type === selectedType}
-                          onClick={() => handleMenuItemClick(option.type)}
-                        >
-                          {option.name}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-        </Stack>
+            <Popper
+              sx={{ zIndex: 99 }}
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              transition
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                  }}
+                >
+                  <Paper sx={{ width: 210 }}>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList id="split-button-menu" autoFocusItem>
+                        {options.map((option) => (
+                          <MenuItem
+                            key={option.type}
+                            selected={option.type === selectedType}
+                            onClick={() => handleMenuItemClick(option.type)}
+                          >
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </Stack>
+        )}
       </Stack>
     </>
   );

@@ -7,13 +7,9 @@ import {
   TableRow,
   TableCell,
   IconButton,
-  Collapse,
-  Table,
-  TableBody,
   Skeleton,
   Tooltip,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 // components
 import moment from 'moment';
@@ -23,6 +19,7 @@ import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
 import Iconify from 'src/components/Iconify';
 import DeleteConfirmation from 'src/components/modal/DeleteConfirmation';
 import { useGetJurnal } from 'src/query/hooks/jurnals/useGetJurnal';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +35,8 @@ UserTableRow.propTypes = {
 
 export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, index }) {
   const theme = useTheme();
+
+  const userData = useSelector((state) => state.user.userData);
 
   const [showDelete, setDelete] = useState(false);
 
@@ -112,9 +111,10 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
         <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
 
-        <TableCell align="center">
-          <Stack direction="row">
-            <IconButton onClick={onEditRow}>
+        {userData?.role !== 4 && (
+          <TableCell align="center">
+            <Stack direction="row">
+              <IconButton onClick={onEditRow}>
               <Iconify
                 icon={'lucide:edit'}
                 sx={{ color: theme.palette.primary.main, fontSize: 16 }}
@@ -140,6 +140,7 @@ export default function UserTableRow({ row, selected, onEditRow, onDeleteRow, in
             )}
           </Stack>
         </TableCell>
+      )}
       </TableRow>
       {isFetched &&
         details &&
