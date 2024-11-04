@@ -73,7 +73,7 @@ export default function SupervisorCreate() {
       {
         onSuccess: (res) => {
           enqueueSnackbar(res.message);
-          push('/supervisor/list');
+          push('/management/supervisor/list');
         },
         onError: (err) => {
           enqueueSnackbar(err.message, { variant: 'error' });
