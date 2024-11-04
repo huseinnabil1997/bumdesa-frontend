@@ -43,7 +43,7 @@ export default function LinkUMKMDialog({ open, onClose }) {
   }, [html]);
 
   const handleAgree = async () => {
-    onCreate({
+    onCreate({}, {
       onSuccess: (res) => {
         setResponseLink(res?.data);
         enqueueSnackbar(res?.message);
