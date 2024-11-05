@@ -17,7 +17,7 @@ export const useGetListBumdesa = (param) => {
     param.page,
     param.limit,
     param.search,
-    param.area_code,
+    param.area,
     param.status_active,
   ], () => fetchData(param));
 

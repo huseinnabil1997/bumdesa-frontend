@@ -56,7 +56,7 @@ export default function BumdesaList() {
     page,
     limit: rowsPerPage,
     search: watch('search'),
-    area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    area: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_active: watch('status_active')?.value,
   });
 
