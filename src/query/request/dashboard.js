@@ -16,8 +16,8 @@ export function getDemographic() {
   return axiosInstance.get(`dashboard/demografi`);
 }
 
-export function getStatistics() {
-  return axiosInstance.get(`dashboard/static`);
+export function getStatistics(params) {
+  return axiosInstance.get(`dashboard/static`, { params });
 }
 
 export function getAreaSummary(params) {
