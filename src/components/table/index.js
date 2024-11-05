@@ -4,3 +4,4 @@ export { default as TableSkeleton } from './TableSkeleton';
 export { default as TableEmptyRows } from './TableEmptyRows';
 export { default as TableHeadCustom } from './TableHeadCustom';
 export { default as TableSelectedActions } from './TableSelectedActions';
+export { default as TableError } from './TableError';
