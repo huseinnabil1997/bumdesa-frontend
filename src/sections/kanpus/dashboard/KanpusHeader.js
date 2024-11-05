@@ -24,9 +24,16 @@ import { useGetStatistics } from 'src/query/hooks/dashboard/useGetStatistics';
 export default function DashboardFinances({ unit }) {
   const theme = useTheme();
 
-  const { data: stat } = useGetStatistics();
-
   const [seriesData, setSeriesData] = useState(new Date());
+
+  const { data: stat } = useGetStatistics({
+    date: moment(seriesData).format('yyyy'),
+  });
+
+  const { data, isLoading } = useGetFinances({
+    date: moment(seriesData).format('yyyy'),
+    unit,
+  });
 
   const contents = useMemo(
     () => [
@@ -42,13 +49,6 @@ export default function DashboardFinances({ unit }) {
     ],
     [stat]
   );
-
-  const { data, isLoading } = useGetFinances({
-    date: moment(seriesData).format('yyyy'),
-    unit,
-  });
-
-  console.log('DashboardFinances useGetStatistics', stat);
 
   return (
     <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>

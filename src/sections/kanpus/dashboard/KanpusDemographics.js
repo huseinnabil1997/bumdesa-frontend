@@ -69,14 +69,14 @@ export default function KanpusDemographics({ demo }) {
             .map((row) => row.total_bumdesa),
           color: theme.palette.primary.main,
         },
-        {
-          name: 'Kemendes',
-          data: demo
-            .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
-            .slice(0, 6)
-            .map((row, i) => row.total_kemendes + 1 + i * 2),
-          color: theme.palette.warning.main,
-        },
+        // {
+        //   name: 'Kemendes',
+        //   data: demo
+        //     .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
+        //     .slice(0, 6)
+        //     .map((row, i) => row.total_kemendes + 1 + i * 2),
+        //   color: theme.palette.warning.main,
+        // },
       ]);
   }, [demo]);
 
