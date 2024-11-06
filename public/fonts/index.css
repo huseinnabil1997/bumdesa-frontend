@@ -16,3 +16,23 @@
   font-style: normal;
   src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype');
 }
+
+@font-face {
+  font-family: 'BRI Digital Text Bold';
+  src: local('BRI Digital Text Bold'), url('BRIDigitalText-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'BRI Digital Text Regular';
+  src: local('BRI Digital Text Regular'), url('BRIDigitalText-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'BRI Digital Text Medium';
+  src: local('BRI Digital Text Medium'), url('BRIDigitalText-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'BRI Digital Text SemiBold';
+  src: local('BRI Digital Text SemiBold'), url('BRIDigitalText-SemiBold.ttf') format('truetype');
+}
