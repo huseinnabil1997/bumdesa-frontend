@@ -16,8 +16,8 @@ export function getDemographic() {
   return axiosInstance.get(`dashboard/demografi`);
 }
 
-export function getStatistics() {
-  return axiosInstance.get(`dashboard/static`);
+export function getStatistics(params) {
+  return axiosInstance.get(`dashboard/static`, { params });
 }
 
 export function getAreaSummary(params) {
@@ -25,13 +25,13 @@ export function getAreaSummary(params) {
 }
 
 export function getDetailSummary(params) {
-  if (params.area) {
-    params['province'] = params.area.substring(0, 2);
-    params['city'] = params.area.substring(2, 4);
-    params['district'] = params.area.substring(4, 6);
+  // if (params.area) {
+  //   params['province'] = params.area.substring(0, 2);
+  //   params['city'] = params.area.substring(2, 4);
+  //   params['district'] = params.area.substring(4, 6);
 
-    delete params.area;
-  }
+  //   delete params.area;
+  // }
 
   return axiosInstance.get(`report/summary-bumdesa`, { params });
 }

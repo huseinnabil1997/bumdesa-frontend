@@ -1,14 +1,18 @@
 import { useMutation } from 'react-query';
 import { createLink } from 'src/query/request/link-umkm';
 
-const createData = async (payload) => {
-  const { data } = await createLink(payload);
+const createData = async () => {
+  try {
+    const { data } = await createLink();
 
-  return data;
+    return data;
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 export const useCreateLink = () => {
-  const createMutation = useMutation((payload) => createData(payload));
+  const createMutation = useMutation(() => createData());
 
   return createMutation;
 };
