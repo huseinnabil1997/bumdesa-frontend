@@ -52,8 +52,6 @@ export default function SummaryPage() {
     mode: 'onChange',
   });
 
-  const { watch } = methods;
-
   const {
     data: summary,
     isLoading,

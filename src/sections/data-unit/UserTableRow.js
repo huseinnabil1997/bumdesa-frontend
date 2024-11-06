@@ -72,7 +72,7 @@ export default function UserTableRow({ row, onViewRow }) {
 
   return (
     <StyledTableRow hover>
-      <FixedTableCell>{unit_name ?? '-'}</FixedTableCell>
+      <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{unit_name ?? '-'}</FixedTableCell>
       <TableCell align="left" sx={cellStyle}>{bumdesa_name}</TableCell>
       <TableCell align="left" sx={cellStyle}>{year_registered}</TableCell>
       <TableCell align="center">

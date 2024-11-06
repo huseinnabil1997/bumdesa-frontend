@@ -57,7 +57,7 @@ UserList.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function UserList() {
-  let debounceTimeout;
+  // let debounceTimeout;
   const {
     page,
     rowsPerPage,
