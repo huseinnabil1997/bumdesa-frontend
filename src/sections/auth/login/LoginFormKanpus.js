@@ -86,7 +86,7 @@ export default function LoginForm() {
 
   const {
     setError,
-    clearError,
+    // clearError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
@@ -108,7 +108,7 @@ export default function LoginForm() {
           window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
-          clearError('captcha');
+          // clearError('captcha');
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
           router.push(

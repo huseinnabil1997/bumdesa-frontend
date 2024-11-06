@@ -29,6 +29,9 @@ import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 import '@fullcalendar/common/main.min.css';
 import '@fullcalendar/daygrid/main.min.css';
 
+//fonts
+import '../../public/fonts/index.css';
+
 import PropTypes from 'prop-types';
 import cookie from 'cookie';
 // next
