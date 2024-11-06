@@ -79,7 +79,7 @@ export default function UnitList() {
               kecamatan: watch('kecamatan') ?? null,
               status_report: watch('report') ?? null,
               unit: watch('search') ?? null,
-              area: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+              area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
             }}
             setValue={setValue}
           />
