@@ -37,7 +37,7 @@ export default function DashboardFinances({ unit }) {
 
   const contents = useMemo(
     () => [
-      { title: 'User BUMDesa Registrasi', value: stat?.total_user_regis },
+      { title: 'User BUMDesa Registrasi', value: stat?.total_bumdesa_active },
       { title: 'Unit Usaha Registrasi', value: stat?.total_unit_active },
       { title: 'Jumlah BUMDes Mengisi Laporan Keuangan', value: stat?.total_report },
       { title: 'Jumlah Unit Mengisi Laporan Keuangan', value: stat?.total_report_unit },

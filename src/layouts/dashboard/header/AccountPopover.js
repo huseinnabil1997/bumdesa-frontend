@@ -170,7 +170,7 @@ export default function AccountPopover() {
         {/* <MyAvatar /> */}
         <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
           <Typography color='#292929' fontSize='18px' fontWeight={600}>
-            {isKanpus ? userData?.name : data?.name ? `${data?.name}, ` : '...'}
+            {isKanpus ? (userData?.name || userData?.email || '...') : (data?.name ? `${data?.name}, ` : (userData?.email || '...'))}
             {!isKanpus && bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </Typography>
           <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
