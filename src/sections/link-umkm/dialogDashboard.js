@@ -1,10 +1,22 @@
 import React, { useCallback } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, CardMedia } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  CardMedia,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const LinkUMKMDialogDashboard = ({ open, onClose }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+
   const router = useRouter();
 
   const handleClose = useCallback(() => {
@@ -13,7 +25,16 @@ const LinkUMKMDialogDashboard = ({ open, onClose }) => {
   }, [router, onClose]);
 
   return (
-    <Dialog open={open} onClose={onClose} sx={{ maxWidth: 350, maxHeight: '608px', margin: 'auto' }} fullWidth>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      sx={{
+        maxWidth: isMobile ? 350 : 900,
+        maxHeight: isMobile ? '608px' : '720px',
+        margin: 'auto',
+      }}
+      fullWidth
+    >
       <DialogTitle>
         <IconButton
           aria-label="close"
@@ -31,13 +52,22 @@ const LinkUMKMDialogDashboard = ({ open, onClose }) => {
       <DialogContent>
         <CardMedia
           component="img"
-          image="/image/LINKUMKM.gif"
+          image={isMobile ? '/image/LINKUMKM.gif' : '/image/LINKUMKM_Desktop.gif'}
           alt="Integrasi LinkUMKM"
-          sx={{ width: '100%', maxWidth: 236, maxHeight: 480 }}
+          sx={{
+            width: '100%',
+            maxWidth: isMobile ? 236 : '100%',
+            maxHeight: isMobile ? 480 : '100%',
+          }}
         />
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'center', px: 2, pb: 2 }}>
-        <StyledButton onClick={handleClose} variant="contained" color="primary" sx={{ height: '48px', width: '100%' }}>
+        <StyledButton
+          onClick={handleClose}
+          variant="contained"
+          color="primary"
+          sx={{ height: '48px', width: '100%' }}
+        >
           Integrasi LinkUMKM
         </StyledButton>
       </DialogActions>
