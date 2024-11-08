@@ -68,7 +68,7 @@ export default function DashboardSalesKanpus({ id, unit = false }) {
   }, [data]);
 
   return (
-    <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
+    <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}`, minHeight: 500 }}>
       <CardHeader
         sx={{ p: 3, pb: 0 }}
         title="Penjualan"

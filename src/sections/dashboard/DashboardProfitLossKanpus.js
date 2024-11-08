@@ -79,9 +79,9 @@ export default function DashboardProfitLossKanpus({ id, unit = false }) {
   }, [data]);
 
   return (
-    <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
+    <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}`, minHeight: 500 }}>
       <CardHeader
-        sx={{ p: 3, pb: 0 }}
+        sx={{ p: 3, pt: 5 }}
         title="Laba (Rugi) Bersih"
         action={
           <Box display="flex" alignItems="center">
@@ -93,7 +93,7 @@ export default function DashboardProfitLossKanpus({ id, unit = false }) {
       />
 
       {!isLoading && chartOptions && (
-        <Box sx={{ mt: 3, mx: 3 }}>
+        <Box sx={{ mt: 1, mx: 3 }}>
           <ReactApexChart type="bar" series={chartData} options={chartOptions} height={360} />
           {startDate.length === 7 && (
             <Box display="flex" alignItems="center" justifyContent="center" sx={{ mb: 3, mt: -2 }}>
