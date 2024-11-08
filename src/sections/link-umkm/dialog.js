@@ -33,7 +33,7 @@ export default function LinkUMKMDialog({ open, onClose }) {
   };
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}terms-and-condition/terms-and-condition-link-umkm.html`)
+    axios.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}terms-and-condition/terms-and-condition-link-umkm1.html`)
       .then(res => {
         setHtml(res.data)
       })
@@ -80,7 +80,7 @@ export default function LinkUMKMDialog({ open, onClose }) {
             control={<Checkbox name="checkedLinkUMKM" checked={checked} onChange={handleCheckboxChange} />}
             label={
               <Typography fontSize="14px" fontWeight={400}>
-                Saya telah menyetujui <span style={{ color: '#1078CA', fontWeight: 600 }}>Syarat & Ketentuan</span> dan <span style={{ color: '#1078CA', fontWeight: 600 }}>Pemberitahuan Privasi</span> LinkUMKM
+                Saya telah menyetujui <span style={{ color: '#1078CA', fontWeight: 600 }}>Syarat & Ketentuan</span> dan <span onClick={() => window.open('/link-umkm/privacy-policy', '_blank')} style={{ color: '#1078CA', fontWeight: 600, cursor: 'pointer' }}>Kebijakan Privasi</span> LinkUMKM
               </Typography>
             }
             sx={dialogStyles.checkboxLabel}
