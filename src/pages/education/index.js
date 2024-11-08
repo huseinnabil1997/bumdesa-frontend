@@ -8,6 +8,7 @@ import LinkUMKMDialogDashboard from 'src/sections/link-umkm/dialogDashboard';
 import { useGetLink } from 'src/query/hooks/link-umkm/useGetLink';
 import { useCreateLink } from 'src/query/hooks/link-umkm/useCreateLink';
 import FailedDialog from 'src/sections/link-umkm/failedDialog';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -20,20 +21,26 @@ Education.getLayout = function getLayout(page) {
 export default function Education() {
   const { themeStretch } = useSettings();
   const { data } = useGetLink();
+  const { enqueueSnackbar } = useSnackbar();
   const { mutate: onCreate, isLoading: loading } = useCreateLink();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [openFailed, setOpenFailed] = useState(false);
 
   const handleCreateLink = async () => {
-    onCreate({
+    onCreate({}, {
       onSuccess: (res) => {
         const { hotLink, token, userFullname, userEmail } = res.data;
-        const url = new URL(hotLink);
-        url.searchParams.append('token', token);
-        url.searchParams.append('userFullname', userFullname);
-        url.searchParams.append('userEmail', userEmail);
-        window.open(url.toString(), '_blank');
+        try {
+          const url = new URL(hotLink);
+          url.searchParams.append('token', token);
+          url.searchParams.append('userFullname', userFullname);
+          url.searchParams.append('userEmail', userEmail);
+          window.open(url.toString(), '_blank');
+        } catch (error) {
+          enqueueSnackbar('URL tidak valid', { variant: 'error' });
+          setOpenFailed(true);
+        }
       },
       onError: () => {
         setOpenFailed(true);
@@ -42,12 +49,14 @@ export default function Education() {
   };
 
   useEffect(() => {
-    if (data?.linkumkm_integrated !== 1) {
-      setOpen(true);
-    } else {
-      handleCreateLink();
+    if (data?.linkumkm_integrated) {
+      if (data?.linkumkm_integrated !== 1) {
+        setOpen(true);
+      } else {
+        handleCreateLink();
+      }
     }
-  }, []);
+  }, [data?.linkumkm_integrated]);
 
   const handleClose = () => {
     setOpen(false);
