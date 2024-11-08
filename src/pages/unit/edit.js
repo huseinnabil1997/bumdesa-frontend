@@ -114,9 +114,9 @@ export default function EditUnitUsaha() {
                 content: () => (
                   <Box
                     display="flex"
-                    justifyContent="space-around"
+                    justifyContent="space-between"
                     alignItems="center"
-                    sx={{ width: '280px', height: 48, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                    sx={{ minWidth: 100, height: 55, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
                   >
                     <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
                     <Typography mr="12px" fontSize="12px">Data Anda telah berhasil diperbarui.</Typography>
@@ -135,15 +135,14 @@ export default function EditUnitUsaha() {
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
-                    sx={{ width: 475, height: 96, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                    sx={{ minWidth: 100, minHeight: 55, backgroundColor: '#E1F8EB', px: '10px', py: '15px', borderRadius: '4px' }}
                   >
                     <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
                     <Box
                       display="flex"
-                      justifyContent="space-between"
                       flexDirection="column"
                     >
-                      <Typography fontSize="12px" mb="10px">
+                      <Typography fontSize="12px">
                         Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{data?.email}</span>
                       </Typography>
                       <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>

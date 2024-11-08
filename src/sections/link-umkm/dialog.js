@@ -21,7 +21,6 @@ export default function LinkUMKMDialog({ open, onClose }) {
   const [checked, setChecked] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailed, setOpenFailed] = useState(false);
-  const [responseLink, setResponseLink] = useState({});
   const [html, setHtml] = useState('');
 
   const { enqueueSnackbar } = useSnackbar();
@@ -45,26 +44,32 @@ export default function LinkUMKMDialog({ open, onClose }) {
   const handleAgree = async () => {
     onCreate({}, {
       onSuccess: (res) => {
-        setResponseLink(res?.data);
+        setTimeout(() => {
+          handleSuccess(res?.data);
+        }, 1000);
         enqueueSnackbar(res?.message);
-        setOpenSuccess(true);
       },
       onError: (err) => {
         enqueueSnackbar(err.message, { variant: 'error' });
         setOpenFailed(true);
       },
     });
-    onClose();
   };
 
-  const handleSuccess = () => {
-    setOpenSuccess(false);
+  const handleSuccess = (responseLink) => {
     const { hotLink, token, userFullname, userEmail } = responseLink;
-    const url = new URL(hotLink);
-    url.searchParams.append('token', token);
-    url.searchParams.append('userFullname', userFullname);
-    url.searchParams.append('userEmail', userEmail);
-    window.open(url.toString(), '_blank');
+
+    try {
+      const url = new URL(hotLink);
+      url.searchParams.append('token', token);
+      url.searchParams.append('userFullname', userFullname);
+      url.searchParams.append('userEmail', userEmail);
+      window.open(url.toString(), '_blank');
+      setOpenSuccess(true);
+    } catch (error) {
+      enqueueSnackbar('URL tidak valid', { variant: 'error' });
+      setOpenFailed(true);
+    }
   };
 
   return (
@@ -79,7 +84,7 @@ export default function LinkUMKMDialog({ open, onClose }) {
           <FormControlLabel
             control={<Checkbox name="checkedLinkUMKM" checked={checked} onChange={handleCheckboxChange} />}
             label={
-              <Typography fontSize="14px" fontWeight={400}>
+              <Typography fontSize="14px" fontWeight={400} sx={{ cursor: 'default' }}>
                 Saya telah menyetujui <span style={{ color: '#1078CA', fontWeight: 600 }}>Syarat & Ketentuan</span> dan <span onClick={() => window.open('/link-umkm/privacy-policy', '_blank')} style={{ color: '#1078CA', fontWeight: 600, cursor: 'pointer' }}>Kebijakan Privasi</span> LinkUMKM
               </Typography>
             }
@@ -101,7 +106,6 @@ export default function LinkUMKMDialog({ open, onClose }) {
           setOpenSuccess(false);
           router.push('/dashboard');
         }}
-        handleSuccess={handleSuccess}
       />
       <FailedDialog open={openFailed} onRetry={handleAgree} onClose={() => setOpenFailed(false)} loading={creating} />
     </>
