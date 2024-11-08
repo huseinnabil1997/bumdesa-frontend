@@ -60,8 +60,6 @@ export default function SupervisorCreate() {
 
   const { handleSubmit, reset } = methods;
 
-  console.log('is email same:', data?.email, defaultValues.email);
-
   useEffect(() => {
     reset(defaultValues);
   }, [id, data]);
