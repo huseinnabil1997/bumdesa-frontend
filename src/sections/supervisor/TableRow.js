@@ -6,6 +6,7 @@ import { Stack, TableRow, TableCell, IconButton } from '@mui/material';
 // components
 import Iconify from 'src/components/Iconify';
 import DeleteConfirmation from 'src/components/modal/DeleteConfirmation';
+import Label from 'src/components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ export default function UserTableRow({ row, onEditRow, onDeleteRow, index }) {
 
   const [showDelete, setDelete] = useState(false);
 
-  const { title, name, email } = row;
+  const { title, name, email, status } = row;
 
   return (
     <>
@@ -34,7 +35,11 @@ export default function UserTableRow({ row, onEditRow, onDeleteRow, index }) {
         <TableCell>{name}</TableCell>
         <TableCell>{title ?? '-'}</TableCell>
         <TableCell>{email ?? '-'}</TableCell>
-
+        <TableCell align="center">
+          <Label color={status == '1' ? 'success' : 'error'}>
+            {status == '1' ? 'Aktif' : 'Tidak Aktif'}
+          </Label>
+        </TableCell>
         <TableCell align="center">
           <Stack direction="row" justifyContent="center">
             <IconButton onClick={onEditRow}>
