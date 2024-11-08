@@ -65,6 +65,7 @@ export const SUPERVISOR_HEAD = [
   { id: 'name', label: 'Nama', align: 'left' },
   { id: 'title', label: 'Jabatan', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
+  { id: 'status', label: 'Status', align: 'center' },
   { id: '', label: '', align: 'right', width: 50 },
 ];
 
