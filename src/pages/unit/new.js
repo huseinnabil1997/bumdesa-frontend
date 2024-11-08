@@ -118,16 +118,16 @@ export default function AddUnitUsaha() {
           content: () => (
             <Box
               display="flex"
-              justifyContent="space-around"
+              justifyContent="space-between"
               alignItems="center"
-              sx={{ width: '408px', height: '48px', backgroundColor: '#E1F8EB', padding: '8px', borderRadius: '4px' }}
+              sx={{ minWidth: 100, height: 55, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
             >
               <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-              <Typography fontSize="12px">Unit Usaha Berhasil ditambahkan, Verifikasi email Unit Usaha</Typography>
+              <Typography mr="12px" fontSize="12px">Unit Usaha Berhasil ditambahkan, verifikasi email Unit Usaha</Typography>
             </Box>
           )
         });
-  
+
         router.push('list');
         reset();
       },
