@@ -41,6 +41,7 @@ export default function Education() {
           enqueueSnackbar('URL tidak valid', { variant: 'error' });
           setOpenFailed(true);
         }
+        router.push('/dashboard');
       },
       onError: () => {
         setOpenFailed(true);
