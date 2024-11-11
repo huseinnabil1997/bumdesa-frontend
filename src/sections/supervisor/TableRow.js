@@ -22,7 +22,7 @@ export default function UserTableRow({ row, onEditRow, onDeleteRow, index }) {
 
   const [showDelete, setDelete] = useState(false);
 
-  const { title, name, email, status } = row;
+  const { title, name, email, is_active } = row;
 
   return (
     <>
@@ -36,8 +36,8 @@ export default function UserTableRow({ row, onEditRow, onDeleteRow, index }) {
         <TableCell>{title ?? '-'}</TableCell>
         <TableCell>{email ?? '-'}</TableCell>
         <TableCell align="center">
-          <Label color={status == '1' ? 'success' : 'error'}>
-            {status == '1' ? 'Aktif' : 'Tidak Aktif'}
+          <Label color={is_active === 1 ? 'success' : 'error'}>
+            {is_active === 1 ? 'Aktif' : 'Belum Aktif'}
           </Label>
         </TableCell>
         <TableCell align="center">
