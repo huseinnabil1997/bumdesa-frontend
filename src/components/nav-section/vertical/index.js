@@ -7,6 +7,7 @@ import DOMPurify from 'dompurify';
 import { NavListRoot } from './NavList';
 import { useGetMenus } from 'src/query/hooks/auth/useGetMenus';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 // import { stringify } from 'stylis';
 
 // ----------------------------------------------------------------------
@@ -32,6 +33,8 @@ NavSectionVertical.propTypes = {
 };
 
 export default function NavSectionVertical({ isCollapse = false, ...other }) {
+  const userData = useSelector((state) => state.user.userData);
+
   const safeParseJSON = (json) => {
     try {
       return JSON.parse(json);
@@ -44,6 +47,8 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
 
   const [navConfig, setNavConfig] = useState(defaultValue);
 
+  console.log('userData:', userData, 'navConfig:', navConfig);
+
   const { data, isLoading } = useGetMenus();
 
   useEffect(() => {
@@ -51,15 +56,22 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
       const cleanedData = data.map((group) => ({
         ...group,
         subheader: DOMPurify.sanitize(group.subheader),
-        items: group.items.map((item) => ({
-          ...item,
-          title: DOMPurify.sanitize(item.title),
-        })),
+        items: group.items
+          .filter((item) => {
+            if (userData.linkumkm_integrated !== 1 && userData.role === 3) {
+              return item.title !== 'Konten Edukasi';
+            }
+            return true;
+          })
+          .map((item) => ({
+            ...item,
+            title: DOMPurify.sanitize(item.title),
+          })),
       }));
       localStorage.setItem('@menu', JSON.stringify(cleanedData));
       setNavConfig(cleanedData);
     }
-  }, [data]);
+  }, [data, userData.linkumkm_integrated]);
 
   return (
     <Box {...other}>
