@@ -30,12 +30,12 @@ export default function Education() {
   const handleCreateLink = async () => {
     onCreate({}, {
       onSuccess: (res) => {
-        const { hotLink, token, userFullname, userEmail } = res.data;
+        const { hot_link, token, user_fullname, user_email } = res.data;
         try {
-          const url = new URL(hotLink);
+          const url = new URL(hot_link);
           url.searchParams.append('token', token);
-          url.searchParams.append('userFullname', userFullname);
-          url.searchParams.append('userEmail', userEmail);
+          url.searchParams.append('user_fullname', user_fullname);
+          url.searchParams.append('user_email', user_email);
           window.open(url.toString(), '_blank');
         } catch (error) {
           enqueueSnackbar('URL tidak valid', { variant: 'error' });

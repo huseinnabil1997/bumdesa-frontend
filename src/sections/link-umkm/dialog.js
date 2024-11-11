@@ -57,13 +57,13 @@ export default function LinkUMKMDialog({ open, onClose }) {
   };
 
   const handleSuccess = (responseLink) => {
-    const { hotLink, token, userFullname, userEmail } = responseLink;
+    const { hot_link, token, user_fullname, user_email } = responseLink;
 
     try {
-      const url = new URL(hotLink);
+      const url = new URL(hot_link);
       url.searchParams.append('token', token);
-      url.searchParams.append('userFullname', userFullname);
-      url.searchParams.append('userEmail', userEmail);
+      url.searchParams.append('user_fullname', user_fullname);
+      url.searchParams.append('user_email', user_email);
       window.open(url.toString(), '_blank');
       setOpenSuccess(true);
     } catch (error) {
