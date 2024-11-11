@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 import { RHFTextField } from 'src/components/hook-form';
 import { StyledButton } from 'src/theme/custom/Button';
-import { searchRegex } from 'src/utils/regex';
+import { searchRegexWithEmail } from 'src/utils/regex';
 import { useSelector } from 'react-redux';
 
 SupervisorHeader.propTypes = {
@@ -28,8 +28,8 @@ export default function SupervisorHeader({ value }) {
           sx={{ width: 420 }}
           fullWidth
           size="small"
-          error={!searchRegex.test(value) && value !== ''}
-          helperText={!searchRegex.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
+          error={!searchRegexWithEmail.test(value) && value !== ''}
+          helperText={!searchRegexWithEmail.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
           placeholder="Cari berdasarkan nama atau email pengawas"
           name="search"
           InputProps={{
