@@ -47,8 +47,6 @@ export default function NavSectionVertical({ isCollapse = false, ...other }) {
 
   const [navConfig, setNavConfig] = useState(defaultValue);
 
-  console.log('userData:', userData, 'navConfig:', navConfig);
-
   const { data, isLoading } = useGetMenus();
 
   useEffect(() => {
