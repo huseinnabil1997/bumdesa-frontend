@@ -49,14 +49,14 @@ export default function Education() {
   };
 
   useEffect(() => {
-    if (data?.linkumkm_integrated) {
+    if (data) {
       if (data?.linkumkm_integrated !== 1) {
         setOpen(true);
       } else {
         handleCreateLink();
       }
     }
-  }, [data?.linkumkm_integrated]);
+  }, [data]);
 
   const handleClose = () => {
     setOpen(false);
