@@ -7,7 +7,7 @@ const createData = async () => {
 
     return data;
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err.message);
   }
 };
 
