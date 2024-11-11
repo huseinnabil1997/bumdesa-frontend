@@ -48,10 +48,13 @@ export default function Login() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const fetchVerifyEmailUnit = async (unit_verify) => {
+  const fetchVerifyEmail = async (params) => {
+    const service = router.query.unit_verify ? axiosCore : axiosAuth;
+    const url = router.query.unit_verify ? '/business-units/email-verify' : '/inspector/email-verify';
+    const keyParams = router.query.unit_verify ? 'unit_verify' : 'inspector_verify';
     setLoading(false);
     try {
-      await axiosCore.post('/business-units/email-verify', { unit_verify });
+      await service.post(url, { [keyParams]: params });
       setLoading(false);
       setIsExpired(false);
       setError('');
@@ -62,31 +65,10 @@ export default function Login() {
       setError(error?.message);
       setLoading(false);
     }
-  };
-
-  const fetchVerifyEmailSupervisor = async (inspector_verify) => {
-    setLoading(false);
-    try {
-      await axiosAuth.post('/business-units/email-verify', { inspector_verify });
-      setLoading(false);
-      setIsExpired(false);
-      setError('');
-      // setSession(null);
-    } catch (error) {
-      console.log('error verifyEmail', error);
-      setIsExpired(true);
-      setError(error?.message);
-      setLoading(false);
-    }
-  };
+  }
 
   useEffect(() => {
-    if (router.query.unit_verify) {
-      fetchVerifyEmailUnit(router.query.unit_verify);
-    }
-    if (router.query.inspector_verify) { 
-      fetchVerifyEmailSupervisor(router.query.inspector_verify);
-    }
+    fetchVerifyEmail(router.query.unit_verify || router.query.inspector_verify);
   }, [router.query.unit_verify, router.query.inspector_verify]);
 
   return (
