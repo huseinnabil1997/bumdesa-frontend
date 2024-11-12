@@ -144,7 +144,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
-        <Grid item xs={3}>
+        <Grid item xs={3} flexDirection="column">
           <Typography variant="caption" fontWeight={600}>
             Foto Kantor BUM Desa
           </Typography>
