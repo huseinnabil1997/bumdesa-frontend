@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
-import SuccessDialog from './successDialog';
-import FailedDialog from './failedDialog';
-import { useCreateLink } from 'src/query/hooks/link-umkm/useCreateLink';
-import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/router';
 import axios from 'axios';
 
 const dialogStyles = {
@@ -17,15 +12,10 @@ const dialogStyles = {
   actions: { justifyContent: 'space-between', p: 2, gap: 2 }
 };
 
-export default function LinkUMKMDialog({ open, onClose }) {
+export default function LinkUMKMDialog({ open, onClose, onAgree, loading }) {
   const [checked, setChecked] = useState(false);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openFailed, setOpenFailed] = useState(false);
+  
   const [html, setHtml] = useState('');
-
-  const { enqueueSnackbar } = useSnackbar();
-  const { mutate: onCreate, isLoading: creating } = useCreateLink();
-  const router = useRouter();
 
   const handleCheckboxChange = (event) => {
     setChecked(event.target.checked);
@@ -40,37 +30,6 @@ export default function LinkUMKMDialog({ open, onClose }) {
         console.log('err:', err);
       });
   }, [html]);
-
-  const handleAgree = async () => {
-    onCreate({}, {
-      onSuccess: (res) => {
-        setTimeout(() => {
-          handleSuccess(res?.data);
-        }, 1000);
-        enqueueSnackbar(res?.message);
-      },
-      onError: (err) => {
-        enqueueSnackbar(err.message, { variant: 'error' });
-        setOpenFailed(true);
-      },
-    });
-  };
-
-  const handleSuccess = (responseLink) => {
-    const { hot_link, token, user_fullname, user_email } = responseLink;
-
-    try {
-      const url = new URL(hot_link);
-      url.searchParams.append('token', token);
-      url.searchParams.append('user_fullname', user_fullname);
-      url.searchParams.append('user_email', user_email);
-      window.open(url.toString(), '_blank');
-      setOpenSuccess(true);
-    } catch (error) {
-      enqueueSnackbar('URL tidak valid', { variant: 'error' });
-      setOpenFailed(true);
-    }
-  };
 
   return (
     <>
@@ -95,19 +54,11 @@ export default function LinkUMKMDialog({ open, onClose }) {
           <StyledLoadingButton onClick={onClose} variant="outlined" color="primary" sx={dialogStyles.button}>
             Batal
           </StyledLoadingButton>
-          <StyledLoadingButton onClick={handleAgree} variant="contained" color="primary" disabled={!checked} sx={dialogStyles.button} loading={creating}>
+          <StyledLoadingButton onClick={onAgree} variant="contained" color="primary" disabled={!checked} sx={dialogStyles.button} loading={loading}>
             Setuju
           </StyledLoadingButton>
         </DialogActions>
       </Dialog>
-      <SuccessDialog
-        open={openSuccess}
-        onClose={() => {
-          setOpenSuccess(false);
-          router.push('/dashboard');
-        }}
-      />
-      <FailedDialog open={openFailed} onRetry={handleAgree} onClose={() => setOpenFailed(false)} loading={creating} />
     </>
   );
 }
