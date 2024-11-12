@@ -134,7 +134,7 @@ const Link = memo(() => {
 });
 
 Link.getLayout = function getLayout(page) {
-  return <Layout title="Permberdayaan UMKM">{page}</Layout>;
+  return <Layout title="Pemberdayaan LinkUMKM">{page}</Layout>;
 };
 
 export default Link;
