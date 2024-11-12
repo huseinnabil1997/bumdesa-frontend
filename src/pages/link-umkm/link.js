@@ -12,6 +12,10 @@ import useSettings from 'src/hooks/useSettings';
 import { StyledButton } from 'src/theme/custom/Button';
 import Image from 'src/components/Image';
 import LinkUMKMDialog from 'src/sections/link-umkm/dialog';
+import SuccessDialog from 'src/sections/link-umkm/successDialog';
+import FailedDialog from 'src/sections/link-umkm/failedDialog';
+import { useCreateLink } from 'src/query/hooks/link-umkm/useCreateLink';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -20,8 +24,47 @@ const handleClose = (setOpen) => () => setOpen(false);
 
 const Link = memo(() => {
   const { themeStretch } = useSettings();
+  const { enqueueSnackbar } = useSnackbar();
+
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFailed, setOpenFailed] = useState(false);
+
+  const { mutate: onCreate, isLoading: creating } = useCreateLink();
+
+  const handleSuccess = (responseLink) => {
+    const { hot_link, token, user_fullname, user_email } = responseLink;
+
+    try {
+      const url = new URL(hot_link);
+      url.searchParams.append('token', token);
+      url.searchParams.append('user_fullname', user_fullname);
+      url.searchParams.append('user_email', user_email);
+      window.open(url.toString(), '_blank');
+      setOpenSuccess(true);
+    } catch (error) {
+      enqueueSnackbar('URL tidak valid', { variant: 'error' });
+      setOpenFailed(true);
+    }
+  };
+
+  const handleAgree = async () => {
+    onCreate({}, {
+      onSuccess: (res) => {
+        setTimeout(() => {
+          handleSuccess(res?.data);
+        }, 1000);
+        enqueueSnackbar(res?.message);
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+        setOpenFailed(true);
+      },
+    });
+    setOpen(false);
+  };
 
   return (
     <Page>
@@ -77,7 +120,15 @@ const Link = memo(() => {
         </Box>
       </Container>
 
-      <LinkUMKMDialog open={open} onClose={handleClose(setOpen)} />
+      <LinkUMKMDialog open={open} onClose={handleClose(setOpen)} onAgree={handleAgree} loading={creating} />
+      <SuccessDialog
+        open={openSuccess}
+        onClose={() => {
+          setOpenSuccess(false);
+          router.push('/dashboard');
+        }}
+      />
+      <FailedDialog open={openFailed} onRetry={handleAgree} onClose={() => setOpenFailed(false)} loading={creating} />
     </Page>
   );
 });
