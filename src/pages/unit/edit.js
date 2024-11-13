@@ -314,6 +314,7 @@ export default function EditUnitUsaha() {
                   format="yyyy"
                   views={['year']}
                   openTo="year"
+                  onChange={(date) => setValue('year_founded', moment(date).format('YYYY'))}
                   sx={{
                     width: '293px',
                     '& .MuiInputBase-root': {
