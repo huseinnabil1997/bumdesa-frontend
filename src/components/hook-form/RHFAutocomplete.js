@@ -21,6 +21,7 @@ export default function RHFAutocomplete({
   helperText,
   require,
   isLoading,
+  endAdornment,
   ...other
 }) {
   const { control, setValue } = useFormContext();
@@ -49,6 +50,7 @@ export default function RHFAutocomplete({
                 label={''}
                 sx={{
                   '.MuiFormHelperText-root': { marginLeft: 0 },
+                  ...(endAdornment && { '& .MuiAutocomplete-popupIndicator': { transform: 'none' } }),
                   ...other.sx,
                 }}
                 InputProps={{
@@ -62,6 +64,7 @@ export default function RHFAutocomplete({
                 }}
               />
             )}
+            popupIcon={endAdornment}
             {...other}
           />
         )}
