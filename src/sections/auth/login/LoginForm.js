@@ -42,9 +42,12 @@ export default function LoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
+      .transform((value) => value.trim())
       .email('Email harus berisi alamat email yang valid')
       .required('Email wajib diisi'),
-    password: Yup.string().required('Kata sandi wajib diisi'),
+    password: Yup.string()
+      .transform((value) => value.trim())
+      .required('Kata sandi wajib diisi'),
   });
 
   const defaultValues = {
@@ -67,7 +70,7 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const res = await login(data.email, data.password);
+      const res = await login(data.email.trim(), data.password.trim());
       if (res?.data) {
         const isKanpus = res?.data?.unit_id === 0 && res?.data?.bumdesa_id === 0;
         dispatch(setUser(res.data));
