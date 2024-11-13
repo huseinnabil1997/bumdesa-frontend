@@ -80,7 +80,7 @@ export default function AccountInfo() {
   const userData = useSelector(state => state.user.userData);
 
   const defaultValues = {
-    id: fBumdesId(data?.bumdesa_id_reference) ?? '',
+    id: fBumdesId(data?.bumdesa_id) ?? '',
     email: userData?.email ?? '',
   };
 
