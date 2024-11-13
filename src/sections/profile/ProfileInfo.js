@@ -85,7 +85,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
     foto_kantor: data?.photo ?? null,
     logo: data?.photo_logo ?? null,
     nama: data?.name ?? '',
-    id: data?.bumdesa_id ?? '',
+    id: data?.bumdesa_id_reference ?? '',
     tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
     alamat: data?.address ?? '',
     provinsi: data?.province ?? null,

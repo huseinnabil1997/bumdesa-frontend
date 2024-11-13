@@ -143,12 +143,14 @@ export default function ProfileInfoUnit({ data, setIsEdit }) {
   }, []);
 
   useEffect(() => {
-    const checkImage = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
-      setIsValidImage(isValid);
-    };
+    if (defaultValues?.image) {
+      const checkImage = async () => {
+        const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}unit/${defaultValues?.image}`);
+        setIsValidImage(isValid);
+      };
 
-    checkImage();
+      checkImage();
+    }
   }, [defaultValues?.image]);
 
   return (

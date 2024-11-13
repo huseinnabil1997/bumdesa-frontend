@@ -15,7 +15,6 @@ export { eventBus };
 
 const styles = {
   card: {
-    maxWidth: 960,
     minHeight: 605
   },
   segment: {
