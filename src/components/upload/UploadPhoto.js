@@ -92,7 +92,7 @@ export default function UploadPhoto({
   const [modalImage, setModalImage] = useState(null);
   const [isValidImage, setIsValidImage] = useState(false);
   const [fileRejections, setFileRejections] = useState([]);
-  
+
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     multiple: false,
     ...other,
@@ -132,15 +132,17 @@ export default function UploadPhoto({
   };
 
   useEffect(() => {
-    const checkImage = async () => {
-      const isValid = await checkUrlImage(
-        `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}${imageFrom}/${file}`
-      );
-      setIsValidImage(isValid);
-      return isValid;
-    };
+    if (file && typeof file === 'string') {
+      const checkImage = async () => {
+        const isValid = await checkUrlImage(
+          `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}${imageFrom}/${file}`
+        );
+        setIsValidImage(isValid);
+        return isValid;
+      };
 
-    checkImage();
+      checkImage();
+    }
   }, [file]);
 
   return (

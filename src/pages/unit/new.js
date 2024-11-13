@@ -220,6 +220,7 @@ export default function AddUnitUsaha() {
                 name="image"
                 label="Foto Unit Usaha"
                 accept="image/png, image/jpg, image/jpeg"
+                imageFrom={'unit'}
                 maxSize={10000000}
                 onDrop={(file) => handleDrop(file, (val) => setValue(`image`, val))}
                 errorTextAlign="left"
