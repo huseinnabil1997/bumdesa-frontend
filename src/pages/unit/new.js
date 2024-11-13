@@ -71,7 +71,11 @@ export default function AddUnitUsaha() {
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
     year_founded: Yup.string()
       .required('Tahun Berdiri wajib diisi')
-      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value))
+      .test('is-greater', 'Tahun Berdiri tidak boleh kurang dari tahun didirikan BUM Desa', function(value) {
+        const founded_at = dataBumdesa?.founded_at?.split('T')[0];
+        return moment(value).isSameOrAfter(moment(founded_at));
+      }),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string()
       .required('Nama Manager Unit Usaha wajib diisi')

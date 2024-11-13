@@ -97,6 +97,9 @@ export default function RHFDatePicker({
                 }
                 handlePickerClose();
               }}
+              PopperProps={{
+                placement: 'bottom-start',
+              }}
               renderInput={(params) => (
                 <TextField
                   {...field}
