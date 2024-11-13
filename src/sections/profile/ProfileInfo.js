@@ -129,16 +129,18 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   }, []);
 
   useEffect(() => {
-    const checkImageKantor = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`);
-      setIsValidImageKantor(isValid);
-    };
-    const checkImageLogo = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}`);
-      setIsValidImageLogo(isValid);
-    };
-    checkImageKantor();
-    checkImageLogo();
+    if (defaultValues?.foto_kantor) {
+      const checkImageKantor = async () => {
+        const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`);
+        setIsValidImageKantor(isValid);
+      };
+      const checkImageLogo = async () => {
+        const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}`);
+        setIsValidImageLogo(isValid);
+      };
+      checkImageKantor();
+      checkImageLogo();
+    }
   }, [defaultValues?.foto_kantor, defaultValues?.logo]);
 
   return (
@@ -318,13 +320,13 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{ 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)', 
-          width: 'auto', 
-          bgcolor: 'background.paper', 
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'auto',
+          bgcolor: 'background.paper',
           boxShadow: 24,
           maxHeight: '100vh',
           overflow: 'auto'
