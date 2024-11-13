@@ -280,6 +280,7 @@ export default function AddUnitUsaha() {
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
                   minDate={moment(founded_at).format('yyyy-MM-DD')}
+                  onChange={(date) => setValue('year_founded', moment(date).format('YYYY'))}
                   format="yyyy"
                   views={['year']}
                   openTo="year"
