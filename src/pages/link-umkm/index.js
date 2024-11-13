@@ -14,7 +14,7 @@ import { StyledButton } from 'src/theme/custom/Button';
 // ----------------------------------------------------------------------
 
 LinkUmkm.getLayout = function getLayout(page) {
-  return <Layout title="BUM Desa X LinkUMKM">{page}</Layout>;
+  return <Layout title="Pemberdayaan LinkUMKM">{page}</Layout>;
 };
 
 // ----------------------------------------------------------------------

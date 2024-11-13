@@ -1,9 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 // @mui
 import {
   Card,
   CardHeader,
-  TextField,
   Stack,
   Typography,
   Grid,
@@ -13,31 +12,54 @@ import {
 } from '@mui/material';
 // components
 import { useTheme } from '@emotion/react';
-import { DatePicker } from '@mui/lab';
 import moment from 'moment';
-import { useGetFinances } from 'src/query/hooks/dashboard/useGetFinances';
 import { fNumber } from 'src/utils/formatNumber';
 import { useGetStatistics } from 'src/query/hooks/dashboard/useGetStatistics';
+import { useForm } from 'react-hook-form';
+import { FormProvider, RHFCustomDateRangePicker } from 'src/components/hook-form';
 
 // --------
 
-export default function DashboardFinances({ unit }) {
+export default function DashboardFinances() {
   const theme = useTheme();
 
-  const [seriesData, setSeriesData] = useState(new Date());
+  const defaultValues = {
+    date: [
+      moment().subtract(2, 'years').format('yyyy'),
+      moment().format('yyyy'),
+    ],
+  };
 
-  const { data: stat } = useGetStatistics({
-    date: moment(seriesData).format('yyyy'),
+  const methods = useForm({
+    defaultValues,
   });
 
-  const { data, isLoading } = useGetFinances({
-    date: moment(seriesData).format('yyyy'),
-    unit,
+  const { watch } = methods;
+
+  const [startDate, setStartDate] = useState(watch('date[0]'));
+  const [endDate, setEndDate] = useState(watch('date[1]'));
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      setStartDate(value.date[0]);
+      setEndDate(value.date[1]);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const { data: stat, isLoading } = useGetStatistics({
+    start_date: startDate,
+    end_date: endDate,
   });
+
+  // const { data, isLoading } = useGetFinances({
+  //   date: moment(seriesData).format('yyyy'),
+  //   unit,
+  // });
 
   const contents = useMemo(
     () => [
-      { title: 'User BUMDesa Registrasi', value: stat?.total_user_regis },
+      { title: 'User BUMDesa Registrasi', value: stat?.total_bumdesa_active },
       { title: 'Unit Usaha Registrasi', value: stat?.total_unit_active },
       { title: 'Jumlah BUMDes Mengisi Laporan Keuangan', value: stat?.total_report },
       { title: 'Jumlah Unit Mengisi Laporan Keuangan', value: stat?.total_report_unit },
@@ -56,22 +78,16 @@ export default function DashboardFinances({ unit }) {
         sx={{ p: 3, pb: 0 }}
         title="Statistik User BUM Desa"
         action={
-          <DatePicker
-            views={['year']}
-            label="Tahun"
-            value={seriesData}
-            onChange={(newValue) => {
-              setSeriesData(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} sx={{ width: 160 }} margin="normal" size="small" />
-            )}
-          />
+          <Box display="flex" alignItems="center">
+            <FormProvider methods={methods}>
+              <RHFCustomDateRangePicker name="date" size="small" sx={{ width: 200 }} />
+            </FormProvider>
+          </Box>
         }
       />
 
       <CardContent>
-        {!isLoading && data && (
+        {!isLoading && stat && (
           <Grid container spacing={3}>
             {contents.map((row, i) => (
               <Grid item xs={4} md={3} key={i}>

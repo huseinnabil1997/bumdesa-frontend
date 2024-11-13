@@ -24,5 +24,5 @@ export const supervisorSchema = Yup.object().shape({
       'Jabatan tidak boleh mengandung tag HTML',
       (value) => !htmlTagRegex.test(value)
     ),
-  email: Yup.string().required('Nama pengawas wajib diisi').email('Format email tidak sesuai'),
+  email: Yup.string().required('Alamat email wajib diisi').email('Format email tidak sesuai'),
 });

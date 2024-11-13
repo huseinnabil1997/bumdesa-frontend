@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, CardMedia, Dialog, DialogContent, DialogActions, Typography, useTheme } from '@mui/material';
 import { StyledButton } from 'src/theme/custom/Button';
 
-function SuccessDialog({ open, onClose, handleSuccess }) {
+function SuccessDialog({ open, onClose }) {
   const theme = useTheme();
 
   const styles = {
@@ -53,8 +53,8 @@ function SuccessDialog({ open, onClose, handleSuccess }) {
           </Typography>
         </DialogContent>
         <DialogActions sx={styles.dialogActions}>
-          <StyledButton onClick={handleSuccess} variant="contained" sx={styles.button} fullWidth>
-            Lanjutkan
+          <StyledButton onClick={onClose} variant="contained" sx={styles.button} fullWidth>
+            OKE
           </StyledButton>
         </DialogActions>
       </Box>

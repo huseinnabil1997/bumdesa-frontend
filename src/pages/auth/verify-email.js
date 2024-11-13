@@ -12,7 +12,8 @@ import { useRouter } from 'next/router';
 // import AlertVerifyEmail from 'src/components/modal/VerifyEmail';
 import { useEffect, useState } from 'react';
 import { PATH_AUTH } from 'src/routes/paths';
-import axiosInstance from 'src/utils/axiosCoreService';
+import axiosCore from 'src/utils/axiosCoreService';
+import axiosAuth from 'src/utils/axios';
 // import { setSession } from 'src/utils/jwt';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 
@@ -47,10 +48,13 @@ export default function Login() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const fetchVerifyEmail = async (unit_verify) => {
+  const fetchVerifyEmail = async (params) => {
+    const service = router.query.unit_verify ? axiosCore : axiosAuth;
+    const url = router.query.unit_verify ? '/business-units/email-verify' : '/inspector/email-verify';
+    const keyParams = router.query.unit_verify ? 'unit_verify' : 'inspector_verify';
     setLoading(false);
     try {
-      await axiosInstance.post('/business-units/email-verify', { unit_verify });
+      await service.post(url, { [keyParams]: params });
       setLoading(false);
       setIsExpired(false);
       setError('');
@@ -61,11 +65,11 @@ export default function Login() {
       setError(error?.message);
       setLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
-    fetchVerifyEmail(router.query.unit_verify);
-  }, []);
+    fetchVerifyEmail(router.query.unit_verify || router.query.inspector_verify);
+  }, [router.query.unit_verify, router.query.inspector_verify]);
 
   return (
     <Page title="Verify Email">

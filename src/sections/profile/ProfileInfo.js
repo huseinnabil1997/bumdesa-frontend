@@ -85,7 +85,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
     foto_kantor: data?.photo ?? null,
     logo: data?.photo_logo ?? null,
     nama: data?.name ?? '',
-    id: data?.bumdesa_id ?? '',
+    id: data?.bumdesa_id_reference ?? '',
     tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
     alamat: data?.address ?? '',
     provinsi: data?.province ?? null,
@@ -129,22 +129,24 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
   }, []);
 
   useEffect(() => {
-    const checkImageKantor = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`);
-      setIsValidImageKantor(isValid);
-    };
-    const checkImageLogo = async () => {
-      const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}`);
-      setIsValidImageLogo(isValid);
-    };
-    checkImageKantor();
-    checkImageLogo();
+    if (defaultValues?.foto_kantor) {
+      const checkImageKantor = async () => {
+        const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.foto_kantor}`);
+        setIsValidImageKantor(isValid);
+      };
+      const checkImageLogo = async () => {
+        const isValid = await checkUrlImage(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}`);
+        setIsValidImageLogo(isValid);
+      };
+      checkImageKantor();
+      checkImageLogo();
+    }
   }, [defaultValues?.foto_kantor, defaultValues?.logo]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} sx={styles.content}>
-        <Grid item xs={3}>
+        <Grid item xs={3} display="flex" flexDirection="column">
           <Typography variant="caption" fontWeight={600}>
             Foto Kantor BUM Desa
           </Typography>
@@ -162,7 +164,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
                   : '/image/default_image.png'
                 )
               }}
-              sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
+              sx={{ zIndex: 8, width: 132, height: 132, borderRadius: '16px' }}
             />
           </IconButtonAnimate>
         </Grid>
@@ -177,7 +179,7 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
               onClick={() => {
                 handleModalImage(isValidImageLogo ? `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}bumdesa/${defaultValues?.logo}` : '/image/default_image.png')
               }}
-              sx={{ zIndex: 8, maxWidth: 132, height: 132, borderRadius: '16px' }}
+              sx={{ zIndex: 8, width: 132, height: 132, borderRadius: '16px' }}
             />
           </IconButtonAnimate>
         </Grid>
@@ -318,7 +320,17 @@ export default function ProfileInfo({ data, isEdit, setIsEdit }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'auto', bgcolor: 'background.paper', boxShadow: 24 }}>
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'auto',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          maxHeight: '100vh',
+          overflow: 'auto'
+        }}>
           {modalImage && <Image src={modalImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />}
         </Box>
       </Modal>

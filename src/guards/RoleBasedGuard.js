@@ -34,7 +34,8 @@ const isAccessDenied = (path, subPath, role) => {
     faqs: ['kanpus', 'pengawas'],
     jurnal: ['kanpus', 'pengawas'],
     ledger: ['kanpus', 'pengawas'],
-    profit: ['pengawas'],
+    profit: ['pengawas', 'kanpus'],
+    report: ['kanpus'],
   };
 
   if (subPath === 'profit') {

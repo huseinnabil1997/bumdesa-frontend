@@ -11,7 +11,6 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { FormProvider, RHFAutocomplete, RHFTextField, RHFUploadPhoto } from 'src/components/hook-form';
 import { handleDrop } from 'src/utils/helperFunction';
-import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import InfoIcon from '@mui/icons-material/Info';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import { useSnackbar } from 'notistack';
@@ -21,8 +20,9 @@ import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
 import { useSelector } from 'react-redux';
 import { useGetProfile } from 'src/query/hooks/profile/useGetProfile';
-import moment from 'moment';
 import { useUpdateUnit } from 'src/query/hooks/units/useUpdateUnit';
+import { yearFoundedOptions } from 'src/sections/unit/constant';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 EditUnitUsaha.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
@@ -48,9 +48,7 @@ export default function EditUnitUsaha() {
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year_founded: Yup.string()
-      .required('Tahun Berdiri wajib diisi')
-      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    year_founded: Yup.object().nullable().required('Tahun Berdiri wajib diisi'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string()
       .required('Nama Manager Unit Usaha wajib diisi')
@@ -73,7 +71,7 @@ export default function EditUnitUsaha() {
     name: data?.name ?? '',
     position: 'Manager',
     email: data?.email ?? '',
-    year_founded: data?.year_founded?.toString() ?? '',
+    year_founded: { value: data?.year_founded, label: data?.year_founded?.toString() } ?? null,
     sector: { value: data?.id_sector, label: data?.sector } ?? null,
     manager_name: data?.organization?.name ?? '',
     manager_phone: data?.organization?.phone ?? '',
@@ -96,7 +94,7 @@ export default function EditUnitUsaha() {
     formData.append('image', data?.image);
     formData.append('name', data?.name);
     formData.append('email', data?.email);
-    formData.append('year_founded', new Date(data.year_founded).getFullYear());
+    formData.append('year_founded', data?.year_founded?.value.toString());
     formData.append('sector', data?.sector?.label);
     formData.append('id_sector', parseInt(data?.sector?.value));
     formData.append('manager_name', data?.manager_name);
@@ -114,9 +112,9 @@ export default function EditUnitUsaha() {
                 content: () => (
                   <Box
                     display="flex"
-                    justifyContent="space-around"
+                    justifyContent="space-between"
                     alignItems="center"
-                    sx={{ width: '280px', height: 48, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                    sx={{ minWidth: 100, height: 55, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
                   >
                     <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
                     <Typography mr="12px" fontSize="12px">Data Anda telah berhasil diperbarui.</Typography>
@@ -135,15 +133,14 @@ export default function EditUnitUsaha() {
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
-                    sx={{ width: 475, height: 96, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                    sx={{ minWidth: 100, minHeight: 55, backgroundColor: '#E1F8EB', px: '10px', py: '15px', borderRadius: '4px' }}
                   >
                     <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
                     <Box
                       display="flex"
-                      justifyContent="space-between"
                       flexDirection="column"
                     >
-                      <Typography fontSize="12px" mb="10px">
+                      <Typography fontSize="12px">
                         Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{data?.email}</span>
                       </Typography>
                       <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>
@@ -271,13 +268,16 @@ export default function EditUnitUsaha() {
                 }
               />
 
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}>
+              <Stack direction="row" useFlexGap flexWrap="wrap">
                 <RHFTextField
                   name="name"
                   label="Nama Unit Usaha"
                   placeholder="Contoh: Toko Ikan Mas Pak Budi"
+                  fullWidth
                   sx={{
                     width: '293px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
@@ -294,6 +294,8 @@ export default function EditUnitUsaha() {
                   sx={{
                     width: '293px',
                     height: '44px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
@@ -303,28 +305,33 @@ export default function EditUnitUsaha() {
                   }}
                   require
                 />
-                <RHFDatePicker
+                <RHFAutocomplete
                   name="year_founded"
                   label="Tahun Berdiri"
                   placeholder="Pilih Tahun"
-                  minDate={moment(founded_at).format('yyyy-MM-DD')}
-                  format="yyyy"
-                  views={['year']}
-                  openTo="year"
+                  size="small"
+                  isOptionEqualToValue={(option, value) => option.value === value.value}
+                  options={yearFoundedOptions(founded_at)?.map((option) => option) ?? []}
+                  getOptionLabel={(option) => option.label}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.value}>
+                      {option.label}
+                    </li>
+                  )}
                   sx={{
                     width: '293px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
-                      borderRadius: '8px',
                     },
                     '& .MuiInputBase-input': {
                       height: '11px',
                     }
                   }}
+                  endAdornment={<CalendarTodayIcon color="#777777" sx={{ mr: 1, fontSize: '16px' }} />}
                   require
                 />
-              </Stack>
-              <Stack spacing={2} direction="row" useFlexGap flexWrap="wrap">
                 <RHFAutocomplete
                   name="sector"
                   label="Sektor Usaha"
@@ -341,6 +348,8 @@ export default function EditUnitUsaha() {
                   )}
                   sx={{
                     width: '293px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
@@ -355,13 +364,15 @@ export default function EditUnitUsaha() {
               <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: '28px' }}>
                 Data Pengurus Unit Usaha
               </Typography>
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row' }}>
+              <Stack direction="row" useFlexGap flexWrap="wrap">
                 <RHFTextField
                   name="manager_name"
                   label="Nama Manager Unit Usaha"
                   placeholder="Contoh: Budi Jailani"
                   sx={{
                     width: '293px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
@@ -382,6 +393,8 @@ export default function EditUnitUsaha() {
                     backgroundColor: '#CCE8FF',
                     borderRadius: '8px',
                     width: '293px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },
@@ -397,6 +410,8 @@ export default function EditUnitUsaha() {
                   placeholder="Contoh: 081xxx"
                   sx={{
                     width: '293px',
+                    mr: 2,
+                    mb: 2,
                     '& .MuiInputBase-root': {
                       height: '44px',
                     },

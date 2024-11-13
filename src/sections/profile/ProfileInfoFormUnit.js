@@ -17,10 +17,10 @@ import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import usePatch from 'src/query/hooks/mutation/usePatch';
-import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
-import moment from 'moment';
 import Label from 'src/components/Label';
+import { yearFoundedOptions } from '../unit/constant';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const styles = {
   content: {
@@ -87,9 +87,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year_founded: Yup.string()
-      .required('Tahun Berdiri wajib diisi')
-      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    year_founded: Yup.object().nullable().required('Tahun Berdiri wajib dipilih'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string()
       .required('Nama Manager Unit Usaha wajib diisi')
@@ -110,7 +108,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
     name: data?.name ?? '',
     position: 'Manager',
     email: data?.email ?? '',
-    year_founded: data?.year_founded?.toString() ?? '',
+    year_founded: { value: data?.year_founded?.toString(), label: data?.year_founded?.toString() } ?? null,
     sector: { value: data?.id_sector, label: data?.sector } ?? null,
     manager_name: data?.organization?.name ?? '',
     manager_phone: data?.organization?.phone ?? '',
@@ -138,7 +136,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
     payload.append('image', formData?.image);
     payload.append('name', formData?.name);
     payload.append('email', formData?.email);
-    payload.append('year_founded', new Date(formData.year_founded).getFullYear());
+    payload.append('year_founded', formData?.year_founded?.value);
     payload.append('sector', formData?.sector?.label);
     payload.append('id_sector', parseInt(formData?.sector?.value));
     payload.append('manager_name', formData?.manager_name);
@@ -168,7 +166,6 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
-      console.log('error Edit Units', error);
     }
   };
 
@@ -221,7 +218,25 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
           />
         </Grid>
         <Grid item xs={4}>
-          <RHFDatePicker
+          <RHFAutocomplete
+            name="year_founded"
+            label="Tahun Berdiri"
+            placeholder="Pilih Tahun"
+            size="small"
+            loading={isLoadingSectors}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            options={yearFoundedOptions(foundedAt)}
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <li {...props} key={option.value}>
+                {option.label}
+              </li>
+            )}
+            sx={styles.textfield}
+            endAdornment={<CalendarTodayIcon color="#777777" sx={{ mr: 1, fontSize: '16px' }} />}
+            require
+          />
+          {/* <RHFDatePicker
             name="year_founded"
             label="Tahun Berdiri"
             placeholder="Pilih Tahun"
@@ -231,7 +246,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
             openTo="year"
             sx={styles.textfield}
             require
-          />
+          /> */}
         </Grid>
         <Grid item xs={4}>
           <RHFAutocomplete

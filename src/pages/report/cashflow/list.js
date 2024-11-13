@@ -32,7 +32,7 @@ export default function LaporanArusKas() {
   const theme = useTheme();
 
   const [alertDelete, setAlertDelete] = useState(null);
-  const [submitValue, setSubmitValue] = useState({});
+  const [submitValue, setSubmitValue] = useState(null);
 
   const { data, isLoading } = useGetCashFlow(submitValue);
 

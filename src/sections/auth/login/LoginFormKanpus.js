@@ -66,9 +66,12 @@ export default function LoginForm() {
 
   const LoginSchema = Yup.object().shape({
     personal_number: Yup.string()
+      .transform((value) => value.trim())
       .required('PN wajib diisi')
       .matches(/^\d{8}$/, 'PN tidak valid'),
-    password: Yup.string().required('Kata sandi wajib diisi'),
+    password: Yup.string()
+      .transform((value) => value.trim())
+      .required('Kata sandi wajib diisi'),
     // captcha: Yup.string().required('Captcha wajib diisi'),
   });
 
@@ -86,7 +89,7 @@ export default function LoginForm() {
 
   const {
     setError,
-    clearError,
+    // clearError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
@@ -98,7 +101,7 @@ export default function LoginForm() {
     // }
     try {
       setLoading(true);
-      const res = await login(data.personal_number, data.password);
+      const res = await login(data.personal_number.trim(), data.password.trim());
       if (res?.data) {
         const isKanpus = res?.data?.unit_id === 0 && res?.data?.bumdesa_id === 0;
         dispatch(setUser(res.data));
@@ -108,7 +111,7 @@ export default function LoginForm() {
           window.location.href = `/auth/register/step-${steps[res?.data?.sequence]}`;
         } else {
           await setSession(res?.metadata?.token ?? '', data.remember);
-          clearError('captcha');
+          // clearError('captcha');
           enqueueSnackbar(res.message, { variant: 'success' });
           defaultRangeDate();
           router.push(

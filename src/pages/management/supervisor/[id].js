@@ -20,6 +20,7 @@ import { supervisorSchema } from 'src/sections/supervisor/validation';
 import { useUpdateSupervisor } from 'src/query/hooks/supervisor/useUpdateSupervisor';
 import { useGetSupervisor } from 'src/query/hooks/supervisor/useGetSupervisor';
 import { useEffect, useMemo } from 'react';
+import Iconify from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -71,9 +72,55 @@ export default function SupervisorCreate() {
     action(
       { ...value, id: _id },
       {
-        onSuccess: (res) => {
-          enqueueSnackbar(res.message);
-          push('/management/supervisor/list');
+        onSuccess: () => {
+          if ((value?.email === defaultValues.email) || action === onCreate) {
+            enqueueSnackbar(
+              '',
+              {
+                variant: 'success',
+                content: () => (
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ minWidth: 100, height: 55, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
+                  >
+                    <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                    <Typography mr="12px" fontSize="12px">Pengawas Berhasil ditambahkan, verifikasi email Pengawas</Typography>
+                  </Box>
+                )
+              }
+            );
+          } else {
+            enqueueSnackbar(
+              '',
+              {
+                variant: 'success',
+                content: () => (
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ minWidth: 100, minHeight: 55, backgroundColor: '#E1F8EB', px: '10px', py: '15px', borderRadius: '4px' }}
+                  >
+                    <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                    >
+                      <Typography fontSize="12px">
+                        Email konfirmasi telah dikirim ke <span style={{ fontSize: '12px', fontWeight: 700 }}>{value?.email}</span>
+                      </Typography>
+                      <Typography fontSize="12px">Silakan klik tautan (link) di dalam email konfirmasi tersebut untuk memverifikasi alamat email.</Typography>
+                    </Box>
+                  </Box>
+                )
+              }
+            );
+          }
+          setTimeout(() => {
+            push('/management/supervisor/list');
+          }, 500);
         },
         onError: (err) => {
           enqueueSnackbar(err.message, { variant: 'error' });
@@ -159,5 +206,25 @@ export default function SupervisorCreate() {
         </FormProvider>
       </Container>
     </Page>
+  );
+}
+
+function SnackbarIcon({ icon, color }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        // mr: 1.5,
+        width: 40,
+        height: 40,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: color === 'success' ? '#27AE60' : `${color}.main`,
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Box>
   );
 }
