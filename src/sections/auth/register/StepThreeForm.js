@@ -21,10 +21,10 @@ import { handleDrop } from 'src/utils/helperFunction';
 import { useGetSector } from 'src/query/hooks/options/useGetSector';
 import { useGetRegisSequence } from 'src/query/hooks/auth/useGetRegisSequence';
 import { useEffect } from 'react';
-import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
-import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import { isString } from 'lodash';
+import { yearFoundedOptions } from 'src/sections/unit/constant';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 // ----------------------------------------------------------------------
 
 export default function StepThreeForm() {
@@ -54,7 +54,7 @@ export default function StepThreeForm() {
     const payload = {
       ...data,
       sector: data?.sector?.value,
-      year_founded: moment(data?.year_founded).format('yyyy'),
+      year_founded: data?.year_founded?.value?.toString(),
     };
 
     if (isString(payload.image)) delete payload.image;
@@ -78,7 +78,7 @@ export default function StepThreeForm() {
     if (data) {
       setValue('name', data.name);
       setValue('email', data.email);
-      setValue('year_founded', data?.year_founded ? new Date(data.year_founded, 0, 1) : new Date());
+      setValue('year_founded', data?.year_founded ? { value: data.year_founded.toString(), label: data.year_founded.toString() } : threeDefaultValues.year_founded);
       setValue('sector', data.sector);
       setValue('image', data?.image ? data?.image : null);
     }
@@ -118,7 +118,7 @@ export default function StepThreeForm() {
         <RHFTextField name="name" label="Nama Unit Usaha" require />
         <RHFTextField name="email" label="Alamat Email Unit Usaha" require />
 
-        <RHFDatePicker
+        {/* <RHFDatePicker
           name="year_founded"
           label="Tahun Berdiri"
           placeholder="Pilih Tahun"
@@ -133,6 +133,21 @@ export default function StepThreeForm() {
               borderRadius: '8px',
             },
           }}
+          require
+        /> */}
+        <RHFAutocomplete
+          name="year_founded"
+          label="Tahun Berdiri"
+          placeholder="Pilih Tahun"
+          isOptionEqualToValue={(option, value) => option.value === value.value}
+          options={yearFoundedOptions(data?.founded_at)}
+          getOptionLabel={(option) => option.label}
+          renderOption={(props, option) => (
+            <li {...props} key={option.value}>
+              {option.label}
+            </li>
+          )}
+          endAdornment={<CalendarTodayIcon color="#777777" sx={{ mr: 1, fontSize: '16px' }} />}
           require
         />
 
