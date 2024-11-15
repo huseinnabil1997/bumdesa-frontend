@@ -81,7 +81,6 @@ export default function IndonesianMap({ data }) {
       const sameIdLocations = document.querySelectorAll(`.svg-map__location[id="${id}"]`);
       sameIdLocations.forEach((location) => {
         location.classList.add('svg-map__location--hover');
-        console.log(`Added hover class to: ${location.id}`);
       });
     }
   };
@@ -96,11 +95,9 @@ export default function IndonesianMap({ data }) {
     const region = event.target;
     if (region.classList.contains('svg-map__location')) {
       const id = region.id;
-      console.log(`Mouse out from ID: ${id}`);
       const sameIdLocations = document.querySelectorAll(`.svg-map__location[id="${id}"]`);
       sameIdLocations.forEach((location) => {
         location.classList.remove('svg-map__location--hover');
-        console.log(`Removed hover class from: ${location.id}`);
       });
       setTooltipContent(null);
     }
