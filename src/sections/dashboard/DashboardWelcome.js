@@ -27,7 +27,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function DashboardWelcome({ isUnit }) {
+export default function DashboardWelcome({ isUnit, isPengawas }) {
   const userData = useSelector(state => state.user.userData);
 
   const { data, isLoading } = useGetProfile(userData?.bumdesa_id);
@@ -38,7 +38,7 @@ export default function DashboardWelcome({ isUnit }) {
         <Chip
           size="small"
           variant="filled"
-          label={isUnit ? 'BUMDESA Unit' : 'BUMDESA Pusat'}
+          label={isUnit ? 'BUM Desa Unit' : isPengawas ? 'Pengawas BUM Desa' : 'BUM Desa Pusat'}
           sx={{ color: 'white', backgroundColor: '#27AE60', fontWeight: 600, fontSize: 12, mb: 1 }}
         />
         {isLoading ? (
