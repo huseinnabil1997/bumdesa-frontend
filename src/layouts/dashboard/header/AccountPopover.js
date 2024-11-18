@@ -105,6 +105,8 @@ export default function AccountPopover() {
 
   const isKanpus = userData?.role === 1;
 
+  const isPengawas = userData?.role === 4;
+
   const data = userData?.unit_id === 0 ? bumdesaData : unitData;
 
   const handleOpen = (event) => {
@@ -170,8 +172,8 @@ export default function AccountPopover() {
         {/* <MyAvatar /> */}
         <Stack display='flex' justifyContent='center' alignItems='center' direction={'row'} spacing={2}>
           <Typography color='#292929' fontSize='18px' fontWeight={600}>
-            {isKanpus ? (userData?.name || userData?.email || '...') : (data?.name ? `${data?.name}, ` : (userData?.email || '...'))}
-            {!isKanpus && bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+            {isKanpus ? (userData?.name || userData?.email || '...') : (isPengawas ? userData?.name : (data?.name ? `${data?.name}, ` : (userData?.email || '...')))}
+            {!isKanpus && !isPengawas && bumdesaData?.city?.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
           </Typography>
           <KeyboardArrowDownRounded sx={{ color: '#1078CA' }} />
         </Stack>
@@ -200,7 +202,7 @@ export default function AccountPopover() {
           <>
             <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
               <Person sx={styles.icon} />
-              <Typography sx={styles.text}>Profil</Typography>
+              <Typography sx={styles.text}>{isPengawas ? 'Profil BUM Desa' : 'Profil'}</Typography>
             </MenuItem>
             <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
               <Settings sx={styles.icon} />

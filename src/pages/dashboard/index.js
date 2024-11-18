@@ -58,7 +58,7 @@ export default function Dashboard() {
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <DashboardWelcome isUnit={userData?.unit_id} />
+            <DashboardWelcome isUnit={userData?.unit_id} isPengawas={userData?.role === 4} />
           </Grid>
 
           {userData?.role === 4 && (

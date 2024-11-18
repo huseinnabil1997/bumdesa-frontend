@@ -76,7 +76,7 @@ const RHFCustomRangeDatePicker = ({ onSelectDate, selectedDate, type }) => {
   const [endMonth, setEndMonth] = useState(generateMonthsToText(selectedDate[1].month) || null);
   const itemsPerPage = 9;
   const [paginationStartYear, setPaginationStartYear] = useState(Math.floor((selectedDate[0].year || new Date().getFullYear()) / 9) * 9);
-  const yearsForMonth = generateListYears(selectedDate[0].year || new Date().getFullYear());
+  const yearsForMonth = generateListYears();
 
   useEffect(() => {
     if (startYear) {
@@ -366,10 +366,10 @@ export default function RHFCustomDatePicker({ name, require, isLoading, type, ..
   const handleSelectDate = (date) => {
     if (date[0].year > date[1].year) {
       setSelectedDate([{ year: date[1].year, month: date[1].month, day: date[1].day }, { year: date[0].year, month: date[0].month, day: date[0].day }]);
-      setValue(name, formatDateForValue([{ year: date[1].year, month: date[1].month, day: date[1].day }, { year: date[0].year, month: date[0].month, day: date[0].day }], type))
+      setValue(name, formatDateForValue([{ year: date[1].year, month: date[1].month, day: date[1].day }, { year: date[0].year, month: date[0].month, day: date[0].day }]))
     } else {
       setSelectedDate(date);
-      setValue(name, formatDateForValue(date, type))
+      setValue(name, formatDateForValue(date))
     }
   };
 
