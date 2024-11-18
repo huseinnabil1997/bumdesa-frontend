@@ -90,7 +90,7 @@ export default function DashboardFinances() {
         {!isLoading && stat && (
           <Grid container spacing={3}>
             {contents.map((row, i) => (
-              <Grid item xs={4} md={3} key={i}>
+              <Grid item xs={6} md={4} lg={3} key={i}>
                 <Stack sx={{ p: 3, backgroundColor: '#DDEFFC', borderRadius: 1.5, minHeight: 120, justifyContent: 'space-between' }}>
                   <Box display="flex" justifyContent="space-between">
                     <Typography variant="subtitle2" fontWeight={400}>
