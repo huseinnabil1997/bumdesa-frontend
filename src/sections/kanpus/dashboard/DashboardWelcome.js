@@ -38,7 +38,7 @@ export default function DashboardWelcome({ isUnit }) {
         <Chip
           size="small"
           variant="filled"
-          label={isUnit ? 'BUMDESA Unit' : 'BUMDESA Pusat'}
+          label={isUnit ? 'BUM Desa Unit' : 'BUM Desa Pusat'}
           sx={{ color: 'white', backgroundColor: '#27AE60', fontWeight: 600, fontSize: 12, mb: 1 }}
         />
         {isLoading ? (

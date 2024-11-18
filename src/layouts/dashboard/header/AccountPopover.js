@@ -84,8 +84,6 @@ export default function AccountPopover() {
 
   const userData = useSelector(state => state.user.userData);
 
-  console.log('userData', userData);
-
   const { data: unitData, refetch: unitRefetch } = useGetUnitById(userData?.unit_id);
 
   const { data: bumdesaData, refetch: bumdesaRefetch } = useGetProfile(userData?.bumdesa_id);
@@ -204,7 +202,7 @@ export default function AccountPopover() {
           <>
             <MenuItem onClick={handleProfile} sx={{ my: 1, ...styles.box }}>
               <Person sx={styles.icon} />
-              <Typography sx={styles.text}>Profil</Typography>
+              <Typography sx={styles.text}>{isPengawas ? 'Profil BUM Desa' : 'Profil'}</Typography>
             </MenuItem>
             <MenuItem onClick={handleSetting} sx={{ my: 1, ...styles.box }}>
               <Settings sx={styles.icon} />
