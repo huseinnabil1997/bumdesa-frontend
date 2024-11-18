@@ -16,8 +16,7 @@ const useCurrentRole = () => {
   if (userData.role === 1) return 'kanpus';
   if (userData.role === 2) return 'bumdesa';
   if (userData.role === 3) return 'unit';
-  if (userData.role === 4) return 'pengawas';
-  else return 'pengawas';
+  return 'pengawas';
 };
 
 const isAccessDenied = (path, subPath, role) => {
