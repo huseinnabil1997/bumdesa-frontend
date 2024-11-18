@@ -19,9 +19,9 @@ async function listFilesInDirectory(directoryPath, basePath, fileList = [], work
 
       // Tambahkan logika untuk memeriksa created date
       const createdDate = new Date(stat.birthtime);
-      const august2024 = new Date('2024-08-01');
+      const september2024 = new Date('2024-09-01');
 
-      if (createdDate >= august2024) {
+      if (createdDate >= september2024) {
         fileList.push({
           no: fileList.length + 1,
           libraryObject: relativePath,
@@ -48,7 +48,7 @@ async function listFilesInDirectory(directoryPath, basePath, fileList = [], work
       });
     });
 
-    await workbook.xlsx.writeFile('fileList_v2_1.xlsx');
+    await workbook.xlsx.writeFile('fileList_v2_2.xlsx');
   }
 }
 
