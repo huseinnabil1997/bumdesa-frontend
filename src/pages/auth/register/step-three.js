@@ -91,13 +91,15 @@ export default function Register() {
               <Image id="bg" visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <SideContainer>
                 <SideContent justifyContent="center">
-                  <Image
-                    visibleByDefault
-                    disabledEffect
-                    src="/image/bri-square.svg"
-                    alt="bri"
-                    sx={{ width: 160, mx: 'auto', mb: 1, mt: 5 }}
-                  />
+                  <Box alignItems="center" bgcolor="white" borderRadius={2} width="fit-content" mx="auto" p={2} mb={6} mt={5}>
+                    <Image
+                      visibleByDefault
+                      disabledEffect
+                      src="/image/fa_bumdesa_digital.png"
+                      alt="bri"
+                      sx={{ height: 60 }}
+                    />
+                  </Box>
                   <Typography sx={{ mt: 5, maxWidth: '420px', mx: 'auto', fontWeight: 'bold' }}>
                     Akun Anda berhasil dibuat, silakan lengkapi informasi berikut untuk melanjutkan
                   </Typography>
