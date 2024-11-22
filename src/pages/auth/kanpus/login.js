@@ -88,7 +88,7 @@ export default function Login() {
             <SectionStyle>
               <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <Title>
-              <Box alignItems="center" bgcolor="white" borderRadius={2} width="fit-content" mx="auto" p={2} mb={6} mt={5}>
+                <Box alignItems="center" bgcolor="white" borderRadius={2} width="fit-content" mx="auto" p={2} mb={6} mt={5}>
                   <Image
                     visibleByDefault
                     disabledEffect
