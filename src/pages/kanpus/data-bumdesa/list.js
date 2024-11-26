@@ -108,7 +108,7 @@ export default function BumdesaList() {
                     <TableNoData
                       isNotFound
                       title="BUMDesa belum tersedia."
-                      description="Silakan cek koneksi Anda dan muat ulang halaman."
+                      description=""
                     />
                   )}
                   {!isLoading && isError && (
