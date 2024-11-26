@@ -108,7 +108,7 @@ export default function UnitList() {
                     <TableNoData
                       isNotFound
                       title="Unit Usaha belum tersedia."
-                      description="Silakan cek koneksi Anda dan muat ulang halaman."
+                      description=""
                     />
                   )}
                   {!isLoading && isError && (
