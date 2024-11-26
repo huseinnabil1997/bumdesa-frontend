@@ -21,7 +21,7 @@ const LinkUMKMDialogDashboard = ({ open, onClose }) => {
 
   const handleClose = useCallback(() => {
     router.push('/link-umkm');
-    onClose();
+    // onClose();
   }, [router, onClose]);
 
   return (
