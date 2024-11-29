@@ -86,7 +86,9 @@ export default function SupervisorCreate() {
                     sx={{ minWidth: 100, height: 55, backgroundColor: '#E1F8EB', p: '8px', borderRadius: '4px' }}
                   >
                     <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />
-                    <Typography mr="12px" fontSize="12px">Pengawas Berhasil ditambahkan, verifikasi email Pengawas</Typography>
+                    <Typography mr="12px" fontSize="12px">
+                      {id === 'create' ? 'Pengawas Berhasil ditambahkan, verifikasi email Pengawas' : 'Pengawas Berhasil diubah'}
+                    </Typography>
                   </Box>
                 )
               }
