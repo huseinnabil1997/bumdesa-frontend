@@ -23,7 +23,8 @@ const checkAuth = (error) => {
     }, 5000);
   }
 
-  if ([403].includes(error.response?.status ?? 0) && currentUrl !== '/employee/list/') {
+  if ([403].includes(error.response?.status ?? 0) && 
+      !['/employee/list/', '/management/manager/list/'].includes(currentUrl)) {
     setTimeout(() => {
       window.location.href = '/403';
     }, 3000);
