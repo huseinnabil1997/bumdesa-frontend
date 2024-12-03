@@ -138,6 +138,13 @@ export default function ManagerList() {
     search: filterName,
   });
 
+  const {
+    data: managersDeleteStatus,
+  } = useGetManagers({
+    page: page,
+    limit: rowsPerPage,
+  });
+
   useEffect(() => {
     refetch();
   }, [page, rowsPerPage, filterName]);
@@ -223,7 +230,7 @@ export default function ManagerList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={managers?.data.length <= 3 && page === 1}
+                      disableDelete={managersDeleteStatus?.data.length <= 3 && page === 1}
                       onEditRow={() => setOpenEditModal(row.id)}
                       sx={styles.tableRow}
                     />

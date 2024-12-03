@@ -85,6 +85,11 @@ export default function UserList() {
     search: filterName,
   });
 
+  const { data: unitsDeleteStatus } = useGetUnits({
+    page: page,
+    limit: rowsPerPage,
+  });
+
   const units = data;
 
   useEffect(() => {
@@ -225,7 +230,7 @@ export default function UserList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={units?.data.length === 1 && page === 1}
+                      disableDelete={unitsDeleteStatus?.data?.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
                       onViewRow={() => router.push(`detail?id=${row.id}`)}

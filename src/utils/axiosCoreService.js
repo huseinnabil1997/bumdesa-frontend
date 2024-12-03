@@ -11,6 +11,8 @@ const axiosInstance = axios.create({
 });
 
 const checkAuth = (error) => {
+  const currentUrl = window.location.pathname;
+
   if ([401].includes(error.response?.status ?? 0)) {
     // if ([444].includes(error.response?.status ?? 0)) {
     localStorage.removeItem('token');
@@ -21,7 +23,8 @@ const checkAuth = (error) => {
     }, 5000);
   }
 
-  if ([403].includes(error.response?.status ?? 0)) {
+  if ([403].includes(error.response?.status ?? 0) && 
+      !['/employee/list/', '/management/manager/list/'].includes(currentUrl)) {
     setTimeout(() => {
       window.location.href = '/403';
     }, 3000);
