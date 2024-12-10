@@ -29,6 +29,9 @@ import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 import '@fullcalendar/common/main.min.css';
 import '@fullcalendar/daygrid/main.min.css';
 
+//fonts
+import '../../public/fonts/index.css';
+
 import PropTypes from 'prop-types';
 import cookie from 'cookie';
 // next
@@ -66,9 +69,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AuthProvider } from '../contexts/JWTContext';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { getSessionToken } from 'src/utils/axiosUnregistered';
+// import { useRouter } from 'next/router';
+// import { useEffect } from 'react';
+// import { getSessionToken } from 'src/utils/axiosUnregistered';
 // import { AuthProvider } from '../contexts/Auth0Context';
 // import { AuthProvider } from '../contexts/FirebaseContext';
 // import { AuthProvider } from '../contexts/AwsCognitoContext';
@@ -94,9 +97,9 @@ export default function MyApp(props) {
     },
   });
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  const isLogin = !!getSessionToken();
+  // const isLogin = !!getSessionToken();
 
   // useEffect(() => {
   //   if (router.asPath.includes('/login') && isLogin) router.push('/auth/register/step-one');

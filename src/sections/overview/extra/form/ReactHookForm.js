@@ -3,7 +3,16 @@ import { useState, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 // @mui
-import { Stack, Grid, Button, TextField, Typography, IconButton, InputAdornment, FormHelperText } from '@mui/material';
+import {
+  Stack,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  IconButton,
+  InputAdornment,
+  FormHelperText,
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import DatePicker from '@mui/lab/DatePicker';
 // utils
@@ -11,7 +20,12 @@ import { fData } from '../../../../utils/formatNumber';
 import { fTimestamp } from '../../../../utils/formatTime';
 // components
 import Iconify from '../../../../components/Iconify';
-import { FormProvider, RHFTextField, RHFCheckbox, RHFEditor } from '../../../../components/hook-form';
+import {
+  FormProvider,
+  RHFTextField,
+  RHFCheckbox,
+  RHFEditor,
+} from '../../../../components/hook-form';
 //
 import { FormSchema, defaultValues } from '.';
 
@@ -86,7 +100,12 @@ export default function ReactHookForm() {
                     label="Start date"
                     inputFormat="dd/MM/yyyy"
                     renderInput={(params) => (
-                      <TextField fullWidth {...params} error={!!error} helperText={error?.message} />
+                      <TextField
+                        fullWidth
+                        {...params}
+                        error={!!error}
+                        helperText={error?.message}
+                      />
                     )}
                   />
                 )}
@@ -101,7 +120,12 @@ export default function ReactHookForm() {
                     label="End date"
                     inputFormat="dd/MM/yyyy"
                     renderInput={(params) => (
-                      <TextField fullWidth {...params} error={!!error} helperText={error?.message} />
+                      <TextField
+                        fullWidth
+                        {...params}
+                        error={!!error}
+                        helperText={error?.message}
+                      />
                     )}
                   />
                 )}
@@ -156,7 +180,9 @@ export default function ReactHookForm() {
                 </Button>
 
                 <div>
-                  {values.photo?.name && <Typography variant="subtitle2">{values.photo.name}</Typography>}
+                  {values.photo?.name && (
+                    <Typography variant="subtitle2">{values.photo.name}</Typography>
+                  )}
                   {values.photo?.size && (
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       {fData(values.photo.size)}

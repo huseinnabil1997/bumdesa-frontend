@@ -16,36 +16,53 @@ const useCurrentRole = () => {
   if (userData.role === 1) return 'kanpus';
   if (userData.role === 2) return 'bumdesa';
   if (userData.role === 3) return 'unit';
-  else return 'pengawas';
+  return 'pengawas';
 };
 
-const isAccessDenied = (path, role) => {
+const isAccessDenied = (path, subPath, role) => {
   const accessRules = {
-    unit: ['unit'],
+    unit: ['unit', 'pengawas'],
     dashboard: ['kanpus'],
-    manager: ['unit'],
-    employee: ['bumdesa'],
-    'link-umkm': ['unit', 'kanpus'],
-    kanpus: ['bumdesa', 'unit'],
+    manager: ['unit', 'pengawas'],
+    employee: ['bumdesa', 'pengawas'],
+    'link-umkm': ['unit', 'kanpus', 'pengawas'],
+    kanpus: ['bumdesa', 'unit', 'pengawas'],
     setting: ['kanpus'],
     profile: ['kanpus'],
+    log: ['kanpus', 'pengawas'],
+    faqs: ['kanpus', 'pengawas'],
+    jurnal: ['kanpus', 'pengawas'],
+    ledger: ['kanpus', 'pengawas'],
+    profit: ['pengawas', 'kanpus'],
+    report: ['kanpus'],
   };
 
-  return accessRules[path]?.includes(role);
+  if (subPath === 'profit') {
+    return accessRules[subPath]?.includes(role);
+  }
+
+  if (path) {
+    return accessRules[path]?.includes(role);
+  }
+
+  return false;
 };
 
 export default function RoleBasedGuard({ children }) {
   const router = useRouter();
   const path = router.pathname.split('/')[1];
+  const subPath = router.pathname.split('/')[2];
   const currentRole = useCurrentRole();
 
   useEffect(() => {
-    if (isAccessDenied(path, currentRole)) {
-      router.push('/403');
+    if (isAccessDenied(path, subPath, currentRole)) {
+      setTimeout(() => {
+        window.location.href = '/403';
+      }, 3000);
     }
-  }, [path, currentRole, router]);
+  }, [path, subPath, currentRole, router]);
 
-  if (isAccessDenied(path, currentRole)) {
+  if (isAccessDenied(path, subPath, currentRole)) {
     return (
       <Container>
         <Alert severity="error">

@@ -10,7 +10,6 @@ import { useSelector } from 'react-redux';
 
 const styles = {
   card: {
-    maxWidth: 960,
     minHeight: 172
   },
   segment: {

@@ -24,21 +24,7 @@ import { useGetListBumdesa } from 'src/query/hooks/data-bumdesa/useGetListBumdes
 import { FormProvider } from 'src/components/hook-form';
 import BumdesaHeader from 'src/sections/data-bumdesa/BumdesaHeader';
 import Scrollbar from 'src/components/Scrollbar';
-
-const TABLE_HEAD = [
-  { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
-  { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left', minWidth: 150 },
-  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
-  { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center', minWidth: 150 },
-  { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center', minWidth: 150 },
-  { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
-  { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
-  { id: 'solvency', label: 'Solvabilitas', align: 'left', minWidth: 150 },
-  { id: 'total_omset', label: 'Total Omset', align: 'left', minWidth: 150 },
-  { id: 'profit', label: 'Laba Rugi', align: 'left', minWidth: 150 },
-  { id: 'cash_balance', label: 'Total Kas Tunai', align: 'left', minWidth: 150 },
-  { id: 'detail', label: 'Detail', align: 'center', minWidth: 100 },
-];
+import { TABLE_HEAD_DATA_BUMDESA } from 'src/utils/constant';
 
 BumdesaList.getLayout = function getLayout(page) {
   return <Layout title="Data BUMDesa">{page}</Layout>;
@@ -70,7 +56,7 @@ export default function BumdesaList() {
     page,
     limit: rowsPerPage,
     search: watch('search'),
-    area_code: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
+    area: watch('kecamatan')?.value ?? watch('kota')?.value ?? watch('provinsi')?.value,
     status_active: watch('status_active')?.value,
   });
 
@@ -104,7 +90,7 @@ export default function BumdesaList() {
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               <Table>
                 <TableHeadCustom
-                  headLabel={TABLE_HEAD}
+                  headLabel={TABLE_HEAD_DATA_BUMDESA}
                   rowCount={bumdesas?.data?.length}
                   sx={{ background: theme.palette.grey[200] }}
                 />
@@ -122,7 +108,7 @@ export default function BumdesaList() {
                     <TableNoData
                       isNotFound
                       title="BUMDesa belum tersedia."
-                      description="Silakan cek koneksi Anda dan muat ulang halaman."
+                      description=""
                     />
                   )}
                   {!isLoading && isError && (

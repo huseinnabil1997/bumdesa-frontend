@@ -10,6 +10,7 @@ import { AddBox, ArrowForwardIos, Verified } from '@mui/icons-material';
 import { StyledButton } from 'src/theme/custom/Button';
 import { useRouter } from 'next/router';
 import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
+import { useSelector } from 'react-redux';
 
 const CDN_URL = process.env.NEXT_PUBLIC_BUMDESA_ASSET;
 
@@ -17,6 +18,7 @@ const CDN_URL = process.env.NEXT_PUBLIC_BUMDESA_ASSET;
 
 export default function DashboardUnit() {
   const router = useRouter();
+  const userData = useSelector((state) => state.user.userData);
 
   const { data, isLoading, isFetched } = useGetUnits({ page: 1, limit: 3 });
 
@@ -37,7 +39,7 @@ export default function DashboardUnit() {
       <Scrollbar>
         {!isLoading && (
           <Stack spacing={2} direction="row" sx={{ pb: 1, pt: 1, pr: 1, minWidth: 900 }}>
-            <CreateItem />
+            {userData.role !== 4 && <CreateItem />}
             {isFetched &&
               data?.data &&
               data?.data?.map((row) => <ProductItem key={row.id} data={row} />)}

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import {
@@ -10,17 +10,17 @@ import {
 } from 'src/components/hook-form';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import * as Yup from 'yup';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { handleDrop } from 'src/utils/helperFunction';
 import { isEqual } from 'lodash';
 import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import { useGetSectors } from 'src/query/hooks/units/useGetSectors';
 import usePatch from 'src/query/hooks/mutation/usePatch';
-import { useTheme } from '@mui/material/styles';
-import RHFDatePicker from 'src/components/hook-form/RHFDatePicker';
 import { alphabetRegex, htmlTagRegex, numberRegex } from 'src/utils/regex';
-import moment from 'moment';
+import Label from 'src/components/Label';
+import { yearFoundedOptions } from '../unit/constant';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const styles = {
   content: {
@@ -28,7 +28,6 @@ const styles = {
     p: '24px',
   },
   textfield: {
-    // width: '293px',
     '& .MuiInputBase-root': {
       height: '44px',
     },
@@ -75,15 +74,11 @@ const styles = {
 };
 
 export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
-  const theme = useTheme();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const { data: sectorData, isLoading: isLoadingSectors } = useGetSectors();
-
   const mutation = usePatch();
 
-  const NewUnitFormSchema = Yup.object().shape({
+  const NewUnitFormSchema = useMemo(() => Yup.object().shape({
     image: Yup.mixed().required('Foto Unit Usaha wajib diisi'),
     name: Yup.string()
       .required('Nama Unit Usaha wajib diisi')
@@ -92,9 +87,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
     email: Yup.string()
       .email('Format email tidak valid')
       .required('Alamat Email Aktif Unit Usaha wajib diisi'),
-    year_founded: Yup.string()
-      .required('Tahun Berdiri wajib diisi')
-      .test('no-html', 'Tahun Berdiri tidak boleh mengandung tag HTML', value => !htmlTagRegex.test(value)),
+    year_founded: Yup.object().nullable().required('Tahun Berdiri wajib dipilih'),
     sector: Yup.object().nullable().required('Sektor Usaha wajib dipilih'),
     manager_name: Yup.string()
       .required('Nama Manager Unit Usaha wajib diisi')
@@ -107,19 +100,19 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
       .matches(numberRegex, 'Nomor telepon harus diawali dengan 08 dan minimal 10 digit')
       .min(10, 'Nomor telepon minimal diisi 10 digit')
       .max(13, 'Nomor telepon maksimal diisi 13 digit'),
-  });
+  }), []);
 
-  const defaultValues = {
+  const defaultValues = useMemo(() => ({
     id: data?.id ?? '',
     image: data?.photo ?? null,
     name: data?.name ?? '',
     position: 'Manager',
     email: data?.email ?? '',
-    year_founded: data?.year_founded?.toString() ?? '',
+    year_founded: { value: data?.year_founded?.toString(), label: data?.year_founded?.toString() } ?? null,
     sector: { value: data?.id_sector, label: data?.sector } ?? null,
     manager_name: data?.organization?.name ?? '',
     manager_phone: data?.organization?.phone ?? '',
-  };
+  }), [data]);
 
   const methods = useForm({
     resolver: yupResolver(NewUnitFormSchema),
@@ -132,35 +125,22 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
     handleSubmit,
     isSubmitting,
     watch,
-    // reset,
   } = methods;
 
-  const currentValues = {
-    foto_kantor: watch('foto_kantor'),
-    logo: watch('logo'),
-    nama: watch('nama'),
-    id: watch('id'),
-    tanggal_berdiri: watch('tanggal_berdiri'),
-    alamat: watch('alamat'),
-    provinsi: watch('provinsi'),
-    kota: watch('kota'),
-    kecamatan: watch('kecamatan'),
-    desa: watch('desa'),
-    kode_pos: watch('kode_pos'),
-  };
+  const currentValues = watch();
 
-  const areValuesEqual = () => isEqual(currentValues, defaultValues);
+  const areValuesEqual = useMemo(() => isEqual(currentValues, defaultValues), [currentValues, defaultValues]);
 
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append('image', data?.image);
-    formData.append('name', data?.name);
-    formData.append('email', data?.email);
-    formData.append('year_founded', new Date(data.year_founded).getFullYear());
-    formData.append('sector', data?.sector?.label);
-    formData.append('id_sector', parseInt(data?.sector?.value));
-    formData.append('manager_name', data?.manager_name);
-    formData.append('manager_phone', data?.manager_phone);
+  const onSubmit = async (formData) => {
+    const payload = new FormData();
+    payload.append('image', formData?.image);
+    payload.append('name', formData?.name);
+    payload.append('email', formData?.email);
+    payload.append('year_founded', formData?.year_founded?.value);
+    payload.append('sector', formData?.sector?.label);
+    payload.append('id_sector', parseInt(formData?.sector?.value));
+    payload.append('manager_name', formData?.manager_name);
+    payload.append('manager_phone', formData?.manager_phone);
 
     const headers = {
       'Content-Type': 'multipart/form-data',
@@ -168,11 +148,11 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
 
     try {
       await mutation.mutateAsync({
-        endpoint: `/business-units/${data.id}`,
-        payload: formData,
-        headers: headers,
+        endpoint: `/business-units/${formData.id}`,
+        payload,
+        headers,
       });
-      if (data?.email === defaultValues.email) {
+      if (formData?.email === defaultValues.email) {
         await enqueueSnackbar('', {
           variant: 'success',
           content: () => (
@@ -186,13 +166,12 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
       }
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: 'error' });
-      console.log('error Edit Units', error);
     }
   };
 
   useEffect(() => {
     methods.reset(defaultValues);
-  }, [data]);
+  }, [data, defaultValues, methods]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -221,39 +200,43 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
             }
           />
         </Grid>
-        <Grid item xs={1}>
-          {data?.status === 1 && (
-            <Chip label="Aktif" sx={{ backgroundColor: '#2ECC71', color: 'white' }} />
-          )}
-          {data?.status === 0 && (
-            <Chip label="Belum Aktif" sx={{ backgroundColor: '#EB5858', color: 'white' }} />
-          )}
-          {data?.status === 3 && (
-            <Chip
-              label="Nonaktif"
-              sx={{ backgroundColor: theme.palette.warning.main, color: 'white' }}
-            />
-          )}
+        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Label
+            color={data?.status === 1 ? 'success' : data?.status === 0 ? 'error' : 'warning'}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {data?.status === 1 ? 'Aktif' : data?.status === 0 ? 'Belum Aktif' : 'Nonaktif'}
+          </Label>
         </Grid>
         <Grid item xs={4}>
           <RHFTextField
             name="name"
             label="Nama Unit Usaha"
             placeholder="Contoh: Toko Ikan Mas Pak Budi"
-            sx={{
-              width: '293px',
-              '& .MuiInputBase-root': {
-                height: '44px',
-              },
-              '& .MuiInputBase-input': {
-                height: '11px',
-              },
-            }}
+            sx={styles.textfield}
             require
           />
         </Grid>
         <Grid item xs={4}>
-          <RHFDatePicker
+          <RHFAutocomplete
+            name="year_founded"
+            label="Tahun Berdiri"
+            placeholder="Pilih Tahun"
+            size="small"
+            loading={isLoadingSectors}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            options={yearFoundedOptions(foundedAt)}
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <li {...props} key={option.value}>
+                {option.label}
+              </li>
+            )}
+            sx={styles.textfield}
+            endAdornment={<CalendarTodayIcon color="#777777" sx={{ mr: 1, fontSize: '16px' }} />}
+            require
+          />
+          {/* <RHFDatePicker
             name="year_founded"
             label="Tahun Berdiri"
             placeholder="Pilih Tahun"
@@ -261,18 +244,9 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
             minDate={moment(foundedAt).format('yyyy-MM-DD')}
             views={['year']}
             openTo="year"
-            sx={{
-              width: '293px',
-              '& .MuiInputBase-root': {
-                height: '44px',
-                borderRadius: '8px',
-              },
-              '& .MuiInputBase-input': {
-                height: '11px',
-              },
-            }}
+            sx={styles.textfield}
             require
-          />
+          /> */}
         </Grid>
         <Grid item xs={4}>
           <RHFAutocomplete
@@ -289,15 +263,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
                 {option.label}
               </li>
             )}
-            sx={{
-              width: '293px',
-              '& .MuiInputBase-root': {
-                height: '44px',
-              },
-              '& .MuiInputBase-input': {
-                height: '11px',
-              },
-            }}
+            sx={styles.textfield}
             require
           />
         </Grid>
@@ -311,15 +277,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
             name="manager_name"
             label="Nama Manager Unit Usaha"
             placeholder="Contoh: Budi Jailani"
-            sx={{
-              width: '293px',
-              '& .MuiInputBase-root': {
-                height: '44px',
-              },
-              '& .MuiInputBase-input': {
-                height: '11px',
-              },
-            }}
+            sx={styles.textfield}
             require
           />
         </Grid>
@@ -331,17 +289,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
               style: { color: '#00549B' },
               readOnly: true,
             }}
-            sx={{
-              backgroundColor: '#CCE8FF',
-              borderRadius: '8px',
-              width: '293px',
-              '& .MuiInputBase-root': {
-                height: '44px',
-              },
-              '& fieldset': {
-                border: 'none',
-              },
-            }}
+            sx={styles.textfield.id}
             require
           />
         </Grid>
@@ -350,15 +298,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
             name="manager_phone"
             label="Nomor Telepon"
             placeholder="Contoh: 081xxx"
-            sx={{
-              width: '293px',
-              '& .MuiInputBase-root': {
-                height: '44px',
-              },
-              '& .MuiInputBase-input': {
-                height: '11px',
-              },
-            }}
+            sx={styles.textfield}
             require
           />
         </Grid>
@@ -370,7 +310,7 @@ export default function ProfileInfoFormUnit({ data, setIsEdit, foundedAt }) {
           </StyledLoadingButton>
           <StyledLoadingButton
             loading={isSubmitting}
-            disabled={areValuesEqual()}
+            disabled={areValuesEqual}
             onClick={handleSubmit(onSubmit)}
             sx={styles.action.button}
             variant="contained"

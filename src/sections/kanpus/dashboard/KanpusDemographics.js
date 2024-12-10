@@ -5,7 +5,7 @@ import { Card, CardHeader, Box, CardContent, Button } from '@mui/material';
 // components
 import ReactApexChart, { BaseOptionChart } from '../../../components/chart';
 import { useTheme } from '@emotion/react';
-import { fCurrency } from 'src/utils/formatNumber';
+// import { fCurrency } from 'src/utils/formatNumber';
 import IndonesianMap from 'src/components/map/IndonesianMap';
 import { useRouter } from 'next/router';
 
@@ -23,7 +23,7 @@ export default function KanpusDemographics({ demo }) {
     xaxis: {
       categories: demo
         ?.sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
-        ?.slice(0, 6)
+        ?.slice(0, 5)
         ?.map((row) => row.province),
     },
     dataLabels: {
@@ -52,7 +52,7 @@ export default function KanpusDemographics({ demo }) {
     tooltip: {
       x: { show: true },
       y: {
-        formatter: (val) => `${fCurrency(val)}`,
+        formatter: (val) => `${val}`,
         title: { formatter: () => `Total: ` },
       },
     },
@@ -65,18 +65,18 @@ export default function KanpusDemographics({ demo }) {
           name: 'BUM Desa',
           data: demo
             .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
-            .slice(0, 6)
+            .slice(0, 5)
             .map((row) => row.total_bumdesa),
           color: theme.palette.primary.main,
         },
-        {
-          name: 'Kemendes',
-          data: demo
-            .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
-            .slice(0, 6)
-            .map((row, i) => row.total_kemendes + 1 + i * 2),
-          color: theme.palette.warning.main,
-        },
+        // {
+        //   name: 'Kemendes',
+        //   data: demo
+        //     .sort((a, b) => b.total_bumdesa - a.total_bumdesa) // Sort the array in descending order by score
+        //     .slice(0, 6)
+        //     .map((row, i) => row.total_kemendes + 1 + i * 2),
+        //   color: theme.palette.warning.main,
+        // },
       ]);
   }, [demo]);
 

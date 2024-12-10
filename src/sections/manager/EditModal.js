@@ -29,82 +29,31 @@ const NewModalSchema = Yup.object().shape({
     .max(13, 'Nomor telepon maksimal diisi 13 digit'),
 });
 
-// Styles
 const styles = {
-  dialogStyle: {
-    width: '480px',
-    height: '661px',
-    borderRadius: '16px',
-    overflow: 'hidden',
-  },
-  titleStyle: {
-    fontSize: '16px',
-    fontWeight: 700,
-    color: '#292929',
-    p: '24px'
-  },
-  actionStyle: {
-    justifyContent: 'space-between',
-    p: '16px 24px 24px 24px'
-  },
-  buttonStyle: {
-    width: '212px',
-    height: '48px',
-  },
+  dialogStyle: { width: '480px', height: '661px', borderRadius: '16px', overflow: 'hidden' },
+  titleStyle: { fontSize: '16px', fontWeight: 700, color: '#292929', p: '24px' },
+  actionStyle: { justifyContent: 'space-between', p: '16px 24px 24px 24px' },
+  buttonStyle: { width: '212px', height: '48px' },
   textfield: {
-    '& .MuiInputBase-root': {
-      height: '44px',
-    },
-    '& .MuiInputBase-input': {
-      height: '11px',
-    },
+    '& .MuiInputBase-root': { height: '44px' },
+    '& .MuiInputBase-input': { height: '11px' },
     id: {
       backgroundColor: '#CCE8FF',
       borderRadius: '8px',
-      '& .MuiInputBase-root': {
-        height: '44px',
-      },
-      '& .MuiInputBase-input': {
-        height: '11px',
-      },
+      '& .MuiInputBase-root': { height: '44px' },
+      '& .MuiInputBase-input': { height: '11px' },
     }
   },
-  contentStyle: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  infoIcon: {
-    width: '16px',
-    height: '16px',
-    color: '#1078CA'
-  },
-  infoText: {
-    color: '#525252',
-    fontWeight: 500,
-    ml: 1,
-    fontSize: '12px'
-  },
-  snackbar: {
-    width: '344px',
-    height: '48px',
-    backgroundColor: '#E1F8EB',
-    gap: '8px',
-    padding: '8px',
-    borderRadius: '4px'
-  },
-  snackbarIcon: {
-    width: '16px',
-    height: '16px',
-    color: '#27AE60'
-  }
+  contentStyle: { display: 'flex', flexDirection: 'column', gap: '10px' },
+  infoIcon: { width: '16px', height: '16px', color: '#1078CA' },
+  infoText: { color: '#525252', fontWeight: 500, ml: 1, fontSize: '12px' },
+  snackbar: { width: '344px', height: '48px', backgroundColor: '#E1F8EB', gap: '8px', padding: '8px', borderRadius: '4px' },
+  snackbarIcon: { width: '16px', height: '16px', color: '#27AE60' }
 };
 
 function EditModal({ open, onClose, id, positions, from }) {
-
   const { data: manager } = useGetManagerById(id);
   const { mutate: updateManager, isLoading: isUpdating } = useUpdateManager();
-
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
@@ -120,13 +69,7 @@ function EditModal({ open, onClose, id, positions, from }) {
     mode: 'onChange',
   });
 
-  const {
-    setValue,
-    handleSubmit,
-    isSubmitting,
-    watch,
-    clearErrors,
-  } = methods;
+  const { setValue, handleSubmit, isSubmitting, watch, clearErrors } = methods;
 
   useEffect(() => {
     resetForm();
@@ -159,11 +102,7 @@ function EditModal({ open, onClose, id, positions, from }) {
           enqueueSnackbar('', {
             variant: 'success',
             content: () => (
-              <Box
-                display="flex"
-                alignItems="center"
-                sx={styles.snackbar}
-              >
+              <Box display="flex" alignItems="center" sx={styles.snackbar}>
                 <Iconify icon={'eva:checkmark-circle-2-fill'} sx={styles.snackbarIcon} />
                 <Typography fontSize="12px">Data Pengurus Telah Diperbarui!</Typography>
               </Box>
@@ -185,15 +124,12 @@ function EditModal({ open, onClose, id, positions, from }) {
           onClose();
           resetForm();
         }}
-        PaperProps={{
-          sx: styles.dialogStyle,
-        }}
+        PaperProps={{ sx: styles.dialogStyle }}
       >
         <DialogTitle sx={styles.titleStyle}>
           Ubah Pengurus {from === 'employee' ? "Unit Usaha" : "BUM Desa"}
         </DialogTitle>
         <DialogContent sx={styles.contentStyle}>
-
           <RHFUploadPhoto
             name="image"
             label={from === 'employee' ? "Foto Anggota Unit Usaha" : "Foto Anggota BUM Desa"}
@@ -204,15 +140,7 @@ function EditModal({ open, onClose, id, positions, from }) {
             errorTextAlign="left"
             errorPosition="bottom"
             helperText={
-              <Typography
-                variant="caption"
-                sx={{
-                  mt: 1,
-                  display: 'block',
-                  textAlign: 'start',
-                  color: 'text.secondary',
-                }}
-              >
+              <Typography variant="caption" sx={{ mt: 1, display: 'block', textAlign: 'start', color: 'text.secondary' }}>
                 Format yang diperbolehkan: png, jpg, jpeg.
               </Typography>
             }
@@ -246,22 +174,12 @@ function EditModal({ open, onClose, id, positions, from }) {
             sx={styles.textfield}
             require
           />
-          <Box sx={{
-            height: '78px',
-            padding: '12px',
-            borderRadius: '4px',
-            border: '1px solid #56ADF2',
-            bgcolor: '#DDEFFC',
-            display: 'flex',
-            flexDirection: 'row',
-          }}>
+          <Box sx={{ height: '78px', padding: '12px', borderRadius: '4px', border: '1px solid #56ADF2', bgcolor: '#DDEFFC', display: 'flex', flexDirection: 'row' }}>
             <Info sx={styles.infoIcon} />
             <Typography sx={styles.infoText}>
-              Data profil Anda akan digunakan untuk berbagai keperluan BUM Desa, seperti penyaluran
-              informasi, undangan kegiatan, dan lainnya.
+              Data profil Anda akan digunakan untuk berbagai keperluan BUM Desa, seperti penyaluran informasi, undangan kegiatan, dan lainnya.
             </Typography>
           </Box>
-
         </DialogContent>
         <DialogActions sx={styles.actionStyle}>
           <StyledLoadingButton
@@ -278,14 +196,7 @@ function EditModal({ open, onClose, id, positions, from }) {
             variant='contained'
             sx={styles.buttonStyle}
             onClick={handleSubmit(onSubmit)}
-            disabled={
-              isSubmitting
-              || isUpdating
-              || !watch('image')
-              || !watch('name')
-              || !watch('position')
-              || !watch('phone')
-            }
+            disabled={isSubmitting || isUpdating || !watch('image') || !watch('name') || !watch('position') || !watch('phone')}
           >
             Simpan
           </StyledLoadingButton>

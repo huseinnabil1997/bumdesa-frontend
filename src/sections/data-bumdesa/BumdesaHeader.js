@@ -192,7 +192,7 @@ export default function BumdesaHeader({ filter, isEmpty, value, setValue }) {
         size="small"
         error={!searchRegex.test(value) && value !== ''}
         helperText={!searchRegex.test(value) && value !== '' ? 'Pencarian tidak valid' : ''}
-        placeholder="Cari BUMDesa"
+        placeholder="Cari BUM Desa"
         name="search"
         InputProps={{
           startAdornment: <Search sx={{ color: '#777', mr: 1 }} />,

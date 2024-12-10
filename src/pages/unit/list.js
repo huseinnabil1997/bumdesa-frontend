@@ -29,12 +29,13 @@ import { UserTableToolbarUnit, UserTableRowUnit } from '../../sections/dashboard
 import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useGetUnits } from 'src/query/hooks/units/useGetUnits';
-import usePost from 'src/query/hooks/mutation/usePost';
-import useDelete from 'src/query/hooks/mutation/useDelete';
 import { useDeactivate } from 'src/query/hooks/units/useDeactivate';
 import { useActivate } from 'src/query/hooks/units/useActivate';
 import ChangeStatusModal from 'src/components/modal/ChangeStatus';
 import debounce from 'lodash.debounce';
+import { useDeleteUnit } from 'src/query/hooks/units/useDeleteJurnal';
+import { useResendUnit } from 'src/query/hooks/units/useResendUnit';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -58,19 +59,21 @@ export default function UserList() {
     defaultCurrentPage: 1,
   });
 
+  const userData = useSelector((state) => state.user.userData);
+
   const router = useRouter();
 
   const { themeStretch } = useSettings();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const mutationPost = usePost();
-
-  const mutationDelete = useDelete();
-
   const [filterName, setFilterName] = useState('');
   const [alertDelete, setAlertDelete] = useState(null);
   const [alertChangeStatus, setAlertChangeStatus] = useState(null);
+
+  const { mutate: onDelete } = useDeleteUnit();
+
+  const { mutate: onResend } = useResendUnit();
 
   const { mutate: onDeactivate } = useDeactivate();
 
@@ -82,6 +85,11 @@ export default function UserList() {
     search: filterName,
   });
 
+  const { data: unitsDeleteStatus } = useGetUnits({
+    page: page,
+    limit: rowsPerPage,
+  });
+
   const units = data;
 
   useEffect(() => {
@@ -89,39 +97,37 @@ export default function UserList() {
   }, [page, rowsPerPage]);
 
   const handleResendRow = async (id) => {
-    try {
-      const response = await mutationPost.mutateAsync({
-        endpoint: `/business-units/resend-verify/${id}`,
-      });
-      await enqueueSnackbar(response.messsage ?? 'Berhasil kirim ulang ke email!', {
-        variant: 'success',
-      });
-      refetch();
-    } catch (error) {
-      await enqueueSnackbar(error.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
-      console.log('error handleResendRow', error);
-    }
+    onResend(id, {
+      onSuccess: (res) => {
+        enqueueSnackbar(res.messsage ?? 'Berhasil kirim ulang ke email!', {
+          variant: 'success',
+        });
+        refetch();
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.messsage ?? 'Gagal kirim ulang ke email!', { variant: 'error' });
+      },
+    });
   };
 
   const handleDeleteRow = (id) => {
     setAlertDelete({ id: id });
   };
 
-  const onDelete = async () => {
-    try {
-      const response = await mutationDelete.mutateAsync({
-        endpoint: `/business-units/${alertDelete?.id}`,
-      });
-      enqueueSnackbar(response.message ?? 'Sukses menghapus data', { variant: 'success' });
-      refetch();
-      setAlertDelete(null);
-    } catch (error) {
-      enqueueSnackbar(error.message, { variant: 'error' });
-      if (error.code === 412) {
-        setAlertDelete({ id: alertDelete?.id, status: 1 });
-      }
-      console.log('error delete', error);
-    }
+  const handleDelete = async () => {
+    onDelete(alertDelete?.id, {
+      onSuccess: (res) => {
+        enqueueSnackbar(res.message ?? 'Sukses menghapus data', { variant: 'success' });
+        refetch();
+        setAlertDelete(null);
+      },
+      onError: (err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
+        if (err.code === 412) {
+          setAlertDelete({ id: alertDelete?.id, status: 1 });
+        }
+      },
+    });
   };
 
   const handleInputChange = useCallback(
@@ -180,19 +186,21 @@ export default function UserList() {
             />
           </Box>
 
-          <StyledLoadingButton
-            sx={{
-              width: 210,
-              height: '48px',
-              backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
-            }}
-            variant="contained"
-            startIcon={<Iconify icon={'eva:plus-fill'} />}
-            onClick={() => router.push('new')}
-          >
-            Tambah Unit Usaha
-          </StyledLoadingButton>
+          {userData.role !== 4 && (
+            <StyledLoadingButton
+              sx={{
+                width: 210,
+                height: '48px',
+                backgroundColor: '#1078CA',
+                mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
+              }}
+              variant="contained"
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={() => router.push('new')}
+            >
+              Tambah Unit Usaha
+            </StyledLoadingButton>
+          )}
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
@@ -222,7 +230,7 @@ export default function UserList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={units?.data.length === 1 && page === 1}
+                      disableDelete={unitsDeleteStatus?.data?.length === 1 && page === 1}
                       onEditRow={() => router.push(`edit?id=${row.id}`)}
                       onResendRow={() => handleResendRow(row.id)}
                       onViewRow={() => router.push(`detail?id=${row.id}`)}
@@ -239,16 +247,21 @@ export default function UserList() {
                 <TableNoData
                   isNotFound={units?.data?.length === 0}
                   title="Unit usaha belum tersedia."
-                  description="Silakan tambah Unit usaha dengan klik tombol di bawah ini."
+                  description={
+                    userData.role !== 4 &&
+                    'Silakan tambah Unit usaha dengan klik tombol di bawah ini.'
+                  }
                   action={
-                    <StyledButton
-                      sx={{ mt: 2, width: 200 }}
-                      variant="outlined"
-                      startIcon={<Add fontSize="small" />}
-                      onClick={() => router.push('new')}
-                    >
-                      Tambah Unit usaha
-                    </StyledButton>
+                    userData.role !== 4 && (
+                      <StyledButton
+                        sx={{ mt: 2, width: 200 }}
+                        variant="outlined"
+                        startIcon={<Add fontSize="small" />}
+                        onClick={() => router.push('new')}
+                      >
+                        Tambah Unit usaha
+                      </StyledButton>
+                    )
                   }
                 />
                 {isLoading && <TableSkeleton />}
@@ -313,7 +326,7 @@ export default function UserList() {
         <AlertDeleteUnit
           open={!!alertDelete}
           onClose={() => setAlertDelete(null)}
-          action={onDelete}
+          action={handleDelete}
           status={alertDelete?.status}
         />
       </Container>

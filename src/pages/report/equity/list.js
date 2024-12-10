@@ -31,7 +31,7 @@ export default function LaporanEkuitas() {
   const theme = useTheme();
 
   const [alertDelete, setAlertDelete] = useState(null);
-  const [submitValue, setSubmitValue] = useState({});
+  const [submitValue, setSubmitValue] = useState(null);
 
   const { data, isLoading, refetch } = useGetEquity(submitValue);
 
@@ -46,7 +46,7 @@ export default function LaporanEkuitas() {
   }, []);
 
   useEffect(() => {
-    if (submitValue.unit || submitValue.start_date || submitValue.end_date) {
+    if (submitValue?.unit || submitValue?.start_date || submitValue?.end_date) {
       refetch();
     }
   }, [submitValue, refetch]);

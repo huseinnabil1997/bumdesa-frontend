@@ -10,7 +10,7 @@ const StyledSVGMap = styled(SVGMap)(() => ({
     fill: '#ccc',
     stroke: '#1078CA',
   },
-  '& .svg-map__location:hover': {
+  '& .svg-map__location--hover': {
     fill: '#56ADF2 !important',
     stroke: '#56ADF2 !important',
   },
@@ -63,17 +63,25 @@ export default function IndonesianMap({ data }) {
     ]);
 
   const handleLocationClick = (event) => {
+    const id = event.currentTarget.id;
     const locations = document.querySelectorAll('.svg-map__location');
     locations.forEach((location) => location.classList.remove('svg-map__location--selected'));
-    event.currentTarget.classList.add('svg-map__location--selected');
+    
+    const sameIdLocations = document.querySelectorAll(`.svg-map__location[id="${id}"]`);
+    sameIdLocations.forEach((location) => location.classList.add('svg-map__location--selected'));
   };
 
   const handleMouseOver = (event) => {
     const region = event.target;
     if (region.classList.contains('svg-map__location')) {
+      const id = region.id;
       const content = region.getAttribute('data-info');
       setTooltipContent(content);
       setTooltipPosition({ x: event.pageX + 10, y: event.pageY + 10 });
+      const sameIdLocations = document.querySelectorAll(`.svg-map__location[id="${id}"]`);
+      sameIdLocations.forEach((location) => {
+        location.classList.add('svg-map__location--hover');
+      });
     }
   };
 
@@ -83,8 +91,16 @@ export default function IndonesianMap({ data }) {
     }
   };
 
-  const handleMouseOut = () => {
-    setTooltipContent(null);
+  const handleMouseOut = (event) => {
+    const region = event.target;
+    if (region.classList.contains('svg-map__location')) {
+      const id = region.id;
+      const sameIdLocations = document.querySelectorAll(`.svg-map__location[id="${id}"]`);
+      sameIdLocations.forEach((location) => {
+        location.classList.remove('svg-map__location--hover');
+      });
+      setTooltipContent(null);
+    }
   };
 
   useEffect(() => {

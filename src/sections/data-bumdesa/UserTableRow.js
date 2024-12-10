@@ -61,6 +61,7 @@ export default function UserTableRow({ row, onViewRow }) {
     year_registered = '-',
     status_active,
     status_report,
+    status_report_unit,
     profitability,
     liquidity,
     solvability,
@@ -83,11 +84,12 @@ export default function UserTableRow({ row, onViewRow }) {
 
   return (
     <StyledTableRow hover>
-      <FixedTableCell>{bumdesa_name}</FixedTableCell>
+      <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{bumdesa_name}</FixedTableCell>
       {renderTableCell(count_unit)}
       {renderTableCell(year_registered)}
       <TableCell align="center">{renderLabel(status_active)}</TableCell>
       <TableCell align="center">{renderLabel(status_report)}</TableCell>
+      <TableCell align="center">{renderLabel(status_report_unit)}</TableCell>
       {renderTableCell(`${profitability}%`)}
       {renderTableCell(`${liquidity}%`)}
       {renderTableCell(`${solvability}%`)}

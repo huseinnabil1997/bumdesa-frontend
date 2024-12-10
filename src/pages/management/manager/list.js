@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { debounce } from 'lodash';
 // @mui
 import {
   Box,
@@ -14,14 +15,14 @@ import {
   Typography,
 } from '@mui/material';
 // hooks
-import useSettings from '../../hooks/useSettings';
-import useTable from '../../hooks/useTable';
+import useSettings from '../../../hooks/useSettings';
+import useTable from '../../../hooks/useTable';
 // layouts
-import Layout from '../../layouts';
+import Layout from '../../../layouts';
 // components
-import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
-import { TableHeadCustom, TableNoData, TableSkeleton } from '../../components/table';
+import Page from '../../../components/Page';
+import Iconify from '../../../components/Iconify';
+import { TableHeadCustom, TableNoData, TableSkeleton } from '../../../components/table';
 import { StyledButton, StyledLoadingButton } from 'src/theme/custom/Button';
 // sections
 import { Add } from '@mui/icons-material';
@@ -36,15 +37,10 @@ import {
 import { useGetManagers } from 'src/query/hooks/manager/useGetManagers';
 import { useDeleteManager } from 'src/query/hooks/manager/useDeleteManager';
 import { useGetPositions } from 'src/query/hooks/manager/useGetPositions';
+import { useSelector } from 'react-redux';
+import { TABLE_HEAD_MANAGER } from 'src/utils/constant';
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Nama', align: 'left' },
-  { id: 'position', label: 'Jabatan', align: 'left' },
-  { id: 'phone', label: 'Nomor Telepon', align: 'left' },
-  { id: 'status', label: 'Action', align: 'center' },
-];
 
 const styles = {
   snackbar: {
@@ -60,6 +56,49 @@ const styles = {
     height: '16px',
     color: '#27AE60',
   },
+  loadingButton: {
+    width: '100%',
+    maxWidth: 164,
+    height: '48px',
+    backgroundColor: '#1078CA',
+    mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
+    fontSize: '13px',
+    fontWeight: 700,
+  },
+  tableHead: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  tableRow: {
+    backgroundColor: '#F8F9F9',
+    border: 1,
+    borderRadius: 8,
+    borderColor: '#EAEBEB',
+  },
+  pagination: {
+    '& .MuiPaginationItem-page': {
+      border: 'none !important',
+    },
+    '& .MuiPaginationItem-icon': {
+      color: '#1078CA',
+    },
+    '& .MuiPaginationItem-previousNext': {
+      borderColor: '#1078CA',
+    },
+    '& .MuiPaginationItem-firstLast': {
+      borderColor: '#1078CA',
+    },
+  },
+  select: {
+    height: 32,
+    width: 70,
+  },
+  addButton: {
+    mt: 2,
+    width: 200,
+  },
 };
 
 // ----------------------------------------------------------------------
@@ -73,6 +112,8 @@ export default function ManagerList() {
   const { page, rowsPerPage, onChangeRowsPerPage, selected, onSelectRow, onChangePage } = useTable({
     defaultCurrentPage: 1,
   });
+
+  const userData = useSelector((state) => state.user.userData);
 
   const { themeStretch } = useSettings();
 
@@ -97,13 +138,16 @@ export default function ManagerList() {
     search: filterName,
   });
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  const {
+    data: managersDeleteStatus,
+  } = useGetManagers({
+    page: page,
+    limit: rowsPerPage,
+  });
 
   useEffect(() => {
     refetch();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, filterName]);
 
   const handleDeleteRow = (id) => {
     setAlertDelete({ id: id });
@@ -130,11 +174,12 @@ export default function ManagerList() {
     });
   };
 
-  const handleInputChange = (event) => {
-    if (event.key === 'Enter') {
-      refetch();
-    }
-  };
+  const handleInputChange = useCallback(
+    debounce((event) => {
+      setFilterName(event.target.value);
+    }, 300),
+    []
+  );
 
   return (
     <Page title="Pengurus: List">
@@ -151,37 +196,26 @@ export default function ManagerList() {
             />
           </Box>
 
-          <StyledLoadingButton
-            sx={{
-              width: '100%',
-              maxWidth: 164,
-              height: '48px',
-              backgroundColor: '#1078CA',
-              mb: { xs: 2.5, sm: 0, md: 0, lg: 0 },
-              fontSize: '13px',
-              fontWeight: 700,
-            }}
-            variant="contained"
-            startIcon={<Iconify icon={'eva:plus-fill'} />}
-            onClick={() => setOpenNewModal(true)}
-          >
-            Tambah Anggota
-          </StyledLoadingButton>
+          {userData.role !== 4 && (
+            <StyledLoadingButton
+              sx={styles.loadingButton}
+              variant="contained"
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={() => setOpenNewModal(true)}
+            >
+              Tambah Anggota
+            </StyledLoadingButton>
+          )}
         </Box>
 
         <Card sx={{ borderRadius: 2 }}>
           <TableContainer sx={{ minWidth: 300, position: 'relative', borderRadius: 2 }}>
             <Table>
               <TableHeadCustom
-                headLabel={TABLE_HEAD}
+                headLabel={TABLE_HEAD_MANAGER(userData.role)}
                 rowCount={managers?.data?.length}
                 numSelected={selected.length}
-                sx={{
-                  backgroundColor: '#F8F9F9',
-                  border: 1,
-                  borderRadius: 8,
-                  borderColor: '#EAEBEB',
-                }}
+                sx={styles.tableHead}
               />
 
               <TableBody>
@@ -196,14 +230,9 @@ export default function ManagerList() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
-                      disableDelete={managers?.data.length <= 3 && page === 1}
+                      disableDelete={managersDeleteStatus?.data.length <= 3 && page === 1}
                       onEditRow={() => setOpenEditModal(row.id)}
-                      sx={{
-                        backgroundColor: '#F8F9F9',
-                        border: 1,
-                        borderRadius: 8,
-                        borderColor: '#EAEBEB',
-                      }}
+                      sx={styles.tableRow}
                     />
                   ))}
                 <TableNoData
@@ -215,7 +244,7 @@ export default function ManagerList() {
                   description="Silakan tambah Pengurus BUM Desa dengan klik tombol di bawah ini."
                   action={
                     <StyledButton
-                      sx={{ mt: 2, width: 200 }}
+                      sx={styles.addButton}
                       variant="outlined"
                       startIcon={<Add fontSize="small" />}
                       onClick={() => setOpenNewModal(true)}
@@ -243,7 +272,7 @@ export default function ManagerList() {
               displayEmpty
               inputProps={{ 'aria-label': 'Rows per page' }}
               aria-controls=""
-              sx={{ height: 32, width: 70 }}
+              sx={styles.select}
             >
               <MenuItem value={5}>5</MenuItem>
               <MenuItem value={10}>10</MenuItem>
@@ -261,20 +290,7 @@ export default function ManagerList() {
             rowsPerPage={rowsPerPage}
             page={page}
             onChange={onChangePage}
-            sx={{
-              '& .MuiPaginationItem-page': {
-                border: 'none !important',
-              },
-              '& .MuiPaginationItem-icon': {
-                color: '#1078CA',
-              },
-              '& .MuiPaginationItem-previousNext': {
-                borderColor: '#1078CA',
-              },
-              '& .MuiPaginationItem-firstLast': {
-                borderColor: '#1078CA',
-              },
-            }}
+            sx={styles.pagination}
           />
         </Box>
         <DeleteModal

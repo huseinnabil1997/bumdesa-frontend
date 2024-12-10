@@ -80,23 +80,23 @@ export default function DetailBumdesa() {
             </Breadcrumbs>
           </Grid>
 
-          <Grid item xs={12}>
-            <DashboardFinancesBumdesKanpus id={id} />
-          </Grid>
-
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardSalesKanpus id={id} />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <DashboardProfitLossKanpus id={id} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <DashboardFinancesBumdesKanpus id={id} />
           </Grid>
 
           <Grid item xs={12}>
             <Card elevation={0} sx={{ border: `1px solid ${theme.palette.grey[300]}` }}>
               <CardHeader title="Informasi BUMDesa" sx={{ p: 3, pb: 0 }} />
               <CardContent>
-                <ProfileInfo data={data} from="kanpus" />
+                <ProfileInfo data={data} />
               </CardContent>
             </Card>
           </Grid>

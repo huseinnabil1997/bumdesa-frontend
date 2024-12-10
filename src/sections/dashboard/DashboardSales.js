@@ -8,7 +8,7 @@ import { useTheme } from '@emotion/react';
 import { useGetSales } from 'src/query/hooks/dashboard/useGetSales';
 import { DatePicker } from '@mui/lab';
 import moment from 'moment';
-import { fCurrency } from 'src/utils/formatNumber';
+import { fCurrencyJuta } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -42,10 +42,15 @@ export default function DashboardSales({ unit }) {
         'Des',
       ],
     },
+    yaxis: {
+      labels: {
+        formatter: (val) => fCurrencyJuta(val),
+      },
+    },
     tooltip: {
       x: { show: true },
       y: {
-        formatter: (val) => `${fCurrency(val)}`,
+        formatter: (val) => `${fCurrencyJuta(val)}`,
         title: { formatter: () => `Total: ` },
       },
     },

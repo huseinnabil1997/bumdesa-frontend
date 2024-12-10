@@ -8,11 +8,6 @@ import * as Yup from 'yup';
 import { useEffect, useRef } from "react";
 import { handleDrop } from "src/utils/helperFunction";
 import { formatISO } from "date-fns";
-import { useGetProvincies } from "src/query/hooks/options/useGetProvincies";
-import { useGetCities } from "src/query/hooks/options/useGetCities";
-import { useGetDistricts } from "src/query/hooks/options/useGetDistricts";
-import { useGetSubdistricts } from "src/query/hooks/options/useGetSubdistricts";
-import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 import { isEqual } from "lodash";
 import { useUpdateProfile } from "src/query/hooks/profile/useUpdateProfile";
 import { useSnackbar } from "notistack";
@@ -21,6 +16,11 @@ import { fBumdesId } from "src/utils/formatNumber";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "src/redux/slices/user";
 import { alphabetAddressRegex, alphabetRegex, htmlTagRegex } from "src/utils/regex";
+import { useGetProvincies } from "src/query/hooks/options/useGetProvincies";
+import { useGetCities } from "src/query/hooks/options/useGetCities";
+import { useGetDistricts } from "src/query/hooks/options/useGetDistricts";
+import { useGetSubdistricts } from "src/query/hooks/options/useGetSubdistricts";
+import { useGetPostalCode } from "src/query/hooks/options/useGetPostalCode";
 
 const ProfileInfoFormSchema = Yup.object().shape({
   foto_kantor: Yup.mixed().required('Foto Kantor BUM Desa wajib diisi'),
@@ -52,7 +52,6 @@ const styles = {
     p: '24px'
   },
   textfield: {
-    // width: '293px',
     '& .MuiInputBase-root': {
       height: '44px',
     },
@@ -99,22 +98,17 @@ const styles = {
 }
 
 export default function ProfileInfoForm({ data, setIsEdit }) {
-
   const dispatch = useDispatch();
-
   const datePickerRef = useRef(null);
-
   const { enqueueSnackbar } = useSnackbar();
-
   const userData = useSelector(state => state.user.userData);
-
   const { mutate: onUpdate, isLoading: updating } = useUpdateProfile();
 
   const defaultValues = {
     foto_kantor: data?.photo ?? null,
     logo: data?.photo_logo ?? null,
     nama: data?.name ?? '',
-    id: fBumdesId(data?.bumdesa_id) ?? '',
+    id: fBumdesId(data?.bumdesa_id_reference) ?? '',
     tanggal_berdiri: data?.founded_at ? formatISO(new Date(data?.founded_at), { representation: "date" }) : currentDate,
     alamat: data?.address ?? '',
     provinsi: data?.province ?? null,
@@ -190,7 +184,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
     }
   }, [desa, clearErrors, setError]);
 
-  const areValuesEqual = () => isEqual(currentValues, defaultValues);
+  const areValuesEqual = isEqual(currentValues, defaultValues);
 
   const { data: provincies } = useGetProvincies();
   const { data: cities } = useGetCities({ prov_id: provinsi?.value });
@@ -201,7 +195,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
   useEffect(() => {
     if (postalCode) setValue('kode_pos', postalCode?.label);
     else setValue('kode_pos', '');
-  }, [postalCode]);
+  }, [postalCode, setValue]);
 
   const handleProvinsi = (value) => {
     setValue('provinsi', value)
@@ -460,7 +454,7 @@ export default function ProfileInfoForm({ data, setIsEdit }) {
           </StyledLoadingButton>
           <StyledLoadingButton
             loading={isSubmitting}
-            disabled={areValuesEqual() || updating}
+            disabled={areValuesEqual || updating}
             onClick={handleSubmit(onSubmit)}
             sx={styles.action.button}
             variant='contained'

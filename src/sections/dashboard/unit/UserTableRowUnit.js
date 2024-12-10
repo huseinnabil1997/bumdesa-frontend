@@ -7,6 +7,7 @@ import Iconify from '../../../components/Iconify';
 import { CheckCircle, DoNotDisturb, Info } from '@mui/icons-material';
 import Label from 'src/components/Label';
 import { memo, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +52,7 @@ function UserTableRowUnit({
   disableDelete = false,
 }) {
   const theme = useTheme();
+  const userData = useSelector((state) => state.user.userData);
   const { name, email, year_founded, status, is_resend } = row;
 
   const handleDeleteRow = useCallback(() => {
@@ -83,7 +85,7 @@ function UserTableRowUnit({
         <IconButton onClick={onViewRow}>
           <Info sx={{ color: theme.palette.primary.main, fontSize: 18 }} />
         </IconButton>
-        {is_resend && (
+        {is_resend && userData.role !== 4 && (
           <DeleteTooltip title="Re-send email">
             <IconButton onClick={onResendRow}>
               <Iconify
@@ -93,28 +95,32 @@ function UserTableRowUnit({
             </IconButton>
           </DeleteTooltip>
         )}
-        <IconButton onClick={onEditRow}>
-          <Iconify
-            icon={'lucide:edit'}
-            sx={{ color: theme.palette.primary.main, fontSize: 16 }}
-          />
-        </IconButton>
-        <DeleteTooltip title={disableDelete ? "Setidaknya harus ada 1 unit usaha aktif di BUM Desa." : "Hapus Unit"}>
-          <IconButton onClick={handleDeleteRow}>
+        {userData.role !== 4 && (
+          <IconButton onClick={onEditRow}>
             <Iconify
-              icon={'lucide:trash'}
-              sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
+              icon={'lucide:edit'}
+              sx={{ color: theme.palette.primary.main, fontSize: 16 }}
             />
           </IconButton>
-        </DeleteTooltip>
-        {status !== 3 && status !== 0 &&
+        )}
+        {userData.role !== 4 && (
+          <DeleteTooltip title={disableDelete ? "Setidaknya harus ada 1 unit usaha aktif di BUM Desa." : "Hapus Unit"}>
+            <IconButton onClick={handleDeleteRow}>
+              <Iconify
+                icon={'lucide:trash'}
+                sx={{ color: disableDelete ? theme.palette.grey : theme.palette.error.main, fontSize: 16 }}
+              />
+            </IconButton>
+          </DeleteTooltip>
+        )}
+        {status !== 3 && status !== 0 && userData.role !== 4 &&
           <DeleteTooltip title="Nonaktifkan Unit">
             <IconButton onClick={onDeactivateRow}>
               <DoNotDisturb sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
             </IconButton>
           </DeleteTooltip>
         }
-        {status === 3 && status !== 0 &&
+        {status === 3 && status !== 0 && userData.role !== 4 &&
           <DeleteTooltip title="Aktifkan Unit">
             <IconButton onClick={onActivateRow}>
               <CheckCircle sx={{ color: theme.palette.warning.main, fontSize: 16 }} />
