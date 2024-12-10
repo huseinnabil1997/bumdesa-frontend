@@ -1,4 +1,4 @@
-import { Container, } from '@mui/material';
+import { Box, CircularProgress, Container, Typography, } from '@mui/material';
 import useSettings from '../../hooks/useSettings';
 import Layout from '../../layouts';
 import Page from '../../components/Page';
@@ -69,6 +69,10 @@ export default function Education() {
     <Page title="Konten Edukasi: Link UMKM">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <LinkUMKMDialogDashboard open={open} onClose={handleClose} />
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '65vh' }}>
+          {loading && <CircularProgress size="5rem" color="primary" />}
+          {loading && <Typography sx={{ mt: 2 }}>Mengalihkan...</Typography>}
+        </Box>
       </Container>
       <FailedDialog open={openFailed} onClose={handleClose} onRetry={handleCreateLink} loading={loading} />
     </Page >
