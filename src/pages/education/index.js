@@ -71,7 +71,7 @@ export default function Education() {
         <LinkUMKMDialogDashboard open={open} onClose={handleClose} />
         <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '65vh' }}>
           {loading && <CircularProgress size="5rem" color="primary" />}
-          {loading && <Typography variant="h4" sx={{ mt: 2 }}>Mengalihkan...</Typography>}
+          {loading && <Typography sx={{ mt: 2 }}>Mengalihkan...</Typography>}
         </Box>
       </Container>
       <FailedDialog open={openFailed} onClose={handleClose} onRetry={handleCreateLink} loading={loading} />
