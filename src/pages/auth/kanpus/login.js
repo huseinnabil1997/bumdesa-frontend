@@ -94,7 +94,7 @@ export default function Login() {
                     disabledEffect
                     src="/image/fa_bumdesa_digital.png"
                     alt="bri"
-                    sx={{ height: 60 }}
+                    sx={{ height: 60, minWidth: '175px' }}
                   />
                 </Box>
                 {/* <Image

@@ -91,13 +91,13 @@ export default function Login() {
             <SectionStyle>
               <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
               <Title>
-                <Box alignItems="center" bgcolor="white" borderRadius={2} width="fit-content" mx="auto" p={2} mb={6} mt={5}>
+                <Box alignItems="center" bgcolor="white" borderRadius={2} minWidth="182px" mx="auto" p={2} mb={6} mt={5}>
                   <Image
                     visibleByDefault
                     disabledEffect
                     src="/image/fa_bumdesa_digital.png"
                     alt="bri"
-                    sx={{ height: 60 }}
+                    sx={{ height: 60, minWidth: '175px' }}
                   />
                 </Box>
                 {/* <Image
