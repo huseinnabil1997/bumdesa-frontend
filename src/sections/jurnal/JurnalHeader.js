@@ -9,6 +9,7 @@ import {
   ClickAwayListener,
   MenuList,
   CircularProgress,
+  Menu,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -22,6 +23,7 @@ import { getSessionToken } from 'src/utils/axiosReportService';
 import jwtDecode from 'jwt-decode';
 import RHFRangeDatePicker from 'src/components/hook-form/RHFRangeDatePicker';
 import { useSelector } from 'react-redux';
+import Image from 'src/components/Image';
 
 const options = ['', 'Unduh format PDF', 'Unduh format Excel'];
 
@@ -40,6 +42,7 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -85,6 +88,24 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
     setOpen(false);
   };
 
+  const handleMenuClick = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleJurnalSatuanClick = () => {
+    router.push('/jurnal/create');
+    handleMenuClose();
+  };
+
+  const handleUnggahMassalClick = () => {
+    router.push('/jurnal/bulk');
+    handleMenuClose();
+  };
+
   return (
     <>
       <Stack direction="row">
@@ -122,14 +143,35 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
             Unduh Dokumen
           </StyledButton>
           {userData?.role !== 4 && (
-            <StyledButton
-              sx={{ width: 200 }}
-              startIcon={<Add />}
-              variant="contained"
-              onClick={handleClick}
-            >
-              Buat Jurnal
-            </StyledButton>
+            <>
+              <StyledButton
+                sx={{ width: 200 }}
+                startIcon={<Add />}
+                variant="contained"
+                onClick={handleMenuClick}
+              >
+                Buat Jurnal
+              </StyledButton>
+              <Menu
+                anchorEl={menuAnchorEl}
+                open={Boolean(menuAnchorEl)}
+                onClose={handleMenuClose}
+                PaperProps={{
+                  style: {
+                    width: 200,
+                  },
+                }}
+              >
+                <MenuItem onClick={handleJurnalSatuanClick}>
+                  <Image src="/icons/ic_single_upload.png" alt="single upload" sx={{ width: 20, height: 20, mr: 1 }} />
+                  Jurnal Satuan
+                </MenuItem>
+                <MenuItem onClick={handleUnggahMassalClick}>
+                  <Image src="/icons/ic_bulk_upload.png" alt="bulk upload" sx={{ width: 20, height: 20, mr: 1 }} />
+                  Unggah Massal
+                </MenuItem>
+              </Menu>
+            </>
           )}
 
           <Popper
