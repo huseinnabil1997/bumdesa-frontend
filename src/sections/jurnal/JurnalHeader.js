@@ -48,9 +48,9 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
 
   const { mutate: download, isLoading } = useDownloadJurnal();
 
-  const handleClick = () => {
-    router.push('/jurnal/create');
-  };
+  // const handleClick = () => {
+  //   router.push('/jurnal/create');
+  // };
 
   const handleMenuItemClick = (event, index) => {
     const payload = {

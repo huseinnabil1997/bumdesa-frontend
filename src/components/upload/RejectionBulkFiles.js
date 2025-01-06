@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import { Box, Paper, Typography } from '@mui/material';
 // utils
-import { fData } from '../../utils/formatNumber';
+// import { fData } from '../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 

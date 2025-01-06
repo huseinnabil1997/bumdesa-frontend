@@ -1,14 +1,11 @@
 // @mui
-import { Box, Typography, Stack, Divider, LinearProgress, IconButton } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Typography, Stack } from '@mui/material';
 // assets
 import { UploadIllustration } from '../../assets';
-import { StyledLoadingButton } from 'src/theme/custom/Button';
-import Iconify from '../Iconify';
 
 // ----------------------------------------------------------------------
 
-export default function BlockContent({ file, isUploading, uploadProgress, handleUpload }) {
+export default function BlockContent() {
 
   return (
     <Stack

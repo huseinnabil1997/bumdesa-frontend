@@ -3,10 +3,9 @@ import isString from 'lodash/isString';
 import { useDropzone } from 'react-dropzone';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Divider, IconButton, LinearProgress, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, IconButton, Stack, Typography } from '@mui/material';
 //
 import Image from '../Image';
-import RejectionFiles from './RejectionFiles';
 import BlockContent from './BlockContent';
 import { useEffect, useRef, useState } from 'react';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
@@ -47,22 +46,13 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
   const inputRef = useRef(null);
 
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  // const [uploadProgress, setUploadProgress] = useState(0);
 
-  const handleUpload = () => {
+  const simulateUploadProgress = () => {
     setIsUploading(true);
-    setUploadProgress(0); // Inisialisasi progress ke 0
-    // Simulasi upload
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          return 100;
-        }
-        return prev + 25; // Naik 25% setiap interval
-      });
-    }, 500); // Setengah detik
+    setTimeout(() => {
+      setIsUploading(false);
+    }, 3000)
   };
 
   const handleButtonClick = () => {
@@ -73,12 +63,11 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
 
   const handleCancelUpload = () => {
     setIsUploading(false);
-    setUploadProgress(0);
   };
 
   useEffect(() => {
     if (file && !isUploading) {
-      handleUpload();
+      simulateUploadProgress();
     }
   }, [file]);
 
@@ -90,7 +79,7 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
 
   return (
     <Box sx={{ width: '100%', ...sx }}>
-      <Box border="1px dashed #EAEBEB" borderRadius="16px">
+      <Box border="1px dashed #EAEBEB" borderRadius="16px" m={3}>
         <DropZoneStyle
           {...getRootProps()}
           sx={{
@@ -109,7 +98,7 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
         >
           <input {...getInputProps()} ref={inputRef} />
 
-          <BlockContent file={file} isUploading={isUploading} uploadProgress={uploadProgress} handleUpload={handleUpload} />
+          <BlockContent />
 
           {file && (
             <Image
@@ -127,16 +116,17 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
           )}
         </DropZoneStyle>
 
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2 }}>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', m: 3 }}>
           {isUploading ? (
             <Box sx={{ width: '100%', mt: 2, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <CircularProgress size={12} sx={{ color: 'primary.main' }} />
               <Typography fontSize={12} fontWeight={500} color="text.secondary" sx={{ mr: 1 }}>
                 {file?.name} ({(file?.size / 1000000).toFixed(3)} MB)
               </Typography>
-              <LinearProgress variant="determinate" value={uploadProgress} sx={{ width: 500, height: 8, borderRadius: '16px' }} />
+              {/* <LinearProgress variant="determinate" value={uploadProgress} sx={{ width: 500, height: 8, borderRadius: '16px' }} />
               <Typography fontSize={12} fontWeight={500} color="text.secondary" sx={{ ml: 1 }}>
                 {uploadProgress}%
-              </Typography>
+              </Typography> */}
               <IconButton onClick={handleCancelUpload}>
                 <Iconify icon="material-symbols-light:close" sx={{ fontSize: 16, color: 'red', cursor: 'pointer' }} />
               </IconButton>
@@ -158,7 +148,7 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
       </Box>
 
       <Divider sx={{ my: 2 }} />
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack direction="row" justifyContent="space-between" alignItems="center" m={3}>
         <Box>{fileRejections.length > 0 && <RejectionBulkFiles fileRejections={fileRejections} />}</Box>
         <StyledLoadingButton
           variant="contained"

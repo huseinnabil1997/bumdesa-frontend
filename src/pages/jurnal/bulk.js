@@ -29,7 +29,6 @@ import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import { jurnalBulkDefaultValues, jurnalBulkSchema } from 'src/sections/jurnal/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import { handleDrop } from 'src/utils/helperFunction';
 import Scrollbar from 'src/components/Scrollbar';
@@ -56,8 +55,6 @@ export default function JurnalBulkCreate() {
 
   const router = useRouter();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const { data, isLoading, isError } = useGetJurnals({
     limit: 10,
     page,
@@ -81,6 +78,7 @@ export default function JurnalBulkCreate() {
 
   const onSubmit = async (data) => {
     console.log(data);
+    handleOpen();
   };
 
   const handleBack = () => router.back();
@@ -88,6 +86,8 @@ export default function JurnalBulkCreate() {
   const handleCancelUpload = () => {
     setValue('file', null);
   };
+
+  console.log('file upload = ', watch('file'))
 
   return (
     <Page>
@@ -114,99 +114,103 @@ export default function JurnalBulkCreate() {
               Unduh Template Jurnal
             </StyledLoadingButton>
           </Box>
-          <Card elevation={0} sx={{ mt: 3, border: fileRejections.length > 0 ? `1px solid ${theme.palette.error.main}` : `1px solid ${theme.palette.grey[300]}` }}>
+          <Card sx={{ mt: 3, border: fileRejections.length > 0 ? `1px solid ${theme.palette.error.main}` : `1px solid ${theme.palette.grey[300]}` }}>
             {watch('file') ? (
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 3 }}>
                 <Typography fontWeight={600} fontSize={22}>
                   Pratinjau Dokumen Jurnal
                 </Typography>
-                <Card sx={{ mt: 3, minWidth: 864 }} elevation={3}>
-                  <Scrollbar>
-                    <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-                      <Table>
-                        <TableHeadCustom
-                          headLabel={JURNAL_HEAD}
-                          rowCount={data?.journals?.length}
-                          sx={{ background: theme.palette.grey[200] }}
-                        />
+                <Card elevation={3}>
+                  <Card sx={{ m: 3, minWidth: 864 }} elevation={3}>
+                    <Scrollbar>
+                      <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+                        <Table>
+                          <TableHeadCustom
+                            headLabel={JURNAL_HEAD}
+                            rowCount={data?.journals?.length}
+                            sx={{ background: theme.palette.grey[200] }}
+                          />
 
-                        <TableBody>
-                          {!isLoading &&
-                            data?.journals?.length > 0 &&
-                            data?.journals.map((row, i) => (
-                              <TableRow
-                                key={row.id}
-                                index={i}
-                                row={row}
-                                onDeleteRow={() => handleDeleteRow(row.id)}
-                                onEditRow={() => handleEditRow(row)}
+                          <TableBody>
+                            {!isLoading &&
+                              data?.journals?.length > 0 &&
+                              data?.journals.map((row, i) => (
+                                <TableRow
+                                  key={row.id}
+                                  index={i}
+                                  row={row}
+                                // onDeleteRow={() => handleDeleteRow(row.id)}
+                                // onEditRow={() => handleEditRow(row)}
+                                />
+                              ))}
+
+                            {isLoading && <TableSkeleton />}
+
+                            {!data?.journals?.length > 0 && !isError && !isLoading && (
+                              <TableNoData
+                                isNotFound
+                                title="Jurnal belum tersedia."
                               />
-                            ))}
+                            )}
 
-                          {isLoading && <TableSkeleton />}
+                            {!isLoading && isError && (
+                              <TableError
+                                title="Koneksi Error"
+                                description="Silakan cek koneksi Anda dan muat ulang halaman."
+                              />
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Scrollbar>
 
-                          {!data?.journals?.length > 0 && !isError && !isLoading && (
-                            <TableNoData
-                              isNotFound
-                              title="Jurnal belum tersedia."
-                            />
-                          )}
-
-                          {!isLoading && isError && (
-                            <TableError
-                              title="Koneksi Error"
-                              description="Silakan cek koneksi Anda dan muat ulang halaman."
-                            />
-                          )}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Scrollbar>
-
-                  {data?.journals?.length > 0 && (
-                    <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
-                      <Pagination
-                        showFirstButton
-                        showLastButton
-                        color="primary"
-                        count={data?.page?.total_page}
-                        rowsPerPage={data?.page?.limit}
-                        page={page}
-                        onChange={onChangePage}
-                      />
+                    {data?.journals?.length > 0 && (
+                      <Box display="flex" justifyContent="end" sx={{ p: 3 }}>
+                        <Pagination
+                          showFirstButton
+                          showLastButton
+                          color="primary"
+                          count={data?.page?.total_page}
+                          rowsPerPage={data?.page?.limit}
+                          page={page}
+                          onChange={onChangePage}
+                        />
+                      </Box>
+                    )}
+                  </Card>
+                  <Divider
+                    sx={{
+                      width: '100%',
+                      borderStyle: 'dashed',
+                      my: 2,
+                      borderWidth: '1px',
+                      borderColor: '#EAEBEB',
+                    }}
+                  />
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pl: 1, border: `1px solid ${theme.palette.grey[300]}`, borderRadius: 1, mb: 3 }}>
+                      <Typography fontWeight={500} fontSize={12} color={theme.palette.grey[500]}>
+                        {watch('file')?.name} ({(watch('file')?.size / 1000000).toFixed(3)} MB)
+                      </Typography>
+                      <IconButton onClick={handleCancelUpload}>
+                        <Iconify icon="material-symbols-light:close" sx={{ fontSize: 16, color: 'red', cursor: 'pointer' }} />
+                      </IconButton>
                     </Box>
-                  )}
+                  </Box>
                 </Card>
-                <Divider
-                  sx={{
-                    width: '100%',
-                    borderStyle: 'dashed',
-                    my: 2,
-                    borderWidth: '1px',
-                    borderColor: '#EAEBEB',
-                  }}
-                />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pl: 1, border: `1px solid ${theme.palette.grey[300]}`, borderRadius: 1 }}>
-                  <Typography fontWeight={500} fontSize={12} color={theme.palette.grey[500]}>
-                    Jurnal_Desember_2024.csv (2.3 MB)
-                  </Typography>
-                  <IconButton onClick={handleCancelUpload}>
-                    <Iconify icon="material-symbols-light:close" sx={{ fontSize: 16, color: 'red', cursor: 'pointer' }} />
-                  </IconButton>
-                </Box>
                 <Divider sx={{ width: '100%', my: 2 }} />
-                <Stack alignSelf="flex-end">
+                <Stack alignSelf="flex-end" mx={3}>
                   <StyledLoadingButton
                     variant="contained"
                     sx={{ width: 200, height: 42 }}
-                    onClick={handleOpen}
+                    type="submit"
                   >
                     Simpan
                   </StyledLoadingButton>
                 </Stack>
               </Box>
             ) : (
-              <Box sx={{ p: 3 }}>
+              <Box>
                 <RHFUploadSingleFile
                   name="file"
                   onFileRejections={(fileRejections) => {
