@@ -1,4 +1,5 @@
 import axios from 'src/utils/axiosCoreService';
+import axiosMinio from 'axios';
 
 export function getJurnals(param) {
   return axios.get('journals', { params: param });
@@ -22,6 +23,13 @@ export function deleteJurnal(id) {
 
 export function downloadJurnal(param) {
   return axios.get(`journals/report-generate`, {
+    params: param,
+    responseType: 'blob',
+  });
+}
+
+export function downloadJurnalTemplate(param) {
+  return axiosMinio.get(`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template-jurnal.xlsm`, {
     params: param,
     responseType: 'blob',
   });

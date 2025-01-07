@@ -87,9 +87,10 @@ export const fileType = [
   'application/pdf',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'text/csv',
+  'application/vnd.ms-excel.sheet.macroEnabled.12',
 ];
 
-export const extType = ['', '.pdf', '.xlsx', '.csv'];
+export const extType = ['', '.pdf', '.xlsx', '.csv', 'xlsm'];
 
 export const stepperTutorial = [
   {

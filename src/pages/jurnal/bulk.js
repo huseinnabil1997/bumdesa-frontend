@@ -38,6 +38,9 @@ import { useGetJurnals } from 'src/query/hooks/jurnals/useGetJurnals';
 import { JURNAL_HEAD } from 'src/utils/constant';
 import { TableRow } from 'src/sections/jurnal';
 import BulkModal from 'src/sections/jurnal/BulkModal';
+import { useSnackbar } from 'notistack';
+import { useDownloadJurnalTemplate } from 'src/query/hooks/jurnals/useDownloadJurnalTemplate';
+import onDownload from 'src/utils/onDownload';
 
 // ----------------------------------------------------------------------
 
@@ -51,9 +54,13 @@ export default function JurnalBulkCreate() {
 
   const { themeStretch } = useSettings();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const theme = useTheme();
 
   const router = useRouter();
+
+  const { mutate: download, isLoading: isDownloading } = useDownloadJurnalTemplate();
 
   const { data, isLoading, isError } = useGetJurnals({
     limit: 10,
@@ -62,7 +69,6 @@ export default function JurnalBulkCreate() {
     end_date: '2025-01-31',
   });
 
-  const [downloading, setDownloading] = useState(false);
   const [fileRejections, setFileRejections] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -87,6 +93,28 @@ export default function JurnalBulkCreate() {
     setValue('file', null);
   };
 
+  const handleDownload = () => {
+    const payload = {
+      type: 4,
+    };
+
+    download(payload, {
+      onSuccess: (res) => {
+        console.log('res = ', res)
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        onDownload({
+          file: res,
+          title: 'Template Jurnal',
+          type: 4,
+        });
+        setOpen(false);
+      },
+      onError: () => {
+        enqueueSnackbar('Gagal mengunduh!', { variant: 'error' });
+      },
+    });
+  };
+
   console.log('file upload = ', watch('file'))
 
   return (
@@ -103,13 +131,15 @@ export default function JurnalBulkCreate() {
             </BtnLightPrimary>
             <StyledLoadingButton
               variant="outlined"
+              disabled={isDownloading}
               endIcon={
-                downloading ? (
+                isDownloading ? (
                   <CircularProgress size="1rem" />
                 ) : (
                   <Iconify width={14} height={14} icon={'bi:download'} />
                 )
               }
+              onClick={handleDownload}
             >
               Unduh Template Jurnal
             </StyledLoadingButton>
