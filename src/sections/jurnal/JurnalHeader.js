@@ -162,12 +162,12 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
                   },
                 }}
               >
-                <MenuItem onClick={handleJurnalSatuanClick}>
-                  <Image src="/icons/ic_single_upload.png" alt="single upload" sx={{ width: 20, height: 20, mr: 1 }} />
+                <MenuItem onClick={handleJurnalSatuanClick} sx={{ fontSize: 14 }}>
+                  <Image src="/icons/ic_single_upload.png" alt="single upload" sx={{ width: 16, height: 16, mr: 2 }} />
                   Jurnal Satuan
                 </MenuItem>
-                <MenuItem onClick={handleUnggahMassalClick}>
-                  <Image src="/icons/ic_bulk_upload.png" alt="bulk upload" sx={{ width: 20, height: 20, mr: 1 }} />
+                <MenuItem onClick={handleUnggahMassalClick} sx={{ fontSize: 14 }}>
+                  <Image src="/icons/ic_bulk_upload.png" alt="bulk upload" sx={{ width: 16, height: 16, mr: 2 }} />
                   Unggah Massal
                 </MenuItem>
               </Menu>

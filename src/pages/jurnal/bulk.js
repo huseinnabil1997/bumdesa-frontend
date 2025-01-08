@@ -95,17 +95,16 @@ export default function JurnalBulkCreate() {
 
   const handleDownload = () => {
     const payload = {
-      type: 4,
+      type: 2,
     };
 
     download(payload, {
       onSuccess: (res) => {
-        console.log('res = ', res)
         enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
         onDownload({
           file: res,
           title: 'Template Jurnal',
-          type: 4,
+          type: 2,
         });
         setOpen(false);
       },
