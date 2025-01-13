@@ -1,4 +1,5 @@
 import axios from 'src/utils/axiosCoreService';
+import axiosMinio from 'axios';
 
 export function getJurnals(param) {
   return axios.get('journals', { params: param });
@@ -27,6 +28,41 @@ export function downloadJurnal(param) {
   });
 }
 
+export function downloadJurnalTemplate(param) {
+  return axiosMinio.get(
+    `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template-jurnal.xlsm`,
+    {
+      params: param,
+      responseType: 'blob',
+    }
+  );
+}
+
 export function generateEvidenceNumber(params) {
   return axios.get('number-of-evidence', { params });
+}
+
+export function uploadJurnals(payload) {
+  const formData = new FormData();
+
+  formData.append('file', payload.file);
+
+  return axios.post(`journals/bulk`, formData, {
+    onUploadProgress: (progressEvent) => {
+      if (payload.up) {
+        const percentComplete = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        payload.up(percentComplete);
+      }
+    },
+  });
+}
+
+export function submitJurnals(id) {
+  return axios.post(`journals/bulk/submit/${id}`);
+}
+
+export function downloadJurnalPreview(name) {
+  return axios.get(`download/journals/${name}`, {
+    responseType: 'blob',
+  });
 }

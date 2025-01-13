@@ -36,6 +36,10 @@ export const jurnalSchema = Yup.object().shape({
   accounts: Yup.array().of(accountsSchema),
 });
 
+export const jurnalBulkSchema = Yup.object().shape({
+  file: Yup.mixed().required('File wajib diisi'),
+});
+
 export const searchJurnalSchema = Yup.object().shape({
   search: Yup.string().test(
     'no-html',
@@ -50,4 +54,8 @@ export const jurnalDefaultValues = {
   number_of_evidence: '',
   is_first_balance: false,
   accounts: [{ name: null, debit: null, credit: null, cash_flow_code: null }],
+};
+
+export const jurnalBulkDefaultValues = {
+  file: null,
 };

@@ -9,6 +9,17 @@ export const JURNAL_HEAD = [
   { id: 'action', label: 'Action', align: 'center', width: 100 },
 ];
 
+export const JURNAL_BULK_HEAD = [
+  { id: 'col', label: '' },
+  { id: 'nomor_bukti', label: 'Nomor Bukti', align: 'left', width: 300 },
+  { id: 'tanggal', label: 'Tanggal', align: 'left', width: 150 },
+  { id: 'keterangan', label: 'Keterangan', align: 'left', width: 300 },
+  { id: 'unit', label: 'Unit Usaha', align: 'left', width: 300 },
+  { id: 'debit', label: 'Debit', align: 'left', width: 300 },
+  { id: 'kredit', label: 'Kredit', align: 'left', width: 300 },
+  { id: 'note', label: 'Catatan', align: 'center', width: 150 },
+];
+
 export const JURNAL_HEAD_PENGAWAS = [
   { id: 'col', label: '' },
   { id: 'nomor_bukti', label: 'Nomor Bukti', align: 'left', width: 300 },
@@ -87,9 +98,10 @@ export const fileType = [
   'application/pdf',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'text/csv',
+  'application/vnd.ms-excel.sheet.macroEnabled.12',
 ];
 
-export const extType = ['', '.pdf', '.xlsx', '.csv'];
+export const extType = ['', '.pdf', '.xlsx', '.csv', 'xlsm'];
 
 export const stepperTutorial = [
   {
@@ -157,15 +169,25 @@ export const stepperTutorial = [
     content: 'Simpan jurnal di sini.',
     disableBeacon: true,
   },
-]
+];
 
 export const TABLE_HEAD_DATA_BUMDESA = [
   { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
   { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left', minWidth: 150 },
   { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
   { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center', minWidth: 150 },
-  { id: 'financial_status', label: 'Status Laporan Keuangan BUM Desa', align: 'center', minWidth: 150 },
-  { id: 'financial_status_unit', label: 'Status Laporan Keuangan Unit', align: 'center', minWidth: 150 },
+  {
+    id: 'financial_status',
+    label: 'Status Laporan Keuangan BUM Desa',
+    align: 'center',
+    minWidth: 150,
+  },
+  {
+    id: 'financial_status_unit',
+    label: 'Status Laporan Keuangan Unit',
+    align: 'center',
+    minWidth: 150,
+  },
   { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
   { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
   { id: 'solvency', label: 'Solvabilitas', align: 'left', minWidth: 150 },

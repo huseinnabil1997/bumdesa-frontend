@@ -1,13 +1,13 @@
 import { useMutation } from 'react-query';
-import { downloadJurnal } from 'src/query/request/jurnal';
+import { downloadJurnalTemplate } from 'src/query/request/jurnal';
 
 export const onDownload = async (param) => {
-  const { data } = await downloadJurnal(param);
+  const { data } = await downloadJurnalTemplate(param);
 
   return data;
 };
 
-export const useDownloadJurnal = () => {
+export const useDownloadJurnalTemplate = () => {
   const downloadMutation = useMutation((param) => onDownload(param));
 
   return downloadMutation;

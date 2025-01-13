@@ -82,7 +82,7 @@ RHFUploadSingleFile.propTypes = {
   name: PropTypes.string,
 };
 
-export function RHFUploadSingleFile({ name, ...other }) {
+export function RHFUploadSingleFile({ name, onFileRejections, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -94,9 +94,10 @@ export function RHFUploadSingleFile({ name, ...other }) {
 
         return (
           <UploadSingleFile
-            accept="image/*"
+            accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             file={field.value}
             error={checkError}
+            onFileRejections={onFileRejections}
             helperText={
               checkError && (
                 <FormHelperText error sx={{ px: 2 }}>

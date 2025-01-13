@@ -6,31 +6,22 @@ import { UploadIllustration } from '../../assets';
 // ----------------------------------------------------------------------
 
 export default function BlockContent() {
+
   return (
     <Stack
       spacing={2}
       alignItems="center"
       justifyContent="center"
-      direction={{ xs: 'column', md: 'row' }}
-      sx={{ width: 1, textAlign: { xs: 'center', md: 'left' } }}
+      direction="column"
+      sx={{ width: '100%', textAlign: 'center' }}
     >
       <UploadIllustration sx={{ width: 220 }} />
 
-      <Box sx={{ p: 3 }}>
-        <Typography gutterBottom variant="h5">
-          Drop or Select file
-        </Typography>
+      <Box>
+        <Typography fontWeight={600} fontSize={22} mb={1}>Tarik Dokumen atau klik Unggah Massal</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click&nbsp;
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{ color: 'primary.main', textDecoration: 'underline' }}
-          >
-            browse
-          </Typography>
-          &nbsp;thorough your machine
+        <Typography fontSize={12} fontWeight={500} sx={{ color: 'text.secondary' }}>
+          Ukuran dokumen maksimum 5 MB dengan fotmat csv, xls dan xlsx
         </Typography>
       </Box>
     </Stack>
