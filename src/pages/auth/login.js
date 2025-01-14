@@ -89,7 +89,7 @@ export default function Login() {
         <RootStyle>
           {mdUp && (
             <SectionStyle>
-              <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" />
+              <Image visibleByDefault disabledEffect src="/image/login.png" alt="login" sx={{ width: '100%', height: '100%' }} />
               <Title>
                 <Box alignItems="center" bgcolor="white" borderRadius={2} minWidth="182px" mx="auto" p={2} mb={6} mt={5}>
                   <Image
