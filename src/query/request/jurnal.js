@@ -58,7 +58,11 @@ export function uploadJurnals(payload) {
 }
 
 export function submitJurnals(id) {
-  return axios.post(`journals/bulk/submit/${id}`);
+  const payload = {
+    id_upload: id,
+  };
+
+  return axios.post(`journals/bulk/submit`, payload);
 }
 
 export function downloadJurnalPreview(name) {
