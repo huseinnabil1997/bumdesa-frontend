@@ -153,6 +153,7 @@ export default function JurnalBulkCreate() {
         setLinkPreview(res.metadata?.file);
       },
       onError: (err) => {
+        console.log(err.message);
         enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
@@ -225,8 +226,8 @@ export default function JurnalBulkCreate() {
 
                             {!uploading && isError && (
                               <TableError
-                                title="Koneksi Error"
-                                description="Silakan cek koneksi Anda dan muat ulang halaman."
+                                title="Upload Gagal"
+                                description="Silakan cek file atau koneksi Anda dan muat ulang halaman."
                               />
                             )}
                           </TableBody>
