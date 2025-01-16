@@ -11,13 +11,13 @@ export const JURNAL_HEAD = [
 
 export const JURNAL_BULK_HEAD = [
   { id: 'col', label: '' },
-  { id: 'nomor_bukti', label: 'Nomor Bukti', align: 'left', width: 300 },
-  { id: 'tanggal', label: 'Tanggal', align: 'left', width: 150 },
-  { id: 'keterangan', label: 'Keterangan', align: 'left', width: 300 },
-  { id: 'unit', label: 'Unit Usaha', align: 'left', width: 300 },
-  { id: 'debit', label: 'Debit', align: 'left', width: 300 },
-  { id: 'kredit', label: 'Kredit', align: 'left', width: 300 },
-  { id: 'note', label: 'Catatan', align: 'center', width: 150 },
+  { id: 'nomor_bukti', label: 'No. Jurnal', align: 'left', minWidth: 125 },
+  { id: 'tanggal', label: 'Tanggal', align: 'left', minWidth: 150 },
+  { id: 'keterangan', label: 'Keterangan', align: 'left', minWidth: 150 },
+  // { id: 'unit', label: 'Unit Usaha', align: 'left', minWidth: 150 },
+  { id: 'debit', label: 'Debit', align: 'left', minWidth: 150 },
+  { id: 'kredit', label: 'Kredit', align: 'left', minWidth: 150 },
+  { id: 'note', label: 'Catatan', align: 'center', minWidth: 150 },
 ];
 
 export const JURNAL_HEAD_PENGAWAS = [

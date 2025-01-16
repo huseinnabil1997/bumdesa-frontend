@@ -21,7 +21,6 @@ export default function UserTableRowBulk({ row, index }) {
   const theme = useTheme();
 
   const {
-    number_of_evidence,
     date,
     transaction_information,
     debit,
@@ -53,7 +52,7 @@ export default function UserTableRowBulk({ row, index }) {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>{number_of_evidence}</TableCell>
+        <TableCell>Jurnal #{index + 1}</TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>
           <Tooltip title={transaction_information}>
@@ -70,7 +69,7 @@ export default function UserTableRowBulk({ row, index }) {
             </Typography>
           </Tooltip>
         </TableCell>
-        <TableCell>
+        {/* <TableCell>
           <Tooltip title={business_unit_name}>
             <Typography
               fontSize={14}
@@ -84,7 +83,7 @@ export default function UserTableRowBulk({ row, index }) {
               {business_unit_name === '' ? '-' : business_unit_name}
             </Typography>
           </Tooltip>
-        </TableCell>
+        </TableCell> */}
         <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
         <TableCell align="center">
@@ -108,10 +107,7 @@ export default function UserTableRowBulk({ row, index }) {
             <TableCell>
               <DotIcon />
             </TableCell>
-            <TableCell>{account?.account_code?.label ?? '-'}</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
+            <TableCell colSpan={3}>{account?.account_name ?? '-'}</TableCell>
             <TableCell>{account.debit ? fCurrency(account.debit) : '-'}</TableCell>
             <TableCell>{account.credit ? fCurrency(account.credit) : '-'}</TableCell>
             <TableCell />
