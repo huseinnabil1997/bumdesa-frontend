@@ -40,6 +40,7 @@ import onDownload from 'src/utils/onDownload';
 import { useUploadJurnals } from 'src/query/hooks/jurnals/useUploadJurnals';
 import { useSubmitJurnals } from 'src/query/hooks/jurnals/useSubmitJurnals';
 import { LoadingButton } from '@mui/lab';
+import { useDownloadJurnalPreview } from 'src/query/hooks/jurnals/useDownloadJurnalPreview';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +63,7 @@ export default function JurnalBulkCreate() {
   const [linkPreview, setLinkPreview] = useState('');
 
   const { mutate: download, isLoading: downloading } = useDownloadJurnalTemplate();
-  const { mutate: downloadPreview, isLoading: downloadingPreview } = useDownloadJurnalTemplate();
+  const { mutate: downloadPreview, isLoading: downloadingPreview } = useDownloadJurnalPreview();
   const { mutate: upload, isLoading: uploading, isError } = useUploadJurnals();
   const { mutate: submit, isLoading: submitting } = useSubmitJurnals();
 
@@ -261,28 +262,30 @@ export default function JurnalBulkCreate() {
                           />
                         </IconButton>
                       </Box>
-                      <LoadingButton
-                        loading={downloadingPreview}
-                        onClick={handleDownloadPreview}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          pl: 1,
-                          border: `1px solid #1877F2`,
-                          borderRadius: 1,
-                          mb: 3,
-                          ml: 1,
-                        }}
-                      >
-                        <Typography fontWeight={500} fontSize={12} sx={{ color: '#1877F2' }}>
-                          Unduh Dokumen
-                        </Typography>
-                        <Iconify
-                          icon="eva:download-fill"
-                          sx={{ fontSize: 16, color: '#1877F2', cursor: 'pointer', ml: 1 }}
-                        />
-                      </LoadingButton>
+                      {linkPreview && (
+                        <LoadingButton
+                          loading={downloadingPreview}
+                          onClick={handleDownloadPreview}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            pl: 1,
+                            border: `1px solid #1877F2`,
+                            borderRadius: 1,
+                            mb: 3,
+                            ml: 1,
+                          }}
+                        >
+                          <Typography fontWeight={500} fontSize={12} sx={{ color: '#1877F2' }}>
+                            Unduh Dokumen
+                          </Typography>
+                          <Iconify
+                            icon="eva:download-fill"
+                            sx={{ fontSize: 16, color: '#1877F2', cursor: 'pointer', ml: 1 }}
+                          />
+                        </LoadingButton>
+                      )}
                     </Box>
                   )}
                 </Card>
