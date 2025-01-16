@@ -30,7 +30,7 @@ export function downloadJurnal(param) {
 
 export function downloadJurnalTemplate(param) {
   return axiosMinio.get(
-    `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template-jurnal.xlsm`,
+    `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template_jurnal.xlsx`,
     {
       params: param,
       responseType: 'blob',
