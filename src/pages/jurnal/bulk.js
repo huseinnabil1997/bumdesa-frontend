@@ -41,6 +41,8 @@ import { useUploadJurnals } from 'src/query/hooks/jurnals/useUploadJurnals';
 import { useSubmitJurnals } from 'src/query/hooks/jurnals/useSubmitJurnals';
 import { LoadingButton } from '@mui/lab';
 import { useDownloadJurnalPreview } from 'src/query/hooks/jurnals/useDownloadJurnalPreview';
+import BulkModal from 'src/sections/jurnal/BulkModal';
+import BulkModalSuccess from 'src/sections/jurnal/BulkModalSuccess';
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +59,8 @@ export default function JurnalBulkCreate() {
   const theme = useTheme();
 
   const router = useRouter();
+
+  const [isUploadSuccess, setUploadSuccess] = useState(false);
 
   const [uploadProgress, setUploadProgress] = useState(0);
   const [data, setData] = useState([]);
@@ -82,6 +86,7 @@ export default function JurnalBulkCreate() {
     submit(uploadId, {
       onSuccess: (res) => {
         enqueueSnackbar(res?.message ?? 'Berhasil melakukan bulk upload', { variant: 'success' });
+        setUploadSuccess(true);
         handleCancelUpload();
       },
       onError: (err) => {
@@ -295,7 +300,7 @@ export default function JurnalBulkCreate() {
                     variant="contained"
                     sx={{ width: 200, height: 42 }}
                     type="submit"
-                    disabled={data?.length === 0}
+                    disabled={data?.length === 0 || linkPreview}
                     loading={submitting}
                   >
                     Simpan
@@ -321,6 +326,12 @@ export default function JurnalBulkCreate() {
           </Card>
         </FormProvider>
       </Container>
+      <BulkModal open={submitting} />
+      <BulkModalSuccess
+        open={isUploadSuccess}
+        handleClose={() => setUploadSuccess(false)}
+        action={() => router.push('/jurnal')}
+      />
     </Page>
   );
 }

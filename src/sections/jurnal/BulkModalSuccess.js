@@ -1,7 +1,8 @@
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { CircularProgress } from '@mui/material';
+import { Stack } from '@mui/material';
+import Image from 'src/components/Image';
+import { StyledButton } from 'src/theme/custom/Button';
 
 const style = {
   position: 'absolute',
@@ -21,7 +22,7 @@ const style = {
   textAlign: 'center',
 };
 
-export default function BulkModal({ open, handleClose }) {
+export default function BulkModalSuccess({ open, handleClose, action }) {
   return (
     <Modal
       open={open}
@@ -29,12 +30,15 @@ export default function BulkModal({ open, handleClose }) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <CircularProgress size={100} />
+      <Stack sx={style} spacing={3}>
+        <Image src="/image/upload_success.svg" alt="ornament" />
         <Typography fontSize={24} fontWeight={700} sx={{ mt: 5 }}>
-          Sedang Menambahkan Jurnal
+          Jurnal Berhasil Ditambahkan
         </Typography>
-      </Box>
+        <StyledButton variant="contained" fullWidth onClick={action}>
+          Lihat Jurnal
+        </StyledButton>
+      </Stack>
     </Modal>
   );
 }
