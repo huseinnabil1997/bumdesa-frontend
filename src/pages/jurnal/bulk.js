@@ -81,7 +81,7 @@ export default function JurnalBulkCreate() {
     const uploadId = data[0]?.id_upload;
     submit(uploadId, {
       onSuccess: (res) => {
-        enqueueSnackbar(res?.message ?? 'Berhasil melakukan bulk upload', { variant: 'warning' });
+        enqueueSnackbar(res?.message ?? 'Berhasil melakukan bulk upload', { variant: 'success' });
         handleCancelUpload();
       },
       onError: (err) => {
@@ -105,7 +105,7 @@ export default function JurnalBulkCreate() {
 
     download(payload, {
       onSuccess: (res) => {
-        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'success' });
         onDownload({
           file: res,
           title: 'Template Jurnal',
@@ -121,7 +121,7 @@ export default function JurnalBulkCreate() {
   const handleDownloadPreview = () => {
     downloadPreview(linkPreview, {
       onSuccess: (res) => {
-        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'success' });
         onDownload({
           file: res,
           title: 'Template Jurnal',
