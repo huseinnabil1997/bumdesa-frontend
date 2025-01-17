@@ -1,7 +1,7 @@
 // @mui
 import { Box, Typography, Stack } from '@mui/material';
 // assets
-import { UploadIllustration } from '../../assets';
+import Image from '../Image';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ export default function BlockContent() {
       direction="column"
       sx={{ width: '100%', textAlign: 'center' }}
     >
-      <UploadIllustration sx={{ width: 220 }} />
+      <Image src="/image/bulk_upload.svg" alt="ornament" />
 
       <Box>
         <Typography fontWeight={600} fontSize={22} mb={1}>
