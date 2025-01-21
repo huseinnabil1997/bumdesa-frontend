@@ -30,7 +30,7 @@ export function downloadJurnal(param) {
 
 export function downloadJurnalTemplate(param) {
   return axiosMinio.get(
-    `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template-jurnal.xlsm`,
+    `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template_jurnal.xlsx`,
     {
       params: param,
       responseType: 'blob',
@@ -58,7 +58,11 @@ export function uploadJurnals(payload) {
 }
 
 export function submitJurnals(id) {
-  return axios.post(`journals/bulk/submit/${id}`);
+  const payload = {
+    id_upload: id,
+  };
+
+  return axios.post(`journals/bulk/submit`, payload);
 }
 
 export function downloadJurnalPreview(name) {

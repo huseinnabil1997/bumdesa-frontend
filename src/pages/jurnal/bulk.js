@@ -40,6 +40,9 @@ import onDownload from 'src/utils/onDownload';
 import { useUploadJurnals } from 'src/query/hooks/jurnals/useUploadJurnals';
 import { useSubmitJurnals } from 'src/query/hooks/jurnals/useSubmitJurnals';
 import { LoadingButton } from '@mui/lab';
+import { useDownloadJurnalPreview } from 'src/query/hooks/jurnals/useDownloadJurnalPreview';
+import BulkModal from 'src/sections/jurnal/BulkModal';
+import BulkModalSuccess from 'src/sections/jurnal/BulkModalSuccess';
 
 // ----------------------------------------------------------------------
 
@@ -57,12 +60,14 @@ export default function JurnalBulkCreate() {
 
   const router = useRouter();
 
+  const [isUploadSuccess, setUploadSuccess] = useState(false);
+
   const [uploadProgress, setUploadProgress] = useState(0);
   const [data, setData] = useState([]);
   const [linkPreview, setLinkPreview] = useState('');
 
   const { mutate: download, isLoading: downloading } = useDownloadJurnalTemplate();
-  const { mutate: downloadPreview, isLoading: downloadingPreview } = useDownloadJurnalTemplate();
+  const { mutate: downloadPreview, isLoading: downloadingPreview } = useDownloadJurnalPreview();
   const { mutate: upload, isLoading: uploading, isError } = useUploadJurnals();
   const { mutate: submit, isLoading: submitting } = useSubmitJurnals();
 
@@ -80,7 +85,8 @@ export default function JurnalBulkCreate() {
     const uploadId = data[0]?.id_upload;
     submit(uploadId, {
       onSuccess: (res) => {
-        enqueueSnackbar(res?.message ?? 'Berhasil melakukan bulk upload', { variant: 'warning' });
+        enqueueSnackbar(res?.message ?? 'Berhasil melakukan bulk upload', { variant: 'success' });
+        setUploadSuccess(true);
         handleCancelUpload();
       },
       onError: (err) => {
@@ -104,7 +110,7 @@ export default function JurnalBulkCreate() {
 
     download(payload, {
       onSuccess: (res) => {
-        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'success' });
         onDownload({
           file: res,
           title: 'Template Jurnal',
@@ -120,7 +126,7 @@ export default function JurnalBulkCreate() {
   const handleDownloadPreview = () => {
     downloadPreview(linkPreview, {
       onSuccess: (res) => {
-        enqueueSnackbar('Sedang mengunduh...', { variant: 'warning' });
+        enqueueSnackbar('Sedang mengunduh...', { variant: 'success' });
         onDownload({
           file: res,
           title: 'Template Jurnal',
@@ -147,6 +153,7 @@ export default function JurnalBulkCreate() {
         setLinkPreview(res.metadata?.file);
       },
       onError: (err) => {
+        console.log(err.message);
         enqueueSnackbar(err.message, { variant: 'error' });
       },
     });
@@ -219,8 +226,8 @@ export default function JurnalBulkCreate() {
 
                             {!uploading && isError && (
                               <TableError
-                                title="Koneksi Error"
-                                description="Silakan cek koneksi Anda dan muat ulang halaman."
+                                title="Upload Gagal"
+                                description="Silakan cek file atau koneksi Anda dan muat ulang halaman."
                               />
                             )}
                           </TableBody>
@@ -261,28 +268,30 @@ export default function JurnalBulkCreate() {
                           />
                         </IconButton>
                       </Box>
-                      <LoadingButton
-                        loading={downloadingPreview}
-                        onClick={handleDownloadPreview}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          pl: 1,
-                          border: `1px solid #1877F2`,
-                          borderRadius: 1,
-                          mb: 3,
-                          ml: 1,
-                        }}
-                      >
-                        <Typography fontWeight={500} fontSize={12} sx={{ color: '#1877F2' }}>
-                          Unduh Dokumen
-                        </Typography>
-                        <Iconify
-                          icon="eva:download-fill"
-                          sx={{ fontSize: 16, color: '#1877F2', cursor: 'pointer', ml: 1 }}
-                        />
-                      </LoadingButton>
+                      {linkPreview && (
+                        <LoadingButton
+                          loading={downloadingPreview}
+                          onClick={handleDownloadPreview}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            pl: 1,
+                            border: `1px solid #1877F2`,
+                            borderRadius: 1,
+                            mb: 3,
+                            ml: 1,
+                          }}
+                        >
+                          <Typography fontWeight={500} fontSize={12} sx={{ color: '#1877F2' }}>
+                            Unduh Dokumen
+                          </Typography>
+                          <Iconify
+                            icon="eva:download-fill"
+                            sx={{ fontSize: 16, color: '#1877F2', cursor: 'pointer', ml: 1 }}
+                          />
+                        </LoadingButton>
+                      )}
                     </Box>
                   )}
                 </Card>
@@ -292,7 +301,7 @@ export default function JurnalBulkCreate() {
                     variant="contained"
                     sx={{ width: 200, height: 42 }}
                     type="submit"
-                    disabled={data?.length === 0}
+                    disabled={data?.length === 0 || linkPreview}
                     loading={submitting}
                   >
                     Simpan
@@ -318,6 +327,12 @@ export default function JurnalBulkCreate() {
           </Card>
         </FormProvider>
       </Container>
+      <BulkModal open={submitting} />
+      <BulkModalSuccess
+        open={isUploadSuccess}
+        handleClose={() => setUploadSuccess(false)}
+        action={() => router.push('/jurnal')}
+      />
     </Page>
   );
 }

@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles'; // Import useMediaQuery
-import { TableRow, TableCell, IconButton, Tooltip, Typography } from '@mui/material';
+import { TableRow, TableCell, IconButton, Tooltip, Typography, Chip } from '@mui/material';
 // components
 import moment from 'moment';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
@@ -26,7 +26,6 @@ export default function UserTableRowBulk({ row, index }) {
     transaction_information,
     debit,
     credit,
-    business_unit_name,
     transactions,
     notes_upload,
   } = row;
@@ -53,7 +52,7 @@ export default function UserTableRowBulk({ row, index }) {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>{number_of_evidence}</TableCell>
+        <TableCell>Jurnal #{number_of_evidence}</TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>
           <Tooltip title={transaction_information}>
@@ -70,30 +69,19 @@ export default function UserTableRowBulk({ row, index }) {
             </Typography>
           </Tooltip>
         </TableCell>
-        <TableCell>
-          <Tooltip title={business_unit_name}>
-            <Typography
-              fontSize={14}
-              sx={{
-                maxWidth: 100,
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-              }}
-            >
-              {business_unit_name === '' ? '-' : business_unit_name}
-            </Typography>
-          </Tooltip>
-        </TableCell>
         <TableCell>{debit ? fCurrency(debit) : '-'}</TableCell>
         <TableCell>{credit ? fCurrency(credit) : '-'}</TableCell>
         <TableCell align="center">
           {notes_upload ? (
-            <Typography color="error" fontSize={12}>
-              {notes_upload}
-            </Typography>
+            <Chip
+              sx={{ mt: 0.5 }}
+              variant="outlined"
+              label={notes_upload}
+              size="small"
+              color="error"
+            />
           ) : (
-            <Iconify icon={'eva:checkmark-fill'} color="#1877F2" width={24} height={24} />
+            <Iconify icon={'eva:checkmark-circle-2-fill'} color="#1877F2" width={24} height={24} />
           )}
         </TableCell>
       </TableRow>
@@ -108,13 +96,32 @@ export default function UserTableRowBulk({ row, index }) {
             <TableCell>
               <DotIcon />
             </TableCell>
-            <TableCell>{account?.account_code?.label ?? '-'}</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
+            <TableCell colSpan={3}>{account?.account_name ?? '-'}</TableCell>
             <TableCell>{account.debit ? fCurrency(account.debit) : '-'}</TableCell>
             <TableCell>{account.credit ? fCurrency(account.credit) : '-'}</TableCell>
-            <TableCell />
+            <TableCell align="center">
+              {account.notes?.length > 0 ? (
+                <Fragment>
+                  {account.notes.map((note, idx) => (
+                    <Chip
+                      variant="outlined"
+                      sx={{ mt: 0.5 }}
+                      label={note}
+                      key={idx}
+                      size="small"
+                      color="error"
+                    />
+                  ))}
+                </Fragment>
+              ) : (
+                <Iconify
+                  icon={'eva:checkmark-circle-2-fill'}
+                  color="#1877F2"
+                  width={24}
+                  height={24}
+                />
+              )}
+            </TableCell>
           </TableRow>
         ))}
     </>
