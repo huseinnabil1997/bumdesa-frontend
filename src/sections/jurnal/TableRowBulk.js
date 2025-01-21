@@ -21,7 +21,7 @@ export default function UserTableRowBulk({ row, index }) {
   const theme = useTheme();
 
   const {
-    number_of_evidence,
+    number_of_journal,
     date,
     transaction_information,
     debit,
@@ -52,7 +52,7 @@ export default function UserTableRowBulk({ row, index }) {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>Jurnal #{number_of_evidence}</TableCell>
+        <TableCell>Jurnal #{number_of_journal}</TableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>
           <Tooltip title={transaction_information}>
