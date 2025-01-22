@@ -80,8 +80,8 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const accessToken = window.localStorage.getItem('token') ?? sessionStorage.getItem('token');
-
+        const accessToken = localStorage?.getItem('token') ?? sessionStorage?.getItem('token');
+        
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
@@ -104,7 +104,7 @@ function AuthProvider({ children }) {
             },
           });
           // Redirect to login page
-          window.location.href = '/login';
+          // window.location.href = '/auth/login';
         }
       } catch (err) {
         console.error(err);
@@ -116,7 +116,7 @@ function AuthProvider({ children }) {
           },
         });
         // Redirect to login page on error
-        window.location.href = '/login';
+        window.location.href = '/auth/login';
       }
     };
 
