@@ -95,6 +95,7 @@ function AuthProvider({ children }) {
             },
           });
         } else {
+          // Redirect to login if token is invalid or expired
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -102,6 +103,8 @@ function AuthProvider({ children }) {
               user: null,
             },
           });
+          // Redirect to login page
+          window.location.href = '/login';
         }
       } catch (err) {
         console.error(err);
@@ -112,6 +115,8 @@ function AuthProvider({ children }) {
             user: null,
           },
         });
+        // Redirect to login page on error
+        window.location.href = '/login';
       }
     };
 
