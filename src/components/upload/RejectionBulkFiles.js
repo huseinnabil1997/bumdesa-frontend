@@ -44,9 +44,11 @@ export default function RejectionBulkFiles({ errorPosition, fileRejections }) {
 
               {errors.map((error) => (
                 <Typography key={error.code} variant="caption" component="p">
-                  - {error.code === 'file-too-large' && 'Ukuran file terlalu besar.'}
-                  {error.code === 'file-invalid-type' && 'Format dokumen tidak sesuai (csv, xls, dan xlsx)'}
-                  {error.code === 'file-format-invalid' && 'Format dokumen tidak sesuai (csv, xls, dan xlsx).'}
+                  {error.code === 'file-too-large' && 'Ukuran dokumen maksimum 5 MB'}
+                  {error.code === 'file-invalid-type' &&
+                    'Format dokumen tidak sesuai (xls atau xlsx)'}
+                  {error.code === 'file-format-invalid' &&
+                    'Format dokumen tidak sesuai (xls atau xlsx)'}
                 </Typography>
               ))}
             </Box>
@@ -56,4 +58,3 @@ export default function RejectionBulkFiles({ errorPosition, fileRejections }) {
     </Paper>
   );
 }
-

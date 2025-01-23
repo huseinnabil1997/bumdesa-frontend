@@ -5,7 +5,7 @@ import Image from '../Image';
 
 // ----------------------------------------------------------------------
 
-export default function BlockContent() {
+export default function BlockContent({ isLoading }) {
   return (
     <Stack
       spacing={2}
@@ -14,7 +14,11 @@ export default function BlockContent() {
       direction="column"
       sx={{ width: '100%', textAlign: 'center' }}
     >
-      <Image src="/image/bulk_upload.svg" alt="ornament" />
+      {isLoading ? (
+        <Image src="/image/bulk_upload_loading.svg" alt="ornament" />
+      ) : (
+        <Image src="/image/bulk_upload.svg" alt="ornament" />
+      )}
 
       <Box>
         <Typography fontWeight={600} fontSize={22} mb={1}>
