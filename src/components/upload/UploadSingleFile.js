@@ -106,7 +106,7 @@ export default function UploadSingleFile({
         >
           <input {...getInputProps()} ref={inputRef} />
 
-          <BlockContent />
+          <BlockContent isLoading={isUploading} />
 
           {file && (
             <Image
