@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from 'react';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import Iconify from '../Iconify';
 import RejectionBulkFiles from './RejectionBulkFiles';
+import UploadFilesFailed from './UploadFilesFailed';
 
 // ----------------------------------------------------------------------
 
@@ -182,6 +183,7 @@ export default function UploadSingleFile({
       <Divider sx={{ my: 2 }} />
       <Stack direction="row" justifyContent="space-between" alignItems="center" m={3}>
         <Box>
+          {other?.isError && <UploadFilesFailed fileRejections={fileRejections} />}
           {fileRejections.length > 0 && <RejectionBulkFiles fileRejections={fileRejections} />}
         </Box>
         <StyledLoadingButton variant="contained" sx={{ width: 200, height: 42 }} disabled>

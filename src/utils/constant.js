@@ -99,6 +99,7 @@ export const fileType = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'text/csv',
   'application/vnd.ms-excel.sheet.macroEnabled.12',
+  'video/*', //all video
 ];
 
 export const extType = ['', '.pdf', '.xlsx', '.csv', 'xlsm'];
