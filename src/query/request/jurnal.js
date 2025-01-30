@@ -29,13 +29,23 @@ export function downloadJurnal(param) {
 }
 
 export function downloadJurnalTemplate(param) {
-  return axiosMinio.get(
-    `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/journal-template/template_jurnal.xlsx`,
-    {
-      params: param,
-      responseType: 'blob',
-    }
-  );
+  let url = '';
+  if (param.type === 2) {
+    url = `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}journal-template/template_jurnal.xlsx`;
+  } else if (param.type === 5) {
+    url = `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}tutorial/tutorial.mp4`;
+  } else if (param.type === 1) {
+    url = `${process.env.NEXT_PUBLIC_BUMDESA_ASSET}tutorial/tutorial.pdf`;
+  }
+
+  return axiosMinio.get(url, {
+    params: param,
+    responseType: 'blob',
+  });
+}
+
+export function getSystemFlag() {
+  return axios.get('sysflag/T01');
 }
 
 export function generateEvidenceNumber(params) {

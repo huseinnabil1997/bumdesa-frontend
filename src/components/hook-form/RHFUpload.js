@@ -94,7 +94,7 @@ export function RHFUploadSingleFile({ name, onFileRejections, ...other }) {
 
         return (
           <UploadSingleFile
-            accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             file={field.value}
             error={checkError}
             onFileRejections={onFileRejections}
