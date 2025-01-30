@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles'; // Import useMediaQuery
-import { TableRow, TableCell, IconButton, Tooltip, Typography, Chip, styled } from '@mui/material';
+import { TableRow, TableCell, IconButton, Tooltip, Typography, Chip, styled, Stack } from '@mui/material';
 // components
 import moment from 'moment';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
@@ -112,10 +112,11 @@ export default function UserTableRowBulk({ row, index }) {
               backgroundColor: generateColor(index, idx),
             }}
           >
-            <TableCell>
-              <DotIcon />
+            <TableCell colSpan={3}>
+              <Stack direction="row" alignItems="center">
+                <DotIcon /> {account?.account_name ?? '-'}
+              </Stack>
             </TableCell>
-            <TableCell colSpan={3}>{account?.account_name ?? '-'}</TableCell>
             <TableCell>{account.debit ? fCurrency(account.debit) : '-'}</TableCell>
             <TableCell>{account.credit ? fCurrency(account.credit) : '-'}</TableCell>
             <TableCell align="center">

@@ -44,6 +44,10 @@ export function downloadJurnalTemplate(param) {
   });
 }
 
+export function getSystemFlag() {
+  return axios.get('sysflag/T01');
+}
+
 export function generateEvidenceNumber(params) {
   return axios.get('number-of-evidence', { params });
 }

@@ -45,6 +45,7 @@ import { useDownloadJurnalPreview } from 'src/query/hooks/jurnals/useDownloadJur
 import BulkModal from 'src/sections/jurnal/BulkModal';
 import BulkModalSuccess from 'src/sections/jurnal/BulkModalSuccess';
 import onPreview from 'src/utils/onPreview';
+import { useSystemFlag } from 'src/query/hooks/jurnals/useSystemFlag';
 
 // ----------------------------------------------------------------------
 
@@ -62,8 +63,6 @@ export default function JurnalBulkCreate() {
 
   const router = useRouter();
 
-  const fileFlagging = 'pdf';
-
   const [isUploadSuccess, setUploadSuccess] = useState(false);
 
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -75,6 +74,7 @@ export default function JurnalBulkCreate() {
   const { mutate: downloadPreview, isLoading: downloadingPreview } = useDownloadJurnalPreview();
   const { mutate: upload, isLoading: uploading, isError } = useUploadJurnals();
   const { mutate: submit, isLoading: submitting } = useSubmitJurnals();
+  const { data: systemFlag } = useSystemFlag();
 
   const [fileRejections, setFileRejections] = useState([]);
 
@@ -179,7 +179,7 @@ export default function JurnalBulkCreate() {
             <Stack direction="row" spacing={2}>
               <StyledLoadingButton
                 variant="outlined"
-                disabled={downloading}
+                disabled={downloading || !systemFlag?.data?.Setting}
                 endIcon={
                   downloading ? (
                     <CircularProgress size="1rem" />
@@ -187,7 +187,7 @@ export default function JurnalBulkCreate() {
                     <Iconify icon={'lets-icons:lamp'} />
                   )
                 }
-                onClick={() => fileFlagging === 'pdf' ? handleDownload(1) : setIsTutorialModalOpen(true)}
+                onClick={() => systemFlag?.data?.Setting === 'pdf' ? handleDownload(1) : setIsTutorialModalOpen(true)}
               >
                 Panduan Unggah Jurnal
               </StyledLoadingButton>
