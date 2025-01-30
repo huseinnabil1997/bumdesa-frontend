@@ -10,8 +10,8 @@ export const JURNAL_HEAD = [
 ];
 
 export const JURNAL_BULK_HEAD = [
-  { id: 'col', label: '' },
-  { id: 'nomor_bukti', label: 'No. Jurnal', align: 'left', minWidth: 125 },
+  // { id: 'col_sticky', label: '' },
+  { id: 'nomor_bukti_sticky', label: 'No. Jurnal', align: 'left', minWidth: 125 },
   { id: 'tanggal', label: 'Tanggal', align: 'left', minWidth: 150 },
   { id: 'keterangan', label: 'Keterangan', align: 'left', minWidth: 150 },
   // { id: 'unit', label: 'Unit Usaha', align: 'left', minWidth: 150 },

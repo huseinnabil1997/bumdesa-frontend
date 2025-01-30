@@ -66,12 +66,12 @@ export default function UserTableRowBulk({ row, index }) {
           backgroundColor: index % 2 !== 0 ? theme.palette.grey[100] : 'white',
         }}
       >
-        <FixedTableCell>
+        <FixedTableCell sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: 150 }}>
           <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
+          Jurnal #{number_of_journal}
         </FixedTableCell>
-        <FixedTableCell>Jurnal #{number_of_journal}</FixedTableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>
           <Tooltip title={transaction_information}>
