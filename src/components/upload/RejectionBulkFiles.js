@@ -46,9 +46,9 @@ export default function RejectionBulkFiles({ errorPosition, fileRejections }) {
                 <Typography key={error.code} variant="caption" component="p">
                   {error.code === 'file-too-large' && 'Ukuran dokumen maksimum 5 MB'}
                   {error.code === 'file-invalid-type' &&
-                    'Format dokumen tidak sesuai (xls atau xlsx)'}
+                    'Format dokumen tidak sesuai (xlsx)'}
                   {error.code === 'file-format-invalid' &&
-                    'Format dokumen tidak sesuai (xls atau xlsx)'}
+                    'Format dokumen tidak sesuai (xlsx)'}
                 </Typography>
               ))}
             </Box>

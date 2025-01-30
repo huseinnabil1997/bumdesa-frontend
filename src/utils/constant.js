@@ -10,8 +10,8 @@ export const JURNAL_HEAD = [
 ];
 
 export const JURNAL_BULK_HEAD = [
-  { id: 'col', label: '' },
-  { id: 'nomor_bukti', label: 'No. Jurnal', align: 'left', minWidth: 125 },
+  // { id: 'col_sticky', label: '' },
+  { id: 'nomor_bukti_sticky', label: 'No. Jurnal', align: 'left', minWidth: 125 },
   { id: 'tanggal', label: 'Tanggal', align: 'left', minWidth: 150 },
   { id: 'keterangan', label: 'Keterangan', align: 'left', minWidth: 150 },
   // { id: 'unit', label: 'Unit Usaha', align: 'left', minWidth: 150 },
@@ -99,6 +99,7 @@ export const fileType = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'text/csv',
   'application/vnd.ms-excel.sheet.macroEnabled.12',
+  'video/*', //all video
 ];
 
 export const extType = ['', '.pdf', '.xlsx', '.csv', 'xlsm'];

@@ -12,6 +12,7 @@ import {
   IconButton,
   Typography,
   Stack,
+  Modal,
 } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -43,6 +44,8 @@ import { LoadingButton } from '@mui/lab';
 import { useDownloadJurnalPreview } from 'src/query/hooks/jurnals/useDownloadJurnalPreview';
 import BulkModal from 'src/sections/jurnal/BulkModal';
 import BulkModalSuccess from 'src/sections/jurnal/BulkModalSuccess';
+import onPreview from 'src/utils/onPreview';
+import { useSystemFlag } from 'src/query/hooks/jurnals/useSystemFlag';
 
 // ----------------------------------------------------------------------
 
@@ -65,11 +68,13 @@ export default function JurnalBulkCreate() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [data, setData] = useState([]);
   const [linkPreview, setLinkPreview] = useState('');
+  const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
 
   const { mutate: download, isLoading: downloading } = useDownloadJurnalTemplate();
   const { mutate: downloadPreview, isLoading: downloadingPreview } = useDownloadJurnalPreview();
   const { mutate: upload, isLoading: uploading, isError } = useUploadJurnals();
   const { mutate: submit, isLoading: submitting } = useSubmitJurnals();
+  const { data: systemFlag } = useSystemFlag();
 
   const [fileRejections, setFileRejections] = useState([]);
 
@@ -103,19 +108,17 @@ export default function JurnalBulkCreate() {
     setValue('file', null);
   };
 
-  const handleDownload = () => {
+  const handleDownload = (type) => {
     const payload = {
-      type: 2,
+      type: type,
     };
 
     download(payload, {
       onSuccess: (res) => {
         enqueueSnackbar('Sedang mengunduh...', { variant: 'success' });
-        onDownload({
-          file: res,
-          title: 'Template Jurnal',
-          type: 2,
-        });
+        type === 2 
+        ? onDownload({ file: res, title: 'Template Jurnal', type: type })
+        : onPreview({ file: res, type: type })
       },
       onError: () => {
         enqueueSnackbar('Gagal mengunduh!', { variant: 'error' });
@@ -164,38 +167,56 @@ export default function JurnalBulkCreate() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <BtnLightPrimary
-              variant="contained"
-              startIcon={<ArrowBackOutlined />}
-              onClick={handleBack}
-            >
-              Kembali
-            </BtnLightPrimary>
-            <StyledLoadingButton
-              variant="outlined"
-              disabled={downloading}
-              endIcon={
-                downloading ? (
-                  <CircularProgress size="1rem" />
-                ) : (
-                  <Iconify width={14} height={14} icon={'bi:download'} />
-                )
-              }
-              onClick={handleDownload}
-            >
-              Unduh Template Jurnal
-            </StyledLoadingButton>
+            <>
+              <BtnLightPrimary
+                variant="contained"
+                startIcon={<ArrowBackOutlined />}
+                onClick={handleBack}
+              >
+                Kembali
+              </BtnLightPrimary>
+            </>
+            <Stack direction="row" spacing={2}>
+              <StyledLoadingButton
+                variant="outlined"
+                disabled={downloading || !systemFlag?.data?.Setting}
+                endIcon={
+                  downloading ? (
+                    <CircularProgress size="1rem" />
+                  ) : (
+                    <Iconify icon={'lets-icons:lamp'} />
+                  )
+                }
+                onClick={() => systemFlag?.data?.Setting === 'pdf' ? handleDownload(1) : setIsTutorialModalOpen(true)}
+              >
+                Panduan Unggah Jurnal
+              </StyledLoadingButton>
+              <StyledLoadingButton
+                variant="outlined"
+                disabled={downloading}
+                endIcon={
+                  downloading ? (
+                    <CircularProgress size="1rem" />
+                  ) : (
+                    <Iconify width={14} height={14} icon={'bi:download'} />
+                  )
+                }
+                onClick={() => handleDownload(2)}
+              >
+                Unduh Template Jurnal
+              </StyledLoadingButton>
+            </Stack>
           </Box>
           <Card
             sx={{
               mt: 3,
               border:
-                fileRejections.length > 0
+                fileRejections.length > 0 || isError
                   ? `1px solid ${theme.palette.error.main}`
                   : `1px solid ${theme.palette.grey[300]}`,
             }}
           >
-            {uploadProgress === 100 ? (
+            {uploadProgress === 100 && data?.length > 0 ? (
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 3 }}>
                 <Typography fontWeight={600} fontSize={22}>
                   Pratinjau Dokumen Jurnal
@@ -321,6 +342,7 @@ export default function JurnalBulkCreate() {
                       onDrop(val);
                     })
                   }
+                  isError={isError}
                 />
               </Box>
             )}
@@ -333,6 +355,18 @@ export default function JurnalBulkCreate() {
         handleClose={() => setUploadSuccess(false)}
         action={() => router.push('/jurnal')}
       />
+      <Modal
+        open={isTutorialModalOpen}
+        onClose={() => setIsTutorialModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 20 }}
+      >
+          <video width="100%" controls>
+            <source src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/tutorial/tutorial.mp4`} type="video/mp4" />
+            Browser Anda tidak mendukung video.
+          </video>
+      </Modal>
     </Page>
   );
 }
