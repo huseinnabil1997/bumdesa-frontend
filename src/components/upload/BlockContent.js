@@ -26,7 +26,7 @@ export default function BlockContent({ isLoading }) {
         </Typography>
 
         <Typography fontSize={12} fontWeight={500} sx={{ color: 'text.secondary' }}>
-          Ukuran dokumen maksimum 5 MB dengan fotmat xls dan xlsx
+          Ukuran dokumen maksimum 5 MB dengan fotmat xlsx
         </Typography>
       </Box>
     </Stack>
