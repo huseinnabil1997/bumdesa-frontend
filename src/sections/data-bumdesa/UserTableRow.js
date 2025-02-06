@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableRow, TableCell, styled } from '@mui/material';
+import { TableRow, TableCell, styled, Box, Typography } from '@mui/material';
 // components
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import Label from 'src/components/Label';
 import { fCurrencyNoSpace } from 'src/utils/formatNumber';
+import { AccessTime, Today } from '@mui/icons-material';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +61,7 @@ export default function UserTableRow({ row, onViewRow }) {
     bumdesa_name = '-',
     count_unit = '-',
     year_registered = '-',
+    last_login, // 2025-02-03T14:28:55.194535Z
     status_active,
     status_report,
     status_report_unit,
@@ -85,6 +88,20 @@ export default function UserTableRow({ row, onViewRow }) {
   return (
     <StyledTableRow hover>
       <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{bumdesa_name}</FixedTableCell>
+      <TableCell>
+        <Box display="flex">
+          <Today color="primary" fontSize="small" sx={{ mr: 1 }} />
+          <Typography fontSize={12} fontWeight={400}>
+            {last_login ? moment(last_login).utc().format('DD/MM/yyyy') : '-'}
+          </Typography>
+        </Box>
+        <Box display="flex" sx={{ mt: 0.5 }}>
+          <AccessTime color="primary" fontSize="small" sx={{ mr: 1 }} />
+          <Typography fontSize={12} fontWeight={400}>
+            {last_login ? moment(last_login).utc().format('HH:mm') : '-'}
+          </Typography>
+        </Box>
+      </TableCell>
       {renderTableCell(count_unit)}
       {renderTableCell(year_registered)}
       <TableCell align="center">{renderLabel(status_active)}</TableCell>
