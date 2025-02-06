@@ -9,6 +9,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { fCurrency } from 'src/utils/formatNumber';
 import { DotIcon } from 'src/components/nav-section/vertical/NavItem';
 import Iconify from 'src/components/Iconify';
+import DOMPurify from 'dompurify';
 
 // ----------------------------------------------------------------------
 
@@ -66,11 +67,11 @@ export default function UserTableRowBulk({ row, index }) {
           backgroundColor: index % 2 !== 0 ? theme.palette.grey[100] : 'white',
         }}
       >
-        <FixedTableCell sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: 150 }}>
+        <FixedTableCell sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', minWidth: 150 }}>
           <IconButton sx={{ mr: 1 }} size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
-          Jurnal #{number_of_journal}
+          Jurnal #{DOMPurify.sanitize(number_of_journal)}
         </FixedTableCell>
         <TableCell>{moment(date).format('DD/MM/yyyy')}</TableCell>
         <TableCell>
