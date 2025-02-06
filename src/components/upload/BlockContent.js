@@ -22,7 +22,7 @@ export default function BlockContent() {
         </Typography>
 
         <Typography fontSize={12} fontWeight={500} sx={{ color: 'text.secondary' }}>
-          Ukuran dokumen maksimum 5 MB dengan fotmat xlsx
+          Ukuran dokumen maksimum 5 MB dengan format xlsx
         </Typography>
       </Box>
     </Stack>
