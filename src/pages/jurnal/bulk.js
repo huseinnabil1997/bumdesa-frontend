@@ -362,10 +362,18 @@ export default function JurnalBulkCreate() {
         aria-describedby="modal-modal-description"
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 20 }}
       >
+        <Box sx={{ position: 'relative', width: '100%' }}>
+          <IconButton
+            onClick={() => setIsTutorialModalOpen(false)}
+            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1000 }}
+          >
+            <Iconify icon="eva:close-fill" />
+          </IconButton>
           <video width="100%" controls>
             <source src={`${process.env.NEXT_PUBLIC_BUMDESA_ASSET}/tutorial/tutorial.mp4`} type="video/mp4" />
             Browser Anda tidak mendukung video.
           </video>
+        </Box>
       </Modal>
     </Page>
   );
