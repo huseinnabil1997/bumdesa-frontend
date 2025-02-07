@@ -91,7 +91,7 @@ export default function UserTableRow({ row, onViewRow }) {
           </Typography>
         </Box>
       </TableCell>
-      <TableCell align="left" sx={cellStyle}>{year_registered}</TableCell>
+      <TableCell align="left" sx={cellStyle}>{year_registered ? moment(year_registered).utc().format('DD/MM/yyyy') : '-'}</TableCell>
       <TableCell align="center">
         <Label color={status_report === '1' ? 'success' : 'error'}>
           {status_report === '1' ? 'Aktif' : 'Belum Aktif'}

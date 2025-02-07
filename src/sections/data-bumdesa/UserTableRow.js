@@ -85,6 +85,12 @@ export default function UserTableRow({ row, onViewRow }) {
     </TableCell>
   );
 
+  const renderTableDateCell = (value, align = 'left', sx = { color: '#777777', height: 56 }) => (
+    <TableCell align={align} sx={sx}>
+      {value ? moment(value).utc().format('DD/MM/yyyy') : '-'}
+    </TableCell>
+  );
+
   return (
     <StyledTableRow hover>
       <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{bumdesa_name}</FixedTableCell>
@@ -103,7 +109,7 @@ export default function UserTableRow({ row, onViewRow }) {
         </Box>
       </TableCell>
       {renderTableCell(count_unit)}
-      {renderTableCell(year_registered)}
+      {renderTableDateCell(year_registered)}
       <TableCell align="center">{renderLabel(status_active)}</TableCell>
       <TableCell align="center">{renderLabel(status_report)}</TableCell>
       <TableCell align="center">{renderLabel(status_report_unit)}</TableCell>
