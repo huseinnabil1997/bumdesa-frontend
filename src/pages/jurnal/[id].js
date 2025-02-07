@@ -155,6 +155,9 @@ export default function JurnalCreate() {
 
   const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
   const hasEmptyAccount = !watch('accounts').every((row) => !!row.account_code);
+  const hasEmptyValue = watch('accounts').some(
+    (row) => (row.debit == 0 || !row.debit) && (row.credit == 0 || !row.credit)
+  );
 
   return (
     <Page>
@@ -398,7 +401,11 @@ export default function JurnalCreate() {
                 loading={updating}
                 variant="contained"
                 sx={{ width: 200, height: 42 }}
-                disabled={watch('credit') !== watch('debit') || !watch('transaction_information')}
+                disabled={
+                  watch('credit') !== watch('debit') ||
+                  !watch('transaction_information') ||
+                  hasEmptyValue
+                }
                 type="submit"
               >
                 Simpan

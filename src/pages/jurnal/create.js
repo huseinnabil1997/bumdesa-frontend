@@ -192,6 +192,9 @@ export default function JurnalCreate() {
 
   const isHasKas = !!watch('accounts').find((row) => row?.account_code?.value.includes('1.1.01'));
   const hasEmptyAccount = !watch('accounts').every((row) => !!row.account_code);
+  const hasEmptyValue = watch('accounts').some(
+    (row) => (row.debit == 0 || !row.debit) && (row.credit == 0 || !row.credit)
+  );
 
   const handleJoyrideCallback = (data) => {
     const { status } = data;
@@ -234,7 +237,7 @@ export default function JurnalCreate() {
               Kembali
             </BtnLightPrimary>
             {isFirstBalance && (
-              <Box className='first-balance'>
+              <Box className="first-balance">
                 <Chip
                   variant="contained"
                   color="success"
@@ -248,7 +251,7 @@ export default function JurnalCreate() {
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={4}>
-                  <Box className='transaction-information'>
+                  <Box className="transaction-information">
                     <RHFTextField
                       size="small"
                       label="Keterangan Transaksi"
@@ -259,7 +262,7 @@ export default function JurnalCreate() {
                   </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Box className='date-picker'>
+                  <Box className="date-picker">
                     <RHFDatePicker
                       size="small"
                       label="Pilih Tanggal"
@@ -283,7 +286,7 @@ export default function JurnalCreate() {
                   </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Box className='number-of-evidence'>
+                  <Box className="number-of-evidence">
                     <RHFTextField
                       size="small"
                       label="Nomor Bukti (Dibuat Otomatis)"
@@ -309,7 +312,7 @@ export default function JurnalCreate() {
                 {fields.map((row, i) => (
                   <Fragment key={row.id}>
                     <Grid item xs={4}>
-                      <Box className='account-code'>
+                      <Box className="account-code">
                         <RHFAutocomplete
                           require
                           size="small"
@@ -330,7 +333,7 @@ export default function JurnalCreate() {
                       </Box>
                     </Grid>
                     <Grid item xs={isFirstBalance ? 3 : 2}>
-                      <Box className='debit'>
+                      <Box className="debit">
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Debit' : ''}
@@ -346,7 +349,7 @@ export default function JurnalCreate() {
                       </Box>
                     </Grid>
                     <Grid item xs={isFirstBalance ? 3 : 2}>
-                      <Box className='credit'>
+                      <Box className="credit">
                         <RHFTextField
                           size="small"
                           label={i === 0 ? 'Kredit' : ''}
@@ -363,7 +366,7 @@ export default function JurnalCreate() {
                     </Grid>
                     {!isFirstBalance && (
                       <Grid item xs={fields.length > 2 ? 3 : 4}>
-                        <Box className='cash-flow-code'>
+                        <Box className="cash-flow-code">
                           <CreateCashFlow
                             formChecking={formChecking}
                             i={i}
@@ -481,7 +484,11 @@ export default function JurnalCreate() {
                 loading={creating}
                 variant="contained"
                 sx={{ width: 200, height: 42 }}
-                disabled={watch('credit') !== watch('debit') || !watch('transaction_information')}
+                disabled={
+                  watch('credit') !== watch('debit') ||
+                  !watch('transaction_information') ||
+                  hasEmptyValue
+                }
                 type="submit"
                 className="btn-save"
               >
@@ -490,7 +497,7 @@ export default function JurnalCreate() {
             </Stack>
           </Card>
           <FirstBalance
-            className='first-balance-modal'
+            className="first-balance-modal"
             open={open}
             onClose={() => {
               setOpen(false);
