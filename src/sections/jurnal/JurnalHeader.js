@@ -37,7 +37,12 @@ export default function JurnalHeader({ filter, isEmpty, value }) {
   const userData = useSelector((state) => state.user.userData);
   const router = useRouter();
   const token = getSessionToken();
-  const user = jwtDecode(token);
+  let user = {};
+  if (token) {
+    user = jwtDecode(token);
+  } else {
+    console.error('Token not available');
+  }
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);

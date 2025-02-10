@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableRow, TableCell, styled } from '@mui/material';
+import { TableRow, TableCell, styled, Box, Typography } from '@mui/material';
 // components
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { StyledLoadingButton } from 'src/theme/custom/Button';
 import Label from 'src/components/Label';
 import { fCurrencyNoSpace } from 'src/utils/formatNumber';
+import { AccessTime, Today } from '@mui/icons-material';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +59,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, onViewRow }) {
   const {
     year_registered,
+    last_login,
     status_report,
     profitability,
     liquidity,
@@ -74,7 +77,21 @@ export default function UserTableRow({ row, onViewRow }) {
     <StyledTableRow hover>
       <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{unit_name ?? '-'}</FixedTableCell>
       <TableCell align="left" sx={cellStyle}>{bumdesa_name}</TableCell>
-      <TableCell align="left" sx={cellStyle}>{year_registered}</TableCell>
+      <TableCell>
+        <Box display="flex">
+          <Today color="primary" fontSize="small" sx={{ mr: 1 }} />
+          <Typography fontSize={12} fontWeight={400}>
+            {last_login ? moment(last_login).utc().format('DD/MM/yyyy') : '-'}
+          </Typography>
+        </Box>
+        <Box display="flex" sx={{ mt: 0.5 }}>
+          <AccessTime color="primary" fontSize="small" sx={{ mr: 1 }} />
+          <Typography fontSize={12} fontWeight={400}>
+            {last_login ? moment(last_login).utc().format('HH:mm') : '-'}
+          </Typography>
+        </Box>
+      </TableCell>
+      <TableCell align="left" sx={cellStyle}>{year_registered ? moment(year_registered).utc().format('DD/MM/yyyy') : '-'}</TableCell>
       <TableCell align="center">
         <Label color={status_report === '1' ? 'success' : 'error'}>
           {status_report === '1' ? 'Aktif' : 'Belum Aktif'}

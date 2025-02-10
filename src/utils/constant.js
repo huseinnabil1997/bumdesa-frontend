@@ -11,7 +11,7 @@ export const JURNAL_HEAD = [
 
 export const JURNAL_BULK_HEAD = [
   // { id: 'col_sticky', label: '' },
-  { id: 'nomor_bukti_sticky', label: 'No. Jurnal', align: 'left', minWidth: 125 },
+  { id: 'nomor_bukti_sticky', label: 'No. Urut Jurnal', align: 'left', minWidth: 125 },
   { id: 'tanggal', label: 'Tanggal', align: 'left', minWidth: 150 },
   { id: 'keterangan', label: 'Keterangan', align: 'left', minWidth: 150 },
   // { id: 'unit', label: 'Unit Usaha', align: 'left', minWidth: 150 },
@@ -174,8 +174,9 @@ export const stepperTutorial = [
 
 export const TABLE_HEAD_DATA_BUMDESA = [
   { id: 'name_sticky', label: 'Nama BUM Desa', align: 'left', minWidth: 200 },
+  { id: 'last_login', label: 'Terakhir Login', align: 'left', minWidth: 150 },
   { id: 'unit_count', label: 'Jumlah Unit Usaha', align: 'left', minWidth: 150 },
-  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
+  { id: 'registration_date', label: 'Tanggal Registrasi', align: 'left', minWidth: 150 },
   { id: 'activation_status', label: 'Status Aktivasi BUMDesa', align: 'center', minWidth: 150 },
   {
     id: 'financial_status',
@@ -201,7 +202,8 @@ export const TABLE_HEAD_DATA_BUMDESA = [
 export const TABLE_HEAD_DATA_UNIT = [
   { id: 'name_sticky', label: 'Nama Unit Usaha', align: 'left', minWidth: 200 },
   { id: 'bumdesa_name', label: 'Nama BUMDesa', align: 'left', minWidth: 200 },
-  { id: 'registration_date', label: 'Tahun Registrasi', align: 'left', minWidth: 150 },
+  { id: 'last_login', label: 'Terakhir Login', align: 'left', minWidth: 150 },
+  { id: 'registration_date', label: 'Tanggal Registrasi', align: 'left', minWidth: 150 },
   { id: 'financial_status', label: 'Status Laporan Keuangan', align: 'center', minWidth: 150 },
   { id: 'profitability', label: 'Profitabilitas', align: 'left', minWidth: 150 },
   { id: 'liquidity', label: 'Liquiditas', align: 'left', minWidth: 150 },
