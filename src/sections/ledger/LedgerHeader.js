@@ -34,7 +34,12 @@ export default function LedgerHeader({ filter, isEmpty }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const token = getSessionToken();
-  const user = jwtDecode(token);
+  let user = {};
+  if (token) {
+    user = jwtDecode(token);
+  } else {
+    console.error('Token not available');
+  }
   const userData = useSelector((state) => state.user.userData);
 
   const [open, setOpen] = useState(false);

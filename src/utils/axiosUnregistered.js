@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isValidToken } from './jwt';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +37,7 @@ export function getSessionToken() {
   // Check if window is defined before accessing localStorage
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('@token') ?? sessionStorage.getItem('@token');
-    return token ? `Bearer ${token}` : undefined;
+    return token && isValidToken(token) ? `Bearer ${token}` : undefined;
   }
   return undefined;
 }
