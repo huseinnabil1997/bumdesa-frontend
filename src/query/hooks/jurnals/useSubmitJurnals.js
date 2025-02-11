@@ -7,7 +7,10 @@ const submitData = async (id) => {
 
     return data;
   } catch (err) {
-    throw new Error();
+    if (!navigator.onLine) {
+      throw new Error('Tidak ada koneksi internet. Silakan periksa koneksi internet Anda.');
+    }
+    throw new Error(err);
   }
 };
 
