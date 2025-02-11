@@ -79,7 +79,7 @@ export default function NotistackProvider({ children }) {
           info: <SnackbarIcon icon={'eva:info-fill'} color="info" />,
           success: <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />,
           warning: <SnackbarIcon icon={'eva:alert-triangle-fill'} color="warning" />,
-          error: <SnackbarIcon icon={'eva:alert-circle-fill'} color="error" />,
+          error: <SnackbarIcon icon={'material-symbols:error-rounded'} color="error" />,
         }}
         // With close as default
         action={(key) => (

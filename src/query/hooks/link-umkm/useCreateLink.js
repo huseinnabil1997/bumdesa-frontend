@@ -7,6 +7,9 @@ const createData = async () => {
 
     return data;
   } catch (err) {
+    if (!navigator.onLine) {
+      throw new Error('Tidak ada koneksi internet. Silakan periksa koneksi internet Anda.');
+    }
     throw new Error(err.message);
   }
 };
