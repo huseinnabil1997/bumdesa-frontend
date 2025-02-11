@@ -52,6 +52,34 @@ function SnackbarStyles() {
 
 // ----------------------------------------------------------------------
 
+SnackbarIcon.propTypes = {
+  icon: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+};
+
+function SnackbarIcon({ icon, color }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        mr: 1.5,
+        width: 40,
+        height: 40,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: `${color}.main`,
+        bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Box>
+  );
+}
+
+// ----------------------------------------------------------------------
+
 NotistackProvider.propTypes = {
   children: PropTypes.node,
 };
@@ -91,33 +119,5 @@ export default function NotistackProvider({ children }) {
         {children}
       </SnackbarProvider>
     </>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-SnackbarIcon.propTypes = {
-  icon: PropTypes.string,
-  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
-};
-
-function SnackbarIcon({ icon, color }) {
-  return (
-    <Box
-      component="span"
-      sx={{
-        mr: 1.5,
-        width: 40,
-        height: 40,
-        display: 'flex',
-        borderRadius: 1.5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: `${color}.main`,
-        bgcolor: (theme) => alpha(theme.palette[color].main, 0.16),
-      }}
-    >
-      <Iconify icon={icon} width={24} height={24} />
-    </Box>
   );
 }
