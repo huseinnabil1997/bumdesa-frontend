@@ -283,7 +283,7 @@ export default function LogList() {
                     <TableNoData
                       isNotFound
                       title="Data Kosong"
-                      description="Buku besar belum tersedia."
+                      description="Log aktivitas belum tersedia."
                     />
                   )}
 
