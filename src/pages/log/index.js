@@ -68,7 +68,7 @@ export default function JurnalList() {
                 <TimelineContent>
                   <Paper
                     sx={{
-                      width: 'fit-content',
+                      width: '100%',
                       p: 3,
                       bgcolor: 'grey.50012',
                     }}
