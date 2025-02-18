@@ -61,7 +61,7 @@ export default function UserTableRow({ row, onViewRow }) {
     bumdesa_name = '-',
     count_unit = '-',
     year_registered = '-',
-    last_login, // 2025-02-03T14:28:55.194535Z
+    // last_login, // 2025-02-03T14:28:55.194535Z
     status_active,
     status_report,
     status_report_unit,
@@ -94,7 +94,7 @@ export default function UserTableRow({ row, onViewRow }) {
   return (
     <StyledTableRow hover>
       <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{bumdesa_name}</FixedTableCell>
-      <TableCell>
+      {/* <TableCell>
         <Box display="flex">
           <Today color="primary" fontSize="small" sx={{ mr: 1 }} />
           <Typography fontSize={12} fontWeight={400}>
@@ -107,7 +107,7 @@ export default function UserTableRow({ row, onViewRow }) {
             {last_login ? moment(last_login).utc().format('HH:mm') : '-'}
           </Typography>
         </Box>
-      </TableCell>
+      </TableCell> */}
       {renderTableCell(count_unit)}
       {renderTableDateCell(year_registered)}
       <TableCell align="center">{renderLabel(status_active)}</TableCell>
