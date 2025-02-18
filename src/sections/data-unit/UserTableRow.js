@@ -59,7 +59,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, onViewRow }) {
   const {
     year_registered,
-    last_login,
+    // last_login,
     status_report,
     profitability,
     liquidity,
@@ -77,7 +77,7 @@ export default function UserTableRow({ row, onViewRow }) {
     <StyledTableRow hover>
       <FixedTableCell onClick={onViewRow} sx={{ cursor: 'pointer' }}>{unit_name ?? '-'}</FixedTableCell>
       <TableCell align="left" sx={cellStyle}>{bumdesa_name}</TableCell>
-      <TableCell>
+      {/* <TableCell>
         <Box display="flex">
           <Today color="primary" fontSize="small" sx={{ mr: 1 }} />
           <Typography fontSize={12} fontWeight={400}>
@@ -90,7 +90,7 @@ export default function UserTableRow({ row, onViewRow }) {
             {last_login ? moment(last_login).utc().format('HH:mm') : '-'}
           </Typography>
         </Box>
-      </TableCell>
+      </TableCell> */}
       <TableCell align="left" sx={cellStyle}>{year_registered ? moment(year_registered).utc().format('DD/MM/yyyy') : '-'}</TableCell>
       <TableCell align="center">
         <Label color={status_report === '1' ? 'success' : 'error'}>
